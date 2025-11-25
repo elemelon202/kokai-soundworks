@@ -38,8 +38,7 @@ class BandsController < ApplicationController
     authorize @band #* Tyrhen was here
     @pending_bookings = @band.bookings.where(status: 'pending')
     # app/controllers/bands_controller.rb
-  # Make sure chat exists
-  @chat = @band.chat || @band.create_band_chat
+  @chat = @band.chat || @band.create_band_chat(name: "#{@band.name} Chat")
 
   # All messages for the chat
   @messages = @chat.messages.order(created_at: :asc)

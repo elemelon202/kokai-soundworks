@@ -9,7 +9,7 @@ class Message < ApplicationRecord
 
   private
 
-  def create_message_reads_for_participants
+  def create_message_reads
     # Create a MessageRead record for each user in the chat except the sender
     chat.users.each do |participant|
       MessageRead.create(message: self, user: participant, read: false)

@@ -19,7 +19,7 @@ class MessagesController < ApplicationController
     @message = @chat.messages.new(message_params)
     @message.user = current_user
     if @message.save
-      redirect_to chat__messages_path(@chat)
+      redirect_to chat_messages_path(@chat)
     else
       flash.now[:alert] = "Failed to send message."
       render :index
