@@ -9,4 +9,24 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  resources :musicians
+  resources :bands do
+    resources :involvements, only: [:new, :create, :destroy]
+  end
+  resources :involvements, only: [:edit, :update]
+  resources :kanban_tasks do
+    collection do
+      post :sort
+    end
+  end
+  resources :venues do
+    resources :gigs, only: [:new, :create, :index]
+  end
+  resources :gigs, only: [:show, :index] do
+    resources :bookings, only: [:new, :create, :destroy]
+  end
+  resources :bookings, only: [:edit, :update]
+  resources :chats do
+    resources :messages, only: [:create]
+  end
 end
