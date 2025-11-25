@@ -1,0 +1,20 @@
+<div class="header">
+  <h2><%= @band.name %></h2>
+  <% @band.genre_list.each do |genre| %>
+            <div class="middle d-flex flex-row mb-3">
+              <span class="badge bg-secondary"><%= genre %></span>
+                        <% end %>
+                        <p><%= @band.location %></p>
+            </div>
+          <p><%= @band.musicians.count %> <%= @band.musicians.count > 1 ? "members" : "member" %></p>
+</div>
+<!-- Banner Section -->
+<div class="banner">
+  <div class="container">
+    <h1><%= @band.name %></h1>
+    <p><%= @band.location %></p>
+  </div>
+</div>
+<p><%= @band.description %></p>
+<p>TODO: LINK SPOTIFY API TO DISPLAY POPULAR SONGS</p>
+<p>TODO: LINK SPOTIFY API TO PUT MUSIC PLAYER HERE</p>
