@@ -1,0 +1,11 @@
+<div class="content-wrap">
+  <div class="musicians-section">
+    <div class="musician-cards">
+      <% @musicians.each do |musician| %>
+        <%= link_to musician_path(musician), class: "text-decoration-none" do %>
+          <p><%= musician.name %> </p>
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>
