@@ -1,0 +1,11 @@
+<div class="container mt-3">
+  <h1>Edit venue</h1>
+  <%= simple_form_for @venue do |f| %>
+    <%= f.input :name %>
+    <%= f.input :address %>
+    <%= f.input :city %>
+    <%= f.input :capacity %>
+    <%= f.input :description %>
+    <%= f.submit class: 'btn btn-primary' %>
+  <% end %>
+</div>

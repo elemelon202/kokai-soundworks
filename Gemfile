@@ -77,3 +77,4 @@ end
 gem 'devise'
 gem 'ostruct'
 gem 'acts-as-taggable-on'
+gem 'cloudinary'

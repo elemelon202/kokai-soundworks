@@ -2,11 +2,18 @@
   <h1>Venues</h1>
   <div id="venues">
     <% @venues.each do |venue| %>
-      <ul><%= link_to "#{venue.name}", venue_path(venue) %></ul>
-      <li><%= "Address: #{venue.address}" %></li>
-      <li><%= "City: #{venue.city}" %></li>
-      <li><%= "Capacity: #{venue.capacity}" %></li>
-      <li><%= "Description: #{venue.description}" %></li>
+      <p>
+        <%= link_to "#{venue.name}", venue_path(venue) %>
+        <% if venue.photos.attached? %>
+          <%= cl_image_tag(venue.photos.first.key) %>
+        <% else %>
+          <%= image_tag "venue_placeholder.jpg", class: "w-25" %>
+        <% end %>
+        <li><%= "Address: #{venue.address}" %></li>
+        <li><%= "City: #{venue.city}" %></li>
+        <li><%= "Capacity: #{venue.capacity}" %></li>
+        <li><%= "Description: #{venue.description}" %></li>
+      </p>
     <% end %>
   </div>
   <%= link_to "New venue", new_venue_path %>
