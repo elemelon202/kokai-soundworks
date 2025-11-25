@@ -27,7 +27,7 @@ class BandPolicy < ApplicationPolicy
     # 1. They are a registered member (logged in)
     # 2. They have a musician profile
     # 3. ***For this to work a user can only have_one musician****
-    user.present? && user.musician.present?
+    user.present? && user.user_type == 'musician'
   end
 
   def create?
