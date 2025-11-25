@@ -3,16 +3,17 @@ class MusiciansController < ApplicationController
   def index
     # see all musicians
     @musicians = Musician.all
+    # singular musician
+    # get that musicians bands / can do that with iteration
     #maybe have band name in card
     # Musician.new for create a profile button
-    @musician = Musician.new
   end
 
   def show
     #should be able to see a musician
     @musician = Musician.find(params[:id])
     # should be able to see bands the musician is in
-    @bands = @musician.band.all
+    @bands = @musician.bands
     # should have a chat button?
   end
 
@@ -23,6 +24,7 @@ class MusiciansController < ApplicationController
 
   def create
     @musician = Musician.new(musician_params)
+    @musician.user = current_user
     if @musician.save
       redirect to musician_path(@musician)
     else render :new, status: :unprocessable_entity
