@@ -22,22 +22,25 @@ class VenuePolicy < ApplicationPolicy
 
   def new?
     create?
+    user.present? && user.user_type == 'venue'
   end
 
-  def create?
-    return true
+  def create
+    new?
   end
 
   def edit?
-    update?
+    # only owner can edit
+    user.present? && user == record.user
   end
 
   def update?
-    @record.user == user
+    edit?
   end
 
   def delete?
-    @record.user == user
+    # only owner of venue can delete it
+    user.present? && user == record.user
   end
 
 end
