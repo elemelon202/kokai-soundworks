@@ -5,5 +5,8 @@
   <li><%= "Capacity: #{@venue.capacity}" %></li>
   <li><%= "Description: #{@venue.description}" %></li>
   <%= link_to "Edit this venue", edit_venue_path  %>
+  <%= link_to venue_path(@venue), data: { turbo_method: :delete, turbo_confirm: "Delete #{@venue.name}?" } do %>
+    <i class="fa-solid fa-delete-left"></i>
+  <% end %>
   <%= link_to "Back to list", venues_path %>
 </div>
