@@ -1,0 +1,75 @@
+<div class="content-wrap bg-black text-white py-5">
+  <div class="header d-flex flex-column align-items-center mb-4">
+    <h1>Browse bands</h1>
+    <h2>Discover talented bands to connect with</h2>
+  </div>
+
+  <div class="container">
+      <div class="row">
+          <div class="col-md-12">
+              <form class="d-flex">
+                  <div class="input-group dark-mode w-100">
+                      <%= text_field_tag :q, params[:q], class: "form-control form-control-lg bg-dark text-light border-dark input-dark rounded-pill", type: "search", placeholder: "Search for a band...", aria: { label: "Search" } %>
+                      <button class="btn btn-dark text-white px-4" type="submit">
+                              <i class="fa-solid fa-magnifying-glass"></i>
+                          </button>
+                  </div>
+              </form>
+          </div>
+      </div>
+  </div>
+  <div class="container my-4">
+    <%= form_with url: bands_path, method: :get, local: true, html: { id: "band-filter-form" } do %>
+
+      <!-- Search Input -->
+
+      <!-- Genre Pills -->
+      <div class="d-flex flex-row flex-wrap mb-3">
+        <% Band::GENRES.each do |genre| %>
+          <% checked = params[:genres]&.include?(genre) %>
+          <%= label_tag "genre_#{genre}",
+                        genre,
+                        class: "btn btn-outline-dark me-2 mb-2 text-white #{'active' if checked}" do %>
+            <%= check_box_tag "genres[]",
+                              genre,
+                              checked,
+                              id: "genre_#{genre}",
+                              class: "d-none",   # hide actual checkbox
+                              onchange: "document.getElementById('band-filter-form').submit();" %>
+            <span><%= genre %></span>
+          <% end %>
+        <% end %>
+      </div>
+
+    <% end %>
+  </div>
+
+    <!-- Display Bands -->
+  <div class="container">
+      <p><%= @bands.count > 1 ? "#{@bands.count} bands found" : "1 band found" %></p>
+    <div class="container cards">
+      <% @bands.each do |band| %>
+       <div class="card mb-3 bg-dark dark-card text-white p-3 rounded" style="width: 18rem;">
+      <%= image_tag "sam_wall_bass.jpg", alt: "SamBass", class: "img-fluid" %>
+      <div class="card-body">
+        <div class="band-card-top-text">
+          <h5 class="card-title"><%= band.name %></h5>
+          <p><%= band.location %></p>
+        </div>
+        <div class="band-card-bottom-text border-bottom mb-3 pb-3">
+          <% band.genre_list.each do |genre| %>
+            <span class="badge bg-secondary"><%= genre %></span>
+          <% end %>
+          <p class="card-text"><%= band.description %></p>
+        </div>
+        <i class="fa-solid fa-user-group"></i> <span><%= band.musicians.count %> <%= band.musicians.count > 1 ? "members" : "member" %></span> <br>
+      </div>
+    </div>
+      <% end %>
+
+      <% if @bands.empty? %>
+        <p>No bands found.</p>
+      <% end %>
+    </div>
+  </div>
+</div>
