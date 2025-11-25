@@ -28,6 +28,23 @@ class BandsController < ApplicationController
     end
   end
   def edit
+    @pending_bookings = @band.bookings.where(status: 'pending')
+    # app/controllers/bands_controller.rb
+  # Make sure chat exists
+  @chat = @band.chat || @band.create_band_chat
+
+  # All messages for the chat
+  @messages = @chat.messages.order(created_at: :asc)
+
+  # Unread messages for current_user
+  @unread_messages = @chat.messages.joins(:message_reads)
+                           .where(message_reads: { user_id: current_user.id, read: false })
+
+  # Mark unread messages as read
+  @unread_messages.each do |msg|
+    msg_read = msg.message_reads.find_by(user: current_user)
+    msg_read.update(read: true) if msg_read
+    end
   end
   def update
     if @band.update(band_params)
@@ -43,7 +60,7 @@ class BandsController < ApplicationController
 
   private
   def band_params
-    params.require(:band).permit(:name, :description, genre_list: [])
+    params.require(:band).permit(:name, :description, genre_list: [], musician_ids: [])
   end
   def set_band
     @band = Band.find(params[:id])
