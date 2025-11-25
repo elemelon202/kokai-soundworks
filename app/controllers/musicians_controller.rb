@@ -1,5 +1,6 @@
 class MusiciansController < ApplicationController
   # find musician before performing show, edit, update, or destroy
+  skip_before_action :authenticate_user!, only: [:index, :show]
   before_action :set_musician, only: [:show, :edit, :update, :destroy]
 
   def index
