@@ -4,11 +4,14 @@ class BandsController < ApplicationController
   before_action :authorize_band, only: [:edit, :update, :destroy]
 
   def index
+    @bands = Band.all
+
      if params[:genres].present?
     @bands = Band.with_genres(params[:genres])
-     else
-    @bands = Band.all
      end
+      if params[:q].present?
+    @bands = @bands.where("name ILIKE ?", "%#{params[:q]}%")
+      end
   end
   def show
   end
