@@ -1,0 +1,15 @@
+<h1><%= @musician.name %></h1>
+<p>Role: <%= @musician.instrument %></p>
+<p>Age: <%= @musician.age %></p>
+<p>Styles: <%= @musician.styles %></p>
+<p>Location: <%= @musician.location %></p>
+<% if @musician.bands.count == 1 %>
+  <p><%= @musician.name %> is in <%= @musician.bands.count %> band: </p>
+<% else %>
+  <p><%= @musician.name%> is in <%=@musician.bands.count %> bands: </p>
+<% end %>
+<% @musician.bands.each do |band| %>
+  <ul>
+    <li><%= band.name %></li>
+  </ul>
+<% end %>

@@ -115,7 +115,8 @@ musician1 = Musician.create!(
   instrument: "Drums",
   age: 28,
   styles: "Jazz, Funk, R&B",
-  location: "Shibuya, Tokyo"
+  location: "Shibuya, Tokyo",
+  bio: "Yuki is the rhythmic backbone of any ensemble, known across Shibuya for his impeccable timing and dynamic ghost notes. Specializing in intricate Funk beats and smooth R&B pocket drumming, he brings a modern, street-wise sophistication to Jazz grooves. A versatile session player always pushing the tempo."
 )
 
 musician2 = Musician.create!(
@@ -124,7 +125,8 @@ musician2 = Musician.create!(
   instrument: "Bass",
   age: 32,
   styles: "Jazz, Rock, Blues",
-  location: "Shinjuku, Tokyo"
+  location: "Shinjuku, Tokyo",
+  bio: "Based in Shinjuku, Kenji is the ultimate musical chameleon. His rich tone can seamlessly transition from the complex walking lines of traditional Jazz to the driving power of stadium Rock. With a deep respect for the Blues masters, he provides a reliable, resonant foundation for any band."
 )
 
 musician3 = Musician.create!(
@@ -133,7 +135,8 @@ musician3 = Musician.create!(
   instrument: "Vocals",
   age: 25,
   styles: "Jazz, Soul, Pop",
-  location: "Harajuku, Tokyo"
+  location: "Harajuku, Tokyo",
+  bio: "Sakura is a captivating vocalist hailing from Harajuku, blending the warmth of classic Soul with modern Pop production. Her voice is clear, powerful, and deeply emotive, capable of both delicate Jazz phrasing and soaring Pop hooks. She's currently seeking a collective that values lyrical depth and harmonic complexity."
 )
 
 musician4 = Musician.create!(
@@ -142,7 +145,8 @@ musician4 = Musician.create!(
   instrument: "Guitar",
   age: 30,
   styles: "Rock, Metal, Blues",
-  location: "Ikebukuro, Tokyo"
+  location: "Ikebukuro, Tokyo",
+  bio: "The resident shredder of Ikebukuro. Takeshi's guitar work is defined by blistering solos and heavy, distorted riffs. While his foundation is in Metal and Rock, he incorporates the improvisational fluidity of Blues, making his performances unpredictable and explosive. Perfect for any band needing serious volume and stage presence."
 )
 
 puts "✅ Created #{Musician.count} musicians"

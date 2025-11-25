@@ -77,3 +77,4 @@ end
 
 gem 'ostruct'
 gem 'acts-as-taggable-on'
+gem 'cloudinary'

@@ -1,0 +1,22 @@
+<div class="content-wrap">
+  <div class="musicians-section">
+    <div class="musician-cards">
+      <% @musicians.each do |musician| %>
+        <div class="musician-card card m-1">
+          <%= link_to musician_path(musician), class: "text-dark text-decoration-none" do %>
+            <p><%= musician.name %> </p>
+            <p><%= musician.instrument %></p>
+            <p> Styles: <%= musician.styles %></p>
+            <p> City: <%= musician.location %></p>
+            <% if musician.bands.pluck.count == 1 %>
+              <p> In this band: <%= musician.bands.pluck(:name).join("") %></p>
+            <% else %>
+              <p>In these bands: <%= musician.bands.pluck(:name).join(", ") %></p>
+            <% end %>
+            <p><%= musician.bio %></p>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+  </div>
+</div>
