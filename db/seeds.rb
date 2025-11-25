@@ -152,19 +152,22 @@ puts "🎵 Creating bands..."
 band1 = Band.create!(
   user: band_leader1,
   name: "Neon Pulse",
-  description: "Electronic rock fusion band pushing boundaries with synth-driven soundscapes."
+  description: "Electronic rock fusion band pushing boundaries with synth-driven soundscapes.",
+  location: "Shibuya, Tokyo"
 )
 
 band2 = Band.create!(
   user: band_leader2,
   name: "Midnight Jazz Collective",
-  description: "Contemporary jazz ensemble blending traditional and modern influences."
+  description: "Contemporary jazz ensemble blending traditional and modern influences.",
+  location: "Shinjuku, Tokyo"
 )
 
 band3 = Band.create!(
   user: band_leader1,
   name: "Tokyo Thunder",
-  description: "High-energy rock band with a passion for live performances."
+  description: "High-energy rock band with a passion for live performances.",
+  location: "Roppongi, Tokyo"
 )
 
 puts "✅ Created #{Band.count} bands"
