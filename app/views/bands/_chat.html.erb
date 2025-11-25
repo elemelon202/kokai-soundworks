@@ -1,0 +1,23 @@
+<div id="band-chat" class="card p-3 mb-4" style="max-height: 400px; overflow-y: auto;">
+  <h5><%= @chat.name %></h5>
+
+  <div id="messages">
+    <% @messages.each do |msg| %>
+      <% unread = @unread_messages.include?(msg) %>
+      <div class="message <%= 'unread' if unread %>">
+        <strong><%= msg.user.username %>:</strong>
+        <%= msg.content %>
+        <% if unread %>
+          <span class="badge bg-warning text-dark">New</span>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%= form_with model: [@chat, Message.new], local: true do |f| %>
+    <div class="input-group mt-2">
+      <%= f.text_field :content, class: "form-control", placeholder: "Type your message..." %>
+      <button class="btn btn-primary" type="submit">Send</button>
+    </div>
+  <% end %>
+</div>

@@ -2,5 +2,9 @@
   <%= f.input :name %>
   <%= f.input :location %>
   <%= f.input :description %>
+   <%= f.input :musician_ids,
+              as: :select,
+              collection: Musician.all,  # initial load (optional)
+              input_html: { multiple: true, class: "js-musicians-select" } %>
   <%= f.button :submit %>
 <% end %>
