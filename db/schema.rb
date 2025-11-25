@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_25_014310) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_25_021729) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -58,6 +58,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_25_014310) do
     t.text "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "venue_id", null: false
+    t.index ["venue_id"], name: "index_gigs_on_venue_id"
   end
 
   create_table "involvements", force: :cascade do |t|
@@ -72,6 +74,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_25_014310) do
   create_table "kanban_tasks", force: :cascade do |t|
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "name"
+    t.string "status"
+    t.string "task_type"
+    t.date "deadline"
+    t.text "description"
+    t.integer "position"
+    t.integer "created_by_id"
   end
 
   create_table "messages", force: :cascade do |t|
@@ -135,6 +144,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_25_014310) do
   add_foreign_key "bands", "users"
   add_foreign_key "bookings", "bands"
   add_foreign_key "bookings", "gigs"
+  add_foreign_key "gigs", "venues"
   add_foreign_key "involvements", "bands"
   add_foreign_key "involvements", "musicians"
   add_foreign_key "messages", "chats"
