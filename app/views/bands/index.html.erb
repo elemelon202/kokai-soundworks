@@ -1,0 +1,34 @@
+<h1>Browse bands</h1>
+<h2>Discover talented bands to connect with</h2>
+
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <form class="d-flex">
+                <div class="input-group">
+                    <input class="form-control form-control-lg" type="search" placeholder="Search for a band..." aria-label="Search">
+                    <button class="btn btn-primary px-4" type="submit">
+                            <i class="bi bi-search"></i>
+                        </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container d-flex align-items-center my-4">
+  <p>Genres:</p>
+
+  <%= simple_form_for :genre, url: bands_path, method: :get do |f| %>
+    <% Band::GENRES.each do |genre| %>
+      <div>
+        <%= check_box_tag "genres[]", genre, params[:genres]&.include?(genre), id: "genre_#{genre}", onchange: "this.form.submit();" %>
+        <%= label_tag "genre_#{genre}", genre %>
+      </div>
+    <% end %>
+  <% end %>
+</div>
+
+<% @bands.each do |band| %>
+  <h2><%= band.name %></h2>
+  <p><%= band.description %></p>
+<% end %>
