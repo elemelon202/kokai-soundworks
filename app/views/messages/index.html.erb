@@ -1,0 +1,15 @@
+<h3><%= @chat.name %></h3>
+
+<div id="messages">
+  <% @messages.each do |msg| %>
+    <p>
+      <strong><%= msg.user.username %>:</strong>
+      <%= msg.content %>
+    </p>
+  <% end %>
+</div>
+
+<%= form_with model: [@chat, Message.new], local: true do |f| %>
+  <%= f.text_area :content, placeholder: "Type your message..." %>
+  <%= f.submit "Send", class: "btn btn-primary" %>
+<% end %>

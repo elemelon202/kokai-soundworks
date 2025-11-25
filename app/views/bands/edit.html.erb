@@ -1,0 +1,45 @@
+
+  <div class="header d-flex flex-column align-items-left mb-4">
+    <h1>Band Dashboard</h1>
+    <h2>Manage your band gig applications and members</h2>
+  </div>
+<div class="container cards">
+  <div class="card">
+    <h2>Gig Applications</h2>
+    <%= @band.bookings.count %>
+    <span>Pending: <%= @pending_bookings.count %></span>
+  </div>
+  <div class="card">
+    <h2>Band Members</h2>
+    <%= @band.musicians.count %>
+  </div>
+  <div class="card">
+    <h2>Upcoming Gigs</h2>
+    <%= @band.gigs.count %>
+  </div>
+  <div class="card">
+    <h2>Unread Messages</h2>
+    <%= @unread_messages.count %>
+  </div>
+  <div class="band-chat-container">
+   <%= render 'chat', band: @band %>
+   </div>
+   <div class="gig-applications">
+    <h2>Gig Applications</h2>
+    <div class="applications-list">
+      <% @pending_bookings.each do |booking| %>
+        <div class="application-card card mb-3 p-3">
+          <h5><%= booking.gig.name %></h5>
+          <p><strong>Date:</strong> <%= booking.gig.date.strftime("%B %d, %Y") %></p>
+          <p><strong>Venue:</strong> <%= booking.gig.venue.name %></p>
+          <div class="actions">
+            <span><%= booking.status %></span>
+          </div>
+          <div class="available-gigs">
+            <h2>Gigs in your area</h2>
+          </div>
+        </div>
+      <% end %>
+   </div>
+  </div>
+</div>

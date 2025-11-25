@@ -12,4 +12,6 @@ class User < ApplicationRecord
   has_many :musicians, dependent: :destroy
   has_many :gigs, through: :venues
   has_many :bookings, through: :bands
+  has_many :message_reads
+  has_many :read_messages, through: :message_reads, source: :message
 end
