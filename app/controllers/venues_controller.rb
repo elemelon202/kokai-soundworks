@@ -12,6 +12,7 @@ class VenuesController < ApplicationController
 
   def new
     @venue = Venue.new
+    authorize @venue
   end
 
   def create
@@ -19,7 +20,7 @@ class VenuesController < ApplicationController
     @venue.user = current_user
     authorize @venue
     if @venue.save
-      redirect_to venues_path
+      redirect_to venue_path(@venue) #edited by Tyrhen
     else
       render :new, status: :unprocessable_entity
     end
