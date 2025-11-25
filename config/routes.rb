@@ -11,14 +11,14 @@ Rails.application.routes.draw do
   # root "posts#index"
   resources :musicians
   resources :bands do
-    resources :involvements, only: [:new, :create, :destroy]
+    resources :involvements, only: [:new, :create]
   end
-  resources :involvements, only: [:edit, :update]
-  resources :kanban_tasks do
-    collection do
-      post :sort
-    end
-  end
+  resources :involvements, only: [:edit, :update, :destroy]
+  # resources :kanban_tasks do
+  #   collection do
+  #     post :sort
+  #   end
+  # end
   resources :venues do
     resources :gigs, only: [:new, :create, :index]
   end
