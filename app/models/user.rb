@@ -14,4 +14,15 @@ class User < ApplicationRecord
   has_many :bookings, through: :bands
   has_many :message_reads
   has_many :read_messages, through: :message_reads, source: :message
+  has_one :musician, dependent: :destroy
+
+  # convenience: check roles
+  def musician?
+    user_type == "musician"
+  end
+
+  def band_leader?
+    user_type == "band_leader"
+  end
+
 end
