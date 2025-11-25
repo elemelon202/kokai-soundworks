@@ -1,9 +1,13 @@
 class BandsController < ApplicationController
-  before_action :authenticate_user!
+  # I added a bands policy so I edited some of the functions (marked with a star)
+  # added skip_before_action so public users can see these pages.
+  skip_before_action :authenticate_user!, only: [:index, :show]
+  # before_action :authenticate_user! - **Tyrhen edited this out so it doesn't override line 4**
   before_action :set_band, only: [:show, :edit, :update, :destroy]
   before_action :authorize_band, only: [:edit, :update, :destroy]
 
   def index
+    @bands = policy_scope(Band) #<--- This is all you need for the index to bypass pundit - Tyrhen
     @bands = Band.all
 
      if params[:genres].present?
@@ -14,13 +18,16 @@ class BandsController < ApplicationController
       end
   end
   def show
+    authorize @band
   end
   def new
     @band = Band.new
+    authorize @band #* Tyrhen was here
   end
   def create
     @band = Band.new(band_params)
     @band.user = current_user
+    authorize @band #* Tyrhen was here
     if @band.save
       redirect_to band_path(@band)
     else
@@ -28,6 +35,7 @@ class BandsController < ApplicationController
     end
   end
   def edit
+    authorize @band #* Tyrhen was here
     @pending_bookings = @band.bookings.where(status: 'pending')
     # app/controllers/bands_controller.rb
   # Make sure chat exists
@@ -47,6 +55,7 @@ class BandsController < ApplicationController
     end
   end
   def update
+    authorize @band #* Tyrhen was here
     if @band.update(band_params)
       redirect_to band_path(@band)
     else
@@ -54,6 +63,7 @@ class BandsController < ApplicationController
     end
   end
   def destroy
+    authorize @band #* Tyrhen was here
     @band.destroy
     redirect_to bands_path
   end
