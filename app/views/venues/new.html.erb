@@ -1,0 +1,13 @@
+<div class="container">
+  <h1>New venue</h1>
+  <%= simple_form_for @venue do |f| %>
+    <%= f.input :name %>
+    <%= f.input :address %>
+    <%= f.input :city %>
+    <%= f.input :capacity %>
+    <%= f.input :description %>
+    <%= f.input :photos, as: :file, input_html: { multiple: true } %>
+    <%= f.submit class: 'btn btn-primary' %>
+  <% end %>
+  <%= link_to "Back to list", venues_path  %>
+</div>
