@@ -81,3 +81,4 @@ gem 'acts-as-taggable-on'
 gem 'cloudinary'
 gem 'pundit'
 gem 'pg_search'
+gem "redis", "~> 5.0"
