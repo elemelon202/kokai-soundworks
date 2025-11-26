@@ -5,17 +5,16 @@ class MusiciansController < ApplicationController
 
   def index
     @musicians = policy_scope(Musician)
-    @musicians = Musician.all
     # see all musicians
     # singular musician
     # get that musicians bands / can do that with iteration
     #maybe have band name in card
     # Musician.new for create a profile button
-    if params[:query].present?
-      sql_subquery = "name ILIKE :query OR instrument ILIKE :query"
-      @musicians = @musicians.where(sql_subquery, query: "%#{params[:query]}%")
-    end
 
+    # for searching on the musicians index page -- kyle
+    if params[:query].present?
+      @musicians = @musicians.search_by_all(params[:query])
+    end
   end
 
   def show
