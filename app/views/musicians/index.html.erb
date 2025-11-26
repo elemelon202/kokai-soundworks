@@ -63,7 +63,7 @@
                     <p><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
                   </div>
                 <% end %>
-                <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-secondary", data: { turbo: false } %>
+                <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary", style: "background-color: #a4fe35ff;", data: { turbo: false } %>
               </div>
             </div>
           <% end %>
