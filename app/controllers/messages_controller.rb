@@ -2,6 +2,8 @@ class MessagesController < ApplicationController
   before_action :set_chat
   before_action :set_message, only: [:destroy]
 
+  skip_after_action :verify_policy_scoped
+
   def create
     @message = @chat.messages.build(message_params)
     @message.user = current_user
@@ -14,16 +16,20 @@ class MessagesController < ApplicationController
         @message.message_reads.create(user: user, read: false)
       end
 
-      # Broadcast the message to all participants
-      broadcast_message(@message)
-
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: turbo_stream.replace(
-            "message_form",
-            partial: "messages/form",
-            locals: { chat: @chat, message: Message.new }
-          )
+          render turbo_stream: [
+            turbo_stream.append(
+              "messages",
+              partial: "messages/message",
+              locals: { message: @message, current_user: current_user }
+            ),
+            turbo_stream.replace(
+              "message_form",
+              partial: "messages/form",
+              locals: { chat: @chat, message: Message.new }
+            )
+          ]
         end
         format.html { redirect_to direct_message_path(@chat) }
       end
@@ -66,25 +72,5 @@ class MessagesController < ApplicationController
 
   def message_params
     params.require(:message).permit(:content)
-  end
-
-  def broadcast_message(message)
-    @chat.users.each do |user|
-      ActionCable.server.broadcast(
-        "chat_#{@chat.id}",
-        {
-          html: render_message_for_user(message, user),
-          sender_id: current_user.id,
-          user_id: user.id
-        }
-      )
-    end
-  end
-
-  def render_message_for_user(message, user)
-    ApplicationController.renderer.render(
-      partial: "messages/message",
-      locals: { message: message, current_user: user }
-    )
   end
 end
