@@ -1,7 +1,11 @@
 <div class="container">
+  <div class="index-heading m-3 mt-5">
+    <h1>Musicians</h1>
+    <p>New potential bandmates</p>
+  </div>
   <%= form_with url: musicians_path, method: :get, data: { turbo_frame: "musicians_list" }, class: "filters-form" do %>
     <!-- Search Field -->
-    <div class="mb-3 d-flex gap-2 align-items-center">
+    <div class="mt-5 mb-5 d-flex gap-2 align-items-center">
       <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control", data: { action: "input->auto-submit#submit" } %>
       <%= link_to "Clear Filters", musicians_path, class: "btn btn-outline-secondary" %>
       <!-- Instruments Dropdown -->
@@ -37,10 +41,10 @@
   <!-- Musicians list -->
   <turbo-frame id="musicians_list">
     <div class="musicians-section">
-      <div class="row justify-content-center flex-wrap">
+      <div class="row justify-content-center flex-wrap align-items-stretch">
         <% if @musicians.any? %>
           <% @musicians.each do |musician| %>
-            <div class="col-8 col-md-3 m-2">
+            <div class="col-8 col-md-3 m-2 h-100 d-flex">
               <div class="musician-card position-relative">
                 <%= link_to musician_path(musician), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
                   <div class="musician-card-header">
