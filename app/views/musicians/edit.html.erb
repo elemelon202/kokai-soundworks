@@ -1,5 +1,15 @@
-<p>
-  You have been invited to join <%= @band_invitation.band.name %>!<br>
-  <%= link_to "Accept", accept_band_invitation_path(@band_invitation.token), class: "btn btn-success" %>
-  <%= link_to "Decline", decline_band_invitation_path(@band_invitation.token), class: "btn btn-danger" %>
-</p>
+<% if @band_invitation.present? %>
+  <p>
+    You have been invited to join <strong><%= @band_invitation.band.name %></strong>!<br>
+
+    <%= link_to "Accept",
+      accept_band_invitation_path(@band_invitation.token),
+      class: "btn btn-success" %>
+
+    <%= link_to "Decline",
+      decline_band_invitation_path(@band_invitation.token),
+      class: "btn btn-danger" %>
+  </p>
+<% else %>
+  <p>No pending band invitations.</p>
+<% end %>

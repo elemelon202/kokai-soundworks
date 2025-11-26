@@ -76,10 +76,18 @@ end
 
 
 
+  def band_invitation_params
+    params.require(:band_invitation).permit(:musician_id)
+  end
+
   def set_band_invitation_by_token
     @band_invitation = BandInvitation.find_by(token: params[:token])
     unless @band_invitation
       redirect_to root_path, alert: "Invitation not found."
     end
+  end
+
+  def set_band
+    @band = Band.find(params[:band_id])
   end
 end
