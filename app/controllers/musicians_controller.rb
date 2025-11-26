@@ -4,14 +4,18 @@ class MusiciansController < ApplicationController
   before_action :set_musician, only: [:show, :edit, :update, :destroy]
 
   def index
-    # @musicians = Musician.all
+    @musicians = policy_scope(Musician)
+    @musicians = Musician.all
     # see all musicians
     # singular musician
     # get that musicians bands / can do that with iteration
     #maybe have band name in card
     # Musician.new for create a profile button
+    if params[:query].present?
+      sql_subquery = "name ILIKE :query OR instrument ILIKE :query"
+      @musicians = @musicians.where(sql_subquery, query: "%#{params[:query]}%")
+    end
 
-    @musicians = policy_scope(Musician)
   end
 
   def show

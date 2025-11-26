@@ -1,26 +1,39 @@
 <div class="container">
+  <%= form_with url: musicians_path, method: :get, class: "d-flex" do %>
+    <%= label_tag :query, "Search musicians", class: "visually-hidden" %>
+    <%= text_field_tag :query,
+              params[:query],
+              class: "form-control",
+              placeholder: "Type a keyword"
+          %>
+    <%= submit_tag "Search", name: "", class: "btn btn-primary" %>
+  <% end %>
   <div class="musicians-section">
     <div class="musician-cards">
-      <% @musicians.each do |musician| %>
-        <div class="musician-card card m-1 border-3 border-white p-2">
-          <%= link_to musician_path(musician), class: "text-light text-decoration-none" do %>
-            <% if musician.photo.attached? %>
-              <%= cl_image_tag(musician.photo.key, class: "w-25") %>
-            <% else %>
-              <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
-            <% end %>
-            <p><%= musician.name %> </p>
-            <p><%= musician.instrument %></p>
-            <p> Styles: <%= musician.styles %></p>
-            <p> City: <%= musician.location %></p>
-            <% if musician.bands.pluck.count == 1 %>
-              <p> In this band: <%= musician.bands.pluck(:name).join("") %></p>
-            <% else %>
-              <p>In these bands: <%= musician.bands.pluck(:name).join(", ") %></p>
-            <% end %>
-            <p><%= musician.bio %></p>
-          </div>
+      <% if @musicians.any? %>
+        <% @musicians.each do |musician| %>
+          <div class="musician-card card m-1 border-3 border-white p-2">
+            <%= link_to musician_path(musician), class: "text-light text-decoration-none" do %>
+              <% if musician.photo.attached? %>
+                <%= cl_image_tag(musician.photo.key, class: "w-25") %>
+              <% else %>
+                <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
+              <% end %>
+              <p><%= musician.name %> </p>
+              <p><%= musician.instrument %></p>
+              <p> Styles: <%= musician.styles %></p>
+              <p> City: <%= musician.location %></p>
+              <% if musician.bands.pluck.count == 1 %>
+                <p> In this band: <%= musician.bands.pluck(:name).join("") %></p>
+              <% else %>
+                <p>In these bands: <%= musician.bands.pluck(:name).join(", ") %></p>
+              <% end %>
+              <p><%= musician.bio %></p>
+            </div>
+          <% end %>
         <% end %>
+      <% else %>
+        <em>Sorry, no musicians found.</em>
       <% end %>
     </div>
   </div>
