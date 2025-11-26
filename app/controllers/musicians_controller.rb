@@ -15,6 +15,15 @@ class MusiciansController < ApplicationController
     if params[:query].present?
       @musicians = @musicians.search_by_all(params[:query])
     end
+
+    if params[:instrument].present?
+      @musicians = @musicians.where(instrument: params[:instrument])
+    end
+
+    if params[:location].present?
+      @musicians = @musicians.where(location: params[:location])
+    end
+
   end
 
   def show
