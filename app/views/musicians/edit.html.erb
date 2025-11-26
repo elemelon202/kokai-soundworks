@@ -1,3 +1,18 @@
+<% if @band_invitation.present? %>
+  <p>
+    You have been invited to join <strong><%= @band_invitation.band.name %></strong>!<br>
+
+    <%= link_to "Accept",
+      accept_band_invitation_path(@band_invitation.token),
+      class: "btn btn-success" %>
+
+    <%= link_to "Decline",
+      decline_band_invitation_path(@band_invitation.token),
+      class: "btn btn-danger" %>
+  </p>
+<% else %>
+  <p>No pending band invitations.</p>
+<% end %>
 <div class="container mt-3">
   <h1>Edit musician</h1>
   <%= simple_form_for @musician do |f| %>

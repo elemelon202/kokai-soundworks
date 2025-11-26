@@ -14,6 +14,21 @@ Rails.application.routes.draw do
   resources :musicians
   resources :bands do
     resources :involvements, only: [:new, :create]
+    resources :band_invitations, only: [:new, :create, :edit]
+    end
+
+  #These routes can't be nested because they need to be accessed via token only. The routes band_invitations#new and #create are nested because they are used when sending an invite.
+  get 'accept_invitation/:token', to: 'band_invitations#accept', as: 'accept_band_invitation'
+  get 'decline_invitation/:token', to: 'band_invitations#decline', as: 'decline_band_invitation'
+# config/routes.rb
+  resources :band_invitations, only: [] do
+    collection do
+      get :sent
+    end
+    member do
+      patch :accept
+      patch :decline
+    end
   end
   resources :involvements, only: [:edit, :update, :destroy]
   # resources :kanban_tasks do
@@ -30,5 +45,13 @@ Rails.application.routes.draw do
   resources :bookings, only: [:edit, :update]
   resources :chats do
     resources :messages, only: [:create]
+  end
+  resources :direct_messages, only: [:index, :show] do
+    collection do
+      post :create_or_show
+    end
+  end
+   resources :chats, only: [:show] do
+    resources :messages, only: [:create, :destroy]
   end
 end

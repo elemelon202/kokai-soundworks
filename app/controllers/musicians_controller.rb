@@ -32,6 +32,8 @@ class MusiciansController < ApplicationController
     @musician = Musician.find(params[:id])
     # should be able to see bands the musician is in
     @bands = @musician.bands
+
+
     # should have a chat button?
   end
 
@@ -53,6 +55,7 @@ class MusiciansController < ApplicationController
 
 def edit
   authorize @musician
+   @band_invitation = BandInvitation.find_by(musician: current_user.musician, status: "Pending")
 end
 
 def update

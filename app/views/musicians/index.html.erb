@@ -57,6 +57,8 @@
         <% else %>
           <em>Sorry, no musicians found.</em>
         <% end %>
+            <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-secondary" %>
+      <% end %>
       </div>
     </div>
   </turbo-frame>

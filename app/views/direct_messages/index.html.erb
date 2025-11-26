@@ -1,0 +1,93 @@
+<div class="conversations-container">
+  <h1>Your Direct Messages</h1>
+
+  <% if @chats.any? %>
+    <div class="conversations-list">
+      <% @chats.each do |chat| %>
+        <% other_user = chat.other_participant(current_user) %>
+        <div class="conversation-item">
+          <%= link_to direct_message_path(chat), class: "conversation-link" do %>
+            <div class="conversation-info">
+              <strong><%= other_user.username %></strong>
+              <% if other_user.musician %>
+                <span class="badge"><%= other_user.musician.instrument %></span>
+              <% end %>
+              <% last_message = chat.messages.last %>
+              <% if last_message %>
+                <p class="last-message"><%= truncate(last_message.content, length: 50) %></p>
+              <% end %>
+            </div>
+            <% unread = chat.unread_count_for(current_user) %>
+            <% if unread > 0 %>
+              <span class="unread-badge"><%= unread %></span>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p>No conversations yet. Start messaging musicians!</p>
+  <% end %>
+</div>
+
+<style>
+  .conversations-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .conversations-list {
+    margin-top: 20px;
+  }
+
+  .conversation-item {
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    transition: box-shadow 0.2s;
+  }
+
+  .conversation-item:hover {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+
+  .conversation-link {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .conversation-info {
+    flex: 1;
+  }
+
+  .last-message {
+    color: #666;
+    font-size: 0.9em;
+    margin-top: 5px;
+  }
+
+  .badge {
+    background: #e9ecef;
+    padding: 3px 8px;
+    border-radius: 12px;
+    font-size: 0.85em;
+    margin-left: 10px;
+  }
+
+  .unread-badge {
+    background: #dc3545;
+    color: white;
+    padding: 4px 8px;
+    border-radius: 50%;
+    font-size: 0.85em;
+    font-weight: bold;
+    min-width: 24px;
+    text-align: center;
+  }
+</style>
