@@ -36,8 +36,8 @@ class Users::RegistrationsController < Devise::RegistrationsController
 
   def after_sign_up_path_for(resource)
     case resource.user_type
-    when 'band'
-      # Band owner redirects to create their first band
+    when 'band_leader'
+      # Band leader redirects to create their first band
       new_band_path
     when 'venue'
       # Venue owner redirects to create their first venue
