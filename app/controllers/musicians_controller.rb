@@ -45,6 +45,7 @@ end
 
 def update
   authorize @musician
+  @musician = Musician.find(params[:id])
   if @musician.update(musician_params)
     redirect_to musician_path(@musician), notice: 'Your profile has been updated'
   else
@@ -70,7 +71,7 @@ end
   end
 
   def musician_params
-    params.require(:list).permit(:name, :photo)
+    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :photo)
   end
 
 end

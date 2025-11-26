@@ -44,7 +44,7 @@ class Users::RegistrationsController < Devise::RegistrationsController
       venues_path
     when 'musician'
       # Musician redirects to edit their profile (which was just created below)
-      musician_path(resource.musician)
+      edit_musician_path(resource.musician)
     else
       root_path
     end
