@@ -16,20 +16,16 @@ class MessagesController < ApplicationController
         @message.message_reads.create(user: user, read: false)
       end
 
+      # Broadcast to all participants
+      broadcast_message(@message)
+
       respond_to do |format|
         format.turbo_stream do
-          render turbo_stream: [
-            turbo_stream.append(
-              "messages",
-              partial: "messages/message",
-              locals: { message: @message, current_user: current_user }
-            ),
-            turbo_stream.replace(
-              "message_form",
-              partial: "messages/form",
-              locals: { chat: @chat, message: Message.new }
-            )
-          ]
+          render turbo_stream: turbo_stream.replace(
+            "message_form",
+            partial: "messages/form",
+            locals: { chat: @chat, message: Message.new }
+          )
         end
         format.html { redirect_to direct_message_path(@chat) }
       end
@@ -72,5 +68,16 @@ class MessagesController < ApplicationController
 
   def message_params
     params.require(:message).permit(:content)
+  end
+
+  def broadcast_message(message)
+    @chat.users.each do |user|
+      Turbo::StreamsChannel.broadcast_append_to(
+        "chat_#{@chat.id}_user_#{user.id}",
+        target: "messages",
+        partial: "messages/message",
+        locals: { message: message, current_user: user }
+      )
+    end
   end
 end
