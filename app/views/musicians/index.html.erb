@@ -3,6 +3,7 @@
     <!-- Search Field -->
     <div class="mb-3 d-flex gap-2 align-items-center">
       <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control", data: { action: "input->auto-submit#submit" } %>
+      <%= link_to "Clear Filters", musicians_path, class: "btn btn-outline-secondary" %>
       <!-- Instruments Dropdown -->
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
