@@ -42,8 +42,11 @@
           <% @musicians.each do |musician| %>
             <div class="musician-card card m-1 border-3 border-white p-2">
               <%= link_to musician_path(musician), class: "text-light text-decoration-none", data: { turbo: false } do %>
-                <% if musician.photo.attached? %>
-                  <%= cl_image_tag(musician.photo.key, class: "w-25") %>
+                <% if musician.media.attached? %>
+                  <% first_file = musician.media.first %>
+                  <% if first_file.content_type.start_with?("image") %>
+                    <%= cl_image_tag(first_file.key, class: "w-25") %>
+                  <% end %>
                 <% else %>
                   <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
                 <% end %>
@@ -52,13 +55,12 @@
                 <p> Styles: <%= musician.styles %></p>
                 <p> City: <%= musician.location %></p>
               <% end %>
-            <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-secondary", data: { turbo: false } %>
+              <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-secondary", data: { turbo: false } %>
             </div>
           <% end %>
         <% else %>
           <em>Sorry, no musicians found.</em>
         <% end %>
-
       </div>
     </div>
   </turbo-frame>

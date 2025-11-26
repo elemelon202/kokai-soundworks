@@ -32,8 +32,6 @@ class MusiciansController < ApplicationController
     @musician = Musician.find(params[:id])
     # should be able to see bands the musician is in
     @bands = @musician.bands
-
-
     # should have a chat button?
   end
 
@@ -86,7 +84,7 @@ end
   end
 
   def musician_params
-    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :photo)
+    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, media: [])
   end
 
 end

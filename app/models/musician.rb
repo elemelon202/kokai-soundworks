@@ -5,7 +5,7 @@ class Musician < ApplicationRecord
   has_many :involvements, dependent: :destroy
   has_many :bands, through: :involvements
   belongs_to :user
-  has_one_attached :photo
+  has_many_attached :media
 
   validates :name, presence: true
 
