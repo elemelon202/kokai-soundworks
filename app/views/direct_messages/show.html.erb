@@ -1,3 +1,5 @@
+<%= turbo_stream_from "chat_#{@chat.id}_user_#{current_user.id}" %>
+
 <div class="chat-container">
   <div class="chat-header">
     <% other_user = @chat.other_participant(current_user) %>
@@ -60,7 +62,7 @@
 </style>
 
 <script>
-  // Auto-scroll to bottom of messages
+  // Auto-scroll to bottom of messages on page load
   document.addEventListener("DOMContentLoaded", function() {
     const messagesList = document.getElementById("messages");
     if (messagesList) {
@@ -70,11 +72,11 @@
 
   // Auto-scroll when new message is added via Turbo Stream
   document.addEventListener("turbo:before-stream-render", function(event) {
-    const messagesList = document.getElementById("messages");
-    if (messagesList && event.target.getAttribute("action") === "append") {
-      setTimeout(() => {
+    setTimeout(() => {
+      const messagesList = document.getElementById("messages");
+      if (messagesList) {
         messagesList.scrollTop = messagesList.scrollHeight;
-      }, 100);
-    }
+      }
+    }, 100);
   });
 </script>
