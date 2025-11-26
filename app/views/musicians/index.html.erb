@@ -1,9 +1,9 @@
-<div class="content-wrap">
+<div class="container">
   <div class="musicians-section">
     <div class="musician-cards">
       <% @musicians.each do |musician| %>
-        <div class="musician-card card m-1">
-          <%= link_to musician_path(musician), class: "text-dark text-decoration-none" do %>
+        <div class="musician-card card m-1 border-3 border-white p-2">
+          <%= link_to musician_path(musician), class: "text-light text-decoration-none" do %>
             <p><%= musician.name %> </p>
             <p><%= musician.instrument %></p>
             <p> Styles: <%= musician.styles %></p>
@@ -15,8 +15,8 @@
             <% end %>
             <p><%= musician.bio %></p>
           </div>
-        </div>
+        <% end %>
       <% end %>
-    <% end %>
+    </div>
   </div>
 </div>

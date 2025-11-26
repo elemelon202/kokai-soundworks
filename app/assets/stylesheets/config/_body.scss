@@ -1,0 +1,11 @@
+body {
+    // 1. Apply the gradient
+    background: black;
+
+    // 2. Crucial: Makes the background scroll with the content
+    background-attachment: scroll;
+
+    // 3. Fallback color and text color for consistency
+    background-color: #242328;
+    color: #f8f9fa; /* Or use your $body-color variable if this is a .scss file */
+}

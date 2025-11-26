@@ -1,10 +1,12 @@
-<h1>Pages#home</h1>
-<div>
-  <%= link_to "Musicians", musicians_path %>
-</div>
-<div>
-  <%= link_to "Bands", bands_path %>
-</div>
-<div>
-  <%= link_to "Venues", venues_path %>
+<h1>Home</h1>
+<div class="m-3 fs-3">
+  <div class="mb-2">
+    <%= link_to "Musicians", musicians_path, class: "text-white text-decoration-none" %>
+  </div>
+  <div class="mb-2">
+    <%= link_to "Bands", bands_path, class: "text-white text-decoration-none" %>
+  </div>
+  <div class="mb-2">
+    <%= link_to "Venues", venues_path, class: "text-white text-decoration-none" %>
+  </div>
 </div>
