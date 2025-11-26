@@ -53,6 +53,8 @@ class BandsController < ApplicationController
     msg_read.update(read: true) if msg_read
     end
     @band_invitation = BandInvitation.new
+    @pending_invitations = policy_scope(BandInvitation).pending.sent_by(current_user)
+
   end
   def update
     authorize @band #* Tyrhen was here

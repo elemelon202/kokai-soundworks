@@ -1,0 +1,14 @@
+<h2>Pending Invitations You've Sent</h2>
+<% if pending_invitations&.any? %>
+  <ul>
+    <% pending_invitations.each do |invitation| %>
+      <li>
+        <%= invitation.musician.name %> -
+        <%= invitation.band.name %> -
+        <%= invitation.status %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No pending invitations.</p>
+<% end %>

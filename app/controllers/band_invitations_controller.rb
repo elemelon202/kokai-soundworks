@@ -5,6 +5,8 @@ class BandInvitationsController < ApplicationController
 
   before_action :set_band_invitation_by_token, only: [:accept, :decline]
   before_action :set_band, only: [:new, :create]
+  before_action :fetch_pending_invitations, only: [:sent, :edit]
+
   respond_to :html, :turbo_stream
 
 
@@ -24,6 +26,7 @@ def create
 
   respond_to do |format|
     if @band_invitation.save
+      @pending_invitations = policy_scope(BandInvitation).pending.sent_by(current_user)
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace(
@@ -35,6 +38,11 @@ def create
             "flash_messages",
             partial: "shared/flash",
             locals: { notice: "Invitation sent successfully.", alert: nil }
+          ),
+          turbo_stream.replace(
+            "pending_invitations_list",
+            partial: "bands/pending_invitations",
+            locals: { pending_invitations: @pending_invitations }
           )
         ]
       end
@@ -74,6 +82,9 @@ end
     redirect_to band_path(@band_invitation.band), notice: "Invitation declined."
   end
 
+  def sent
+    authorize BandInvitation
+  end
 
 
   def band_invitation_params
@@ -90,4 +101,5 @@ end
   def set_band
     @band = Band.find(params[:band_id])
   end
+
 end

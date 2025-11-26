@@ -1,4 +1,10 @@
 class BandInvitationPolicy < ApplicationPolicy
+  class Scope < Scope
+    def resolve
+      scope.all  # or filter based on user if needed
+    end
+  end
+
   def create?
     user_is_inviter?
   end

@@ -7,6 +7,11 @@ class BandInvitation < ApplicationRecord
 
   before_create :generate_token
 
+  scope :pending, -> { where(status: 'Pending') }
+  scope :accepted, -> { where(status: 'Accepted') }
+  scope :declined, -> { where(status: 'Declined') }
+  scope :sent_by, ->(user) { where(inviter: user) }
+
   private
   def generate_token
     self.token = SecureRandom.hex(20)
