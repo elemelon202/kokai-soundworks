@@ -1,3 +1,8 @@
+<% if @musician.photo.attached? %>
+  <%= cl_image_tag(@musician.photo.key, class: "w-25") %>
+<% else %>
+  <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
+<% end %>
 <h1><%= @musician.name %></h1>
 <p>Role: <%= @musician.instrument %></p>
 <p>Age: <%= @musician.age %></p>

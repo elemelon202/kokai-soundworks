@@ -1,23 +1,65 @@
 <div class="container">
-  <div class="musicians-section">
-    <div class="musician-cards">
-      <% @musicians.each do |musician| %>
-        <div class="musician-card card m-1 border-3 border-white p-2">
-          <%= link_to musician_path(musician), class: "text-light text-decoration-none" do %>
-            <p><%= musician.name %> </p>
-            <p><%= musician.instrument %></p>
-            <p> Styles: <%= musician.styles %></p>
-            <p> City: <%= musician.location %></p>
-            <% if musician.bands.pluck.count == 1 %>
-              <p> In this band: <%= musician.bands.pluck(:name).join("") %></p>
-            <% else %>
-              <p>In these bands: <%= musician.bands.pluck(:name).join(", ") %></p>
-            <% end %>
-            <p><%= musician.bio %></p>
-          </div>
+  <%= form_with url: musicians_path, method: :get, data: { turbo_frame: "musicians_list" }, class: "filters-form" do %>
+    <!-- Search Field -->
+    <div class="mb-3 d-flex gap-2 align-items-center">
+      <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control", data: { action: "input->auto-submit#submit" } %>
+      <%= link_to "Clear Filters", musicians_path, class: "btn btn-outline-secondary" %>
+      <!-- Instruments Dropdown -->
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Instruments
+        </button>
+        <div class="dropdown-menu p-3" style="min-width: 200px;" data-controller="auto-submit">
+          <% Musician.distinct.order(:instrument).pluck(:instrument).each do |instrument| %>
+            <div class="form-check">
+              <%= check_box_tag "instrument[]", instrument, params[:instrument]&.include?(instrument), id: "instrument_#{instrument.parameterize}", class: "form-check-input", data: { action: "change->auto-submit#submit" } %>
+              <%= label_tag "instrument_#{instrument.parameterize}", instrument, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <!-- Locations Dropdown -->
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
+          Locations
+        </button>
+        <div class="dropdown-menu p-3" style="min-width: 200px;" data-controller="auto-submit">
+          <% Musician.distinct.order(:location).pluck(:location).each do |location| %>
+            <div class="form-check">
+              <%= check_box_tag "location[]", location, params[:location]&.include?(location), id: "location_#{location.parameterize}", class: "form-check-input", data: { action: "change->auto-submit#submit" } %>
+              <%= label_tag "location_#{location.parameterize}", location, class: "form-check-label" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <!-- Musicians list -->
+  <turbo-frame id="musicians_list">
+    <div class="musicians-section">
+      <div class="musician-cards">
+        <% if @musicians.any? %>
+          <% @musicians.each do |musician| %>
+            <div class="musician-card card m-1 border-3 border-white p-2">
+              <%= link_to musician_path(musician), class: "text-light text-decoration-none", data: { turbo: false } do %>
+                <% if musician.photo.attached? %>
+                  <%= cl_image_tag(musician.photo.key, class: "w-25") %>
+                <% else %>
+                  <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
+                <% end %>
+                <p><%= musician.name %></p>
+                <p><%= musician.instrument %></p>
+                <p> Styles: <%= musician.styles %></p>
+                <p> City: <%= musician.location %></p>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <em>Sorry, no musicians found.</em>
         <% end %>
             <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-secondary" %>
       <% end %>
+      </div>
     </div>
-  </div>
+  </turbo-frame>
 </div>

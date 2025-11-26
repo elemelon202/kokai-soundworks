@@ -4,14 +4,26 @@ class MusiciansController < ApplicationController
   before_action :set_musician, only: [:show, :edit, :update, :destroy]
 
   def index
-    # @musicians = Musician.all
+    @musicians = policy_scope(Musician)
     # see all musicians
     # singular musician
     # get that musicians bands / can do that with iteration
     #maybe have band name in card
     # Musician.new for create a profile button
 
-    @musicians = policy_scope(Musician)
+    # for searching on the musicians index page -- kyle
+    if params[:query].present?
+      @musicians = @musicians.search_by_all(params[:query])
+    end
+
+    if params[:instrument].present?
+      @musicians = @musicians.where(instrument: params[:instrument])
+    end
+
+    if params[:location].present?
+      @musicians = @musicians.where(location: params[:location])
+    end
+
   end
 
   def show
@@ -48,6 +60,7 @@ end
 
 def update
   authorize @musician
+  @musician = Musician.find(params[:id])
   if @musician.update(musician_params)
     redirect_to musician_path(@musician), notice: 'Your profile has been updated'
   else
@@ -73,7 +86,7 @@ end
   end
 
   def musician_params
-    params.require(:list).permit(:name, :photo)
+    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :photo)
   end
 
 end
