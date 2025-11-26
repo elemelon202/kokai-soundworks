@@ -41,7 +41,7 @@
         <% if @musicians.any? %>
           <% @musicians.each do |musician| %>
             <div class="musician-card card m-1 border-3 border-white p-2">
-              <%= link_to musician_path(musician), class: "text-light text-decoration-none" do %>
+              <%= link_to musician_path(musician), class: "text-light text-decoration-none", data: { turbo: false } do %>
                 <% if musician.photo.attached? %>
                   <%= cl_image_tag(musician.photo.key, class: "w-25") %>
                 <% else %>
