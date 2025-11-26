@@ -2,6 +2,18 @@
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   grid-gap: 16px;
+
+}
+.card {
+  background-color: #373535;           /* light background */
+  border: 1px solid rgba(219, 239, 0, 0.928);      /* dark border */
+  box-shadow: 0 4px 6px rgba(0,0,0,0.1);   /* dark shadow */
+  color: #ffffff;                      /* text color */
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 12px rgba(0,0,0,0.2);
 }
 .dark-card {
   background-color: #1c1c1e;       /* dark background */

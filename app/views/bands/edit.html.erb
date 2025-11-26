@@ -21,9 +21,26 @@
     <h2>Unread Messages</h2>
     <%= @unread_messages.count %>
   </div>
-  <div class="band-chat-container">
-   <%= render 'chat', band: @band %>
-   </div>
+  <div class="card invites border-solid border-2 border-yellow-300 p-4 mb-4">
+    <div class="band-chat-container">
+     <%= render 'chat', band: @band %>
+     </div>
+
+
+ <div id="flash_messages">
+  <%= render partial: "shared/flash", locals: { notice: flash[:notice], alert: flash[:alert] } %>
+</div>
+
+<!-- Invite form -->
+<turbo-frame id="band_invitation_form">
+  <%= render partial: "bands/invite", locals: { band: @band, invitation: @band_invitation } %>
+</turbo-frame>
+
+<!-- Pending Invitations List -->
+<div id="pending_invitations_list">
+  <%= render partial: "bands/pending_invitations", locals: { pending_invitations: @pending_invitations } %>
+</div>
+
    <div class="gig-applications">
     <h2>Gig Applications</h2>
     <div class="applications-list">

@@ -4,6 +4,7 @@ class Band < ApplicationRecord
   has_many :gigs, through: :bookings
   has_many :involvements, dependent: :destroy
   has_many :musicians, through: :involvements
+  has_many :band_invitations, dependent: :destroy
 
   has_one :chat, dependent: :destroy
   has_many :messages, through: :chat
