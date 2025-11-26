@@ -24,6 +24,20 @@
   <div class="band-chat-container">
    <%= render 'chat', band: @band %>
    </div>
+
+
+<div id="flash_messages">
+  <%= render partial: "shared/flash", locals: { notice: flash[:notice], alert: flash[:alert] } %>
+</div>
+
+<!-- Invite form -->
+<turbo-frame id="band_invitation_form">
+  <%= render partial: "bands/invite", locals: { band: @band, invitation: @band_invitation || BandInvitation.new } %>
+</turbo-frame>
+
+
+
+
    <div class="gig-applications">
     <h2>Gig Applications</h2>
     <div class="applications-list">

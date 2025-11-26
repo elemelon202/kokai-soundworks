@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_25_082212) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_26_011942) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -50,6 +50,18 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_25_082212) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["message_id"], name: "index_attachments_on_message_id"
+  end
+
+  create_table "band_invitations", force: :cascade do |t|
+    t.bigint "band_id", null: false
+    t.bigint "musician_id", null: false
+    t.integer "inviter_id"
+    t.string "status"
+    t.string "token"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["band_id"], name: "index_band_invitations_on_band_id"
+    t.index ["musician_id"], name: "index_band_invitations_on_musician_id"
   end
 
   create_table "bands", force: :cascade do |t|
@@ -220,6 +232,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_25_082212) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "attachments", "messages"
+  add_foreign_key "band_invitations", "bands"
+  add_foreign_key "band_invitations", "musicians"
   add_foreign_key "bands", "users"
   add_foreign_key "bookings", "bands"
   add_foreign_key "bookings", "gigs"

@@ -52,6 +52,7 @@ class BandsController < ApplicationController
     msg_read = msg.message_reads.find_by(user: current_user)
     msg_read.update(read: true) if msg_read
     end
+    @band_invitation = BandInvitation.new
   end
   def update
     authorize @band #* Tyrhen was here
