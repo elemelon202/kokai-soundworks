@@ -25,4 +25,18 @@ class User < ApplicationRecord
     user_type == "band_leader"
   end
 
+  def direct_message_chats
+    chats.direct_messages.includes(:messages, :users)
+  end
+
+  def unread_dm_count
+    MessageRead.joins(:message)
+      .where(user_id: id, read: false)
+      .where(messages: { chat_id: chats.direct_messages.pluck(:id) })
+      .count
+  end
+
+  def chat_with(other_user)
+    Chat.between(self, other_user)
+  end
 end

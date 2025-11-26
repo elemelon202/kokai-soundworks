@@ -1,0 +1,70 @@
+<%= form_with model: [chat, message], id: "message_form", data: { turbo: true } do |f| %>
+  <% if message.errors.any? %>
+    <div class="errors">
+      <%= pluralize(message.errors.count, "error") %>:
+      <ul>
+        <% message.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="message-input-group">
+    <%= f.text_area :content, placeholder: "Type your message...", rows: 3, class: "message-input" %>
+    <%= f.submit "Send", class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<style>
+  #message_form {
+    padding: 15px;
+    background: #f5f5f5;
+    border-top: 1px solid #ddd;
+  }
+
+  .message-input-group {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+  }
+
+  .message-input {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    resize: vertical;
+  }
+
+  .btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    white-space: nowrap;
+  }
+
+  .btn-primary {
+    background: #007bff;
+    color: white;
+  }
+
+  .btn-primary:hover {
+    background: #0056b3;
+  }
+
+  .errors {
+    background: #f8d7da;
+    color: #721c24;
+    padding: 10px;
+    border-radius: 4px;
+    margin-bottom: 10px;
+  }
+
+  .errors ul {
+    margin: 5px 0 0 20px;
+  }
+</style>

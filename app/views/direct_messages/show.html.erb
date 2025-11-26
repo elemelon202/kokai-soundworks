@@ -1,0 +1,49 @@
+<div class="chat-container">
+  <div class="chat-header">
+    <h1>Chat with <%= @chat.other_participant(current_user).username %></h1>
+    <%= link_to "Back to Messages", direct_messages_path, class: "btn btn-secondary" %>
+  </div>
+
+  <div class="messages-wrapper">
+    <div id="messages" class="messages-list">
+      <% @messages.each do |message| %>
+        <%= render partial: "messages/message", locals: { message: message, current_user: current_user } %>
+      <% end %>
+    </div>
+
+    <div id="message_form">
+      <%= render partial: "messages/form", locals: { chat: @chat, message: @message } %>
+    </div>
+  </div>
+</div>
+
+<style>
+  .chat-container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  .chat-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #e0e0e0;
+  }
+
+  .messages-wrapper {
+    background: #f9f9f9;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .messages-list {
+    min-height: 400px;
+    max-height: 600px;
+    overflow-y: auto;
+    padding: 20px;
+    background: white;
+  }
+</style>

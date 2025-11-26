@@ -1,0 +1,65 @@
+<div class="message <%= message.user == current_user ? 'sent' : 'received' %>" id="<%= dom_id(message) %>">
+  <div class="message-header">
+    <strong><%= message.user.username %></strong>
+    <span class="message-time"><%= message.created_at.strftime("%b %d, %I:%M %p") %></span>
+  </div>
+  <div class="message-content">
+    <%= message.content %>
+  </div>
+</div>
+
+<style>
+  .message {
+    margin-bottom: 15px;
+    padding: 12px;
+    border-radius: 8px;
+    max-width: 70%;
+    word-wrap: break-word;
+  }
+
+  .message.sent {
+    background: #007bff;
+    color: white;
+    margin-left: auto;
+    text-align: right;
+  }
+
+  .message.received {
+    background: #e9ecef;
+    color: #333;
+    margin-right: auto;
+  }
+
+  .message-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 5px;
+    font-size: 0.85em;
+  }
+
+  .message.sent .message-header {
+    flex-direction: row-reverse;
+  }
+
+  .message-time {
+    opacity: 0.7;
+    font-size: 0.9em;
+  }
+
+  .message-content {
+    word-wrap: break-word;
+    line-height: 1.4;
+  }
+</style>
+```
+
+Make sure the directory structure is correct:
+```
+app/
+  views/
+    messages/
+      _message.html.erb
+      _form.html.erb
+    direct_messages/
+      index.html.erb
+      show.html.erb
