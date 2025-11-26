@@ -1,11 +1,9 @@
 <% if @band_invitation.present? %>
   <p>
     You have been invited to join <strong><%= @band_invitation.band.name %></strong>!<br>
-
     <%= link_to "Accept",
       accept_band_invitation_path(@band_invitation.token),
       class: "btn btn-success" %>
-
     <%= link_to "Decline",
       decline_band_invitation_path(@band_invitation.token),
       class: "btn btn-danger" %>
@@ -21,7 +19,7 @@
     <%= f.input :age %>
     <%= f.input :styles %>
     <%= f.input :location %>
-    <%= f.input :photo, as: :file %>
+    <%= f.input :media, as: :file, input_html: { multiple: true, accept: "image/*,video/*", direct_upload: true } %>
     <%= f.submit class: 'btn btn-primary' %>
   <% end %>
   <%= link_to "Back to list", musician_path(@musician) %>

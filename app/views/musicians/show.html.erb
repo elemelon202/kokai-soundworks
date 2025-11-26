@@ -1,13 +1,19 @@
-<% if @musician.photo.attached? %>
-  <%= cl_image_tag(@musician.photo.key, class: "w-25") %>
+<% if @musician.media.attached? %>
+  <% first_file = @musician.media.first %>
+  <% if first_file.content_type.start_with?("image") %>
+    <%= cl_image_tag(first_file.key, class: "w-25") %>
+  <% end %>
 <% else %>
   <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
 <% end %>
 <h1><%= @musician.name %></h1>
+<%= link_to "Edit profile", edit_musician_path  %>
+<%= link_to "Back to musicians", musicians_path %>
 <p>Role: <%= @musician.instrument %></p>
 <p>Age: <%= @musician.age %></p>
 <p>Styles: <%= @musician.styles %></p>
 <p>Location: <%= @musician.location %></p>
+<p>Bio: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Delectus voluptates iusto aut ducimus vero perspiciatis rem maxime eligendi qui ipsum, voluptatibus quibusdam iure quae atque, dolorem, praesentium blanditiis commodi. Dicta!</p>
 <% if @musician.bands.count == 1 %>
   <p><%= @musician.name %> is in <%= @musician.bands.count %> band: </p>
 <% else %>
@@ -18,3 +24,31 @@
     <li><%= band.name %></li>
   </ul>
 <% end %>
+<!-- Showcase carousel -->
+<div class="container mb-3">
+  <% if @musician.media.attached? %>
+    <div id="musicianCarousel" class="carousel slide w-50 mx-auto" data-bs-ride="carousel">
+      <div class="carousel-inner">
+        <% @musician.media.each_with_index do |file, index| %>
+          <div class="carousel-item <%= 'active' if index == 0 %> text-center">
+            <% if file.content_type.start_with?('image') %>
+              <%= cl_image_tag(file.key, class: "d-block w-100") %>
+            <% elsif file.content_type.start_with?('video') %>
+              <video class="d-block w-100" controls>
+                <source src="<%= url_for(file) %>" type="<%= file.content_type %>">
+              </video>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <button class="carousel-control-prev" type="button" data-bs-target="#musicianCarousel" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon"></span>
+      </button>
+      <button class="carousel-control-next" type="button" data-bs-target="#musicianCarousel" data-bs-slide="next">
+        <span class="carousel-control-next-icon"></span>
+      </button>
+    </div>
+  <% else %>
+    <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
+  <% end %>
+</div>
