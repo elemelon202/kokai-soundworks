@@ -1,5 +1,8 @@
 class Musician < ApplicationRecord
-  belongs_to :user
-  has_many :bands, through: :involvements
+  # involvements has to come first
   has_many :involvements, dependent: :destroy
+  has_many :bands, through: :involvements
+  belongs_to :user
+
+  validates :name, presence: true
 end

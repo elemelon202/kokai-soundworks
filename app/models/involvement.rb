@@ -2,6 +2,7 @@ class Involvement < ApplicationRecord
   belongs_to :band
   belongs_to :musician
 
+  validates :musician_id, uniqueness: {scope: :band_id, message: "is already in this band"}
   after_create :add_user_to_band_chat
 
   private

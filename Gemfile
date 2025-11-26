@@ -74,7 +74,8 @@ group :test do
   gem "selenium-webdriver"
 end
 
-
+# manually added gems
 gem 'ostruct'
 gem 'acts-as-taggable-on'
 gem 'cloudinary'
+gem 'pundit'

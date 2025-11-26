@@ -1,9 +1,11 @@
 <h2>Sign up</h2>
-
 <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
   <%= f.error_notification %>
-
   <div class="form-inputs">
+    <%= f.input :username,
+                required: true,
+                autofocus: true,
+                input_html: {autocomplete: "username"} %>
     <%= f.input :email,
                 required: true,
                 autofocus: true,
@@ -16,10 +18,21 @@
                 required: true,
                 input_html: { autocomplete: "new-password" } %>
   </div>
-
+  <div class="form-group mb-3">
+    <%= f.input :user_type,
+    as: :select,
+    required: true,
+    collection: [
+      ['Musician (Looking to join/start a band)', 'musician' ],
+      ['Band Owner (Manager/admin for a band)', 'band' ],
+      ['Venue Owner (Booking agent/manager for a venue looking for bands)', 'venue' ]
+    ],
+    label: 'I am signing up as a:',
+    prompt: 'Select your primary role',
+    input_html: {class: 'form-select' } %>
+  </div>
   <div class="form-actions">
     <%= f.button :submit, "Sign up" %>
   </div>
 <% end %>
-
 <%= render "devise/shared/links" %>
