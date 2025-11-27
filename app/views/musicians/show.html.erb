@@ -7,8 +7,16 @@
   <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
 <% end %>
 <h1><%= @musician.name %></h1>
-<%= link_to "Edit profile", edit_musician_path  %>
 <%= link_to "Back to musicians", musicians_path %>
+<% if @musician.user == current_user %>
+  <%= link_to "Edit profile", edit_musician_path(@musician), class: "btn btn-outline-primary mb-3" %>
+<% else %>
+  <%= button_to "Message",
+      create_or_show_direct_messages_path(recipient_id: @musician.user_id),
+      method: :post,
+      class: "btn btn-secondary mb-3",
+      data: { turbo: false } %>
+<% end %>
 <p>Role: <%= @musician.instrument %></p>
 <p>Age: <%= @musician.age %></p>
 <p>Styles: <%= @musician.styles %></p>
