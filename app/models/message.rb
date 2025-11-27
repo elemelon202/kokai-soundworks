@@ -11,7 +11,7 @@ class Message < ApplicationRecord
 
   def create_message_reads
     # Create a MessageRead record for each user in the chat except the sender
-    chat.users.each do |participant|
+    chat.users.where.not(id: user_id).each do |participant|
       MessageRead.create(message: self, user: participant, read: false)
     end
   end

@@ -15,9 +15,24 @@ class MessagePolicy < ApplicationPolicy
     user_is_participant?
   end
 
+  # Only the message author can delete
+  def destroy?
+    user.present? && record.user == user
+  end
+
   private
 
   def user_is_participant?
-    record.chat.participations.exists?(user: user)
+    chat = record.chat
+    # Check direct participation (for DMs)
+    return true if chat.participations.exists?(user: user)
+
+    # Check band membership (for band chats)
+    if chat.band.present?
+      return true if chat.band.user_id == user.id # Band owner
+      return true if user.musician && chat.band.musicians.include?(user.musician)
+    end
+
+    false
   end
 end

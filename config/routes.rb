@@ -47,7 +47,7 @@ Rails.application.routes.draw do
   resources :chats do
     resources :messages, only: [:create]
   end
-  resources :direct_messages, only: [:index, :show] do
+  resources :direct_messages, only: [:index, :show, :destroy] do
     collection do
       post :create_or_show
     end

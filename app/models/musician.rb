@@ -18,4 +18,14 @@ class Musician < ApplicationRecord
   using: {
     tsearch: { prefix: true }
   }
+
+  # Returns bands where this musician is the leader (band creator)
+  def led_bands
+    bands.where(user_id: user_id)
+  end
+
+  # Check if musician is a leader of any band
+  def band_leader?
+    led_bands.exists?
+  end
 end

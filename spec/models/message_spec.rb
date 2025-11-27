@@ -16,10 +16,10 @@ RSpec.describe Message, type: :model do
       let(:user3) { create(:user) }
       let(:chat) { create(:chat, :direct_message, :with_participants, participants: [user1, user2, user3]) }
 
-      it 'creates message_read records for all chat participants' do
+      it 'creates message_read records for all chat participants except sender' do
         expect {
           create(:message, chat: chat, user: user1)
-        }.to change(MessageRead, :count).by(3)
+        }.to change(MessageRead, :count).by(2)
       end
 
       it 'creates unread message_read records' do
@@ -27,10 +27,11 @@ RSpec.describe Message, type: :model do
         expect(message.message_reads.pluck(:read)).to all(be false)
       end
 
-      it 'includes all participants in message_reads' do
+      it 'includes all participants except sender in message_reads' do
         message = create(:message, chat: chat, user: user1)
         reader_ids = message.message_reads.pluck(:user_id)
-        expect(reader_ids).to include(user1.id, user2.id, user3.id)
+        expect(reader_ids).to include(user2.id, user3.id)
+        expect(reader_ids).not_to include(user1.id)
       end
     end
   end

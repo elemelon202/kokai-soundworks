@@ -18,6 +18,7 @@ class BandPolicy < ApplicationPolicy
   end
 
   def edit?
+    return false unless user.present?
     user_is_owner? || user_is_member?
   end
 
@@ -26,6 +27,7 @@ class BandPolicy < ApplicationPolicy
   end
 
   def destroy?
+    return false unless user.present?
     user_is_owner?
   end
 

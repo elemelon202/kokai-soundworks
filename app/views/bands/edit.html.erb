@@ -37,7 +37,7 @@
 </turbo-frame>
 
 <!-- Pending Invitations List -->
-<div id="pending_invitations_list">
+<div id="pending_invitations_list" data-band-id="<%= @band.id %>">
   <%= render partial: "bands/pending_invitations", locals: { pending_invitations: @pending_invitations } %>
 </div>
 

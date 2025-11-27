@@ -20,8 +20,25 @@ class MusicianPolicy < ApplicationPolicy
     true
   end
 
+  def new?
+    user.present?
+  end
+
+  def create?
+    user.present?
+  end
+
   def update?
     # so that users can only edit their OWN musician profile
+    return false unless user.present?
     user.musician == record
+  end
+
+  def edit?
+    update?
+  end
+
+  def destroy?
+    update?
   end
 end

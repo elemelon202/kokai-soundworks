@@ -21,12 +21,11 @@ class VenuePolicy < ApplicationPolicy
   end
 
   def new?
-    create?
-    user.present? && user.user_type == 'venue'
+    user.present?
   end
 
-  def create
-    new?
+  def create?
+    user.present?
   end
 
   def edit?
@@ -38,9 +37,8 @@ class VenuePolicy < ApplicationPolicy
     edit?
   end
 
-  def delete?
+  def destroy?
     # only owner of venue can delete it
     user.present? && user == record.user
   end
-
 end

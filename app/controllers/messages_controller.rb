@@ -20,6 +20,15 @@ class MessagesController < ApplicationController
       broadcast_message(@message)
 
       respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            html: ApplicationController.render(
+              partial: "messages/message",
+              locals: { message: @message, current_user: current_user }
+            )
+          }
+        end
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
             "message_form",
@@ -31,6 +40,7 @@ class MessagesController < ApplicationController
       end
     else
       respond_to do |format|
+        format.json { render json: { success: false, errors: @message.errors.full_messages }, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
             "message_form",
@@ -71,13 +81,28 @@ class MessagesController < ApplicationController
   end
 
   def broadcast_message(message)
-    @chat.users.each do |user|
-      Turbo::StreamsChannel.broadcast_append_to(
-        "chat_#{@chat.id}_user_#{user.id}",
-        target: "messages",
-        partial: "messages/message",
-        locals: { message: message, current_user: user }
+    if @chat.band.present?
+      # Broadcast to band chat channel
+      ActionCable.server.broadcast(
+        "band_chat_#{@chat.id}",
+        {
+          html: ApplicationController.render(
+            partial: "messages/message",
+            locals: { message: message, current_user: nil }
+          ),
+          sender_id: message.user_id
+        }
       )
+    else
+      # Direct message - broadcast to each user's stream
+      @chat.users.each do |user|
+        Turbo::StreamsChannel.broadcast_append_to(
+          "chat_#{@chat.id}_user_#{user.id}",
+          target: "messages",
+          partial: "messages/message",
+          locals: { message: message, current_user: user }
+        )
+      end
     end
   end
 end

@@ -21,12 +21,11 @@
     background: #007bff;
     color: white;
     margin-left: auto;
-    text-align: right;
   }
 
   .message.received {
     background: #e9ecef;
-    color: #333;
+    color: #000;
     margin-right: auto;
   }
 
@@ -38,7 +37,11 @@
   }
 
   .message.sent .message-header {
-    flex-direction: row-reverse;
+    color: rgba(255, 255, 255, 0.9);
+  }
+
+  .message.received .message-header {
+    color: #333;
   }
 
   .message-time {
@@ -49,17 +52,6 @@
   .message-content {
     word-wrap: break-word;
     line-height: 1.4;
+    color: inherit;
   }
 </style>
-```
-
-Make sure the directory structure is correct:
-```
-app/
-  views/
-    messages/
-      _message.html.erb
-      _form.html.erb
-    direct_messages/
-      index.html.erb
-      show.html.erb

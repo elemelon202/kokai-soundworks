@@ -1,0 +1,71 @@
+<div class="dm-sidebar">
+  <div class="sidebar-header">
+    <h3>Messages</h3>
+    <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newChatModal">
+      + New
+    </button>
+  </div>
+
+  <div class="conversations-list">
+    <% @chats.each do |chat| %>
+      <% other_user = chat.other_participant(current_user) %>
+      <% next unless other_user %>
+      <div class="conversation-item <%= 'active' if @chat&.id == chat.id %>">
+        <%= link_to direct_message_path(chat), class: "conversation-link" do %>
+          <div class="conversation-info">
+            <strong><%= other_user.username %></strong>
+            <% if other_user.musician %>
+              <span class="badge bg-secondary"><%= other_user.musician.instrument %></span>
+            <% end %>
+            <% last_message = chat.messages.last %>
+            <% if last_message %>
+              <p class="last-message"><%= truncate(last_message.content, length: 30) %></p>
+            <% end %>
+          </div>
+          <div class="conversation-meta">
+            <% unread = chat.unread_count_for(current_user) %>
+            <% if unread > 0 %>
+              <span class="unread-badge"><%= unread %></span>
+            <% end %>
+          </div>
+        <% end %>
+        <%= button_to direct_message_path(chat), method: :delete, class: "delete-chat-btn", data: { turbo_confirm: "Delete this conversation?" } do %>
+          <span>&times;</span>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @chats.empty? %>
+      <p class="no-chats">No conversations yet</p>
+    <% end %>
+  </div>
+</div>
+
+<!-- New Chat Modal -->
+<div class="modal fade" id="newChatModal" tabindex="-1" aria-labelledby="newChatModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="newChatModalLabel">Start a New Conversation</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>Select a musician to message:</p>
+        <div class="musician-list">
+          <% @musicians.each do |musician| %>
+            <% next if musician.user_id == current_user.id %>
+            <%= link_to create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "musician-option", data: { turbo_method: :post } do %>
+              <div class="musician-info">
+                <strong><%= musician.name %></strong>
+                <span class="text-muted"><%= musician.instrument %></span>
+              </div>
+              <% if musician.location.present? %>
+                <small class="text-muted"><%= musician.location %></small>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
