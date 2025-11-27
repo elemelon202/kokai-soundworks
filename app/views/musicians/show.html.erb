@@ -1,54 +1,162 @@
-<% if @musician.media.attached? %>
-  <% first_file = @musician.media.first %>
-  <% if first_file.content_type.start_with?("image") %>
-    <%= cl_image_tag(first_file.key, class: "w-25") %>
-  <% end %>
-<% else %>
-  <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
-<% end %>
-<h1><%= @musician.name %></h1>
-<%= link_to "Edit profile", edit_musician_path  %>
-<%= link_to "Back to musicians", musicians_path %>
-<p>Role: <%= @musician.instrument %></p>
-<p>Age: <%= @musician.age %></p>
-<p>Styles: <%= @musician.styles %></p>
-<p>Location: <%= @musician.location %></p>
-<p>Bio: Lorem ipsum dolor sit, amet consectetur adipisicing elit. Delectus voluptates iusto aut ducimus vero perspiciatis rem maxime eligendi qui ipsum, voluptatibus quibusdam iure quae atque, dolorem, praesentium blanditiis commodi. Dicta!</p>
-<% if @musician.bands.count == 1 %>
-  <p><%= @musician.name %> is in <%= @musician.bands.count %> band: </p>
-<% else %>
-  <p><%= @musician.name%> is in <%=@musician.bands.count %> bands: </p>
-<% end %>
-<% @musician.bands.each do |band| %>
-  <ul>
-    <li><%= band.name %></li>
-  </ul>
-<% end %>
-<!-- Showcase carousel -->
-<div class="container mb-3">
-  <% if @musician.media.attached? %>
-    <div id="musicianCarousel" class="carousel slide w-50 mx-auto" data-bs-ride="carousel">
-      <div class="carousel-inner">
-        <% @musician.media.each_with_index do |file, index| %>
-          <div class="carousel-item <%= 'active' if index == 0 %> text-center">
-            <% if file.content_type.start_with?('image') %>
-              <%= cl_image_tag(file.key, class: "d-block w-100") %>
-            <% elsif file.content_type.start_with?('video') %>
-              <video class="d-block w-100" controls>
-                <source src="<%= url_for(file) %>" type="<%= file.content_type %>">
-              </video>
-            <% end %>
-          </div>
+<div class="musician-show-page">
+  <%# ----- PROFILE HEADER ----- %>
+  <div class="profile-header">
+    <div class="profile-header-left">
+      <div class="profile-avatar">
+        <%= @musician.name.split.map(&:first).join.upcase[0..1] %>
+      </div>
+      <div class="profile-info">
+        <h1 class="profile-name"><%= @musician.name %></h1>
+        <div class="profile-meta">
+          <span class="profile-badge"><%= @musician.styles&.split(',')&.first || 'Musician' %></span>
+          <span class="profile-location"><i class="fa-solid fa-location-dot"></i> <%= @musician.location %></span>
+        </div>
+        <div class="profile-stats-inline">
+          <span>Age: <strong><%= @musician.age %></strong></span>
+          <span>Active Bands: <strong><%= @musician.bands.count %></strong></span>
+        </div>
+      </div>
+    </div>
+    <div class="profile-header-right">
+      <button class="btn-icon"><i class="fa-solid fa-share-nodes"></i></button>
+      <% if current_user.id == @musician.user_id %>
+        <%= link_to edit_musician_path(@musician), class: "btn-edit-profile" do %>
+          <i class="fa-solid fa-pen"></i> Edit Profile
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+  <%# ----- MUSICIAN BANNER ----- %>
+  <div class="musician-banner">
+    <% if @musician.media.attached? %>
+      <% first_image = @musician.media.find { |m| m.content_type.start_with?("image") } %>
+      <% if first_image %>
+        <%= cl_image_tag(first_image.key, class: "banner-image") %>
+      <% else %>
+        <%= image_tag "musician_placeholder.jpg", class: "banner-image" %>
+      <% end %>
+    <% else %>
+      <%= image_tag "musician_placeholder.jpg", class: "banner-image" %>
+    <% end %>
+  </div>
+  <%# ----- TAB NAVIGATION ----- %>
+  <%# ----- BOTTOM PROFILE CONTENT ----- %>
+  <div class="bottom-profile-content">
+    <%# ----- LEFT COLUMN: ABOUT CARD ------ %>
+    <div class="about-card tab-content active" id="tab-about">
+      <h3 class="section-title">About</h3>
+      <p class="about-text"><%= @musician.bio %></p>
+      <h4 class="subsection-title">Genres</h4>
+      <div class="tag-list">
+        <% @musician.styles&.split(',')&.each do |style| %>
+          <span class="tag"><%= style.strip %></span>
         <% end %>
       </div>
-      <button class="carousel-control-prev" type="button" data-bs-target="#musicianCarousel" data-bs-slide="prev">
-        <span class="carousel-control-prev-icon"></span>
-      </button>
-      <button class="carousel-control-next" type="button" data-bs-target="#musicianCarousel" data-bs-slide="next">
-        <span class="carousel-control-next-icon"></span>
-      </button>
+      <h4 class="subsection-title">Instruments</h4>
+      <div class="tag-list">
+        <% (@musician.instrument || "Not specified").split(',').each do |instrument| %>
+          <span class="tag"><%= instrument.strip %></span>
+        <% end %>
+      </div>
     </div>
-  <% else %>
-    <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
+    <%# ----- RIGHT COLUMN: STATS & AVAILABILITY ------ %>
+    <div class="right-column">
+      <div class="stats-card">
+        <h3 class="section-title">Quick Stats</h3>
+        <div class="stat-row">
+          <span class="stat-label">Age</span>
+          <span class="stat-value"><%= @musician.age %></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Current Bands</span>
+          <span class="stat-value"><%= @musician.bands.count %></span>
+        </div>
+        <div class="stat-row">
+          <span class="stat-label">Primary Style</span>
+          <span class="stat-value-badge"><%= @musician.styles&.split(',')&.first || '—' %></span>
+        </div>
+      </div>
+      <div class="availability-card">
+        <h3 class="section-title">Availability</h3>
+        <div class="availability-row">
+          <span>Available for new bands</span>
+          <label class="toggle">
+            <input type="checkbox" checked disabled>
+            <span class="toggle-slider"></span>
+          </label>
+        </div>
+      </div>
+    </div>
+  </div>
+  <%# ----- BANDS SECTION (shown via tab) ----- %>
+  <div class="bands-card tab-content" id="tab-bands">
+    <h3 class="section-title">Current Bands</h3>
+    <% if @musician.bands.any? %>
+      <ul class="bands-list">
+        <% @musician.bands.each do |band| %>
+          <li class="band-item"><%= band.name %></li>
+        <% end %>
+      </ul>
+    <% else %>
+      <p class="no-bands">Not currently in any bands</p>
+    <% end %>
+  </div>
+  <%# ----- MEDIA CAROUSEL (if needed) ----- %>
+  <% if @musician.media.attached? && @musician.media.count > 1 %>
+    <div class="media-section">
+      <h3 class="section-title">Media</h3>
+      <div id="musicianCarousel" class="carousel slide" data-bs-ride="carousel">
+        <div class="carousel-indicators">
+          <% @musician.media.each_with_index do |file, index| %>
+            <button type="button" data-bs-target="#musicianCarousel" data-bs-slide-to="<%= index %>"
+                    class="<%= 'active' if index == 0 %>" aria-label="Slide <%= index + 1 %>"></button>
+          <% end %>
+        </div>
+        <div class="carousel-inner">
+          <% @musician.media.each_with_index do |file, index| %>
+            <div class="carousel-item <%= 'active' if index == 0 %>">
+              <% if file.content_type.start_with?('image') %>
+                <%= cl_image_tag(file.key, class: "carousel-media") %>
+              <% elsif file.content_type.start_with?('video') %>
+                <video class="carousel-media" controls>
+                  <source src="<%= url_for(file) %>" type="<%= file.content_type %>">
+                </video>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#musicianCarousel" data-bs-slide="prev">
+          <span class="carousel-control-prev-icon"></span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#musicianCarousel" data-bs-slide="next">
+          <span class="carousel-control-next-icon"></span>
+        </button>
+      </div>
+    </div>
   <% end %>
 </div>
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const tabBtns = document.querySelectorAll('.tab-btn');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabBtns.forEach(btn => {
+      btn.addEventListener('click', function() {
+        const tabId = this.getAttribute('data-tab');
+
+        // Update active tab button
+        tabBtns.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+
+        // Show/hide tab content
+        tabContents.forEach(content => {
+          if (content.id === 'tab-' + tabId) {
+            content.classList.add('active');
+          } else {
+            content.classList.remove('active');
+          }
+        });
+      });
+    });
+  });
+</script>
