@@ -20,7 +20,6 @@
       </div>
     </div>
   </div>
-
   <div class="band-show-content">
     <!-- Band Info Section -->
     <div class="band-info-section">
@@ -34,14 +33,12 @@
           <span><%= @band.gigs.count %> <%= @band.gigs.count == 1 ? "Gig" : "Gigs" %></span>
         </div>
       </div>
-
       <% if @band.description.present? %>
         <div class="band-description">
           <h3>About</h3>
           <p><%= @band.description %></p>
         </div>
       <% end %>
-
       <!-- Band Members -->
       <div class="band-members-section">
         <h3>Members</h3>
@@ -67,7 +64,6 @@
         </div>
       </div>
     </div>
-
     <!-- Photos Section -->
     <% if @band.images.attached? %>
       <div class="band-media-section">
@@ -81,7 +77,6 @@
         </div>
       </div>
     <% end %>
-
     <!-- Videos Section -->
     <% if @band.videos.attached? %>
       <div class="band-media-section">
