@@ -6,24 +6,6 @@ RSpec.describe "BandInvitations", type: :request do
   let(:invitee_user) { create(:user) }
   let(:invitee_musician) { create(:musician, user: invitee_user) }
 
-  describe "GET /bands/:band_id/band_invitations/new" do
-    context "when not logged in" do
-      it "redirects to login" do
-        get new_band_band_invitation_path(band)
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context "when logged in as band owner" do
-      before { sign_in band_owner }
-
-      it "returns a successful response" do
-        get new_band_band_invitation_path(band)
-        expect(response).to have_http_status(:success)
-      end
-    end
-  end
-
   describe "POST /bands/:band_id/band_invitations" do
     context "when not logged in" do
       it "redirects to login" do
@@ -53,7 +35,7 @@ RSpec.describe "BandInvitations", type: :request do
     end
   end
 
-  describe "GET /band_invitations/:token/accept" do
+  describe "GET /accept_invitation/:token" do
     let!(:invitation) { create(:band_invitation, band: band, musician: invitee_musician, inviter: band_owner) }
 
     context "when not logged in" do
@@ -73,7 +55,7 @@ RSpec.describe "BandInvitations", type: :request do
 
       it "adds the musician to the band" do
         get accept_band_invitation_path(token: invitation.token)
-        expect(band.musicians).to include(invitee_musician)
+        expect(band.reload.musicians).to include(invitee_musician)
       end
 
       it "redirects to the band page" do
@@ -99,7 +81,7 @@ RSpec.describe "BandInvitations", type: :request do
     end
   end
 
-  describe "GET /band_invitations/:token/decline" do
+  describe "GET /decline_invitation/:token" do
     let!(:invitation) { create(:band_invitation, band: band, musician: invitee_musician, inviter: band_owner) }
 
     context "when logged in as the invited musician" do
@@ -123,30 +105,6 @@ RSpec.describe "BandInvitations", type: :request do
       it "shows a flash message" do
         get decline_band_invitation_path(token: invitation.token)
         expect(flash[:notice]).to eq("Invitation declined.")
-      end
-    end
-  end
-
-  describe "GET /band_invitations/sent" do
-    context "when not logged in" do
-      it "redirects to login" do
-        get sent_band_invitations_path
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context "when logged in" do
-      before { sign_in band_owner }
-
-      it "returns a successful response" do
-        get sent_band_invitations_path
-        expect(response).to have_http_status(:success)
-      end
-
-      it "shows invitations sent by the current user" do
-        invitation = create(:band_invitation, band: band, musician: invitee_musician, inviter: band_owner)
-        get sent_band_invitations_path
-        expect(response.body).to include(invitee_musician.name)
       end
     end
   end

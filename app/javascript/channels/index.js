@@ -1,2 +1,6 @@
 import "./consumer"
 import "./direct_message_channel"
+import "./band_invitation_channel"
+import "./band_chat_channel"
+import "./notification_channel"
+import "./messages_notification_channel"

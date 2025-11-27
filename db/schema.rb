@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_26_011942) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_27_035712) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -163,6 +163,23 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_26_011942) do
     t.index ["user_id"], name: "index_musicians_on_user_id"
   end
 
+  create_table "notifications", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "notifiable_type", null: false
+    t.bigint "notifiable_id", null: false
+    t.string "notification_type", null: false
+    t.text "message"
+    t.boolean "read", default: false, null: false
+    t.bigint "actor_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["actor_id"], name: "index_notifications_on_actor_id"
+    t.index ["notifiable_type", "notifiable_id"], name: "index_notifications_on_notifiable"
+    t.index ["user_id", "created_at"], name: "index_notifications_on_user_id_and_created_at"
+    t.index ["user_id", "read"], name: "index_notifications_on_user_id_and_read"
+    t.index ["user_id"], name: "index_notifications_on_user_id"
+  end
+
   create_table "participations", force: :cascade do |t|
     t.bigint "user_id", null: false
     t.bigint "chat_id", null: false
@@ -247,6 +264,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_26_011942) do
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
   add_foreign_key "musicians", "users"
+  add_foreign_key "notifications", "users"
+  add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "participations", "chats"
   add_foreign_key "participations", "users"
   add_foreign_key "taggings", "tags"

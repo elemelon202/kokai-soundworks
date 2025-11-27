@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :message_reads
   has_many :read_messages, through: :message_reads, source: :message
   has_one :musician, dependent: :destroy
+  has_many :notifications, dependent: :destroy
 
   # convenience: check roles
   def musician?

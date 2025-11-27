@@ -5,7 +5,7 @@ class BandInvitationsController < ApplicationController
 
   before_action :set_band_invitation_by_token, only: [:accept, :decline]
   before_action :set_band, only: [:new, :create]
-  before_action :fetch_pending_invitations, only: [:sent, :edit]
+  before_action :fetch_pending_invitations, only: [:sent]
 
   respond_to :html, :turbo_stream
 
@@ -26,7 +26,11 @@ def create
 
   respond_to do |format|
     if @band_invitation.save
-      @pending_invitations = policy_scope(BandInvitation).pending.sent_by(current_user)
+      # Create notification for the invited musician
+      Notification.create_for_band_invitation(@band_invitation)
+
+      # Get all pending invitations for this band (not just current user's)
+      @pending_invitations = @band.band_invitations.pending
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace(
@@ -73,17 +77,56 @@ end
     authorize @band_invitation
     @band_invitation.update(status: "Accepted")
     @band_invitation.band.musicians << @band_invitation.musician
+
+    # Notify the inviter that invitation was accepted
+    Notification.create_for_invitation_response(@band_invitation, accepted: true)
+    # Notify band members about new member
+    Notification.create_for_band_member_joined(@band_invitation.band, @band_invitation.musician)
+
+    broadcast_invitation_update(@band_invitation)
     redirect_to band_path(@band_invitation.band), notice: "Invitation accepted."
   end
 
   def decline
     authorize @band_invitation
     @band_invitation.update(status: "Declined")
+
+    # Notify the inviter that invitation was declined
+    Notification.create_for_invitation_response(@band_invitation, accepted: false)
+
+    broadcast_invitation_update(@band_invitation)
     redirect_to band_path(@band_invitation.band), notice: "Invitation declined."
   end
 
   def sent
     authorize BandInvitation
+  end
+
+  def destroy
+    @band = Band.find(params[:band_id])
+    @band_invitation = @band.band_invitations.find(params[:id])
+    authorize @band_invitation
+
+    @band_invitation.destroy
+    @pending_invitations = @band.band_invitations.pending
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace(
+            "pending_invitations_list",
+            partial: "bands/pending_invitations",
+            locals: { pending_invitations: @pending_invitations }
+          ),
+          turbo_stream.update(
+            "flash_messages",
+            partial: "shared/flash",
+            locals: { notice: "Invitation cancelled.", alert: nil }
+          )
+        ]
+      end
+      format.html { redirect_to edit_band_path(@band), notice: "Invitation cancelled." }
+    end
   end
 
 
@@ -102,4 +145,25 @@ end
     @band = Band.find(params[:band_id])
   end
 
+  def fetch_pending_invitations
+    @pending_invitations = policy_scope(BandInvitation).pending.sent_by(current_user)
+  end
+
+  def broadcast_invitation_update(invitation)
+    band = invitation.band
+    # Show all pending invitations for this band (visible to all band members)
+    pending_invitations = band.band_invitations.pending
+
+    ActionCable.server.broadcast(
+      "band_invitations_#{band.id}",
+      {
+        type: "invitation_updated",
+        html: ApplicationController.render(
+          partial: "bands/pending_invitations",
+          locals: { pending_invitations: pending_invitations }
+        ),
+        member_count: band.musicians.count
+      }
+    )
+  end
 end

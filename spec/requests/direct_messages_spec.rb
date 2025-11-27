@@ -47,8 +47,9 @@ RSpec.describe "DirectMessages", type: :request do
       end
 
       it "marks messages as read" do
+        # Message from other_user automatically creates unread MessageRead for user
         message = create(:message, chat: chat, user: other_user)
-        message_read = create(:message_read, message: message, user: user, read: false)
+        message_read = message.message_reads.find_by(user: user)
 
         get direct_message_path(chat)
         expect(message_read.reload.read).to be true

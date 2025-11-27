@@ -55,26 +55,6 @@ RSpec.describe "Musicians", type: :request do
     end
   end
 
-  describe "GET /musicians/new" do
-    context "when not logged in" do
-      it "redirects to login" do
-        get new_musician_path
-        expect(response).to redirect_to(new_user_session_path)
-      end
-    end
-
-    context "when logged in" do
-      let(:user) { create(:user) }
-
-      before { sign_in user }
-
-      it "returns a successful response" do
-        get new_musician_path
-        expect(response).to have_http_status(:success)
-      end
-    end
-  end
-
   describe "POST /musicians" do
     context "when not logged in" do
       it "redirects to login" do

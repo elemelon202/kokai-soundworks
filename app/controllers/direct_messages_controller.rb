@@ -1,13 +1,12 @@
 class DirectMessagesController < ApplicationController
-  before_action :set_chat, only: [:show]
+  before_action :set_chat, only: [:show, :destroy]
   before_action :set_recipient, only: [:create_or_show]
-  skip_after_action :verify_policy_scoped, only: [:index]
+  before_action :load_sidebar_chats, only: [:index, :show]
+  skip_after_action :verify_policy_scoped, only: [:index, :show, :destroy]
 
   def index
-    @chats = current_user.direct_message_chats
-                        .includes(:users, messages: :user)
-                        .order('messages.created_at DESC')
     authorize Chat
+    @musicians = Musician.where.not(user_id: current_user.id).includes(:user)
   end
 
   def show
@@ -20,13 +19,29 @@ class DirectMessagesController < ApplicationController
       message_read.update(read: true) unless message_read.read?
     end
 
+    # Broadcast updated unread count to the user
+    broadcast_updated_message_count
+
     @message = Message.new
+    @musicians = Musician.where.not(user_id: current_user.id).includes(:user)
   end
 
   def create_or_show
+    if @recipient == current_user
+      skip_authorization
+      redirect_to root_path, alert: "You cannot message yourself"
+      return
+    end
+
     @chat = current_user.chat_with(@recipient)
     authorize @chat
     redirect_to direct_message_path(@chat)
+  end
+
+  def destroy
+    authorize @chat, :destroy?
+    @chat.destroy
+    redirect_to direct_messages_path, notice: "Conversation deleted."
   end
 
   private
@@ -41,5 +56,21 @@ class DirectMessagesController < ApplicationController
 
   def set_recipient
     @recipient = User.find(params[:recipient_id])
+  end
+
+  def load_sidebar_chats
+    @chats = current_user.direct_message_chats
+                        .includes(:users, messages: :user)
+                        .order('messages.created_at DESC')
+  end
+
+  def broadcast_updated_message_count
+    MessagesNotificationChannel.broadcast_to(
+      current_user,
+      {
+        unread_count: current_user.unread_dm_count,
+        show_toast: false
+      }
+    )
   end
 end

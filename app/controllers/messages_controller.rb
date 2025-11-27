@@ -16,10 +16,28 @@ class MessagesController < ApplicationController
         @message.message_reads.create(user: user, read: false)
       end
 
+      # Create notifications
+      if @chat.band.present?
+        Notification.create_for_band_message(@message, @chat.band)
+      else
+        # For direct messages, only use the messages notification channel (not bell notifications)
+        # This keeps DM notifications separate from band notifications
+        broadcast_dm_notification(@message)
+      end
+
       # Broadcast to all participants
       broadcast_message(@message)
 
       respond_to do |format|
+        format.json do
+          render json: {
+            success: true,
+            html: ApplicationController.render(
+              partial: "messages/message",
+              locals: { message: @message, current_user: current_user }
+            )
+          }
+        end
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
             "message_form",
@@ -31,6 +49,7 @@ class MessagesController < ApplicationController
       end
     else
       respond_to do |format|
+        format.json { render json: { success: false, errors: @message.errors.full_messages }, status: :unprocessable_entity }
         format.turbo_stream do
           render turbo_stream: turbo_stream.replace(
             "message_form",
@@ -71,13 +90,44 @@ class MessagesController < ApplicationController
   end
 
   def broadcast_message(message)
-    @chat.users.each do |user|
-      Turbo::StreamsChannel.broadcast_append_to(
-        "chat_#{@chat.id}_user_#{user.id}",
-        target: "messages",
-        partial: "messages/message",
-        locals: { message: message, current_user: user }
+    if @chat.band.present?
+      # Broadcast to band chat channel
+      ActionCable.server.broadcast(
+        "band_chat_#{@chat.id}",
+        {
+          html: ApplicationController.render(
+            partial: "messages/message",
+            locals: { message: message, current_user: nil }
+          ),
+          sender_id: message.user_id
+        }
       )
+    else
+      # Direct message - broadcast to each user's stream
+      @chat.users.each do |user|
+        Turbo::StreamsChannel.broadcast_append_to(
+          "chat_#{@chat.id}_user_#{user.id}",
+          target: "messages",
+          partial: "messages/message",
+          locals: { message: message, current_user: user }
+        )
+      end
     end
+  end
+
+  def broadcast_dm_notification(message)
+    recipient = @chat.other_participant(current_user)
+    return unless recipient
+
+    MessagesNotificationChannel.broadcast_to(
+      recipient,
+      {
+        unread_count: recipient.unread_dm_count,
+        show_toast: true,
+        sender_name: current_user.username,
+        message_preview: message.content.truncate(50),
+        chat_path: Rails.application.routes.url_helpers.direct_message_path(@chat)
+      }
+    )
   end
 end

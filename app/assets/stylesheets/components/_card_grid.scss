@@ -28,6 +28,21 @@
   box-shadow: 0 8px 12px rgba(255,255,255,0.2);
 }
 
+.band-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+
+  &:hover {
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .card {
+    cursor: pointer;
+  }
+}
+
 // Smallest device
 @media (min-width: 100px) and (max-width: 575px) {
   .cards {

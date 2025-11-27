@@ -1,12 +1,12 @@
 class VenuesController < ApplicationController
   skip_before_action :authenticate_user!, only: [:index, :show]
+  before_action :set_venue, only: [:show, :edit, :update, :destroy]
 
   def index
     @venues = policy_scope(Venue).all
   end
 
   def show
-    @venue = Venue.find(params[:id])
     authorize @venue
   end
 
@@ -28,12 +28,10 @@ class VenuesController < ApplicationController
 
   def edit
     authorize @venue
-    @venue = Venue.find(params[:id])
   end
 
   def update
     authorize @venue
-    @venue = Venue.find(params[:id])
     if @venue.update(venue_params)
       redirect_to venue_path(@venue)
     else
@@ -43,15 +41,17 @@ class VenuesController < ApplicationController
 
   def destroy
     authorize @venue
-    @venue = Venue.find(params[:id])
     @venue.destroy
     redirect_to venues_path, status: :see_other
   end
 
   private
 
+  def set_venue
+    @venue = Venue.find(params[:id])
+  end
+
   def venue_params
     params.require(:venue).permit(:name, :address, :city, :capacity, :description, photos: [])
   end
-
 end

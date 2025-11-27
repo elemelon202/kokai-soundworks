@@ -1,0 +1,438 @@
+// Cool Form - Reusable form styling with gradient accents
+// Usage: Wrap your form in .cool-form-container > .cool-form-card
+
+.cool-form-container {
+  min-height: 100vh;
+  padding: 40px 20px;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: radial-gradient(
+      ellipse at 80% 20%,
+      rgba(233, 54, 173, 0.15) 0%,
+      transparent 50%
+    ),
+    radial-gradient(
+      ellipse at 20% 80%,
+      rgba(213, 255, 64, 0.1) 0%,
+      transparent 50%
+    );
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+.cool-form-card {
+  max-width: 700px;
+  margin: 0 auto;
+  background: linear-gradient(
+    145deg,
+    rgba(30, 30, 30, 0.95),
+    rgba(17, 17, 17, 0.98)
+  );
+  border-radius: 24px;
+  padding: 40px;
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    0 25px 50px -12px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+
+  // Gradient border effect
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 24px;
+    padding: 1px;
+    background: linear-gradient(
+      135deg,
+      rgba(233, 54, 173, 0.5) 0%,
+      rgba(213, 255, 64, 0.3) 50%,
+      rgba(233, 54, 173, 0.5) 100%
+    );
+    -webkit-mask:
+      linear-gradient(#fff 0 0) content-box,
+      linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    pointer-events: none;
+  }
+
+  // Glow effect
+  &::after {
+    content: "";
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: conic-gradient(
+      from 0deg,
+      transparent 0deg,
+      rgba(233, 54, 173, 0.03) 60deg,
+      transparent 120deg,
+      rgba(213, 255, 64, 0.03) 180deg,
+      transparent 240deg,
+      rgba(233, 54, 173, 0.03) 300deg,
+      transparent 360deg
+    );
+    animation: cool-form-rotate-glow 20s linear infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+}
+
+@keyframes cool-form-rotate-glow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.cool-form-header {
+  text-align: center;
+  margin-bottom: 40px;
+  position: relative;
+
+  .cool-form-icon {
+    width: 80px;
+    height: 80px;
+    margin: 0 auto 20px;
+    background: linear-gradient(135deg, #E936AD, #D5FF40);
+    border-radius: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 36px;
+    animation: cool-form-pulse-icon 3s ease-in-out infinite;
+
+    i {
+      color: #171717;
+    }
+  }
+
+  h1 {
+    font-size: 2.5rem;
+    font-weight: 800;
+    background: linear-gradient(135deg, #ffffff 0%, #E936AD 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 10px;
+    letter-spacing: -0.5px;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 1rem;
+  }
+}
+
+@keyframes cool-form-pulse-icon {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(233, 54, 173, 0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 0 20px 5px rgba(233, 54, 173, 0.2); }
+}
+
+.cool-form-section {
+  margin-bottom: 35px;
+  padding-bottom: 35px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+
+  &:last-of-type {
+    border-bottom: none;
+    margin-bottom: 20px;
+    padding-bottom: 0;
+  }
+}
+
+.cool-form-section-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 25px;
+
+  .section-icon {
+    width: 40px;
+    height: 40px;
+    background: rgba(233, 54, 173, 0.15);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #E936AD;
+    font-size: 18px;
+  }
+
+  .section-text {
+    h2 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0;
+    }
+
+    p {
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+      margin: 0;
+    }
+  }
+}
+
+// Form field styling
+.cool-form-card {
+  .form-group {
+    margin-bottom: 20px;
+  }
+
+  .form-control, .form-select {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 18px;
+    color: #fff;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #E936AD;
+      box-shadow: 0 0 0 3px rgba(233, 54, 173, 0.15);
+      outline: none;
+    }
+
+    &:hover:not(:focus) {
+      border-color: rgba(255, 255, 255, 0.2);
+    }
+  }
+
+  textarea.form-control {
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  label, .form-label, .control-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+
+    abbr {
+      color: #E936AD;
+      text-decoration: none;
+    }
+  }
+
+  // Multiple select styling
+  select[multiple] {
+    min-height: 150px;
+
+    option {
+      padding: 10px;
+      margin: 2px 0;
+      border-radius: 6px;
+
+      &:checked {
+        background: linear-gradient(135deg, #E936AD, #D5FF40);
+        color: #171717;
+      }
+    }
+  }
+
+  // Hint text
+  .form-text, .help-block {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 6px;
+  }
+}
+
+// File input styling
+.cool-form-card {
+  input[type="file"] {
+    background: rgba(255, 255, 255, 0.03);
+    border: 2px dashed rgba(255, 255, 255, 0.15);
+    border-radius: 12px;
+    padding: 30px 20px;
+    width: 100%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      border-color: #E936AD;
+      background: rgba(233, 54, 173, 0.05);
+    }
+
+    &::file-selector-button {
+      background: linear-gradient(135deg, #E936AD, #c42891);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 20px;
+      color: #fff;
+      font-weight: 600;
+      cursor: pointer;
+      margin-right: 15px;
+      transition: all 0.3s ease;
+
+      &:hover {
+        transform: scale(1.02);
+      }
+    }
+  }
+}
+
+// Submit button
+.cool-form-submit {
+  margin-top: 30px;
+
+  .btn-submit {
+    width: 100%;
+    padding: 16px 32px;
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #171717;
+    background: linear-gradient(135deg, #D5FF40 0%, #a4fe35 100%);
+    border: none;
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+
+    &::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      left: -100%;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.3),
+        transparent
+      );
+      transition: left 0.5s ease;
+    }
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 30px rgba(213, 255, 64, 0.3);
+
+      &::before {
+        left: 100%;
+      }
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+// Back link
+.cool-form-back {
+  text-align: center;
+  margin-top: 20px;
+
+  a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+
+    i {
+      margin-right: 6px;
+    }
+
+    &:hover {
+      color: #E936AD;
+    }
+  }
+}
+
+// Devise links styling
+.devise-links {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+
+  a {
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: color 0.3s ease;
+
+    &:hover {
+      color: #E936AD;
+    }
+  }
+}
+
+// Checkbox styling for remember me
+.cool-form-card {
+  .form-check, .boolean {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #E936AD;
+      cursor: pointer;
+    }
+
+    label {
+      margin-bottom: 0;
+      color: rgba(255, 255, 255, 0.7);
+      cursor: pointer;
+    }
+  }
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .cool-form-card {
+    padding: 25px 20px;
+    border-radius: 20px;
+  }
+
+  .cool-form-header {
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    .cool-form-icon {
+      width: 60px;
+      height: 60px;
+      font-size: 28px;
+    }
+  }
+
+  .cool-form-section-header {
+    .section-icon {
+      width: 35px;
+      height: 35px;
+      font-size: 16px;
+    }
+
+    .section-text h2 {
+      font-size: 1.1rem;
+    }
+  }
+}

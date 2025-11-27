@@ -5,10 +5,10 @@ RSpec.describe "Messages", type: :request do
   let(:other_user) { create(:user) }
   let(:chat) { create(:chat, :direct_message, :with_participants, participants: [user, other_user]) }
 
-  describe "POST /messages" do
+  describe "POST /chats/:chat_id/messages" do
     context "when not logged in" do
       it "redirects to login" do
-        post messages_path, params: { message: { content: "Hello", chat_id: chat.id } }
+        post chat_messages_path(chat), params: { message: { content: "Hello" } }
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -18,28 +18,28 @@ RSpec.describe "Messages", type: :request do
 
       it "creates a new message" do
         expect {
-          post messages_path, params: { message: { content: "Hello", chat_id: chat.id } }
+          post chat_messages_path(chat), params: { message: { content: "Hello" } }
         }.to change(Message, :count).by(1)
       end
 
       it "associates the message with the current user" do
-        post messages_path, params: { message: { content: "Hello", chat_id: chat.id } }
+        post chat_messages_path(chat), params: { message: { content: "Hello" } }
         expect(Message.last.user).to eq(user)
       end
 
       it "associates the message with the chat" do
-        post messages_path, params: { message: { content: "Hello", chat_id: chat.id } }
+        post chat_messages_path(chat), params: { message: { content: "Hello" } }
         expect(Message.last.chat).to eq(chat)
       end
     end
   end
 
-  describe "DELETE /messages/:id" do
+  describe "DELETE /chats/:chat_id/messages/:id" do
     let!(:message) { create(:message, chat: chat, user: user) }
 
     context "when not logged in" do
       it "redirects to login" do
-        delete message_path(message)
+        delete chat_message_path(chat, message)
         expect(response).to redirect_to(new_user_session_path)
       end
     end
@@ -49,7 +49,7 @@ RSpec.describe "Messages", type: :request do
 
       it "destroys the message" do
         expect {
-          delete message_path(message)
+          delete chat_message_path(chat, message)
         }.to change(Message, :count).by(-1)
       end
     end

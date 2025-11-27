@@ -46,14 +46,17 @@ class MusiciansController < ApplicationController
     @musician.user = current_user
     authorize @musician
     if @musician.save
-      redirect to musician_path(@musician), notice: 'Profile has been created'
+      redirect_to musician_path(@musician), notice: 'Profile has been created'
     else render :new, status: :unprocessable_entity
     end
   end
 
 def edit
   authorize @musician
-   @band_invitation = BandInvitation.find_by(musician: current_user.musician, status: "Pending")
+  @band_invitation = BandInvitation.find_by(musician: current_user.musician, status: "Pending")
+
+  # Mark band invitation notifications as read when visiting edit page
+  mark_invitation_notifications_as_read
 end
 
 def update
@@ -68,13 +71,8 @@ end
 
   def destroy
     authorize @musician
-    @musician = Musician.find(params[:id])
+    @musician.destroy
     redirect_to root_path, status: :see_other, notice: 'You have deleted your account. We hope to see you again'
-    # if @musician.destroy
-    #   redirect_to musicians_path status: :see_other, notice: 'You have deleted your profile!'
-    # else
-    #   redirect_to musicians_path, status: :unprocessable_entity, alert: 'Could not delete'
-    # end
   end
 
   private
@@ -87,4 +85,12 @@ end
     params.require(:musician).permit(:name, :instrument, :age, :styles, :location, media: [])
   end
 
+  def mark_invitation_notifications_as_read
+    return unless current_user
+
+    # Mark band invitation notifications as read
+    current_user.notifications.unread
+      .where(notification_type: Notification::TYPES[:band_invitation])
+      .update_all(read: true)
+  end
 end

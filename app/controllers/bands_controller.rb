@@ -3,8 +3,9 @@ class BandsController < ApplicationController
   # added skip_before_action so public users can see these pages.
   skip_before_action :authenticate_user!, only: [:index, :show]
   # before_action :authenticate_user! - **Tyrhen edited this out so it doesn't override line 4**
-  before_action :set_band, only: [:show, :edit, :update, :destroy]
+  before_action :set_band, only: [:show, :edit, :update, :destroy, :transfer_leadership]
   before_action :authorize_band, only: [:edit, :update, :destroy]
+  before_action :authorize_leader, only: [:transfer_leadership]
 
   def index
     @bands = policy_scope(Band) #<--- This is all you need for the index to bypass pundit - Tyrhen
@@ -27,8 +28,11 @@ class BandsController < ApplicationController
   def create
     @band = Band.new(band_params)
     @band.user = current_user
+    @band.leader_musician_params = leader_musician_params if leader_musician_params.present?
     authorize @band #* Tyrhen was here
     if @band.save
+      # Send invitations to selected musicians instead of adding them directly
+      send_invitations_to_musicians
       redirect_to band_path(@band)
     else
       render :new
@@ -53,7 +57,11 @@ class BandsController < ApplicationController
     msg_read.update(read: true) if msg_read
     end
     @band_invitation = BandInvitation.new
-    @pending_invitations = policy_scope(BandInvitation).pending.sent_by(current_user)
+    # Show all pending invitations for this band (visible to all band members)
+    @pending_invitations = @band.band_invitations.pending
+
+    # Mark band-related notifications as read when visiting the dashboard
+    mark_band_notifications_as_read
 
   end
   def update
@@ -70,16 +78,90 @@ class BandsController < ApplicationController
     redirect_to bands_path
   end
 
+  def transfer_leadership
+    new_leader_musician = Musician.find(params[:musician_id])
+    new_leader_user = new_leader_musician.user
+
+    # Ensure the new leader is a member of the band
+    unless @band.musicians.include?(new_leader_musician)
+      redirect_to edit_band_path(@band), alert: "That musician is not a member of this band."
+      return
+    end
+
+    # Transfer leadership
+    @band.update!(user: new_leader_user)
+
+    redirect_to edit_band_path(@band), notice: "Leadership transferred to #{new_leader_musician.name}."
+  end
+
   private
   def band_params
-    params.require(:band).permit(:name, :description, genre_list: [], musician_ids: [])
+    # Don't permit musician_ids - we handle invitations separately
+    params.require(:band).permit(:name, :location, :description, :banner, genre_list: [], images: [], videos: [])
   end
+
+  def invited_musician_ids
+    params[:band][:musician_ids]&.reject(&:blank?) || []
+  end
+
+  def send_invitations_to_musicians
+    invited_musician_ids.each do |musician_id|
+      musician = Musician.find_by(id: musician_id)
+      next unless musician
+      # Don't invite the band creator (they're already a member)
+      next if musician.user_id == current_user.id
+
+      @band.band_invitations.create(
+        musician: musician,
+        inviter: current_user,
+        status: 'Pending'
+      )
+    end
+  end
+
+  def leader_musician_params
+    return nil unless params[:band][:leader_musician].present?
+    params[:band].require(:leader_musician).permit(:name, :instrument, :location, :media)
+  end
+
   def set_band
     @band = Band.find(params[:id])
   end
   def authorize_band
-    unless @band.user == current_user
+    unless @band.user == current_user || user_is_band_member?
       redirect_to bands_path, alert: "You are not authorized to perform this action."
+    end
+  end
+
+  def user_is_band_member?
+    return false unless current_user&.musician
+    @band.musicians.include?(current_user.musician)
+  end
+
+  def authorize_leader
+    unless @band.user_id == current_user.id
+      redirect_to edit_band_path(@band), alert: "Only the band leader can perform this action."
+    end
+  end
+
+  def mark_band_notifications_as_read
+    return unless current_user
+
+    # Mark notifications related to this band as read
+    band_notification_types = [
+      Notification::TYPES[:band_message],
+      Notification::TYPES[:band_member_joined],
+      Notification::TYPES[:band_member_left]
+    ]
+
+    # Find notifications where the notifiable is related to this band
+    current_user.notifications.unread.where(notification_type: band_notification_types).find_each do |notification|
+      # Check if notification is related to this band
+      if notification.notifiable.respond_to?(:chat) && notification.notifiable.chat&.band_id == @band.id
+        notification.update(read: true)
+      elsif notification.notifiable == @band
+        notification.update(read: true)
+      end
     end
   end
 end

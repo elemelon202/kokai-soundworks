@@ -23,18 +23,66 @@
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
           <li class="nav-item active">
-            <%= link_to "Home", "/", class: "nav-link btn btn-primary text-white" %>
+            <%= link_to "Musicians", musicians_path, class: "nav-link btn btn-primary text-white" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Messages", "#", class: "nav-link btn btn-primary text-white" %>
+            <%= link_to "Bands", bands_path, class: "nav-link btn btn-primary text-white" %>
+          </li>
+          <li class="nav-item">
+            <%= link_to "Venues", venues_path, class: "nav-link btn btn-primary text-white" %>
+          </li>
+          <% if current_user.musician.present? %>
+            <li class="nav-item dropdown">
+              <a href="#" class="nav-link btn btn-primary text-white dropdown-toggle" id="bandDashboardDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <i class="fa-solid fa-gauge-high me-1"></i> Dashboard
+              </a>
+              <div class="dropdown-menu" aria-labelledby="bandDashboardDropdown">
+                <h6 class="dropdown-header">Musician</h6>
+                <%= link_to edit_musician_path(current_user.musician), class: "dropdown-item" do %>
+                  <i class="fa-solid fa-sliders me-2"></i> View Musician Dash
+                <% end %>
+                <%= link_to musician_path(current_user.musician), class: "dropdown-item" do %>
+                  <i class="fa-solid fa-user me-2"></i> View Musician Profile
+                <% end %>
+                <% if current_user.musician.bands.any? %>
+                  <div class="dropdown-divider"></div>
+                  <h6 class="dropdown-header">Band Dashboards</h6>
+                  <% current_user.musician.bands.each do |band| %>
+                    <%= link_to edit_band_path(band), class: "dropdown-item" do %>
+                      <i class="fa-solid fa-users me-2"></i> <%= band.name %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </div>
+            </li>
+          <% end %>
+          <li class="nav-item">
+            <%= render 'shared/messages_notification' %>
+          </li>
+          <li class="nav-item">
+            <%= render 'shared/notifications' %>
           </li>
           <li class="nav-item dropdown">
             <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <%= image_tag "https://kitt.lewagon.com/placeholder/users/ssaunier", class: "avatar", alt: "dropdown menu" %>
             </a>
+            <!-- Avatar drop down -->
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <%= link_to "Action", "#", class: "dropdown-item" %>
-              <%= link_to "Another action", "#", class: "dropdown-item" %>
+              <% if current_user&.musician.present? %>
+                <%= link_to "Profile", musician_path(current_user.musician), class: "dropdown-item" %>
+                <%= link_to "Messages", direct_messages_path, class: "dropdown-item" %>
+                <h6 class="dropdown-header">Bands</h6>
+                <% if current_user.musician.bands.any? %>
+                  <% current_user.musician.bands.each do |band| %>
+                    <%= link_to "- #{band.name}", band_path(band), class: "dropdown-item" %>
+                  <% end %>
+                <% end %>
+                <%= link_to "Create a band", new_band_path, class: "dropdown-item" %>
+                <div class="dropdown-divider"></div>
+              <% else %>
+                <%= link_to "Create Musician Profile", new_musician_path, class: "dropdown-item" %>
+                <div class="dropdown-divider"></div>
+              <% end %>
               <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
             </div>
           </li>
