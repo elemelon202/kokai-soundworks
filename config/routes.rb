@@ -52,6 +52,15 @@ Rails.application.routes.draw do
       post :create_or_show
     end
   end
+
+  resources :notifications, only: [:index] do
+    member do
+      patch :mark_as_read
+    end
+    collection do
+      patch :mark_all_as_read
+    end
+  end
    resources :chats, only: [:show] do
     resources :messages, only: [:create, :destroy]
   end

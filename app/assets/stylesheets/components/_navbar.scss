@@ -18,7 +18,27 @@
     font-size: 1rem;
   }
 
+  // Align all nav items in a row
+  .navbar-nav {
+    align-items: center;
+    gap: 8px;
+  }
 
+  .nav-item {
+    display: flex;
+    align-items: center;
+  }
+}
+
+// Nav link buttons (Musicians, Bands, Venues)
+.navbar-lewagon .nav-link.btn-primary {
+  transition: all 0.3s ease;
+
+  &:hover {
+    color: #171717 !important;
+    background: #D5FF40;
+    border-color: #D5FF40;
+  }
 }
 
 .btn-primary:hover {

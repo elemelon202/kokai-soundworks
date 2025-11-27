@@ -1,28 +1,108 @@
-<%= simple_form_for @band do |f| %>
-  <h2>Band Details</h2>
-  <%= f.input :name, label: "Band Name" %>
-  <%= f.input :location, label: "Band Location" %>
-  <%= f.input :description %>
+<div class="cool-form-container">
+  <div class="cool-form-card">
+    <div class="cool-form-header">
+      <div class="cool-form-icon">
+        <i class="fa-solid fa-users-line"></i>
+      </div>
+      <h1>Create Your Band</h1>
+      <p>Bring your musical vision to life</p>
+    </div>
 
-  <% unless current_user.musician %>
-    <hr>
-    <h2>Your Musician Profile</h2>
-    <p class="text-muted">As a band leader, you need a musician profile. Fill in your details below:</p>
+    <%= simple_form_for @band do |f| %>
+      <div class="cool-form-section">
+        <div class="cool-form-section-header">
+          <div class="section-icon">
+            <i class="fa-solid fa-guitar"></i>
+          </div>
+          <div class="section-text">
+            <h2>Band Details</h2>
+            <p>Tell us about your band</p>
+          </div>
+        </div>
 
-    <%= f.fields_for :leader_musician, Musician.new do |m| %>
-      <%= m.input :name, label: "Your Name", required: true %>
-      <%= m.input :instrument, label: "Your Instrument/Role", required: true %>
-      <%= m.input :location, label: "Your Location" %>
-      <%= m.input :media, as: :file, label: "Profile Photo (optional)", input_html: { accept: "image/*" } %>
+        <%= f.input :name,
+                    label: "Band Name",
+                    placeholder: "Enter your band's name",
+                    input_html: { class: "form-control" } %>
+
+        <%= f.input :location,
+                    label: "Location",
+                    placeholder: "Where are you based?",
+                    input_html: { class: "form-control" } %>
+
+        <%= f.input :description,
+                    label: "Description",
+                    placeholder: "Describe your band's sound, style, and story...",
+                    input_html: { class: "form-control", rows: 4 } %>
+      </div>
+
+      <% unless current_user.musician %>
+        <div class="cool-form-section">
+          <div class="cool-form-section-header">
+            <div class="section-icon">
+              <i class="fa-solid fa-user-music"></i>
+            </div>
+            <div class="section-text">
+              <h2>Your Musician Profile</h2>
+              <p>As a band leader, you need a musician profile</p>
+            </div>
+          </div>
+
+          <%= f.fields_for :leader_musician, Musician.new do |m| %>
+            <%= m.input :name,
+                        label: "Your Name",
+                        required: true,
+                        placeholder: "Enter your name",
+                        input_html: { class: "form-control" } %>
+
+            <%= m.input :instrument,
+                        label: "Your Instrument/Role",
+                        required: true,
+                        placeholder: "e.g., Lead Guitar, Vocals, Drums",
+                        input_html: { class: "form-control" } %>
+
+            <%= m.input :location,
+                        label: "Your Location",
+                        placeholder: "Where are you based?",
+                        input_html: { class: "form-control" } %>
+
+            <%= m.input :media,
+                        as: :file,
+                        label: "Profile Photo",
+                        hint: "Upload an image to personalize your profile",
+                        input_html: { accept: "image/*" } %>
+          <% end %>
+        </div>
+      <% end %>
+
+      <div class="cool-form-section">
+        <div class="cool-form-section-header">
+          <div class="section-icon">
+            <i class="fa-solid fa-user-plus"></i>
+          </div>
+          <div class="section-text">
+            <h2>Invite Musicians</h2>
+            <p>Add existing musicians to your band (optional)</p>
+          </div>
+        </div>
+
+        <%= f.input :musician_ids,
+                    as: :select,
+                    collection: Musician.all,
+                    input_html: { multiple: true, class: "form-control" },
+                    label: "Select Musicians",
+                    hint: "Hold Ctrl/Cmd to select multiple musicians" %>
+      </div>
+
+      <div class="cool-form-submit">
+        <%= f.button :submit, "Create Band", class: "btn-submit" %>
+      </div>
     <% end %>
-  <% end %>
 
-  <hr>
-  <h2>Invite Musicians (Optional)</h2>
-  <%= f.input :musician_ids,
-              as: :select,
-              collection: Musician.all,
-              input_html: { multiple: true, class: "js-musicians-select" },
-              label: "Select existing musicians to invite" %>
-  <%= f.button :submit, "Create Band" %>
-<% end %>
+    <div class="cool-form-back">
+      <%= link_to bands_path do %>
+        <i class="fa-solid fa-arrow-left"></i> Back to bands
+      <% end %>
+    </div>
+  </div>
+</div>

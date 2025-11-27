@@ -1,14 +1,31 @@
-<h2>Pending Invitations You've Sent</h2>
-<% if pending_invitations&.any? %>
-  <ul>
-    <% pending_invitations.each do |invitation| %>
-      <li>
-        <%= invitation.musician.name %> -
-        <%= invitation.band.name %> -
-        <%= invitation.status %>
-      </li>
-    <% end %>
-  </ul>
-<% else %>
-  <p>No pending invitations.</p>
-<% end %>
+<div class="pending-invitations-section">
+  <div class="pending-header">
+    <i class="fa-solid fa-clock"></i>
+    <span>Pending Invitations</span>
+  </div>
+
+  <% if pending_invitations&.any? %>
+    <div class="pending-list">
+      <% pending_invitations.each do |invitation| %>
+        <div class="pending-item">
+          <div class="pending-avatar">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="pending-info">
+            <span class="pending-name"><%= invitation.musician.name %></span>
+            <span class="pending-band"><%= invitation.band.name %></span>
+          </div>
+          <div class="pending-status status-<%= invitation.status.downcase %>">
+            <i class="fa-solid fa-hourglass-half"></i>
+            <%= invitation.status.capitalize %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div class="pending-empty">
+      <i class="fa-solid fa-paper-plane"></i>
+      <p>No pending invitations</p>
+    </div>
+  <% end %>
+</div>

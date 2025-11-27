@@ -16,6 +16,15 @@ class MessagesController < ApplicationController
         @message.message_reads.create(user: user, read: false)
       end
 
+      # Create notifications
+      if @chat.band.present?
+        Notification.create_for_band_message(@message, @chat.band)
+      else
+        Notification.create_for_direct_message(@message)
+        # Broadcast to messages notification channel for DMs
+        broadcast_dm_notification(@message)
+      end
+
       # Broadcast to all participants
       broadcast_message(@message)
 
@@ -104,5 +113,21 @@ class MessagesController < ApplicationController
         )
       end
     end
+  end
+
+  def broadcast_dm_notification(message)
+    recipient = @chat.other_participant(current_user)
+    return unless recipient
+
+    MessagesNotificationChannel.broadcast_to(
+      recipient,
+      {
+        unread_count: recipient.unread_dm_count,
+        show_toast: true,
+        sender_name: current_user.username,
+        message_preview: message.content.truncate(50),
+        chat_path: Rails.application.routes.url_helpers.direct_message_path(@chat)
+      }
+    )
   end
 end

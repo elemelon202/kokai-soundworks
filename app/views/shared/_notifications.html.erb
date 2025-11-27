@@ -1,0 +1,46 @@
+<div class="notification-dropdown" id="notification-dropdown">
+  <button class="notification-bell" id="notification-bell" data-bs-toggle="dropdown" aria-expanded="false">
+    <i class="fa-solid fa-bell"></i>
+    <span class="notification-badge" id="notification-count" style="<%= current_user.notifications.unread.count > 0 ? '' : 'display: none;' %>">
+      <%= current_user.notifications.unread.count %>
+    </span>
+  </button>
+
+  <div class="dropdown-menu dropdown-menu-end notification-menu" aria-labelledby="notification-bell">
+    <div class="notification-header">
+      <h6>Notifications</h6>
+      <% if current_user.notifications.unread.any? %>
+        <%= link_to mark_all_as_read_notifications_path, method: :patch, data: { turbo_method: :patch }, class: "mark-all-read" do %>
+          Mark all read
+        <% end %>
+      <% end %>
+    </div>
+
+    <div class="notification-list" id="notification-list">
+      <% if current_user.notifications.recent.any? %>
+        <% current_user.notifications.recent.includes(:actor).each do |notification| %>
+          <%= link_to (notification.path || '#'),
+                      class: "notification-item #{'unread' unless notification.read}",
+                      data: { notification_id: notification.id } do %>
+            <div class="notification-icon">
+              <i class="<%= notification.icon_class %>"></i>
+            </div>
+            <div class="notification-content">
+              <p class="notification-message"><%= notification.message %></p>
+              <span class="notification-time"><%= time_ago_in_words(notification.created_at) %> ago</span>
+            </div>
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="notification-empty" id="notification-empty">
+          <i class="fa-solid fa-bell-slash"></i>
+          <p>No notifications yet</p>
+        </div>
+      <% end %>
+    </div>
+
+    <div class="notification-footer">
+      <%= link_to "View all notifications", notifications_path %>
+    </div>
+  </div>
+</div>

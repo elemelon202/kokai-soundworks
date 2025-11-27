@@ -1,0 +1,7 @@
+<%= link_to direct_messages_path, class: "messages-notification-btn", id: "messages-notification-btn", data: { turbo: false } do %>
+  <i class="fa-solid fa-comment"></i>
+  <% unread_count = current_user.unread_dm_count %>
+  <span class="messages-badge" id="messages-count" style="<%= unread_count > 0 ? '' : 'display: none;' %>">
+    <%= unread_count > 99 ? '99+' : unread_count %>
+  </span>
+<% end %>
