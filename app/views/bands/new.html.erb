@@ -82,16 +82,28 @@
           </div>
           <div class="section-text">
             <h2>Invite Musicians</h2>
-            <p>Add existing musicians to your band (optional)</p>
+            <p>Search and invite musicians to your band (optional)</p>
           </div>
         </div>
 
-        <%= f.input :musician_ids,
-                    as: :select,
-                    collection: Musician.all,
-                    input_html: { multiple: true, class: "form-control" },
-                    label: "Select Musicians",
-                    hint: "Hold Ctrl/Cmd to select multiple musicians" %>
+        <div class="musician-search-field">
+          <label class="form-label" for="band_musician_ids">Search Musicians</label>
+          <%
+            # Get musicians with real profiles (exclude auto-created band leader profiles with "Unknown" instrument)
+            available_musicians = Musician.where.not(instrument: [nil, '', 'Unknown'])
+            available_musicians = available_musicians.where.not(id: current_user.musician.id) if current_user.musician
+          %>
+          <select name="band[musician_ids][]"
+                  id="band_musician_ids"
+                  multiple
+                  data-controller="tom-select"
+                  data-tom-select-placeholder-value="Search by name, instrument, or location...">
+            <% available_musicians.order(:name).each do |musician| %>
+              <option value="<%= musician.id %>"><%= musician.name %> - <%= musician.instrument %><%= musician.location.present? ? " (#{musician.location})" : "" %></option>
+            <% end %>
+          </select>
+          <p class="form-hint">Type to search for musicians by name, instrument, or location</p>
+        </div>
       </div>
 
       <div class="cool-form-submit">

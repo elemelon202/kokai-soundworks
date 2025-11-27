@@ -14,12 +14,18 @@
   <div class="invite-input-group">
     <div class="invite-select-wrapper">
       <%= f.label :musician_id, class: "invite-label" do %>
-        <i class="fa-solid fa-user-music"></i> Select Musician
+        <i class="fa-solid fa-user-music"></i> Search Musician
       <% end %>
       <% available_musicians = Musician.where.not(id: band.musician_ids).where.not(id: band.band_invitations.pending.pluck(:musician_id)) %>
-      <%= f.collection_select :musician_id, available_musicians, :id, :name,
-          { prompt: "Search for a musician to invite..." },
-          { class: "invite-select", data: { controller: "tom-select", tom_select_placeholder_value: "Search by name..." } } %>
+      <select name="band_invitation[musician_id]"
+              id="band_invitation_musician_id"
+              data-controller="tom-select"
+              data-tom-select-placeholder-value="Search by name, instrument, or location...">
+        <option value="">Select a musician...</option>
+        <% available_musicians.each do |musician| %>
+          <option value="<%= musician.id %>"><%= musician.name %> - <%= musician.instrument %><%= musician.location.present? ? " (#{musician.location})" : "" %></option>
+        <% end %>
+      </select>
     </div>
     <%= f.submit "Send Invite", class: "invite-submit-btn" %>
   </div>
