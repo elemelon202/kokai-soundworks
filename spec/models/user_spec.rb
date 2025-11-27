@@ -66,8 +66,8 @@ RSpec.describe User, type: :model do
 
     it 'returns count of unread messages in DM chats' do
       chat = create(:chat, :direct_message, :with_participants, participants: [user1, user2])
-      message = create(:message, chat: chat, user: user2)
-      create(:message_read, message: message, user: user1, read: false)
+      # Message from user2 automatically creates unread MessageRead for user1
+      create(:message, chat: chat, user: user2)
 
       expect(user1.unread_dm_count).to eq(1)
     end
@@ -75,7 +75,8 @@ RSpec.describe User, type: :model do
     it 'returns 0 when all messages are read' do
       chat = create(:chat, :direct_message, :with_participants, participants: [user1, user2])
       message = create(:message, chat: chat, user: user2)
-      create(:message_read, message: message, user: user1, read: true)
+      # Mark the auto-created message_read as read
+      message.message_reads.find_by(user: user1).update!(read: true)
 
       expect(user1.unread_dm_count).to eq(0)
     end

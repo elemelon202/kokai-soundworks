@@ -14,6 +14,9 @@ class Band < ApplicationRecord
   acts_as_taggable_on :genres
   accepts_nested_attributes_for :musicians
 
+  # Temporary attribute to pass musician profile data from controller
+  attr_accessor :leader_musician_params
+
   GENRES = ['Rock', 'Pop', 'Jazz', 'Classical', 'Hip Hop', 'Country', 'Electronic', 'Reggae', 'Blues', 'Folk'].freeze
 
   scope :with_genres, ->(genres) { tagged_with(genres, on: :genres, any: true) }
@@ -28,14 +31,7 @@ class Band < ApplicationRecord
 
   def setup_band_membership_and_chat
     # Ensure creator has a musician profile
-    creator_musician = user.musician || Musician.create!(
-      user: user,
-      name: user.username,
-      instrument: "Unknown",
-      styles: "",
-      location: "",
-      bio: ""
-    )
+    creator_musician = user.musician || create_leader_musician
 
     # Add creator to band members
     involvements.create!(musician: creator_musician)
@@ -45,5 +41,36 @@ class Band < ApplicationRecord
 
     # Add creator as chat participant
     chat_record.participations.create!(user: user)
+  end
+
+  def create_leader_musician
+    musician_attrs = if leader_musician_params.present?
+      {
+        user: user,
+        name: leader_musician_params[:name].presence || user.username,
+        instrument: leader_musician_params[:instrument].presence || "Unknown",
+        location: leader_musician_params[:location].presence || "",
+        styles: "",
+        bio: ""
+      }
+    else
+      {
+        user: user,
+        name: user.username,
+        instrument: "Unknown",
+        styles: "",
+        location: "",
+        bio: ""
+      }
+    end
+
+    musician = Musician.create!(musician_attrs)
+
+    # Attach photo if provided
+    if leader_musician_params.present? && leader_musician_params[:media].present?
+      musician.media.attach(leader_musician_params[:media])
+    end
+
+    musician
   end
 end

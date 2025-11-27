@@ -22,4 +22,9 @@ class ChatPolicy < ApplicationPolicy
   def create_or_show?
     true
   end
+
+  def destroy?
+    # User must be a participant in the chat
+    record.users.include?(user)
+  end
 end

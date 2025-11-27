@@ -6,14 +6,17 @@ class BandInvitationPolicy < ApplicationPolicy
   end
 
   def create?
+    return false unless user.present?
     user_is_inviter?
   end
 
   def accept?
+    return false unless user.present?
     user_is_invited_musician?
   end
 
   def decline?
+    return false unless user.present?
     user_is_invited_musician?
   end
 

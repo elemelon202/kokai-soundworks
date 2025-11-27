@@ -21,7 +21,12 @@
 <% end %>
 <% @musician.bands.each do |band| %>
   <ul>
-    <li><%= band.name %></li>
+    <li>
+      <%= band.name %>
+      <% if band.user_id == @musician.user_id %>
+        <span class="badge bg-primary">Leader of <%= band.name %></span>
+      <% end %>
+    </li>
   </ul>
 <% end %>
 <!-- Showcase carousel -->

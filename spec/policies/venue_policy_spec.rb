@@ -14,7 +14,7 @@ RSpec.describe VenuePolicy, type: :policy do
     it { should forbid_action(:new) }
     it { should forbid_action(:edit) }
     it { should forbid_action(:update) }
-    it { should forbid_action(:delete) }
+    it { should forbid_action(:destroy) }
   end
 
   context 'for the venue owner' do
@@ -25,7 +25,7 @@ RSpec.describe VenuePolicy, type: :policy do
     it { should permit_action(:new) }
     it { should permit_action(:edit) }
     it { should permit_action(:update) }
-    it { should permit_action(:delete) }
+    it { should permit_action(:destroy) }
   end
 
   context 'for another venue user' do
@@ -36,7 +36,7 @@ RSpec.describe VenuePolicy, type: :policy do
     it { should permit_action(:new) }
     it { should forbid_action(:edit) }
     it { should forbid_action(:update) }
-    it { should forbid_action(:delete) }
+    it { should forbid_action(:destroy) }
   end
 
   context 'for a non-venue user' do
@@ -44,10 +44,11 @@ RSpec.describe VenuePolicy, type: :policy do
 
     it { should forbid_action(:index) }
     it { should permit_action(:show) }
-    it { should forbid_action(:new) }
+    it { should permit_action(:new) }
+    it { should permit_action(:create) }
     it { should forbid_action(:edit) }
     it { should forbid_action(:update) }
-    it { should forbid_action(:delete) }
+    it { should forbid_action(:destroy) }
   end
 
   describe 'Scope' do

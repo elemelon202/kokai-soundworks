@@ -1,93 +1,232 @@
-<div class="conversations-container">
-  <h1>Your Direct Messages</h1>
+<div class="dm-container">
+  <%= render "sidebar" %>
 
-  <% if @chats.any? %>
-    <div class="conversations-list">
-      <% @chats.each do |chat| %>
-        <% other_user = chat.other_participant(current_user) %>
-        <div class="conversation-item">
-          <%= link_to direct_message_path(chat), class: "conversation-link" do %>
-            <div class="conversation-info">
-              <strong><%= other_user.username %></strong>
-              <% if other_user.musician %>
-                <span class="badge"><%= other_user.musician.instrument %></span>
-              <% end %>
-              <% last_message = chat.messages.last %>
-              <% if last_message %>
-                <p class="last-message"><%= truncate(last_message.content, length: 50) %></p>
-              <% end %>
-            </div>
-            <% unread = chat.unread_count_for(current_user) %>
-            <% if unread > 0 %>
-              <span class="unread-badge"><%= unread %></span>
-            <% end %>
-          <% end %>
-        </div>
-      <% end %>
+  <div class="chat-area empty-state">
+    <div class="empty-message">
+      <h3>Welcome to Direct Messages</h3>
+      <p>Select a conversation from the sidebar or start a new one.</p>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newChatModal">
+        Start a New Conversation
+      </button>
     </div>
-  <% else %>
-    <p>No conversations yet. Start messaging musicians!</p>
-  <% end %>
+  </div>
 </div>
 
 <style>
-  .conversations-container {
-    max-width: 800px;
+  .dm-container {
+    display: flex;
+    height: calc(100vh - 100px);
+    max-width: 1200px;
     margin: 0 auto;
-    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .dm-sidebar {
+    width: 300px;
+    min-width: 300px;
+    background: #f8f9fa;
+    border-right: 1px solid #ddd;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    background: white;
+  }
+
+  .sidebar-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
   }
 
   .conversations-list {
-    margin-top: 20px;
+    flex: 1;
+    overflow-y: auto;
   }
 
   .conversation-item {
-    background: white;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    margin-bottom: 10px;
-    transition: box-shadow 0.2s;
+    position: relative;
+    border-bottom: 1px solid #eee;
+    transition: background 0.2s;
   }
 
   .conversation-item:hover {
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: #e9ecef;
+  }
+
+  .conversation-item.active {
+    background: #007bff;
+    border-left: 3px solid #0056b3;
+  }
+
+  .conversation-item.active .conversation-link {
+    color: white;
+  }
+
+  .conversation-item.active .last-message {
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .conversation-item.active .badge {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
   }
 
   .conversation-link {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 15px;
+    padding: 12px 15px;
     text-decoration: none;
     color: inherit;
   }
 
   .conversation-info {
     flex: 1;
+    min-width: 0;
+  }
+
+  .conversation-info strong {
+    display: block;
+    margin-bottom: 2px;
   }
 
   .last-message {
     color: #666;
-    font-size: 0.9em;
-    margin-top: 5px;
-  }
-
-  .badge {
-    background: #e9ecef;
-    padding: 3px 8px;
-    border-radius: 12px;
     font-size: 0.85em;
-    margin-left: 10px;
+    margin: 5px 0 0 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   .unread-badge {
     background: #dc3545;
     color: white;
-    padding: 4px 8px;
-    border-radius: 50%;
-    font-size: 0.85em;
+    padding: 2px 6px;
+    border-radius: 10px;
+    font-size: 0.75em;
     font-weight: bold;
-    min-width: 24px;
+  }
+
+  .delete-chat-btn {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    padding: 2px 6px;
+    font-size: 1.2em;
+    opacity: 0;
+    transition: opacity 0.2s;
+  }
+
+  .conversation-item:hover .delete-chat-btn {
+    opacity: 1;
+  }
+
+  .delete-chat-btn:hover {
+    color: #dc3545;
+  }
+
+  .no-chats {
+    padding: 20px;
     text-align: center;
+    color: #666;
+  }
+
+  .chat-area {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: white;
+  }
+
+  .chat-area.empty-state {
+    justify-content: center;
+    align-items: center;
+  }
+
+  .empty-message {
+    text-align: center;
+    color: #666;
+  }
+
+  .empty-message h3 {
+    margin-bottom: 10px;
+  }
+
+  .empty-message p {
+    margin-bottom: 20px;
+  }
+
+  .chat-header {
+    padding: 15px;
+    border-bottom: 1px solid #ddd;
+    background: #f8f9fa;
+  }
+
+  .chat-header h4 {
+    margin: 0;
+  }
+
+  .chat-participant-name {
+    color: #000;
+    font-weight: 600;
+  }
+
+  .sidebar-header h3 {
+    color: #000;
+  }
+
+  .conversation-info strong {
+    color: #000;
+  }
+
+  .conversation-item.active .conversation-info strong {
+    color: white;
+  }
+
+  .messages-list {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    min-height: 0;
+  }
+
+  /* Modal styles */
+  .musician-list {
+    max-height: 400px;
+    overflow-y: auto;
+  }
+
+  .musician-option {
+    display: block;
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.2s;
+  }
+
+  .musician-option:hover {
+    background: #f0f0f0;
+  }
+
+  .musician-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 </style>

@@ -1,10 +1,28 @@
 <%= simple_form_for @band do |f| %>
-  <%= f.input :name %>
-  <%= f.input :location %>
+  <h2>Band Details</h2>
+  <%= f.input :name, label: "Band Name" %>
+  <%= f.input :location, label: "Band Location" %>
   <%= f.input :description %>
-   <%= f.input :musician_ids,
+
+  <% unless current_user.musician %>
+    <hr>
+    <h2>Your Musician Profile</h2>
+    <p class="text-muted">As a band leader, you need a musician profile. Fill in your details below:</p>
+
+    <%= f.fields_for :leader_musician, Musician.new do |m| %>
+      <%= m.input :name, label: "Your Name", required: true %>
+      <%= m.input :instrument, label: "Your Instrument/Role", required: true %>
+      <%= m.input :location, label: "Your Location" %>
+      <%= m.input :media, as: :file, label: "Profile Photo (optional)", input_html: { accept: "image/*" } %>
+    <% end %>
+  <% end %>
+
+  <hr>
+  <h2>Invite Musicians (Optional)</h2>
+  <%= f.input :musician_ids,
               as: :select,
-              collection: Musician.all,  # initial load (optional)
-              input_html: { multiple: true, class: "js-musicians-select" } %>
-  <%= f.button :submit %>
+              collection: Musician.all,
+              input_html: { multiple: true, class: "js-musicians-select" },
+              label: "Select existing musicians to invite" %>
+  <%= f.button :submit, "Create Band" %>
 <% end %>

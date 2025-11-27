@@ -27,8 +27,11 @@ class BandsController < ApplicationController
   def create
     @band = Band.new(band_params)
     @band.user = current_user
+    @band.leader_musician_params = leader_musician_params if leader_musician_params.present?
     authorize @band #* Tyrhen was here
     if @band.save
+      # Send invitations to selected musicians instead of adding them directly
+      send_invitations_to_musicians
       redirect_to band_path(@band)
     else
       render :new
@@ -53,7 +56,8 @@ class BandsController < ApplicationController
     msg_read.update(read: true) if msg_read
     end
     @band_invitation = BandInvitation.new
-    @pending_invitations = policy_scope(BandInvitation).pending.sent_by(current_user)
+    # Show all pending invitations for this band (visible to all band members)
+    @pending_invitations = @band.band_invitations.pending
 
   end
   def update
@@ -72,8 +76,34 @@ class BandsController < ApplicationController
 
   private
   def band_params
-    params.require(:band).permit(:name, :description, genre_list: [], musician_ids: [])
+    # Don't permit musician_ids - we handle invitations separately
+    params.require(:band).permit(:name, :location, :description, genre_list: [])
   end
+
+  def invited_musician_ids
+    params[:band][:musician_ids]&.reject(&:blank?) || []
+  end
+
+  def send_invitations_to_musicians
+    invited_musician_ids.each do |musician_id|
+      musician = Musician.find_by(id: musician_id)
+      next unless musician
+      # Don't invite the band creator (they're already a member)
+      next if musician.user_id == current_user.id
+
+      @band.band_invitations.create(
+        musician: musician,
+        inviter: current_user,
+        status: 'Pending'
+      )
+    end
+  end
+
+  def leader_musician_params
+    return nil unless params[:band][:leader_musician].present?
+    params[:band].require(:leader_musician).permit(:name, :instrument, :location, :media)
+  end
+
   def set_band
     @band = Band.find(params[:id])
   end
