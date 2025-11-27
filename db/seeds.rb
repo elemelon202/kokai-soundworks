@@ -40,10 +40,10 @@ puts "✅ Created #{Venue.count} venues"
 
 puts "🎸 Creating musicians..."
 
-musician1 = Musician.create!(user: musician_user1, name: "Yuki Tanaka", instrument: "Drums", age: 28, styles: "Jazz, Funk, R&B", location: "Shibuya, Tokyo", bio: "Yuki is the rhythmic backbone of any ensemble...")
-musician2 = Musician.create!(user: musician_user2, name: "Kenji Watanabe", instrument: "Bass", age: 32, styles: "Jazz, Rock, Blues", location: "Shinjuku, Tokyo", bio: "Kenji is the ultimate musical chameleon...")
-musician3 = Musician.create!(user: musician_user3, name: "Sakura Kimura", instrument: "Vocals", age: 25, styles: "Jazz, Soul, Pop", location: "Harajuku, Tokyo", bio: "Sakura is a captivating vocalist...")
-musician4 = Musician.create!(user: musician_user4, name: "Takeshi Ito", instrument: "Guitar", age: 30, styles: "Rock, Metal, Blues", location: "Ikebukuro, Tokyo", bio: "Takeshi's guitar work is defined by blistering solos...")
+musician1 = Musician.create!(user: musician_user1, name: "Yuki Tanaka", instrument: "Drums", age: 28, styles: "Jazz, Funk, R&B", location: "Shibuya, Tokyo", bio: "Yuki is the rhythmic backbone of any ensemble providing a kick-ass foundation for any band that he's in.")
+musician2 = Musician.create!(user: musician_user2, name: "Kenji Watanabe", instrument: "Bass", age: 32, styles: "Jazz, Rock, Blues", location: "Shinjuku, Tokyo", bio: "Kenji is the ultimate musical chameleon able to blend into any melodic jungle.")
+musician3 = Musician.create!(user: musician_user3, name: "Sakura Kimura", instrument: "Vocals", age: 25, styles: "Jazz, Soul, Pop", location: "Harajuku, Tokyo", bio: "Sakura is a captivating vocalist with the voice of a siren.")
+musician4 = Musician.create!(user: musician_user4, name: "Takeshi Ito", instrument: "Guitar", age: 30, styles: "Rock, Metal, Blues", location: "Ikebukuro, Tokyo", bio: "Takeshi's guitar work is defined by blistering solos and crazy riffs.")
 
 puts "✅ Created #{Musician.count} musicians"
 
