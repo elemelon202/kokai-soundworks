@@ -1,62 +1,99 @@
-
-  <div class="header d-flex flex-column align-items-left mb-4">
+<div class="band-dashboard-container">
+  <div class="band-dashboard-header">
     <h1>Band Dashboard</h1>
     <h2>Manage your band gig applications and members</h2>
   </div>
-<div class="container cards">
-  <div class="card">
-    <h2>Gig Applications</h2>
-    <%= @band.bookings.count %>
-    <span>Pending: <%= @pending_bookings.count %></span>
+
+  <div id="flash_messages">
+    <%= render partial: "shared/flash", locals: { notice: flash[:notice], alert: flash[:alert] } %>
   </div>
-  <div class="card">
-    <h2>Band Members</h2>
-    <%= @band.musicians.count %>
+
+  <div class="band-stats-grid">
+    <div class="band-stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-ticket"></i>
+      </div>
+      <div class="stat-value"><%= @band.bookings.count %></div>
+      <div class="stat-label">Gig Applications</div>
+      <div class="stat-sub">Pending: <%= @pending_bookings.count %></div>
+    </div>
+
+    <div class="band-stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="stat-value"><%= @band.musicians.count %></div>
+      <div class="stat-label">Band Members</div>
+    </div>
+
+    <div class="band-stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-calendar-days"></i>
+      </div>
+      <div class="stat-value"><%= @band.gigs.count %></div>
+      <div class="stat-label">Upcoming Gigs</div>
+    </div>
+
+    <div class="band-stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-envelope"></i>
+      </div>
+      <div class="stat-value"><%= @unread_messages.count %></div>
+      <div class="stat-label">Unread Messages</div>
+    </div>
   </div>
-  <div class="card">
-    <h2>Upcoming Gigs</h2>
-    <%= @band.gigs.count %>
-  </div>
-  <div class="card">
-    <h2>Unread Messages</h2>
-    <%= @unread_messages.count %>
-  </div>
-  <div class="card invites border-solid border-2 border-yellow-300 p-4 mb-4">
-    <div class="band-chat-container">
-     <%= render 'chat', band: @band %>
-     </div>
 
-
- <div id="flash_messages">
-  <%= render partial: "shared/flash", locals: { notice: flash[:notice], alert: flash[:alert] } %>
-</div>
-
-<!-- Invite form -->
-<turbo-frame id="band_invitation_form">
-  <%= render partial: "bands/invite", locals: { band: @band, invitation: @band_invitation } %>
-</turbo-frame>
-
-<!-- Pending Invitations List -->
-<div id="pending_invitations_list" data-band-id="<%= @band.id %>">
-  <%= render partial: "bands/pending_invitations", locals: { pending_invitations: @pending_invitations } %>
-</div>
-
-   <div class="gig-applications">
-    <h2>Gig Applications</h2>
-    <div class="applications-list">
-      <% @pending_bookings.each do |booking| %>
-        <div class="application-card card mb-3 p-3">
-          <h5><%= booking.gig.name %></h5>
-          <p><strong>Date:</strong> <%= booking.gig.date.strftime("%B %d, %Y") %></p>
-          <p><strong>Venue:</strong> <%= booking.gig.venue.name %></p>
-          <div class="actions">
-            <span><%= booking.status %></span>
-          </div>
-          <div class="available-gigs">
-            <h2>Gigs in your area</h2>
-          </div>
+  <div class="band-dashboard-content">
+    <div class="band-dashboard-card">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-comments"></i>
         </div>
+        <h3>Band Chat</h3>
+      </div>
+      <div class="band-chat-wrapper">
+        <%= render 'chat', band: @band %>
+      </div>
+    </div>
+
+    <div class="band-dashboard-card">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-user-plus"></i>
+        </div>
+        <h3>Invite Musicians</h3>
+      </div>
+      <div class="band-invite-section">
+        <turbo-frame id="band_invitation_form">
+          <%= render partial: "bands/invite", locals: { band: @band, invitation: @band_invitation } %>
+        </turbo-frame>
+
+        <div id="pending_invitations_list" data-band-id="<%= @band.id %>" class="mt-4">
+          <%= render partial: "bands/pending_invitations", locals: { pending_invitations: @pending_invitations } %>
+        </div>
+      </div>
+    </div>
+
+    <div class="band-dashboard-card full-width">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-clipboard-list"></i>
+        </div>
+        <h3>Gig Applications</h3>
+      </div>
+
+      <% if @pending_bookings.any? %>
+        <% @pending_bookings.each do |booking| %>
+          <div class="gig-application-card">
+            <h5><%= booking.gig.name %></h5>
+            <p><strong>Date:</strong> <%= booking.gig.date.strftime("%B %d, %Y") %></p>
+            <p><strong>Venue:</strong> <%= booking.gig.venue.name %></p>
+            <span class="status-badge <%= booking.status.downcase %>"><%= booking.status %></span>
+          </div>
+        <% end %>
+      <% else %>
+        <p style="color: rgba(255,255,255,0.5); text-align: center; padding: 30px;">No pending gig applications</p>
       <% end %>
-   </div>
+    </div>
   </div>
 </div>

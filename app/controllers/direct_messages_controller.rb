@@ -19,6 +19,9 @@ class DirectMessagesController < ApplicationController
       message_read.update(read: true) unless message_read.read?
     end
 
+    # Broadcast updated unread count to the user
+    broadcast_updated_message_count
+
     @message = Message.new
     @musicians = Musician.where.not(user_id: current_user.id).includes(:user)
   end
@@ -59,5 +62,15 @@ class DirectMessagesController < ApplicationController
     @chats = current_user.direct_message_chats
                         .includes(:users, messages: :user)
                         .order('messages.created_at DESC')
+  end
+
+  def broadcast_updated_message_count
+    MessagesNotificationChannel.broadcast_to(
+      current_user,
+      {
+        unread_count: current_user.unread_dm_count,
+        show_toast: false
+      }
+    )
   end
 end

@@ -26,6 +26,9 @@ def create
 
   respond_to do |format|
     if @band_invitation.save
+      # Create notification for the invited musician
+      Notification.create_for_band_invitation(@band_invitation)
+
       @pending_invitations = policy_scope(BandInvitation).pending.sent_by(current_user)
       format.turbo_stream do
         render turbo_stream: [
@@ -73,6 +76,12 @@ end
     authorize @band_invitation
     @band_invitation.update(status: "Accepted")
     @band_invitation.band.musicians << @band_invitation.musician
+
+    # Notify the inviter that invitation was accepted
+    Notification.create_for_invitation_response(@band_invitation, accepted: true)
+    # Notify band members about new member
+    Notification.create_for_band_member_joined(@band_invitation.band, @band_invitation.musician)
+
     broadcast_invitation_update(@band_invitation)
     redirect_to band_path(@band_invitation.band), notice: "Invitation accepted."
   end
@@ -80,6 +89,10 @@ end
   def decline
     authorize @band_invitation
     @band_invitation.update(status: "Declined")
+
+    # Notify the inviter that invitation was declined
+    Notification.create_for_invitation_response(@band_invitation, accepted: false)
+
     broadcast_invitation_update(@band_invitation)
     redirect_to band_path(@band_invitation.band), notice: "Invitation declined."
   end

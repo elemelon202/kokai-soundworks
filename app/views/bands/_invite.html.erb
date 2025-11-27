@@ -1,7 +1,8 @@
-<%= form_with model: [band, invitation], id: "new_band_invitation" do |f| %>
+<%= form_with model: [band, invitation], id: "new_band_invitation", class: "invite-form" do |f| %>
   <% if invitation.errors.any? %>
-    <div class="errors">
-      <%= pluralize(invitation.errors.count, "error") %> prevented this invitation:
+    <div class="invite-errors">
+      <i class="fa-solid fa-circle-exclamation"></i>
+      <span><%= pluralize(invitation.errors.count, "error") %> prevented this invitation:</span>
       <ul>
         <% invitation.errors.full_messages.each do |msg| %>
           <li><%= msg %></li>
@@ -10,10 +11,15 @@
     </div>
   <% end %>
 
-  <div>
-    <%= f.label :musician_id, "Select Musician" %>
-    <%= f.collection_select :musician_id, Musician.all, :id, :name, { prompt: "Choose a musician..." } %>
+  <div class="invite-input-group">
+    <div class="invite-select-wrapper">
+      <%= f.label :musician_id, class: "invite-label" do %>
+        <i class="fa-solid fa-user-music"></i> Select Musician
+      <% end %>
+      <%= f.collection_select :musician_id, Musician.all, :id, :name,
+          { prompt: "Choose a musician to invite..." },
+          { class: "invite-select" } %>
+    </div>
+    <%= f.submit "Send Invite", class: "invite-submit-btn" %>
   </div>
-
-  <%= f.submit "Invite" %>
 <% end %>
