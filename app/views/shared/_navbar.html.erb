@@ -3,7 +3,7 @@
     <%# LOGO %>
     <div class="d-flex align-items-center me-auto">
       <%= link_to root_path, class: "navbar-brand" do %>
-        <%= image_tag "https://raw.githubusercontent.com/lewagon/fullstack-images/master/uikit/logo.png" %>
+        <%= image_tag "kokai1.png" %>
       <% end %>
       <%# USER STATUS %>
       <% if user_signed_in? %>
@@ -23,10 +23,10 @@
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
           <li class="nav-item active">
-            <%= link_to "Home", "#", class: "nav-link" %>
+            <%= link_to "Home", "/", class: "nav-link btn btn-primary text-white" %>
           </li>
           <li class="nav-item">
-            <%= link_to "Messages", "#", class: "nav-link" %>
+            <%= link_to "Messages", "#", class: "nav-link btn btn-primary text-white" %>
           </li>
           <li class="nav-item dropdown">
             <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

@@ -9,13 +9,20 @@
   position: sticky;
   top: 0;
   z-index: 1020;
-  a {
-    color: white;
+
+  li:hover {
+    color: black;
   }
 
   p {
     font-size: 1rem;
   }
+
+
+}
+
+.btn-primary:hover {
+  color: black;
 }
 
 .navbar-lewagon .navbar-collapse {

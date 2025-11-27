@@ -1,12 +1,142 @@
-<h1>Home</h1>
-<div class="m-3 fs-3">
-  <div class="mb-2">
-    <%= link_to "Musicians", musicians_path, class: "text-white text-decoration-none" %>
+<div class="container-home">
+  <div class="hero-text text-center text-white pt-5">
+    <h1 class="slogan m-4">From Bedroom to Breakthrough</h1>
+    <p>Build Bands. Book Gigs. Fill Venues</p>
+    <p>We've made it easier to connect to other musicians, bands, and venues.</p>
+    <p>Discover talent, book shows, and grow your music career.</p>
   </div>
-  <div class="mb-2">
-    <%= link_to "Bands", bands_path, class: "text-white text-decoration-none" %>
+  <div class="hero-cards justify-content-center m-4">
+    <div class="row justify-content-center">
+      <div class="col-8 col-md-3 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">For Musicians</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#"><%= link_to "See Musicians", musicians_path, class: "btn btn-primary" %></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-8 col-md-3 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">For Bands</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#"><%= link_to "See Bands", bands_path, class: "btn btn-primary" %></a>
+          </div>
+        </div>
+      </div>
+      <div class="col-8 col-md-3 mb-3">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">For Venues</h5>
+            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+            <a href="#"> <%= link_to "See Venues", venues_path, class: "btn btn-primary" %></a>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
-  <div class="mb-2">
-    <%= link_to "Venues", venues_path, class: "text-white text-decoration-none" %>
+  <div class="carousels text-center m-4">
+    <div class="musicians-carousel row justify-content-center">
+      <div class="musicians-carousel-heading text-center">
+        <h2>New Faces</h2>
+      </div>
+      <div class="row justify-content-center">
+        <div class="musician-card col-8 col-md-3">
+          <div class="musician-card-header">
+            <%= image_tag "musician_placeholder2.jpg", alt: "text", class: "musician-avatar" %>
+            <div class="musician-card-name-wrapper">
+              <h4 class="musician-card-name">Aris Kael</h4>
+            </div>
+          </div>
+          <div class="musician-card-details">
+            <p><i class="fa-solid fa-location-dot"></i> Location</p>
+            <p><i class="fa-solid fa-guitar"></i> Instrument</p>
+            <p><i class="fa-solid fa-music"></i> Genres</p>
+            <p><i class="fa-solid fa-pen-to-square"></i> Bio</p>
+          </div>
+        </div>
+        <div class="musician-card col-8 col-md-3">
+          <div class="musician-card-header">
+            <%= image_tag "musician_placeholder2.jpg", alt: "text", class: "musician-avatar" %>
+            <div class="musician-card-name-wrapper">
+              <h4 class="musician-card-name">Yuuki Tanaka</h4>
+            </div>
+          </div>
+          <div class="musician-card-details">
+            <p><i class="fa-solid fa-location-dot"></i> Location</p>
+            <p><i class="fa-solid fa-guitar"></i> Instrument</p>
+            <p><i class="fa-solid fa-music"></i> Genres</p>
+            <p><i class="fa-solid fa-pen-to-square"></i> Bio</p>
+          </div>
+        </div>
+        <div class="musician-card col-8 col-md-3">
+          <div class="musician-card-header">
+            <%= image_tag "musician_placeholder2.jpg", alt: "text", class: "musician-avatar" %>
+            <div class="musician-card-name-wrapper">
+              <h4 class="musician-card-name">Elias Vance</h4>
+            </div>
+          </div>
+          <div class="musician-card-details">
+            <p><i class="fa-solid fa-location-dot"></i> Location</p>
+            <p><i class="fa-solid fa-guitar"></i> Instrument</p>
+            <p><i class="fa-solid fa-music"></i> Genres</p>
+            <p><i class="fa-solid fa-pen-to-square"></i> Bio</p>
+          </div>
+        </div>
+        <div class="musician-card col-8 col-md-3">
+          <div class="musician-card-header">
+            <%= image_tag "musician_placeholder2.jpg", alt: "text", class: "musician-avatar" %>
+            <div class="musician-card-name-wrapper">
+              <h4 class="musician-card-name">Sloane Rider</h4>
+            </div>
+          </div>
+          <div class="musician-card-details">
+            <p><i class="fa-solid fa-location-dot"></i> Location</p>
+            <p><i class="fa-solid fa-guitar"></i> Instrument</p>
+            <p><i class="fa-solid fa-music"></i> Genres</p>
+            <p><i class="fa-solid fa-pen-to-square"></i> Bio</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="venues-carousel">
+      <h2>New Places</h2>
+      <div class="venues-cards row justify-content-center">
+        <div class="musician-card col-8 col-md-3">
+          <%= image_tag "venue_placeholder1.jpg", alt: "text", class: "img-fluid" %>
+          <div class="musician-card-name-wrapper">
+            <h4 class="musician-card-name">Bluenote Tokyo</h4>
+          </div>
+          <div class="musician-card-details">
+            <p><i class="fa-solid fa-location-dot"></i> Location</p>
+            <p><i class="fa-solid fa-guitar"></i> Capacity</p>
+            <p><i class="fa-solid fa-pen-to-square"></i> Bio</p>
+          </div>
+        </div>
+        <div class="musician-card col-8 col-md-3">
+          <%= image_tag "venue_placeholder1.jpg", alt: "text", class: "img-fluid" %>
+          <div class="musician-card-name-wrapper">
+            <h4 class="musician-card-name">Ariamis Arts</h4>
+          </div>
+          <div class="musician-card-details">
+            <p><i class="fa-solid fa-location-dot"></i> Location</p>
+            <p><i class="fa-solid fa-guitar"></i> Capacity</p>
+            <p><i class="fa-solid fa-pen-to-square"></i> Bio</p>
+          </div>
+        </div>
+        <div class="musician-card col-8 col-md-3">
+          <%= image_tag "venue_placeholder1.jpg", alt: "text", class: "img-fluid" %>
+          <div class="musician-card-name-wrapper">
+            <h4 class="musician-card-name">Hollow Bastion</h4>
+          </div>
+          <div class="musician-card-details">
+            <p><i class="fa-solid fa-location-dot"></i> Location</p>
+            <p><i class="fa-solid fa-guitar"></i> Capacity</p>
+            <p><i class="fa-solid fa-pen-to-square"></i> Bio</p>
+          </div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
