@@ -1,0 +1,128 @@
+.band-card {
+  background-color: #171717;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
+  transition: 0.3s;
+  width: 100%;
+  margin: 0 auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  position: relative;
+  height: 100%;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+
+  a {
+    width: 100%;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    position: relative;
+    z-index: 3;
+  }
+
+  .btn {
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out;
+    pointer-events: none;
+    z-index: 4;
+  }
+
+
+
+}
+
+
+
+.band-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+
+    .btn {
+      opacity: 1;
+      pointer-events: auto;
+    }
+  }
+
+.band-card::before {
+  content: "";
+  position:absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  border-radius: 20px;
+  background: linear-gradient(to bottom left, #000000, #a7e936);
+  z-index: 0;
+}
+
+.band-card::after {
+  content: "";
+  position: absolute;
+
+  top: 0.5px;
+  left: 0.5px;
+  right: 0.5px;
+  bottom: 0.5px;
+
+  border-radius: 20px;
+  background-color:#171717;
+
+  z-index: 1;
+}
+
+.band-card-header {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  margin-bottom: 20px;
+  z-index: 2;
+}
+
+.band-avatar {
+  height: 60px;
+  width: 60px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin-right: 15px;
+  z-index: 2;
+
+}
+
+.musician-card-name-wrapper {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.1;
+  z-index: 2;
+}
+
+.musician-card-name {
+  padding-left: 0;
+  margin: 0;
+  font-size: 1.5em;
+  color: white;
+  white-space: nowrap;
+  z-index: 2;
+}
+
+.musician-card-details span {
+  margin: 5px 0;
+  color: #ccc;
+  font-size: 1.1em;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+
+  i {
+    font-size: 10px;
+    z-index: 2;
+  }
+}

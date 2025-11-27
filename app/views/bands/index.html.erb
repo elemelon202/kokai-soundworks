@@ -1,28 +1,25 @@
-<div class="content-wrap bg-black text-white py-5">
-  <div class="header d-flex flex-column align-items-center mb-4">
+<div class="container">
+  <div class="index-heading m-3 mt-5">
     <h1>Browse bands</h1>
-    <h2>Discover talented bands to connect with</h2>
+    <p>Discover talented bands to connect with</p>
   </div>
-
   <div class="container">
-      <div class="row">
-          <div class="col-md-12">
-              <form class="d-flex">
-                  <div class="input-group dark-mode w-100">
-                      <%= text_field_tag :q, params[:q], class: "form-control form-control-lg bg-dark text-light border-dark input-dark rounded-pill", type: "search", placeholder: "Search for a band...", aria: { label: "Search" } %>
-                      <button class="btn btn-dark text-white px-4" type="submit">
-                              <i class="fa-solid fa-magnifying-glass"></i>
-                          </button>
-                  </div>
-              </form>
+    <div class="row">
+      <div class="col-md-12">
+        <form class="d-flex">
+          <div class="input-group dark-mode w-100">
+            <%= text_field_tag :q, params[:q], class: "form-control", type: "search", placeholder: "Search for a band...", aria: { label: "Search" } %>
+            <button class="btn btn-dark text-white px-4" type="submit">
+              <i class="fa-solid fa-magnifying-glass"></i>
+            </button>
           </div>
+        </form>
       </div>
+    </div>
   </div>
   <div class="container my-4">
     <%= form_with url: bands_path, method: :get, local: true, html: { id: "band-filter-form" } do %>
-
       <!-- Search Input -->
-
       <!-- Genre Pills -->
       <div class="d-flex flex-row flex-wrap mb-3">
         <% Band::GENRES.each do |genre| %>
@@ -40,40 +37,41 @@
           <% end %>
         <% end %>
       </div>
-
     <% end %>
   </div>
-
-    <!-- Display Bands -->
+  <!-- Display Bands -->
   <div class="container">
-      <p><%= @bands.count > 1 ? "#{@bands.count} bands found" : "1 band found" %></p>
-    <div class="container cards">
-      <% @bands.each do |band| %>
-        <%= link_to band_path(band), class: "band-card-link" do %>
-          <div class="card mb-3 bg-dark dark-card text-white p-3 rounded" style="width: 18rem;">
-            <% if band.banner.attached? %>
-              <%= image_tag url_for(band.banner), alt: band.name, class: "img-fluid" %>
-            <% else %>
-              <%= image_tag "sam_wall_bass.jpg", alt: band.name, class: "img-fluid" %>
-            <% end %>
-            <div class="card-body">
-              <div class="band-card-top-text">
-                <h5 class="card-title"><%= band.name %></h5>
-                <p><%= band.location %></p>
-              </div>
-              <div class="band-card-bottom-text border-bottom mb-3 pb-3">
-                <% band.genre_list.each do |genre| %>
-                  <span class="badge bg-secondary"><%= genre %></span>
-                <% end %>
-                <p class="card-text"><%= band.description %></p>
-              </div>
-              <i class="fa-solid fa-user-group"></i> <span><%= band.musicians.count %> <%= band.musicians.count > 1 ? "members" : "member" %></span> <br>
+    <p><%= @bands.count > 1 ? "#{@bands.count} bands found" : "1 band found" %></p>
+    <%# BAND CARD START %>
+    <div class="row justify-content-center flex-wrap align-items-stretch">
+      <% if @bands.any? %>
+        <% @bands.each do |band| %>
+          <div class="col-8 col-md-3 m-2 h-100 d-flex">
+            <div class="band-card position-relative">
+              <%= link_to band_path(band), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
+                <div class="band-card-header">
+                  <% if band.banner.attached? %>
+                    <%= image_tag url_for(band.banner), alt: band.name, class: "img-fluid" %>
+                  <% else %>
+                    <%= image_tag "band_placeholder.jpg", alt: band.name, class: "img-fluid rounded-5" %>
+                  <% end %>
+                  <div class="band-card-name-wrapper">
+                  </div>
+                </div>
+                <div class="band-card-details">
+                  <p><i class="fa-solid fa-location-dot"></i> <%= band.location %></p>
+                  <p class="band-card-name"><%= band.name %></p>
+                  <% band.genre_list.each do |genre| %>
+                    <p class="badge"><% genre %></p>
+                  <% end %>
+                  <p><i class="fa-solid fa-pen-to-square"></i> <%= band.description %></p>
+                  <p><i class="fa-solid fa-user-group"></i> <%= band.musicians.count %></p>
+                </div>
+              <% end %>
             </div>
           </div>
         <% end %>
-      <% end %>
-
-      <% if @bands.empty? %>
+      <% else %>
         <p>No bands found.</p>
       <% end %>
     </div>
