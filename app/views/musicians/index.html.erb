@@ -1,7 +1,11 @@
 <div class="container">
+  <div class="index-heading m-3 mt-5">
+    <h1>Musicians</h1>
+    <p>New potential bandmates</p>
+  </div>
   <%= form_with url: musicians_path, method: :get, data: { turbo_frame: "musicians_list" }, class: "filters-form" do %>
     <!-- Search Field -->
-    <div class="mb-3 d-flex gap-2 align-items-center">
+    <div class="mt-5 mb-5 d-flex gap-2 align-items-center">
       <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control", data: { action: "input->auto-submit#submit" } %>
       <%= link_to "Clear Filters", musicians_path, class: "btn btn-outline-secondary" %>
       <!-- Instruments Dropdown -->
@@ -37,25 +41,34 @@
   <!-- Musicians list -->
   <turbo-frame id="musicians_list">
     <div class="musicians-section">
-      <div class="musician-cards">
+      <div class="row justify-content-center flex-wrap align-items-stretch">
         <% if @musicians.any? %>
           <% @musicians.each do |musician| %>
-            <div class="musician-card card m-1 border-3 border-white p-2">
-              <%= link_to musician_path(musician), class: "text-light text-decoration-none", data: { turbo: false } do %>
-                <% if musician.media.attached? %>
-                  <% first_file = musician.media.first %>
-                  <% if first_file.content_type.start_with?("image") %>
-                    <%= cl_image_tag(first_file.key, class: "w-25") %>
-                  <% end %>
-                <% else %>
-                  <%= image_tag "musician_placeholder.jpg", class: "w-25" %>
+            <div class="col-8 col-md-3 m-2 h-100 d-flex">
+              <div class="musician-card position-relative">
+                <%= link_to musician_path(musician), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
+                  <div class="musician-card-header">
+                    <% if musician.media.attached? %>
+                      <% first_file = musician.media.first %>
+                      <% if first_file.content_type.start_with?("image") %>
+                        <%= cl_image_tag(first_file.key, class: "musician-avatar") %>
+                      <% end %>
+                    <% else %>
+                      <%= image_tag "musician_placeholder.jpg", class: "musician-avatar" %>
+                    <% end %>
+                    <div class="musician-card-name-wrapper">
+                      <h4 class="musician-card-name"><%= musician.name %></h4>
+                    </div>
+                  </div>
+                  <div class="musician-card-details">
+                    <p><i class="fa-solid fa-location-dot"></i> <%= musician.location %></p>
+                    <p><i class="fa-solid fa-guitar"></i> <%= musician.instrument %></p>
+                    <p><i class="fa-solid fa-music"></i> <%= musician.styles %></p>
+                    <p><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
+                  </div>
                 <% end %>
-                <p><%= musician.name %></p>
-                <p><%= musician.instrument %></p>
-                <p> Styles: <%= musician.styles %></p>
-                <p> City: <%= musician.location %></p>
-              <% end %>
-              <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-secondary", data: { turbo: false } %>
+                <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary", style: "background-color: #a4fe35ff;", data: { turbo: false } %>
+              </div>
             </div>
           <% end %>
         <% else %>
