@@ -2,7 +2,7 @@
   <!-- Banner Section -->
   <div class="band-banner">
     <% if @band.banner.attached? %>
-      <%= image_tag url_for(@band.banner), class: "banner-image" %>
+      <%= image_tag url_for(@band.banner) %>
     <% else %>
       <div class="banner-placeholder"></div>
     <% end %>

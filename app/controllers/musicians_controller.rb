@@ -1,7 +1,7 @@
 class MusiciansController < ApplicationController
   # find musician before performing show, edit, update, or destroy
   skip_before_action :authenticate_user!, only: [:index, :show]
-  before_action :set_musician, only: [:show, :edit, :update, :destroy]
+  before_action :set_musician, only: [:show, :edit, :update, :destroy, :purge_attachment]
 
   def index
     @musicians = policy_scope(Musician)
@@ -62,10 +62,26 @@ end
 def update
   authorize @musician
   @musician = Musician.find(params[:id])
-  if @musician.update(musician_params)
+
+  # Handle media attachments separately to append instead of replace
+  attach_new_media
+
+  if @musician.update(musician_params_without_media)
     redirect_to musician_path(@musician), notice: 'Your profile has been updated'
   else
     render :edit, status: :unprocessable_entity
+  end
+end
+
+def purge_attachment
+  authorize @musician
+  attachment = ActiveStorage::Attachment.find(params[:attachment_id])
+
+  if attachment.record == @musician
+    attachment.purge
+    redirect_to edit_musician_path(@musician), notice: "Media removed successfully."
+  else
+    redirect_to edit_musician_path(@musician), alert: "Unable to remove that media."
   end
 end
 
@@ -82,7 +98,35 @@ end
   end
 
   def musician_params
-    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, media: [])
+    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :banner, images: [], videos: [])
+  end
+
+  def musician_params_without_media
+    params.require(:musician).permit(:name, :instrument, :age, :styles, :location)
+  end
+
+  def attach_new_media
+    return unless params[:musician].present?
+
+    # Only update banner if a new one was uploaded
+    if params[:musician][:banner].present?
+      @musician.banner.purge if @musician.banner.attached?
+      @musician.banner.attach(params[:musician][:banner])
+    end
+
+    # Append new images instead of replacing existing ones
+    if params[:musician][:images].present?
+      params[:musician][:images].each do |image|
+        @musician.images.attach(image)
+      end
+    end
+
+    # Append new videos instead of replacing existing ones
+    if params[:musician][:videos].present?
+      params[:musician][:videos].each do |video|
+        @musician.videos.attach(video)
+      end
+    end
   end
 
   def mark_invitation_notifications_as_read

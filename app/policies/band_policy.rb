@@ -31,6 +31,10 @@ class BandPolicy < ApplicationPolicy
     user_is_owner?
   end
 
+  def purge_attachment?
+    edit?
+  end
+
   private
 
   def user_is_owner?

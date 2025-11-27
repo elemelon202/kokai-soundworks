@@ -108,88 +108,123 @@
         <h3>Band Media</h3>
       </div>
 
-      <%= form_with model: @band, local: true, class: "band-media-form" do |f| %>
-        <!-- Banner Upload -->
-        <div class="media-upload-section">
-          <div class="media-section-header">
-            <i class="fa-solid fa-panorama"></i>
-            <div>
-              <h4>Banner Image</h4>
-              <p>This will be displayed at the top of your band's profile page</p>
-            </div>
-          </div>
+      <!-- Current Media Display (only shows sections with content) -->
+      <% if @band.banner.attached? || @band.images.attached? || @band.videos.attached? %>
+        <div class="current-media-section">
+          <h4 class="current-media-title"><i class="fa-solid fa-photo-film"></i> Current Media</h4>
+
           <% if @band.banner.attached? %>
-            <div class="current-media-preview banner-preview">
-              <%= image_tag url_for(@band.banner), class: "preview-image banner" %>
+            <div class="media-display-group">
+              <label class="media-group-label">Banner</label>
+              <div class="current-media-preview banner-preview">
+                <%= image_tag url_for(@band.banner), class: "banner-image-preview" %>
+                <%= button_to purge_attachment_band_path(@band, attachment_id: @band.banner.id),
+                    method: :delete,
+                    class: "btn-remove-media",
+                    data: { turbo_confirm: "Remove this banner image?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
             </div>
           <% end %>
-          <div class="upload-input-wrapper">
-            <%= f.file_field :banner, accept: "image/*", class: "media-file-input", id: "banner-input" %>
-            <label for="banner-input" class="upload-label">
-              <i class="fa-solid fa-cloud-upload-alt"></i>
-              <span>Choose banner image</span>
-            </label>
-          </div>
-        </div>
 
-        <!-- Images Upload -->
-        <div class="media-upload-section">
-          <div class="media-section-header">
-            <i class="fa-solid fa-camera"></i>
-            <div>
-              <h4>Photos</h4>
-              <p>Upload photos of your band, performances, or promotional material</p>
-            </div>
-          </div>
           <% if @band.images.attached? %>
-            <div class="current-media-grid">
-              <% @band.images.each do |image| %>
-                <div class="media-grid-item">
-                  <%= image_tag url_for(image), class: "preview-image" %>
-                </div>
-              <% end %>
+            <div class="media-display-group">
+              <label class="media-group-label">Photos (<%= @band.images.count %>)</label>
+              <div class="current-media-grid">
+                <% @band.images.each do |image| %>
+                  <div class="media-grid-item">
+                    <%= image_tag url_for(image), class: "preview-image" %>
+                    <%= button_to purge_attachment_band_path(@band, attachment_id: image.id),
+                        method: :delete,
+                        class: "btn-remove-media",
+                        data: { turbo_confirm: "Remove this photo?" } do %>
+                      <i class="fa-solid fa-trash"></i>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
             </div>
           <% end %>
-          <div class="upload-input-wrapper">
-            <%= f.file_field :images, accept: "image/*", multiple: true, class: "media-file-input", id: "images-input" %>
-            <label for="images-input" class="upload-label">
-              <i class="fa-solid fa-cloud-upload-alt"></i>
-              <span>Choose photos (multiple)</span>
-            </label>
-          </div>
-        </div>
 
-        <!-- Videos Upload -->
+          <% if @band.videos.attached? %>
+            <div class="media-display-group">
+              <label class="media-group-label">Videos (<%= @band.videos.count %>)</label>
+              <div class="current-media-grid videos-grid">
+                <% @band.videos.each do |video| %>
+                  <div class="media-grid-item video-item">
+                    <video controls class="preview-video">
+                      <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
+                    </video>
+                    <%= button_to purge_attachment_band_path(@band, attachment_id: video.id),
+                        method: :delete,
+                        class: "btn-remove-media",
+                        data: { turbo_confirm: "Remove this video?" } do %>
+                      <i class="fa-solid fa-trash"></i>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <!-- Upload Form -->
+      <%= form_with model: @band, local: true, class: "band-media-form" do |f| %>
         <div class="media-upload-section">
           <div class="media-section-header">
-            <i class="fa-solid fa-video"></i>
+            <i class="fa-solid fa-cloud-upload-alt"></i>
             <div>
-              <h4>Videos</h4>
-              <p>Upload performance videos, music videos, or behind-the-scenes content</p>
+              <h4>Upload Media</h4>
+              <p>Add new banner, photos, or videos to your band profile</p>
             </div>
           </div>
-          <% if @band.videos.attached? %>
-            <div class="current-media-grid videos-grid">
-              <% @band.videos.each do |video| %>
-                <div class="media-grid-item video-item">
-                  <video controls class="preview-video">
-                    <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
-                  </video>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
-          <div class="upload-input-wrapper">
-            <%= f.file_field :videos, accept: "video/*", multiple: true, class: "media-file-input", id: "videos-input" %>
-            <label for="videos-input" class="upload-label">
-              <i class="fa-solid fa-cloud-upload-alt"></i>
-              <span>Choose videos (multiple)</span>
-            </label>
-          </div>
-        </div>
 
-        <div class="media-submit-wrapper">
-          <%= f.submit "Save Media", class: "btn-save-media" %>
+          <div class="upload-fields-grid">
+            <div class="upload-field" data-controller="file-preview">
+              <label class="upload-field-label">Banner Image</label>
+              <div class="upload-input-wrapper">
+                <%= f.file_field :banner, accept: "image/*", class: "media-file-input", id: "banner-input",
+                    data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
+                <label for="banner-input" class="upload-label compact" data-file-preview-target="placeholder">
+                  <i class="fa-solid fa-panorama"></i>
+                  <span><%= @band.banner.attached? ? "Replace banner" : "Choose banner" %></span>
+                </label>
+              </div>
+              <div class="file-preview-container" data-file-preview-target="preview"></div>
+            </div>
+
+            <div class="upload-field" data-controller="file-preview">
+              <label class="upload-field-label">Photos</label>
+              <div class="upload-input-wrapper">
+                <%= f.file_field :images, accept: "image/*", multiple: true, class: "media-file-input", id: "images-input",
+                    data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
+                <label for="images-input" class="upload-label compact" data-file-preview-target="placeholder">
+                  <i class="fa-solid fa-camera"></i>
+                  <span>Add photos</span>
+                </label>
+              </div>
+              <div class="file-preview-container" data-file-preview-target="preview"></div>
+            </div>
+
+            <div class="upload-field" data-controller="file-preview">
+              <label class="upload-field-label">Videos</label>
+              <div class="upload-input-wrapper">
+                <%= f.file_field :videos, accept: "video/*", multiple: true, class: "media-file-input", id: "videos-input",
+                    data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
+                <label for="videos-input" class="upload-label compact" data-file-preview-target="placeholder">
+                  <i class="fa-solid fa-video"></i>
+                  <span>Add videos</span>
+                </label>
+              </div>
+              <div class="file-preview-container" data-file-preview-target="preview"></div>
+            </div>
+          </div>
+
+          <div class="media-submit-wrapper">
+            <%= f.submit "Save Media", class: "btn-save-media" %>
+          </div>
         </div>
       <% end %>
     </div>

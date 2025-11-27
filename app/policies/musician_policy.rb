@@ -41,4 +41,8 @@ class MusicianPolicy < ApplicationPolicy
   def destroy?
     update?
   end
+
+  def purge_attachment?
+    update?
+  end
 end
