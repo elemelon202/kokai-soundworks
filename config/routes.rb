@@ -12,12 +12,17 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
-  resources :musicians
+  resources :musicians do
+    member do
+      delete :purge_attachment
+    end
+  end
   resources :bands do
     resources :involvements, only: [:new, :create]
     resources :band_invitations, only: [:new, :create, :edit, :destroy]
     member do
       patch :transfer_leadership
+      delete :purge_attachment
     end
   end
 

@@ -28,7 +28,9 @@
   </div>
   <%# ----- MUSICIAN BANNER ----- %>
   <div class="musician-banner">
-    <% if @musician.media.attached? %>
+    <% if @musician.banner.attached? %>
+      <%= cl_image_tag(@musician.banner.key, class: "banner-image") %>
+    <% elsif @musician.media.attached? %>
       <% first_image = @musician.media.find { |m| m.content_type.start_with?("image") } %>
       <% if first_image %>
         <%= cl_image_tag(first_image.key, class: "banner-image") %>
@@ -102,18 +104,19 @@
     <% end %>
   </div>
   <%# ----- MEDIA CAROUSEL (if needed) ----- %>
-  <% if @musician.media.attached? && @musician.media.count > 1 %>
+  <% all_media = (@musician.images.to_a + @musician.videos.to_a + @musician.media.to_a).uniq %>
+  <% if all_media.count > 1 %>
     <div class="media-section">
       <h3 class="section-title">Media</h3>
       <div id="musicianCarousel" class="carousel slide" data-bs-ride="carousel">
         <div class="carousel-indicators">
-          <% @musician.media.each_with_index do |file, index| %>
+          <% all_media.each_with_index do |file, index| %>
             <button type="button" data-bs-target="#musicianCarousel" data-bs-slide-to="<%= index %>"
                     class="<%= 'active' if index == 0 %>" aria-label="Slide <%= index + 1 %>"></button>
           <% end %>
         </div>
         <div class="carousel-inner">
-          <% @musician.media.each_with_index do |file, index| %>
+          <% all_media.each_with_index do |file, index| %>
             <div class="carousel-item <%= 'active' if index == 0 %>">
               <% if file.content_type.start_with?('image') %>
                 <%= cl_image_tag(file.key, class: "carousel-media") %>

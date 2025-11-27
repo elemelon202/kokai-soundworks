@@ -3,8 +3,8 @@ class BandsController < ApplicationController
   # added skip_before_action so public users can see these pages.
   skip_before_action :authenticate_user!, only: [:index, :show]
   # before_action :authenticate_user! - **Tyrhen edited this out so it doesn't override line 4**
-  before_action :set_band, only: [:show, :edit, :update, :destroy, :transfer_leadership]
-  before_action :authorize_band, only: [:edit, :update, :destroy]
+  before_action :set_band, only: [:show, :edit, :update, :destroy, :transfer_leadership, :purge_attachment]
+  before_action :authorize_band, only: [:edit, :update, :destroy, :purge_attachment]
   before_action :authorize_leader, only: [:transfer_leadership]
 
   def index
@@ -66,7 +66,11 @@ class BandsController < ApplicationController
   end
   def update
     authorize @band #* Tyrhen was here
-    if @band.update(band_params)
+
+    # Handle media attachments separately to append instead of replace
+    attach_new_media
+
+    if @band.update(band_params_without_media)
       redirect_to band_path(@band)
     else
       render :edit
@@ -94,10 +98,53 @@ class BandsController < ApplicationController
     redirect_to edit_band_path(@band), notice: "Leadership transferred to #{new_leader_musician.name}."
   end
 
+  def purge_attachment
+    authorize @band
+    attachment = ActiveStorage::Attachment.find(params[:attachment_id])
+
+    # Verify the attachment belongs to this band
+    if attachment.record == @band
+      attachment.purge
+      redirect_to edit_band_path(@band), notice: "Media removed successfully."
+    else
+      redirect_to edit_band_path(@band), alert: "Unable to remove that media."
+    end
+  end
+
   private
   def band_params
     # Don't permit musician_ids - we handle invitations separately
     params.require(:band).permit(:name, :location, :description, :banner, genre_list: [], images: [], videos: [])
+  end
+
+  def band_params_without_media
+    # Exclude media attachments - they're handled separately in attach_new_media
+    params.require(:band).permit(:name, :location, :description, genre_list: [])
+  end
+
+  def attach_new_media
+    return unless params[:band].present?
+
+    # Only update banner if a new one was uploaded
+    if params[:band][:banner].present?
+      # Purge old banner first to ensure clean replacement
+      @band.banner.purge if @band.banner.attached?
+      @band.banner.attach(params[:band][:banner])
+    end
+
+    # Append new images instead of replacing existing ones
+    if params[:band][:images].present?
+      params[:band][:images].each do |image|
+        @band.images.attach(image)
+      end
+    end
+
+    # Append new videos instead of replacing existing ones
+    if params[:band][:videos].present?
+      params[:band][:videos].each do |video|
+        @band.videos.attach(video)
+      end
+    end
   end
 
   def invited_musician_ids
