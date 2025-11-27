@@ -80,6 +80,61 @@
     <div class="band-dashboard-card full-width">
       <div class="band-card-header">
         <div class="card-icon">
+          <i class="fa-solid fa-users"></i>
+        </div>
+        <h3>Band Members</h3>
+      </div>
+      <div class="band-members-list">
+        <% @band.musicians.each do |musician| %>
+          <div class="band-member-item">
+            <%= link_to musician_path(musician), class: "member-avatar-link" do %>
+              <div class="member-avatar">
+                <% if musician.banner.attached? %>
+                  <%= image_tag url_for(musician.banner), class: "avatar-image" %>
+                <% elsif musician.images.attached? %>
+                  <%= image_tag url_for(musician.images.first), class: "avatar-image" %>
+                <% else %>
+                  <i class="fa-solid fa-user"></i>
+                <% end %>
+              </div>
+            <% end %>
+            <div class="member-details">
+              <div class="member-name">
+                <%= link_to musician.name, musician_path(musician) %>
+                <% if musician.user_id == @band.user_id %>
+                  <span class="leader-badge"><i class="fa-solid fa-crown"></i> Leader</span>
+                <% end %>
+              </div>
+              <div class="member-info">
+                <span class="member-instrument"><i class="fa-solid fa-guitar"></i> <%= musician.instrument || "Not specified" %></span>
+                <% if musician.location.present? %>
+                  <span class="member-location"><i class="fa-solid fa-location-dot"></i> <%= musician.location %></span>
+                <% end %>
+              </div>
+            </div>
+            <div class="member-actions">
+              <% if musician.user_id != current_user.id %>
+                <%= button_to create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn-member-action", title: "Send Message" do %>
+                  <i class="fa-solid fa-envelope"></i>
+                <% end %>
+              <% end %>
+              <% if @band.user_id == current_user.id && musician.user_id != current_user.id %>
+                <% involvement = Involvement.find_by(band: @band, musician: musician) %>
+                <% if involvement %>
+                  <%= button_to involvement_path(involvement), method: :delete, class: "btn-member-action danger", title: "Remove from Band", data: { turbo_confirm: "Remove #{musician.name} from #{@band.name}?" } do %>
+                    <i class="fa-solid fa-user-minus"></i>
+                  <% end %>
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <div class="band-dashboard-card full-width">
+      <div class="band-card-header">
+        <div class="card-icon">
           <i class="fa-solid fa-clipboard-list"></i>
         </div>
         <h3>Gig Applications</h3>

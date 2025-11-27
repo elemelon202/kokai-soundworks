@@ -1209,6 +1209,195 @@ $kokai-yellow-dark: #b8e020;
   }
 }
 
+// Band Members List
+.band-members-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.band-member-item {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 14px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(213, 255, 64, 0.2);
+  }
+}
+
+.member-avatar-link {
+  text-decoration: none;
+  flex-shrink: 0;
+
+  &:hover .member-avatar {
+    border-color: $kokai-yellow;
+    transform: scale(1.05);
+  }
+}
+
+.member-avatar {
+  width: 48px;
+  height: 48px;
+  background: rgba(213, 255, 64, 0.15);
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: $kokai-yellow;
+  font-size: 18px;
+  overflow: hidden;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;
+
+  .avatar-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.member-details {
+  flex: 1;
+  min-width: 0;
+}
+
+.member-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-bottom: 4px;
+
+  a {
+    color: #fff;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: $kokai-yellow;
+    }
+  }
+
+  .leader-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    background: rgba(213, 255, 64, 0.15);
+    border-radius: 6px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: $kokai-yellow;
+
+    i {
+      font-size: 0.7rem;
+    }
+  }
+}
+
+.member-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  flex-wrap: wrap;
+
+  .member-instrument,
+  .member-location {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.85rem;
+    color: rgba(255, 255, 255, 0.5);
+
+    i {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.4);
+    }
+  }
+}
+
+.member-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+
+  // button_to generates a form, so we need to style it
+  form {
+    margin: 0;
+    padding: 0;
+    display: inline-flex;
+  }
+}
+
+.btn-member-action {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+
+  &:hover {
+    background: rgba(213, 255, 64, 0.15);
+    border-color: rgba(213, 255, 64, 0.3);
+    color: $kokai-yellow;
+    transform: translateY(-2px);
+  }
+
+  &.danger {
+    &:hover {
+      background: rgba(255, 71, 87, 0.15);
+      border-color: rgba(255, 71, 87, 0.3);
+      color: #ff6b7a;
+    }
+  }
+
+  i {
+    font-size: 0.9rem;
+  }
+}
+
+// Responsive for band members
+@media (max-width: 576px) {
+  .band-member-item {
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+
+  .member-details {
+    flex: 1 1 calc(100% - 63px);
+  }
+
+  .member-actions {
+    width: 100%;
+    justify-content: flex-end;
+    padding-top: 8px;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+  }
+
+  .member-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+}
+
 // Transfer Leadership Section
 .transfer-leadership-section {
   p {

@@ -19,9 +19,13 @@
     </div>
     <div class="profile-header-right">
       <button class="btn-icon"><i class="fa-solid fa-share-nodes"></i></button>
-      <% if current_user.id == @musician.user_id %>
+      <% if current_user && current_user.id == @musician.user_id %>
         <%= link_to edit_musician_path(@musician), class: "btn-edit-profile" do %>
           <i class="fa-solid fa-pen"></i> Edit Profile
+        <% end %>
+      <% elsif current_user && current_user.id != @musician.user_id %>
+        <%= button_to create_or_show_direct_messages_path(recipient_id: @musician.user_id), method: :post, class: "btn-message-profile" do %>
+          <i class="fa-solid fa-envelope"></i> Message
         <% end %>
       <% end %>
     </div>

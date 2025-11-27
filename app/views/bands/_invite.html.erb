@@ -16,9 +16,10 @@
       <%= f.label :musician_id, class: "invite-label" do %>
         <i class="fa-solid fa-user-music"></i> Select Musician
       <% end %>
-      <%= f.collection_select :musician_id, Musician.all, :id, :name,
-          { prompt: "Choose a musician to invite..." },
-          { class: "invite-select" } %>
+      <% available_musicians = Musician.where.not(id: band.musician_ids).where.not(id: band.band_invitations.pending.pluck(:musician_id)) %>
+      <%= f.collection_select :musician_id, available_musicians, :id, :name,
+          { prompt: "Search for a musician to invite..." },
+          { class: "invite-select", data: { controller: "tom-select", tom_select_placeholder_value: "Search by name..." } } %>
     </div>
     <%= f.submit "Send Invite", class: "invite-submit-btn" %>
   </div>

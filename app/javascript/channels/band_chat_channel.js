@@ -46,6 +46,17 @@ document.addEventListener("turbo:load", () => {
   const form = document.getElementById("band-message-form");
   if (form) {
     const formChatId = form.dataset.chatId;
+    const input = document.getElementById("band-message-input");
+
+    // Handle enter key to submit
+    if (input) {
+      input.addEventListener("keydown", (e) => {
+        if (e.key === "Enter" && !e.shiftKey) {
+          e.preventDefault();
+          form.dispatchEvent(new Event("submit", { bubbles: true, cancelable: true }));
+        }
+      });
+    }
 
     form.addEventListener("submit", async (e) => {
       e.preventDefault();

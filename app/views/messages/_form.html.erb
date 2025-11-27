@@ -1,5 +1,5 @@
 <div id="message_form">
-  <%= form_with model: [chat, message], class: "message-form", data: { turbo: true } do |f| %>
+  <%= form_with model: [chat, message], class: "message-form", data: { turbo: true, controller: "message-form" } do |f| %>
     <% if message.errors.any? %>
       <div class="errors">
         <%= message.errors.full_messages.to_sentence %>
@@ -12,33 +12,8 @@
           rows: 1,
           class: "message-input",
           required: true,
-          data: { action: "keydown->message-form#submitOnEnter" } %>
+          data: { message_form_target: "input", action: "keydown->message-form#submitOnEnter" } %>
       <%= f.submit "Send", class: "btn btn-primary" %>
     </div>
   <% end %>
 </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    setupMessageFormSubmit();
-  });
-
-  document.addEventListener("turbo:load", function() {
-    setupMessageFormSubmit();
-  });
-
-  function setupMessageFormSubmit() {
-    const messageInputs = document.querySelectorAll(".message-input");
-    messageInputs.forEach(function(input) {
-      input.addEventListener("keydown", function(e) {
-        if (e.key === "Enter" && !e.shiftKey) {
-          e.preventDefault();
-          const form = input.closest("form");
-          if (form && input.value.trim() !== "") {
-            form.requestSubmit();
-          }
-        }
-      });
-    });
-  }
-</script>

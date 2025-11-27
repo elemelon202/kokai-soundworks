@@ -112,6 +112,13 @@
             </label>
             <%= f.input :location, label: false, input_html: { class: "form-input", placeholder: "Your city" } %>
           </div>
+
+          <div class="form-field full-width">
+            <label class="form-label">
+              <i class="fa-solid fa-pen"></i> Bio
+            </label>
+            <%= f.input :bio, as: :text, label: false, input_html: { class: "form-input", placeholder: "Tell us about yourself, your musical journey, and what you're looking for...", rows: 4 } %>
+          </div>
         </div>
 
         <!-- Musician Media Section -->

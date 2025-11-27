@@ -17,6 +17,11 @@
             <span class="genre-badge"><%= genre %></span>
           <% end %>
         </div>
+        <% if current_user && current_user.id != @band.user_id %>
+          <%= button_to create_or_show_direct_messages_path(recipient_id: @band.user_id), method: :post, class: "btn-message-band" do %>
+            <i class="fa-solid fa-envelope"></i> Message Band
+          <% end %>
+        <% end %>
       </div>
     </div>
   </div>
