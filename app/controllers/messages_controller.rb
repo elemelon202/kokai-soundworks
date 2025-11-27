@@ -20,8 +20,8 @@ class MessagesController < ApplicationController
       if @chat.band.present?
         Notification.create_for_band_message(@message, @chat.band)
       else
-        Notification.create_for_direct_message(@message)
-        # Broadcast to messages notification channel for DMs
+        # For direct messages, only use the messages notification channel (not bell notifications)
+        # This keeps DM notifications separate from band notifications
         broadcast_dm_notification(@message)
       end
 

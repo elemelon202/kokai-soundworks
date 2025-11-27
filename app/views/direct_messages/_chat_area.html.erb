@@ -3,12 +3,51 @@
 <div class="chat-area">
   <div class="chat-header">
     <% other_user = @chat.other_participant(current_user) %>
-    <h4 class="chat-participant-name">
-      <%= other_user&.username || "Unknown User" %>
+    <div class="chat-header-info">
+      <h4 class="chat-participant-name">
+        <%= other_user&.username || "Unknown User" %>
+        <% if other_user&.musician %>
+          <span class="badge bg-dark"><%= other_user.musician.instrument %></span>
+        <% end %>
+      </h4>
+    </div>
+    <div class="chat-header-actions">
       <% if other_user&.musician %>
-        <span class="badge bg-dark"><%= other_user.musician.instrument %></span>
+        <%= link_to musician_path(other_user.musician), class: "chat-action-btn", title: "View Profile" do %>
+          <i class="fa-solid fa-user"></i>
+        <% end %>
+        <% if current_user.musician %>
+          <div class="dropdown d-inline-block">
+            <button class="chat-action-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Invite to Band">
+              <i class="fa-solid fa-user-plus"></i>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><h6 class="dropdown-header">Invite to Band</h6></li>
+              <% if current_user.musician.bands.any? %>
+                <% current_user.musician.bands.each do |band| %>
+                  <% unless band.musicians.include?(other_user.musician) %>
+                    <li>
+                      <%= button_to band_band_invitations_path(band), method: :post, params: { band_invitation: { musician_id: other_user.musician.id } }, class: "dropdown-item", data: { turbo: false } do %>
+                        <%= band.name %>
+                      <% end %>
+                    </li>
+                  <% end %>
+                <% end %>
+                <% if current_user.musician.bands.all? { |band| band.musicians.include?(other_user.musician) } %>
+                  <li><span class="dropdown-item text-muted">Already in all your bands</span></li>
+                <% end %>
+                <li><hr class="dropdown-divider"></li>
+              <% end %>
+              <li>
+                <%= link_to new_band_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-plus me-2"></i> Create a Band
+                <% end %>
+              </li>
+            </ul>
+          </div>
+        <% end %>
       <% end %>
-    </h4>
+    </div>
   </div>
 
   <div id="messages" class="messages-list" data-chat-id="<%= @chat.id %>" data-current-user-id="<%= current_user.id %>">

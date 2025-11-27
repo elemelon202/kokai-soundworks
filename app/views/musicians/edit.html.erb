@@ -1,26 +1,193 @@
-<% if @band_invitation.present? %>
-  <p>
-    You have been invited to join <strong><%= @band_invitation.band.name %></strong>!<br>
-    <%= link_to "Accept",
-      accept_band_invitation_path(@band_invitation.token),
-      class: "btn btn-success" %>
-    <%= link_to "Decline",
-      decline_band_invitation_path(@band_invitation.token),
-      class: "btn btn-danger" %>
-  </p>
-<% else %>
-  <p>No pending band invitations.</p>
-<% end %>
-<div class="container mt-3">
-  <h1>Edit musician</h1>
-  <%= simple_form_for @musician do |f| %>
-    <%= f.input :name %>
-    <%= f.input :instrument %>
-    <%= f.input :age %>
-    <%= f.input :styles %>
-    <%= f.input :location %>
-    <%= f.input :media, as: :file, input_html: { multiple: true, accept: "image/*,video/*", direct_upload: true } %>
-    <%= f.submit class: 'btn btn-primary' %>
+<div class="musician-dashboard-container">
+  <div class="musician-dashboard-header">
+    <h1>Musician Dashboard</h1>
+    <h2>Manage your profile, media, and band invitations</h2>
+    <%= link_to musician_path(@musician), class: "btn-view-profile" do %>
+      <i class="fa-solid fa-eye"></i> View Profile
+    <% end %>
+  </div>
+
+  <div id="flash_messages">
+    <%= render partial: "shared/flash", locals: { notice: flash[:notice], alert: flash[:alert] } %>
+  </div>
+
+  <% if @band_invitation.present? %>
+    <div class="musician-dashboard-card full-width invitation-card">
+      <div class="musician-card-header">
+        <div class="card-icon highlight">
+          <i class="fa-solid fa-envelope-open-text"></i>
+        </div>
+        <h3>Band Invitation</h3>
+      </div>
+      <div class="invitation-content">
+        <p>You have been invited to join <strong><%= @band_invitation.band.name %></strong>!</p>
+        <div class="invitation-actions">
+          <%= link_to accept_band_invitation_path(@band_invitation.token), class: "btn-accept" do %>
+            <i class="fa-solid fa-check"></i> Accept
+          <% end %>
+          <%= link_to decline_band_invitation_path(@band_invitation.token), class: "btn-decline" do %>
+            <i class="fa-solid fa-xmark"></i> Decline
+          <% end %>
+        </div>
+      </div>
+    </div>
   <% end %>
-  <%= link_to "Back to list", musician_path(@musician) %>
+
+  <div class="musician-stats-grid">
+    <div class="musician-stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-users"></i>
+      </div>
+      <div class="stat-value"><%= @musician.bands.count %></div>
+      <div class="stat-label">Bands</div>
+    </div>
+
+    <div class="musician-stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-guitar"></i>
+      </div>
+      <div class="stat-value"><%= @musician.instrument || "—" %></div>
+      <div class="stat-label">Instrument</div>
+    </div>
+
+    <div class="musician-stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-location-dot"></i>
+      </div>
+      <div class="stat-value"><%= @musician.location || "—" %></div>
+      <div class="stat-label">Location</div>
+    </div>
+
+    <div class="musician-stat-card">
+      <div class="stat-icon">
+        <i class="fa-solid fa-images"></i>
+      </div>
+      <div class="stat-value"><%= @musician.media.attached? ? @musician.media.count : 0 %></div>
+      <div class="stat-label">Media Files</div>
+    </div>
+  </div>
+
+  <div class="musician-dashboard-content">
+    <div class="musician-dashboard-card full-width">
+      <div class="musician-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-user-pen"></i>
+        </div>
+        <h3>Edit Profile</h3>
+      </div>
+
+      <%= simple_form_for @musician, html: { class: "musician-edit-form" } do |f| %>
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-signature"></i> Name
+            </label>
+            <%= f.input :name, label: false, input_html: { class: "form-input", placeholder: "Your name" } %>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-guitar"></i> Instrument
+            </label>
+            <%= f.input :instrument, label: false, input_html: { class: "form-input", placeholder: "Your instrument" } %>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-calendar"></i> Age
+            </label>
+            <%= f.input :age, label: false, input_html: { class: "form-input", placeholder: "Your age" } %>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-music"></i> Styles
+            </label>
+            <%= f.input :styles, label: false, input_html: { class: "form-input", placeholder: "e.g., Jazz, Rock, Blues" } %>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-location-dot"></i> Location
+            </label>
+            <%= f.input :location, label: false, input_html: { class: "form-input", placeholder: "Your city" } %>
+          </div>
+        </div>
+
+        <div class="media-upload-section">
+          <div class="media-section-header">
+            <i class="fa-solid fa-photo-film"></i>
+            <div>
+              <h4>Media</h4>
+              <p>Upload photos and videos to showcase your talent</p>
+            </div>
+          </div>
+
+          <% if @musician.media.attached? %>
+            <div class="current-media-grid">
+              <% @musician.media.each do |media_file| %>
+                <div class="media-grid-item <%= media_file.content_type.start_with?('video') ? 'video-item' : '' %>">
+                  <% if media_file.content_type.start_with?('image') %>
+                    <%= image_tag url_for(media_file), class: "preview-image" %>
+                  <% elsif media_file.content_type.start_with?('video') %>
+                    <video controls class="preview-video">
+                      <source src="<%= url_for(media_file) %>" type="<%= media_file.content_type %>">
+                    </video>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <div class="upload-input-wrapper">
+            <%= f.file_field :media, multiple: true, accept: "image/*,video/*", direct_upload: true, class: "media-file-input", id: "media-input" %>
+            <label for="media-input" class="upload-label">
+              <i class="fa-solid fa-cloud-upload-alt"></i>
+              <span>Choose photos or videos (multiple)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="form-submit-wrapper">
+          <%= f.submit "Save Changes", class: "btn-save-profile" %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @musician.bands.any? %>
+      <div class="musician-dashboard-card full-width">
+        <div class="musician-card-header">
+          <div class="card-icon">
+            <i class="fa-solid fa-users-line"></i>
+          </div>
+          <h3>Your Bands</h3>
+        </div>
+        <div class="bands-list">
+          <% @musician.bands.each do |band| %>
+            <div class="band-item">
+              <div class="band-avatar">
+                <% if band.banner.attached? %>
+                  <%= image_tag url_for(band.banner), class: "band-avatar-img" %>
+                <% else %>
+                  <i class="fa-solid fa-users"></i>
+                <% end %>
+              </div>
+              <div class="band-info">
+                <span class="band-name"><%= band.name %></span>
+                <span class="band-members"><%= band.musicians.count %> members</span>
+              </div>
+              <div class="band-actions">
+                <%= link_to band_path(band), class: "btn-band-action" do %>
+                  <i class="fa-solid fa-eye"></i>
+                <% end %>
+                <%= link_to edit_band_path(band), class: "btn-band-action" do %>
+                  <i class="fa-solid fa-gear"></i>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
 </div>

@@ -1,20 +1,102 @@
-<div class="header">
-  <h2><%= @band.name %></h2>
-  <% @band.genre_list.each do |genre| %>
-            <div class="middle d-flex flex-row mb-3">
-              <span class="badge bg-secondary"><%= genre %></span>
-                        <% end %>
-                        <p><%= @band.location %></p>
+<div class="band-show-container">
+  <!-- Banner Section -->
+  <div class="band-banner">
+    <% if @band.banner.attached? %>
+      <%= image_tag url_for(@band.banner), class: "banner-image" %>
+    <% else %>
+      <div class="banner-placeholder"></div>
+    <% end %>
+    <div class="banner-overlay">
+      <div class="banner-content">
+        <h1><%= @band.name %></h1>
+        <% if @band.location.present? %>
+          <p class="band-location"><i class="fa-solid fa-location-dot"></i> <%= @band.location %></p>
+        <% end %>
+        <div class="band-genres">
+          <% @band.genre_list.each do |genre| %>
+            <span class="genre-badge"><%= genre %></span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="band-show-content">
+    <!-- Band Info Section -->
+    <div class="band-info-section">
+      <div class="band-stats-row">
+        <div class="band-stat">
+          <i class="fa-solid fa-users"></i>
+          <span><%= @band.musicians.count %> <%= @band.musicians.count == 1 ? "Member" : "Members" %></span>
+        </div>
+        <div class="band-stat">
+          <i class="fa-solid fa-calendar-days"></i>
+          <span><%= @band.gigs.count %> <%= @band.gigs.count == 1 ? "Gig" : "Gigs" %></span>
+        </div>
+      </div>
+
+      <% if @band.description.present? %>
+        <div class="band-description">
+          <h3>About</h3>
+          <p><%= @band.description %></p>
+        </div>
+      <% end %>
+
+      <!-- Band Members -->
+      <div class="band-members-section">
+        <h3>Members</h3>
+        <div class="members-grid">
+          <% @band.musicians.each do |musician| %>
+            <%= link_to musician_path(musician), class: "member-card" do %>
+              <div class="member-avatar">
+                <% if musician.media.attached? && musician.media.first.content_type.start_with?("image") %>
+                  <%= image_tag url_for(musician.media.first), class: "avatar-image" %>
+                <% else %>
+                  <i class="fa-solid fa-user"></i>
+                <% end %>
+              </div>
+              <div class="member-info">
+                <strong><%= musician.name %></strong>
+                <span><%= musician.instrument %></span>
+              </div>
+              <% if musician.user_id == @band.user_id %>
+                <span class="leader-badge"><i class="fa-solid fa-crown"></i></span>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+
+    <!-- Photos Section -->
+    <% if @band.images.attached? %>
+      <div class="band-media-section">
+        <h3><i class="fa-solid fa-camera"></i> Photos</h3>
+        <div class="photos-grid">
+          <% @band.images.each do |image| %>
+            <div class="photo-item">
+              <%= image_tag url_for(image), class: "photo-image" %>
             </div>
-          <p><%= @band.musicians.count %> <%= @band.musicians.count > 1 ? "members" : "member" %></p>
-</div>
-<!-- Banner Section -->
-<div class="banner">
-  <div class="container">
-    <h1><%= @band.name %></h1>
-    <p><%= @band.location %></p>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <!-- Videos Section -->
+    <% if @band.videos.attached? %>
+      <div class="band-media-section">
+        <h3><i class="fa-solid fa-video"></i> Videos</h3>
+        <div class="videos-grid">
+          <% @band.videos.each do |video| %>
+            <div class="video-item">
+              <video controls>
+                <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
+                Your browser does not support the video tag.
+              </video>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>
-<p><%= @band.description %></p>
-<p>TODO: LINK SPOTIFY API TO DISPLAY POPULAR SONGS</p>
-<p>TODO: LINK SPOTIFY API TO PUT MUSIC PLAYER HERE</p>

@@ -49,22 +49,28 @@
       <p><%= @bands.count > 1 ? "#{@bands.count} bands found" : "1 band found" %></p>
     <div class="container cards">
       <% @bands.each do |band| %>
-       <div class="card mb-3 bg-dark dark-card text-white p-3 rounded" style="width: 18rem;">
-      <%= image_tag "sam_wall_bass.jpg", alt: "SamBass", class: "img-fluid" %>
-      <div class="card-body">
-        <div class="band-card-top-text">
-          <h5 class="card-title"><%= band.name %></h5>
-          <p><%= band.location %></p>
-        </div>
-        <div class="band-card-bottom-text border-bottom mb-3 pb-3">
-          <% band.genre_list.each do |genre| %>
-            <span class="badge bg-secondary"><%= genre %></span>
-          <% end %>
-          <p class="card-text"><%= band.description %></p>
-        </div>
-        <i class="fa-solid fa-user-group"></i> <span><%= band.musicians.count %> <%= band.musicians.count > 1 ? "members" : "member" %></span> <br>
-      </div>
-    </div>
+        <%= link_to band_path(band), class: "band-card-link" do %>
+          <div class="card mb-3 bg-dark dark-card text-white p-3 rounded" style="width: 18rem;">
+            <% if band.banner.attached? %>
+              <%= image_tag url_for(band.banner), alt: band.name, class: "img-fluid" %>
+            <% else %>
+              <%= image_tag "sam_wall_bass.jpg", alt: band.name, class: "img-fluid" %>
+            <% end %>
+            <div class="card-body">
+              <div class="band-card-top-text">
+                <h5 class="card-title"><%= band.name %></h5>
+                <p><%= band.location %></p>
+              </div>
+              <div class="band-card-bottom-text border-bottom mb-3 pb-3">
+                <% band.genre_list.each do |genre| %>
+                  <span class="badge bg-secondary"><%= genre %></span>
+                <% end %>
+                <p class="card-text"><%= band.description %></p>
+              </div>
+              <i class="fa-solid fa-user-group"></i> <span><%= band.musicians.count %> <%= band.musicians.count > 1 ? "members" : "member" %></span> <br>
+            </div>
+          </div>
+        <% end %>
       <% end %>
 
       <% if @bands.empty? %>

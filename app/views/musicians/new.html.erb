@@ -1,0 +1,90 @@
+<div class="cool-form-container">
+  <div class="cool-form-card">
+    <div class="cool-form-header">
+      <div class="cool-form-icon">
+        <i class="fa-solid fa-guitar"></i>
+      </div>
+      <h1>Create Your Profile</h1>
+      <p>Join the community and start connecting</p>
+    </div>
+
+    <%= simple_form_for @musician do |f| %>
+      <div class="cool-form-section">
+        <div class="cool-form-section-header">
+          <div class="section-icon">
+            <i class="fa-solid fa-user"></i>
+          </div>
+          <div class="section-text">
+            <h2>Basic Info</h2>
+            <p>Tell us about yourself</p>
+          </div>
+        </div>
+
+        <%= f.input :name,
+                    label: "Your Name",
+                    placeholder: "Enter your name",
+                    input_html: { class: "form-control" } %>
+
+        <%= f.input :instrument,
+                    label: "Instrument / Role",
+                    placeholder: "e.g., Lead Guitar, Vocals, Drums",
+                    input_html: { class: "form-control" } %>
+
+        <%= f.input :age,
+                    label: "Age",
+                    placeholder: "Your age",
+                    input_html: { class: "form-control" } %>
+      </div>
+
+      <div class="cool-form-section">
+        <div class="cool-form-section-header">
+          <div class="section-icon">
+            <i class="fa-solid fa-music"></i>
+          </div>
+          <div class="section-text">
+            <h2>Musical Details</h2>
+            <p>Share your musical preferences</p>
+          </div>
+        </div>
+
+        <%= f.input :styles,
+                    label: "Musical Styles",
+                    placeholder: "e.g., Rock, Jazz, Blues, Metal",
+                    input_html: { class: "form-control" } %>
+
+        <%= f.input :location,
+                    label: "Location",
+                    placeholder: "Where are you based?",
+                    input_html: { class: "form-control" } %>
+      </div>
+
+      <div class="cool-form-section">
+        <div class="cool-form-section-header">
+          <div class="section-icon">
+            <i class="fa-solid fa-image"></i>
+          </div>
+          <div class="section-text">
+            <h2>Media</h2>
+            <p>Upload photos or videos to showcase your talent</p>
+          </div>
+        </div>
+
+        <%= f.input :media,
+                    as: :file,
+                    label: "Profile Media",
+                    hint: "Upload images or videos",
+                    input_html: { multiple: true, accept: "image/*,video/*", direct_upload: true } %>
+      </div>
+
+      <div class="cool-form-submit">
+        <%= f.button :submit, "Create Profile", class: "btn-submit" %>
+      </div>
+    <% end %>
+
+    <div class="cool-form-back">
+      <%= link_to musicians_path do %>
+        <i class="fa-solid fa-arrow-left"></i> Back to musicians
+      <% end %>
+    </div>
+  </div>
+</div>

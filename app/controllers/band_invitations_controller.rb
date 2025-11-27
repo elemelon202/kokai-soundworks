@@ -29,7 +29,8 @@ def create
       # Create notification for the invited musician
       Notification.create_for_band_invitation(@band_invitation)
 
-      @pending_invitations = policy_scope(BandInvitation).pending.sent_by(current_user)
+      # Get all pending invitations for this band (not just current user's)
+      @pending_invitations = @band.band_invitations.pending
       format.turbo_stream do
         render turbo_stream: [
           turbo_stream.replace(
@@ -99,6 +100,33 @@ end
 
   def sent
     authorize BandInvitation
+  end
+
+  def destroy
+    @band = Band.find(params[:band_id])
+    @band_invitation = @band.band_invitations.find(params[:id])
+    authorize @band_invitation
+
+    @band_invitation.destroy
+    @pending_invitations = @band.band_invitations.pending
+
+    respond_to do |format|
+      format.turbo_stream do
+        render turbo_stream: [
+          turbo_stream.replace(
+            "pending_invitations_list",
+            partial: "bands/pending_invitations",
+            locals: { pending_invitations: @pending_invitations }
+          ),
+          turbo_stream.update(
+            "flash_messages",
+            partial: "shared/flash",
+            locals: { notice: "Invitation cancelled.", alert: nil }
+          )
+        ]
+      end
+      format.html { redirect_to edit_band_path(@band), notice: "Invitation cancelled." }
+    end
   end
 
 

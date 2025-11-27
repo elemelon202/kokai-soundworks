@@ -15,8 +15,11 @@ Rails.application.routes.draw do
   resources :musicians
   resources :bands do
     resources :involvements, only: [:new, :create]
-    resources :band_invitations, only: [:new, :create, :edit]
+    resources :band_invitations, only: [:new, :create, :edit, :destroy]
+    member do
+      patch :transfer_leadership
     end
+  end
 
   #These routes can't be nested because they need to be accessed via token only. The routes band_invitations#new and #create are nested because they are used when sending an invite.
   get 'accept_invitation/:token', to: 'band_invitations#accept', as: 'accept_band_invitation'

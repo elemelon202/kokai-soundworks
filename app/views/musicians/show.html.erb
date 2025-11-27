@@ -11,11 +11,42 @@
 <% if @musician.user == current_user %>
   <%= link_to "Edit profile", edit_musician_path(@musician), class: "btn btn-outline-primary mb-3" %>
 <% else %>
-  <%= button_to "Message",
-      create_or_show_direct_messages_path(recipient_id: @musician.user_id),
-      method: :post,
-      class: "btn btn-secondary mb-3",
-      data: { turbo: false } %>
+  <div class="d-flex gap-2 mb-3">
+    <%= button_to "Message",
+        create_or_show_direct_messages_path(recipient_id: @musician.user_id),
+        method: :post,
+        class: "btn btn-secondary",
+        data: { turbo: false } %>
+    <% if current_user&.musician %>
+      <div class="dropdown">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+          <i class="fa-solid fa-user-plus me-1"></i> Invite to Band
+        </button>
+        <ul class="dropdown-menu">
+          <% if current_user.musician.bands.any? %>
+            <% current_user.musician.bands.each do |band| %>
+              <% unless band.musicians.include?(@musician) %>
+                <li>
+                  <%= button_to band_band_invitations_path(band), method: :post, params: { band_invitation: { musician_id: @musician.id } }, class: "dropdown-item", data: { turbo: false } do %>
+                    <%= band.name %>
+                  <% end %>
+                </li>
+              <% end %>
+            <% end %>
+            <% if current_user.musician.bands.all? { |band| band.musicians.include?(@musician) } %>
+              <li><span class="dropdown-item text-muted">Already in all your bands</span></li>
+            <% end %>
+            <li><hr class="dropdown-divider"></li>
+          <% end %>
+          <li>
+            <%= link_to new_band_path, class: "dropdown-item" do %>
+              <i class="fa-solid fa-plus me-2"></i> Create a Band
+            <% end %>
+          </li>
+        </ul>
+      </div>
+    <% end %>
+  </div>
 <% end %>
 <p>Role: <%= @musician.instrument %></p>
 <p>Age: <%= @musician.age %></p>

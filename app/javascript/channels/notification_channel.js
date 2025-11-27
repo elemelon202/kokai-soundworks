@@ -27,6 +27,20 @@ document.addEventListener("DOMContentLoaded", () => {
       showToastNotification(data)
     }
   })
+
+  // Mark all as read when opening the notification dropdown
+  notificationBell.addEventListener("click", () => {
+    markAllNotificationsAsRead()
+  })
+
+  // Mark individual notification as read when clicked
+  document.addEventListener("click", (e) => {
+    const notificationItem = e.target.closest(".notification-item")
+    if (notificationItem && notificationItem.dataset.notificationId) {
+      markNotificationAsRead(notificationItem.dataset.notificationId)
+      notificationItem.classList.remove("unread")
+    }
+  })
 })
 
 function updateNotificationCount(count) {
@@ -109,4 +123,48 @@ function showToastNotification(data) {
     toast.classList.add("fade-out")
     setTimeout(() => toast.remove(), 300)
   }, 5000)
+}
+
+function markNotificationAsRead(notificationId) {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+  if (!csrfToken) return
+
+  fetch(`/notifications/${notificationId}/mark_as_read`, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        updateNotificationCount(data.unread_count)
+      }
+    })
+    .catch(error => console.error("Error marking notification as read:", error))
+}
+
+function markAllNotificationsAsRead() {
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content
+  if (!csrfToken) return
+
+  fetch("/notifications/mark_all_as_read", {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRF-Token": csrfToken
+    }
+  })
+    .then(response => response.json())
+    .then(data => {
+      if (data.success) {
+        updateNotificationCount(0)
+        // Remove unread class from all notification items
+        document.querySelectorAll(".notification-item.unread").forEach(item => {
+          item.classList.remove("unread")
+        })
+      }
+    })
+    .catch(error => console.error("Error marking all notifications as read:", error))
 }

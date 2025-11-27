@@ -2,6 +2,9 @@
   <div class="band-dashboard-header">
     <h1>Band Dashboard</h1>
     <h2>Manage your band gig applications and members</h2>
+    <%= link_to band_path(@band), class: "btn-view-band" do %>
+      <i class="fa-solid fa-eye"></i> View Band Page
+    <% end %>
   </div>
 
   <div id="flash_messages">
@@ -68,7 +71,7 @@
           <%= render partial: "bands/invite", locals: { band: @band, invitation: @band_invitation } %>
         </turbo-frame>
 
-        <div id="pending_invitations_list" data-band-id="<%= @band.id %>" class="mt-4">
+        <div class="mt-4">
           <%= render partial: "bands/pending_invitations", locals: { pending_invitations: @pending_invitations } %>
         </div>
       </div>
@@ -95,5 +98,168 @@
         <p style="color: rgba(255,255,255,0.5); text-align: center; padding: 30px;">No pending gig applications</p>
       <% end %>
     </div>
+
+    <!-- Band Media Section -->
+    <div class="band-dashboard-card full-width">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-images"></i>
+        </div>
+        <h3>Band Media</h3>
+      </div>
+
+      <%= form_with model: @band, local: true, class: "band-media-form" do |f| %>
+        <!-- Banner Upload -->
+        <div class="media-upload-section">
+          <div class="media-section-header">
+            <i class="fa-solid fa-panorama"></i>
+            <div>
+              <h4>Banner Image</h4>
+              <p>This will be displayed at the top of your band's profile page</p>
+            </div>
+          </div>
+          <% if @band.banner.attached? %>
+            <div class="current-media-preview banner-preview">
+              <%= image_tag url_for(@band.banner), class: "preview-image banner" %>
+            </div>
+          <% end %>
+          <div class="upload-input-wrapper">
+            <%= f.file_field :banner, accept: "image/*", class: "media-file-input", id: "banner-input" %>
+            <label for="banner-input" class="upload-label">
+              <i class="fa-solid fa-cloud-upload-alt"></i>
+              <span>Choose banner image</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Images Upload -->
+        <div class="media-upload-section">
+          <div class="media-section-header">
+            <i class="fa-solid fa-camera"></i>
+            <div>
+              <h4>Photos</h4>
+              <p>Upload photos of your band, performances, or promotional material</p>
+            </div>
+          </div>
+          <% if @band.images.attached? %>
+            <div class="current-media-grid">
+              <% @band.images.each do |image| %>
+                <div class="media-grid-item">
+                  <%= image_tag url_for(image), class: "preview-image" %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="upload-input-wrapper">
+            <%= f.file_field :images, accept: "image/*", multiple: true, class: "media-file-input", id: "images-input" %>
+            <label for="images-input" class="upload-label">
+              <i class="fa-solid fa-cloud-upload-alt"></i>
+              <span>Choose photos (multiple)</span>
+            </label>
+          </div>
+        </div>
+
+        <!-- Videos Upload -->
+        <div class="media-upload-section">
+          <div class="media-section-header">
+            <i class="fa-solid fa-video"></i>
+            <div>
+              <h4>Videos</h4>
+              <p>Upload performance videos, music videos, or behind-the-scenes content</p>
+            </div>
+          </div>
+          <% if @band.videos.attached? %>
+            <div class="current-media-grid videos-grid">
+              <% @band.videos.each do |video| %>
+                <div class="media-grid-item video-item">
+                  <video controls class="preview-video">
+                    <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
+                  </video>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+          <div class="upload-input-wrapper">
+            <%= f.file_field :videos, accept: "video/*", multiple: true, class: "media-file-input", id: "videos-input" %>
+            <label for="videos-input" class="upload-label">
+              <i class="fa-solid fa-cloud-upload-alt"></i>
+              <span>Choose videos (multiple)</span>
+            </label>
+          </div>
+        </div>
+
+        <div class="media-submit-wrapper">
+          <%= f.submit "Save Media", class: "btn-save-media" %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @band.user_id == current_user.id %>
+      <% other_members = @band.musicians.where.not(user_id: current_user.id) %>
+      <% if other_members.any? %>
+        <div class="band-dashboard-card full-width">
+          <div class="band-card-header">
+            <div class="card-icon">
+              <i class="fa-solid fa-crown"></i>
+            </div>
+            <h3>Transfer Leadership</h3>
+          </div>
+          <div class="transfer-leadership-section">
+            <p>Transfer band leadership to another member. You will remain a member of the band but will no longer be able to delete it or manage invitations.</p>
+            <div class="transfer-form">
+              <%= form_with url: transfer_leadership_band_path(@band), method: :patch, local: true do |f| %>
+                <div class="transfer-input-group">
+                  <div class="transfer-select-wrapper">
+                    <%= f.label :musician_id, class: "transfer-label" do %>
+                      <i class="fa-solid fa-user"></i> Select New Leader
+                    <% end %>
+                    <%= f.collection_select :musician_id, other_members, :id, :name,
+                        { prompt: "Choose a band member..." },
+                        { class: "transfer-select" } %>
+                  </div>
+                  <%= f.submit "Transfer Leadership", class: "btn-transfer",
+                      data: { turbo_confirm: "Are you sure you want to transfer leadership? You will no longer be the band leader." } %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+
+      <div class="band-dashboard-card full-width leave-band-card">
+        <div class="band-card-header">
+          <div class="card-icon danger">
+            <i class="fa-solid fa-trash"></i>
+          </div>
+          <h3>Delete Band</h3>
+        </div>
+        <div class="leave-band-section">
+          <p>As the band leader, you cannot leave the band. Deleting the band will remove all members, chat history, gig applications, and cannot be undone.</p>
+          <%= button_to "Delete #{@band.name}", band_path(@band),
+              method: :delete,
+              class: "btn-leave-band",
+              data: { turbo_confirm: "Are you sure you want to permanently delete #{@band.name}? All members will be removed and this cannot be undone." } %>
+        </div>
+      </div>
+    <% elsif current_user.musician %>
+      <% involvement = Involvement.find_by(band: @band, musician: current_user.musician) %>
+      <% if involvement %>
+        <div class="band-dashboard-card full-width leave-band-card">
+          <div class="band-card-header">
+            <div class="card-icon danger">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <h3>Leave Band</h3>
+          </div>
+          <div class="leave-band-section">
+            <p>If you leave this band, you will no longer have access to the band chat or be able to apply for gigs with this band.</p>
+            <%= button_to "Leave #{@band.name}", involvement_path(involvement),
+                method: :delete,
+                class: "btn-leave-band",
+                data: { turbo_confirm: "Are you sure you want to leave #{@band.name}? This action cannot be undone." } %>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
   </div>
 </div>

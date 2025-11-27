@@ -1,10 +1,10 @@
-<div class="pending-invitations-section">
+<div id="pending_invitations_list" class="pending-invitations-section">
   <div class="pending-header">
     <i class="fa-solid fa-clock"></i>
-    <span>Pending Invitations</span>
+    <span>Pending Invitations (<%= pending_invitations&.count || 0 %>)</span>
   </div>
 
-  <% if pending_invitations&.any? %>
+  <% if pending_invitations.present? && pending_invitations.any? %>
     <div class="pending-list">
       <% pending_invitations.each do |invitation| %>
         <div class="pending-item">
@@ -12,12 +12,16 @@
             <i class="fa-solid fa-user"></i>
           </div>
           <div class="pending-info">
-            <span class="pending-name"><%= invitation.musician.name %></span>
-            <span class="pending-band"><%= invitation.band.name %></span>
+            <span class="pending-name"><%= invitation.musician&.name || "Unknown" %></span>
+            <span class="pending-instrument"><%= invitation.musician&.instrument %></span>
           </div>
-          <div class="pending-status status-<%= invitation.status.downcase %>">
-            <i class="fa-solid fa-hourglass-half"></i>
-            <%= invitation.status.capitalize %>
+          <div class="pending-actions">
+            <%= button_to band_band_invitation_path(invitation.band, invitation),
+                method: :delete,
+                class: "btn-cancel-invite",
+                data: { turbo_confirm: "Cancel invitation to #{invitation.musician&.name}?" } do %>
+              <i class="fa-solid fa-xmark"></i>
+            <% end %>
           </div>
         </div>
       <% end %>
