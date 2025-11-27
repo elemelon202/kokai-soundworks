@@ -1,1 +1,16 @@
 // Specific CSS for your home-page
+.gradient {
+  position:absolute;
+  top: 0;
+  left: 0;
+  min-width: 100vw;
+  min-height: 100vh;
+  background: radial-gradient(
+    ellipse at 5% 5%,
+    #a7b620fa 0%,
+    #1b1b1b 100%
+  );
+  background-attachment: scroll;
+  color: #f8f9fa;
+  z-index: -1;
+}
