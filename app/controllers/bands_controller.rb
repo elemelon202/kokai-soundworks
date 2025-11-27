@@ -78,8 +78,13 @@ class BandsController < ApplicationController
     @band = Band.find(params[:id])
   end
   def authorize_band
-    unless @band.user == current_user
+    unless @band.user == current_user || user_is_band_member?
       redirect_to bands_path, alert: "You are not authorized to perform this action."
     end
+  end
+
+  def user_is_band_member?
+    return false unless current_user&.musician
+    @band.musicians.include?(current_user.musician)
   end
 end

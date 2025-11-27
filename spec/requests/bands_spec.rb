@@ -121,14 +121,29 @@ RSpec.describe "Bands", type: :request do
       end
     end
 
-    context "when logged in as non-owner" do
+    context "when logged in as band member (non-owner)" do
+      let(:member_user) { create(:user) }
+      let(:member_musician) { create(:musician, user: member_user) }
+
+      before do
+        create(:involvement, band: band, musician: member_musician)
+        sign_in member_user
+      end
+
+      it "returns a successful response" do
+        get edit_band_path(band)
+        expect(response).to have_http_status(:success)
+      end
+    end
+
+    context "when logged in as non-member" do
       let(:other_user) { create(:user) }
 
       before { sign_in other_user }
 
       it "redirects with unauthorized message" do
         get edit_band_path(band)
-        expect(response).to redirect_to(root_path)
+        expect(response).to redirect_to(bands_path)
       end
     end
   end
@@ -148,6 +163,43 @@ RSpec.describe "Bands", type: :request do
       it "redirects to the band" do
         patch band_path(band), params: { band: { name: "Updated Name" } }
         expect(response).to redirect_to(band_path(band))
+      end
+    end
+
+    context "when logged in as band member (non-owner)" do
+      let(:member_user) { create(:user) }
+      let(:member_musician) { create(:musician, user: member_user) }
+
+      before do
+        create(:involvement, band: band, musician: member_musician)
+        sign_in member_user
+      end
+
+      it "updates the band" do
+        patch band_path(band), params: { band: { name: "Member Updated" } }
+        expect(band.reload.name).to eq("Member Updated")
+      end
+
+      it "redirects to the band" do
+        patch band_path(band), params: { band: { name: "Member Updated" } }
+        expect(response).to redirect_to(band_path(band))
+      end
+    end
+
+    context "when logged in as non-member" do
+      let(:other_user) { create(:user) }
+
+      before { sign_in other_user }
+
+      it "does not update the band" do
+        original_name = band.name
+        patch band_path(band), params: { band: { name: "Unauthorized Update" } }
+        expect(band.reload.name).to eq(original_name)
+      end
+
+      it "redirects with unauthorized message" do
+        patch band_path(band), params: { band: { name: "Unauthorized Update" } }
+        expect(response).to redirect_to(bands_path)
       end
     end
   end
@@ -171,7 +223,28 @@ RSpec.describe "Bands", type: :request do
       end
     end
 
-    context "when logged in as non-owner" do
+    context "when logged in as band member (non-owner)" do
+      let(:member_user) { create(:user) }
+      let(:member_musician) { create(:musician, user: member_user) }
+
+      before do
+        create(:involvement, band: band, musician: member_musician)
+        sign_in member_user
+      end
+
+      it "does not destroy the band" do
+        expect {
+          delete band_path(band)
+        }.not_to change(Band, :count)
+      end
+
+      it "redirects with unauthorized message" do
+        delete band_path(band)
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context "when logged in as non-member" do
       let(:other_user) { create(:user) }
 
       before { sign_in other_user }
@@ -180,6 +253,11 @@ RSpec.describe "Bands", type: :request do
         expect {
           delete band_path(band)
         }.not_to change(Band, :count)
+      end
+
+      it "redirects with unauthorized message" do
+        delete band_path(band)
+        expect(response).to redirect_to(bands_path)
       end
     end
   end
