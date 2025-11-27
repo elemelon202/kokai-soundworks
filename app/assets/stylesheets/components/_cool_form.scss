@@ -405,6 +405,156 @@
   }
 }
 
+// Musician Search Field (Tom Select styling)
+.musician-search-field {
+  .form-label {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.8);
+  }
+
+  .form-hint {
+    font-size: 0.8rem;
+    color: rgba(255, 255, 255, 0.4);
+    margin-top: 8px;
+  }
+}
+
+// Tom Select styling for dark theme
+.cool-form-card {
+  .ts-wrapper {
+    &.multi {
+      .ts-control {
+        background: rgba(255, 255, 255, 0.03);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 10px 14px;
+        min-height: 52px;
+        transition: all 0.3s ease;
+
+        &:hover {
+          border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        input {
+          color: #fff;
+
+          &::placeholder {
+            color: rgba(255, 255, 255, 0.4);
+          }
+        }
+      }
+
+      &.focus .ts-control {
+        background: rgba(255, 255, 255, 0.05);
+        border-color: #E936AD;
+        box-shadow: 0 0 0 3px rgba(233, 54, 173, 0.15);
+      }
+    }
+
+    .ts-dropdown {
+      background: rgba(30, 30, 30, 0.98);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 12px;
+      margin-top: 8px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+
+      .ts-dropdown-content {
+        max-height: 300px;
+        padding: 8px;
+      }
+
+      .option {
+        padding: 12px 14px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &:hover, &.active {
+          background: rgba(233, 54, 173, 0.15);
+        }
+
+        &.selected {
+          background: rgba(213, 255, 64, 0.15);
+        }
+      }
+
+      .no-results {
+        padding: 20px;
+        text-align: center;
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.9rem;
+      }
+    }
+
+    // Selected item styling
+    .item {
+      background: linear-gradient(135deg, rgba(233, 54, 173, 0.2), rgba(233, 54, 173, 0.1));
+      border: 1px solid rgba(233, 54, 173, 0.3);
+      border-radius: 8px;
+      padding: 6px 10px;
+      margin: 3px;
+      color: #fff;
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+
+      .musician-name {
+        font-weight: 600;
+      }
+
+      .musician-instrument {
+        color: rgba(255, 255, 255, 0.6);
+        font-size: 0.8rem;
+      }
+
+      .remove {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 1.1rem;
+        margin-left: 4px;
+        cursor: pointer;
+        transition: color 0.2s ease;
+
+        &:hover {
+          color: #E936AD;
+        }
+      }
+    }
+  }
+
+  // Musician option in dropdown
+  .musician-option {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    .musician-name {
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .musician-details {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.8rem;
+    }
+  }
+
+  // Clear button styling
+  .ts-wrapper .clear-button {
+    color: rgba(255, 255, 255, 0.4);
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: #E936AD;
+    }
+  }
+}
+
 // Responsive adjustments
 @media (max-width: 768px) {
   .cool-form-card {

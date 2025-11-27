@@ -90,6 +90,38 @@ $kokai-yellow-dark: #b8e020;
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
+  margin-bottom: 15px;
+}
+
+// Message Band Button
+.btn-message-band {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 24px;
+  background: $kokai-yellow;
+  color: #171717;
+  border: none;
+  border-radius: 25px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+
+  i {
+    font-size: 1rem;
+  }
+
+  &:hover {
+    background: $kokai-yellow-dark;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(213, 255, 64, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
 }
 
 .genre-badge {

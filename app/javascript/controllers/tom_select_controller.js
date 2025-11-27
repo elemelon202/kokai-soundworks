@@ -7,10 +7,14 @@ export default class extends Controller {
   }
 
   connect() {
+    const isMultiple = this.element.hasAttribute('multiple')
+    const plugins = isMultiple ? ['remove_button', 'clear_button'] : ['clear_button']
+
     this.tomSelect = new TomSelect(this.element, {
-      plugins: ['clear_button'],
+      plugins: plugins,
       placeholder: this.placeholderValue,
       allowEmptyOption: true,
+      maxItems: isMultiple ? null : 1,
       sortField: {
         field: "text",
         direction: "asc"

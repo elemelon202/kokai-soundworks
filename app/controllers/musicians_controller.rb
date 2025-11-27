@@ -1,7 +1,32 @@
 class MusiciansController < ApplicationController
   # find musician before performing show, edit, update, or destroy
-  skip_before_action :authenticate_user!, only: [:index, :show]
+  skip_before_action :authenticate_user!, only: [:index, :show, :search]
   before_action :set_musician, only: [:show, :edit, :update, :destroy, :purge_attachment]
+
+  def search
+    @musicians = policy_scope(Musician)
+
+    if params[:query].present?
+      @musicians = @musicians.search_by_all(params[:query])
+    end
+
+    # Exclude the current user's musician profile if they have one
+    if current_user&.musician
+      @musicians = @musicians.where.not(id: current_user.musician.id)
+    end
+
+    @musicians = @musicians.limit(20)
+
+    render json: @musicians.map { |m|
+      {
+        id: m.id,
+        name: m.name,
+        instrument: m.instrument,
+        location: m.location,
+        display: "#{m.name} - #{m.instrument}#{m.location.present? ? " (#{m.location})" : ""}"
+      }
+    }
+  end
 
   def index
     @musicians = policy_scope(Musician)

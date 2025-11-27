@@ -13,6 +13,9 @@ Rails.application.routes.draw do
   # Defines the root path route ("/")
   # root "posts#index"
   resources :musicians do
+    collection do
+      get :search
+    end
     member do
       delete :purge_attachment
     end
