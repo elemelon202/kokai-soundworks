@@ -66,9 +66,13 @@
                       <p><i class="fa-solid fa-location-dot"></i> <%= musician.location %></p>
                       <p><i class="fa-solid fa-guitar"></i> <%= musician.instrument %></p>
                       <p><i class="fa-solid fa-music"></i> <%= musician.styles %></p>
-                      <p><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
-                    </div>
-                  <% end %>
+                      <% if musician.bio == nil %>
+                        <p><i class="fa-solid fa-pen-to-square"></i> <%= "..." %></p>
+                      <% else %>
+                        <p><i class="fa-solid fa-pen-to-square"></i> <%= "#{musician.bio.split.take(8).join(' ')}..." %></p>
+                      <% end %>
+                    <% end %>
+                  </div>
                   <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary", style: "background-color: #a4fe35ff;", data: { turbo: false } %>
                 </div>
               </div>
