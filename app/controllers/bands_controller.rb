@@ -78,12 +78,26 @@ class BandsController < ApplicationController
   end
   def destroy
     authorize @band #* Tyrhen was here
+    band_name = @band.name
     @band.destroy
-    redirect_to bands_path
+    redirect_to bands_path, notice: "#{band_name} has been deleted."
   end
 
   def transfer_leadership
-    new_leader_musician = Musician.find(params[:musician_id])
+    # Validate that a musician was selected
+    if params[:musician_id].blank?
+      redirect_to edit_band_path(@band), alert: "Please select a band member to transfer leadership to."
+      return
+    end
+
+    new_leader_musician = Musician.find_by(id: params[:musician_id])
+
+    # Ensure the musician exists
+    unless new_leader_musician
+      redirect_to edit_band_path(@band), alert: "Musician not found."
+      return
+    end
+
     new_leader_user = new_leader_musician.user
 
     # Ensure the new leader is a member of the band
@@ -92,10 +106,18 @@ class BandsController < ApplicationController
       return
     end
 
+    # Ensure the new leader is not already the leader
+    if @band.user_id == new_leader_user.id
+      redirect_to edit_band_path(@band), alert: "This musician is already the band leader."
+      return
+    end
+
     # Transfer leadership
     @band.update!(user: new_leader_user)
 
     redirect_to edit_band_path(@band), notice: "Leadership transferred to #{new_leader_musician.name}."
+  rescue ActiveRecord::RecordInvalid => e
+    redirect_to edit_band_path(@band), alert: "Failed to transfer leadership: #{e.message}"
   end
 
   def purge_attachment

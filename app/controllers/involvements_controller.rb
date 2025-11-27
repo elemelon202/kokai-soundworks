@@ -5,26 +5,35 @@ class InvolvementsController < ApplicationController
 
   def destroy
     band = @involvement.band
+    member_being_removed = @involvement.musician
 
-    # Don't allow the band leader to leave
-    if band.user_id == current_user.id
+    # Check if current user is the band leader
+    is_band_leader = band.user_id == current_user.id
+
+    # Don't allow the band leader to leave (they must delete or transfer ownership)
+    if member_being_removed.user_id == current_user.id && is_band_leader
       redirect_to edit_band_path(band), alert: "As the band leader, you cannot leave the band. You must delete the band or transfer ownership first."
       return
     end
 
-    # Ensure the current user is the one leaving
-    unless @involvement.musician.user_id == current_user.id
-      redirect_to edit_band_path(band), alert: "You can only remove yourself from a band."
+    # Allow removal if: current user is leaving OR current user is the band leader removing someone else
+    unless member_being_removed.user_id == current_user.id || is_band_leader
+      redirect_to edit_band_path(band), alert: "You are not authorized to remove this member."
       return
     end
 
     # Remove from band chat participation
     if band.chat
-      Participation.find_by(user: current_user, chat: band.chat)&.destroy
+      Participation.find_by(user: member_being_removed.user, chat: band.chat)&.destroy
     end
 
     @involvement.destroy
-    redirect_to bands_path, notice: "You have left #{band.name}."
+
+    if member_being_removed.user_id == current_user.id
+      redirect_to bands_path, notice: "You have left #{band.name}."
+    else
+      redirect_to edit_band_path(band), notice: "#{member_being_removed.name} has been removed from #{band.name}."
+    end
   end
 
   private
