@@ -1,3 +1,10 @@
+#Every band has a leader who is the user that created the band. The leader is automatically added as a member of the band upon creation as a musician, because only musicians can be members of bands.
+#If the leader does not have a musician profile, one is created for them with default values.
+#A band can have multiple musicians as members through the Involvement model.
+#When a band is created, a chat is also created for the band, and the leader is added as a participant in that chat. Leadership is transferable to other memebers.
+#To transfer leadership the band.user_id must be updated to the user_id of another member's musician profile.
+#Only the leader can delete the band, but other members can leave. The leader cannot leave until they transfer leadership to another member.
+
 class Band < ApplicationRecord
   belongs_to :user
   has_many :bookings, dependent: :destroy
@@ -8,6 +15,11 @@ class Band < ApplicationRecord
 
   has_one :chat, dependent: :destroy
   has_many :messages, through: :chat
+
+  # Media attachments
+  has_one_attached :banner
+  has_many_attached :images
+  has_many_attached :videos
 
   after_create :setup_band_membership_and_chat
 

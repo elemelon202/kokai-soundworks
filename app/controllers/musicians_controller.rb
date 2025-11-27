@@ -53,7 +53,10 @@ class MusiciansController < ApplicationController
 
 def edit
   authorize @musician
-   @band_invitation = BandInvitation.find_by(musician: current_user.musician, status: "Pending")
+  @band_invitation = BandInvitation.find_by(musician: current_user.musician, status: "Pending")
+
+  # Mark band invitation notifications as read when visiting edit page
+  mark_invitation_notifications_as_read
 end
 
 def update
@@ -82,4 +85,12 @@ end
     params.require(:musician).permit(:name, :instrument, :age, :styles, :location, media: [])
   end
 
+  def mark_invitation_notifications_as_read
+    return unless current_user
+
+    # Mark band invitation notifications as read
+    current_user.notifications.unread
+      .where(notification_type: Notification::TYPES[:band_invitation])
+      .update_all(read: true)
+  end
 end
