@@ -11,10 +11,7 @@ class MessagesController < ApplicationController
     authorize @message
 
     if @message.save
-      # Create message_reads for all participants except sender
-      @chat.users.where.not(id: current_user.id).each do |user|
-        @message.message_reads.create(user: user, read: false)
-      end
+      # Note: message_reads are created automatically by Message#create_message_reads callback
 
       # Create notifications
       if @chat.band.present?

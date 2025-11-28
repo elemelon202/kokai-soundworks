@@ -47,15 +47,13 @@ class BandsController < ApplicationController
   # All messages for the chat
   @messages = @chat.messages.order(created_at: :asc)
 
-  # Unread messages for current_user
-  @unread_messages = @chat.messages.joins(:message_reads)
-                           .where(message_reads: { user_id: current_user.id, read: false })
+  # Get unread count before marking as read (for display)
+  unread_query = MessageRead.where(user_id: current_user.id, read: false)
+                            .where(message_id: @chat.messages.select(:id))
+  @unread_count = unread_query.count
 
-  # Mark unread messages as read
-  @unread_messages.each do |msg|
-    msg_read = msg.message_reads.find_by(user: current_user)
-    msg_read.update(read: true) if msg_read
-    end
+  # Mark unread messages as read using a single query
+  unread_query.update_all(read: true)
     @band_invitation = BandInvitation.new
     # Show all pending invitations for this band (visible to all band members)
     @pending_invitations = @band.band_invitations.pending
