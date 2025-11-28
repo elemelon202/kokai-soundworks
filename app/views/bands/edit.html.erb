@@ -252,7 +252,9 @@
       <% end %>
 
       <!-- Upload Form -->
-      <%= form_with model: @band, local: true, class: "band-media-form" do |f| %>
+      <%= form_with model: @band, local: true, class: "band-media-form", id: "band-media-form" do |f| %>
+        <%# Hidden field for banner position - updated by Stimulus controller when position is adjusted %>
+        <%= f.hidden_field :banner_position, id: "band-media-form-banner-position", value: @band.banner_position || 50 %>
         <div class="media-upload-section">
           <div class="media-section-header">
             <i class="fa-solid fa-cloud-upload-alt"></i>

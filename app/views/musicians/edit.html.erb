@@ -76,7 +76,9 @@
         <h3>Edit Profile</h3>
       </div>
 
-      <%= simple_form_for @musician, html: { class: "musician-edit-form" } do |f| %>
+      <%= simple_form_for @musician, html: { class: "musician-edit-form", id: "musician-form" } do |f| %>
+        <%# Hidden field for banner position - updated by Stimulus controller when position is adjusted %>
+        <%= f.hidden_field :banner_position, id: "musician-form-banner-position", value: @musician.banner_position || 50 %>
         <div class="form-grid">
           <div class="form-field">
             <label class="form-label">
