@@ -7,7 +7,6 @@
       <h1>Create Your Band</h1>
       <p>Bring your musical vision to life</p>
     </div>
-
     <%= simple_form_for @band do |f| %>
       <div class="cool-form-section">
         <div class="cool-form-section-header">
@@ -19,23 +18,19 @@
             <p>Tell us about your band</p>
           </div>
         </div>
-
         <%= f.input :name,
                     label: "Band Name",
                     placeholder: "Enter your band's name",
                     input_html: { class: "form-control" } %>
-
         <%= f.input :location,
                     label: "Location",
                     placeholder: "Where are you based?",
                     input_html: { class: "form-control" } %>
-
         <%= f.input :description,
                     label: "Description",
                     placeholder: "Describe your band's sound, style, and story...",
                     input_html: { class: "form-control", rows: 4 } %>
       </div>
-
       <% unless current_user.musician %>
         <div class="cool-form-section">
           <div class="cool-form-section-header">
@@ -47,25 +42,21 @@
               <p>As a band leader, you need a musician profile</p>
             </div>
           </div>
-
           <%= f.fields_for :leader_musician, Musician.new do |m| %>
             <%= m.input :name,
                         label: "Your Name",
                         required: true,
                         placeholder: "Enter your name",
                         input_html: { class: "form-control" } %>
-
             <%= m.input :instrument,
                         label: "Your Instrument/Role",
                         required: true,
                         placeholder: "e.g., Lead Guitar, Vocals, Drums",
                         input_html: { class: "form-control" } %>
-
             <%= m.input :location,
                         label: "Your Location",
                         placeholder: "Where are you based?",
                         input_html: { class: "form-control" } %>
-
             <%= m.input :media,
                         as: :file,
                         label: "Profile Photo",
@@ -74,7 +65,6 @@
           <% end %>
         </div>
       <% end %>
-
       <div class="cool-form-section">
         <div class="cool-form-section-header">
           <div class="section-icon">
@@ -85,13 +75,19 @@
             <p>Search and invite musicians to your band (optional)</p>
           </div>
         </div>
-
         <div class="musician-search-field">
           <label class="form-label" for="band_musician_ids">Search Musicians</label>
           <%
-            # Get musicians with real profiles (exclude auto-created band leader profiles with "Unknown" instrument)
             available_musicians = Musician.where.not(instrument: [nil, '', 'Unknown'])
             available_musicians = available_musicians.where.not(id: current_user.musician.id) if current_user.musician
+            preselected_id = params[:preselected_musician].to_i
+
+            if defined?(other_user) && other_user&.musician.present?
+              # Put messaged musician first, then alphabetical
+              available_musicians = available_musicians.order(Arel.sql("id = #{other_user.musician.id} DESC")).order(:name)
+            else
+              available_musicians = available_musicians.order(:name)
+            end
           %>
           <% preselected_id = params[:preselect_musician].to_i %>
           <select name="band[musician_ids][]"
@@ -105,17 +101,11 @@
           </select>
           <p class="form-hint">Type to search for musicians by name, instrument, or location</p>
         </div>
-      </div>
-
-      <div class="cool-form-submit">
-        <%= f.button :submit, "Create Band", class: "btn-submit" %>
-      </div>
-    <% end %>
-
-    <div class="cool-form-back">
-      <%= link_to bands_path do %>
-        <i class="fa-solid fa-arrow-left"></i> Back to bands
       <% end %>
+      <div class="cool-form-back">
+        <%= link_to bands_path do %>
+          <i class="fa-solid fa-arrow-left"></i> Back to bands
+        <% end %>
+      </div>
     </div>
   </div>
-</div>

@@ -23,6 +23,7 @@ class BandsController < ApplicationController
   end
   def new
     @band = Band.new
+    @other_user = @chat.recipient.musician if @chat.present?
     authorize @band #* Tyrhen was here
   end
   def create

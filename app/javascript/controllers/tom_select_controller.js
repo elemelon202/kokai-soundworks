@@ -15,9 +15,16 @@ export default class extends Controller {
       placeholder: this.placeholderValue,
       allowEmptyOption: true,
       maxItems: isMultiple ? null : 1,
-      sortField: {
-        field: "text",
-        direction: "asc"
+
+      onInitialize() {
+        // preselected musician is shown
+        const preselected = [...this.element.options]
+          .filter(opt => opt.selected)
+          .map(opt => opt.value)
+
+        if (preselected.length > 0) {
+          this.setValue(preselected)
+        }
       }
     })
   }
