@@ -75,13 +75,24 @@ end
 
   def accept
     authorize @band_invitation
-    @band_invitation.update(status: "Accepted")
-    @band_invitation.band.musicians << @band_invitation.musician
 
-    # Notify the inviter that invitation was accepted
-    Notification.create_for_invitation_response(@band_invitation, accepted: true)
-    # Notify band members about new member
-    Notification.create_for_band_member_joined(@band_invitation.band, @band_invitation.musician)
+    # Check if invitation was already accepted
+    if @band_invitation.status == "Accepted"
+      redirect_to band_path(@band_invitation.band), notice: "You have already accepted this invitation."
+      return
+    end
+
+    @band_invitation.update(status: "Accepted")
+
+    # Only add musician to band if they're not already a member
+    unless @band_invitation.band.musicians.include?(@band_invitation.musician)
+      @band_invitation.band.musicians << @band_invitation.musician
+
+      # Notify the inviter that invitation was accepted
+      Notification.create_for_invitation_response(@band_invitation, accepted: true)
+      # Notify band members about new member
+      Notification.create_for_band_member_joined(@band_invitation.band, @band_invitation.musician)
+    end
 
     broadcast_invitation_update(@band_invitation)
     redirect_to band_path(@band_invitation.band), notice: "Invitation accepted."
