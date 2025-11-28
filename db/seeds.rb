@@ -198,14 +198,15 @@ puts "Created #{Venue.count} venues"
 puts "Creating musicians..."
 
 musicians = []
-instruments = ["Guitar", "Bass", "Drums", "Vocals", "Keyboard", "Saxophone"]
+instruments = ["Guitar", "Bass", "Drums", "Vocals", "Keyboard", "Saxophone", "Violin"]
+locations = ["Tokyo", "Osaka", "Kyoto", "Yokohama", "Kawasaki", "Kobe", "Sapporo"]
 musicians << Musician.create!(
   user: musician_users[0],
   name: "Yuki Tanaka",
   instrument: instruments.sample,
   age: 28,
   styles: "Jazz, Funk, R&B",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Yuki is the rhythmic backbone of any ensemble. With a background in jazz studies at Berklee College of Music, she brings technical precision and creative flair to every performance. Known for her explosive solos and impeccable timing."
 )
 
@@ -215,7 +216,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 32,
   styles: "Jazz, Rock, Blues",
-  location: "Shinjuku, Tokyo",
+  location: locations.sample,
   bio: "Kenji is the ultimate musical chameleon, seamlessly transitioning between upright bass for jazz gigs and electric bass for rock shows. His groove-heavy playing style has made him one of Tokyo's most sought-after session musicians."
 )
 
@@ -225,7 +226,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 25,
   styles: "Jazz, Soul, Pop",
-  location: "Harajuku, Tokyo",
+  location: locations.sample,
   bio: "Sakura is a captivating vocalist with a four-octave range. Her soulful interpretations of jazz standards and original compositions have earned her a devoted following in Tokyo's jazz scene."
 )
 
@@ -235,7 +236,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 30,
   styles: "Rock, Metal, Blues",
-  location: "Ikebukuro, Tokyo",
+  location: locations.sample,
   bio: "Takeshi's guitar work is defined by blistering solos and heavy riffs. A graduate of MI Japan, he has toured extensively throughout Asia and brings stadium-level energy to every club show."
 )
 
@@ -245,7 +246,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 35,
   styles: "Jazz, Classical, Electronic",
-  location: "Meguro, Tokyo",
+  location: locations.sample,
   bio: "Hiroshi bridges the worlds of classical training and modern electronic music. His virtuosic piano technique combined with synth programming creates unique soundscapes that defy categorization."
 )
 
@@ -255,7 +256,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 29,
   styles: "Jazz, Funk, Soul",
-  location: "Nakano, Tokyo",
+  location: locations.sample,
   bio: "Mika's saxophone playing channels the spirit of classic soul and modern jazz. Her warm tone and improvisational skills make her a standout in any ensemble."
 )
 
@@ -265,7 +266,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 27,
   styles: "Jazz, Latin, Fusion",
-  location: "Koenji, Tokyo",
+  location: locations.sample,
   bio: "Ryo brings Latin fire to Tokyo's jazz scene. His trumpet playing is influenced by Afro-Cuban traditions, and he leads his own salsa band on weekends."
 )
 
@@ -275,7 +276,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 24,
   styles: "Classical, Jazz, Folk",
-  location: "Kichijoji, Tokyo",
+  location: locations.sample,
   bio: "Aoi is a classically trained violinist who discovered jazz in college. She brings orchestral elegance to jazz standards and has collaborated with artists across multiple genres."
 )
 
@@ -285,7 +286,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 33,
   styles: "World Music, Jazz, Electronic",
-  location: "Shimokitazawa, Tokyo",
+  location: locations.sample,
   bio: "Ken specializes in world percussion instruments from djembe to tabla. His rhythmic explorations blend traditional techniques with modern electronic production."
 )
 
@@ -295,7 +296,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 26,
   styles: "Pop, R&B, Jazz",
-  location: "Daikanyama, Tokyo",
+  location: locations.sample,
   bio: "Yumi's silky vocals have graced countless studio sessions. Her background singers work and solo performances showcase incredible range and emotional depth."
 )
 
@@ -305,7 +306,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 31,
   styles: "Folk, Acoustic, Singer-Songwriter",
-  location: "Sangenjaya, Tokyo",
+  location: locations.sample,
   bio: "Daiki is a masterful fingerstyle guitarist and singer-songwriter. His intimate acoustic performances have built a devoted following in Tokyo's coffee house circuit."
 )
 
@@ -315,7 +316,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 28,
   styles: "Electronic, Ambient, Experimental",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Emi creates immersive electronic soundscapes using modular synthesizers and custom software. Her live performances are audio-visual experiences that push boundaries."
 )
 
@@ -326,7 +327,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 29,
   styles: "Classical, Jazz, Contemporary",
-  location: "Ginza, Tokyo",
+  location: locations.sample,
   bio: "Naomi is a classically trained pianist with a passion for jazz improvisation. Her elegant touch and expressive playing have made her a favorite at upscale venues."
 )
 
@@ -336,7 +337,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 34,
   styles: "Rock, Punk, Alternative",
-  location: "Koenji, Tokyo",
+  location: locations.sample,
   bio: "Taro brings raw energy and precision to every performance. His powerful drumming style has been the backbone of several influential Tokyo punk bands."
 )
 
@@ -346,7 +347,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 26,
   styles: "Classical, World Music, New Age",
-  location: "Ueno, Tokyo",
+  location: locations.sample,
   bio: "Mari's flute playing transports listeners to ethereal realms. Trained at Tokyo University of the Arts, she blends classical technique with world music influences."
 )
 
@@ -356,7 +357,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 30,
   styles: "Funk, R&B, Neo-Soul",
-  location: "Ebisu, Tokyo",
+  location: locations.sample,
   bio: "Shota's funky bass lines are infectious and groove-heavy. He's played with numerous R&B artists and brings serious pocket to every session."
 )
 
@@ -366,7 +367,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 23,
   styles: "J-Pop, R&B, Dance",
-  location: "Harajuku, Tokyo",
+  location: locations.sample,
   bio: "Hana is a rising star in Tokyo's pop scene. Her powerful voice and charismatic stage presence have garnered a growing fanbase on social media."
 )
 
@@ -376,7 +377,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 36,
   styles: "Blues, Rock, Jazz Fusion",
-  location: "Shimokitazawa, Tokyo",
+  location: locations.sample,
   bio: "Koji is a guitar virtuoso known for his soulful blues licks and technical prowess. He runs a popular guitar workshop in Shimokitazawa."
 )
 
@@ -386,7 +387,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 27,
   styles: "Classical, Chamber Music, Film Scores",
-  location: "Bunkyo, Tokyo",
+  location: locations.sample,
   bio: "Rina's cello playing is deeply emotional and technically brilliant. She frequently performs with orchestras and records for film soundtracks."
 )
 
@@ -396,7 +397,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 31,
   styles: "Jazz, Bebop, Hard Bop",
-  location: "Shinjuku, Tokyo",
+  location: locations.sample,
   bio: "Masato channels the spirit of classic bebop through his saxophone. His improvisations are inventive and deeply rooted in jazz tradition."
 )
 
@@ -406,7 +407,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 25,
   styles: "Classical, Celtic, Ambient",
-  location: "Setagaya, Tokyo",
+  location: locations.sample,
   bio: "Yuna's harp playing creates magical atmospheres. She performs at weddings, corporate events, and intimate concert settings."
 )
 
@@ -416,7 +417,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 28,
   styles: "Jazz, Fusion, Progressive",
-  location: "Nakameguro, Tokyo",
+  location: locations.sample,
   bio: "Shin is a technically gifted drummer who pushes rhythmic boundaries. His complex polyrhythms and dynamic playing are highly sought after."
 )
 
@@ -426,7 +427,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 32,
   styles: "Classical, Tango, Crossover",
-  location: "Roppongi, Tokyo",
+  location: locations.sample,
   bio: "Akiko's violin playing spans classical concertos to passionate tango. She leads her own tango ensemble and performs internationally."
 )
 
@@ -436,7 +437,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 29,
   styles: "Progressive Rock, Metal, Jazz Fusion",
-  location: "Ikebukuro, Tokyo",
+  location: locations.sample,
   bio: "Jun is a bass virtuoso known for his technical mastery and musicality. His YouTube tutorials have millions of views worldwide."
 )
 
@@ -446,7 +447,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 27,
   styles: "Jazz, Bossa Nova, French Chanson",
-  location: "Jiyugaoka, Tokyo",
+  location: locations.sample,
   bio: "Misaki's sultry voice and sophisticated phrasing make her a standout jazz vocalist. She sings in Japanese, English, and French."
 )
 
@@ -456,7 +457,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 25,
   styles: "Metal, Shred, Neoclassical",
-  location: "Akihabara, Tokyo",
+  location: locations.sample,
   bio: "Ryota's lightning-fast guitar work and neoclassical influences have made him a star in Tokyo's metal scene. He endorses several guitar brands."
 )
 
@@ -466,7 +467,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 30,
   styles: "Electronic, Techno, House",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Ayumi is a synth wizard who creates pulsing electronic music. Her DJ sets and live performances are fixtures at Tokyo's best clubs."
 )
 
@@ -476,7 +477,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 33,
   styles: "Jazz, Ska, Reggae",
-  location: "Yokohama",
+  location: locations.sample,
   bio: "Kazuki's bright trumpet tone brings joy to every performance. He plays in multiple ska bands and leads jazz jam sessions."
 )
 
@@ -486,7 +487,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 26,
   styles: "Classical, Klezmer, Jazz",
-  location: "Nerima, Tokyo",
+  location: locations.sample,
   bio: "Saki is a versatile clarinetist equally at home in orchestras and klezmer bands. Her warm tone and expressive playing are captivating."
 )
 
@@ -496,7 +497,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 35,
   styles: "Latin, Afro-Cuban, Brazilian",
-  location: "Asakusa, Tokyo",
+  location: locations.sample,
   bio: "Tomoya specializes in Latin percussion and has studied extensively in Cuba and Brazil. His congas and timbales drive any Latin ensemble."
 )
 
@@ -506,7 +507,7 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 24,
   styles: "Indie, Folk, Alternative",
-  location: "Kichijoji, Tokyo",
+  location: locations.sample,
   bio: "Natsuki's ethereal voice and introspective lyrics have built a devoted indie following. She writes all her own songs."
 )
 
@@ -516,307 +517,307 @@ musicians << Musician.create!(
   instrument: instruments.sample,
   age: 28,
   styles: "Fingerstyle, Folk, Americana",
-  location: "Mitaka, Tokyo",
+  location: locations.sample,
   bio: "Haruki's fingerpicking technique is mesmerizing. He performs solo acoustic shows and has released several instrumental albums."
 )
 
 musicians << Musician.create!(
   user: musician_users[32],
   name: "Mei Ueno",
-  instrument: "Piano",
+  instrument: instruments.sample,
   age: 31,
   styles: "Jazz, Stride, Ragtime",
-  location: "Ochanomizu, Tokyo",
+  location: locations.sample,
   bio: "Mei brings vintage jazz piano styles to modern audiences. Her stride piano playing and ragtime interpretations are energetic and authentic."
 )
 
 musicians << Musician.create!(
   user: musician_users[33],
   name: "Kenta Fukuda",
-  instrument: "Drums",
+  instrument: instruments.sample,
   age: 27,
   styles: "Pop, Rock, Studio Session",
-  location: "Machida, Tokyo",
+  location: locations.sample,
   bio: "Kenta is a reliable session drummer with great feel and versatility. He's recorded on numerous J-pop albums and commercial jingles."
 )
 
 musicians << Musician.create!(
   user: musician_users[34],
   name: "Nanami Ota",
-  instrument: "Flute",
+  instrument: instruments.sample,
   age: 29,
   styles: "Jazz, Fusion, Latin Jazz",
-  location: "Meguro, Tokyo",
+  location: locations.sample,
   bio: "Nanami brings a jazz sensibility to her flute playing. Her improvisations are melodic and her tone is warm and inviting."
 )
 
 musicians << Musician.create!(
   user: musician_users[35],
   name: "Yuto Shimizu",
-  instrument: "Upright Bass",
+  instrument: instruments.sample,
   age: 34,
   styles: "Jazz, Swing, Rockabilly",
-  location: "Shinjuku, Tokyo",
+  location: locations.sample,
   bio: "Yuto's upright bass playing swings hard. He's a fixture in Tokyo's jazz and rockabilly scenes, known for his walking bass lines."
 )
 
 musicians << Musician.create!(
   user: musician_users[36],
   name: "Kokoro Kawai",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 22,
   styles: "Soul, Gospel, R&B",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Kokoro's powerful voice and gospel roots shine through in every performance. She's considered one of Tokyo's most promising young vocalists."
 )
 
 musicians << Musician.create!(
   user: musician_users[37],
   name: "Sota Maeda",
-  instrument: "Guitar",
+  instrument: instruments.sample,
   age: 30,
   styles: "Country, Bluegrass, Americana",
-  location: "Setagaya, Tokyo",
+  location: locations.sample,
   bio: "Sota brings Nashville to Tokyo with his country guitar picking. He leads Tokyo's premier bluegrass band and teaches guitar."
 )
 
 musicians << Musician.create!(
   user: musician_users[38],
   name: "Honoka Takeda",
-  instrument: "Viola",
+  instrument: instruments.sample,
   age: 26,
   styles: "Classical, String Quartet, Contemporary",
-  location: "Bunkyo, Tokyo",
+  location: locations.sample,
   bio: "Honoka's viola playing adds depth and warmth to any ensemble. She performs with chamber groups and contemporary music collectives."
 )
 
 musicians << Musician.create!(
   user: musician_users[39],
   name: "Kaito Yoshida",
-  instrument: "Alto Saxophone",
+  instrument: instruments.sample,
   age: 28,
   styles: "Smooth Jazz, R&B, Pop",
-  location: "Minato, Tokyo",
+  location: locations.sample,
   bio: "Kaito's smooth saxophone playing has graced countless recordings. His melodic style is perfect for romantic ballads and chill grooves."
 )
 
 musicians << Musician.create!(
   user: musician_users[40],
   name: "Asuka Tanaka",
-  instrument: "Oboe",
+  instrument: instruments.sample,
   age: 27,
   styles: "Classical, Baroque, Chamber Music",
-  location: "Chiyoda, Tokyo",
+  location: locations.sample,
   bio: "Asuka is a principal oboist with a major Tokyo orchestra. Her pure tone and musical intelligence make her a sought-after chamber musician."
 )
 
 musicians << Musician.create!(
   user: musician_users[41],
   name: "Ren Sasaki",
-  instrument: "Drums",
+  instrument: instruments.sample,
   age: 26,
   styles: "Hip Hop, Neo-Soul, R&B",
-  location: "Nakano, Tokyo",
+  location: locations.sample,
   bio: "Ren's pocket drumming is deep and groovy. He's the go-to drummer for Tokyo's hip hop and neo-soul recording sessions."
 )
 
 musicians << Musician.create!(
   user: musician_users[42],
   name: "Chiaki Morimoto",
-  instrument: "Violin",
+  instrument: instruments.sample,
   age: 30,
   styles: "Jazz, Gypsy Jazz, Swing",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Chiaki's violin playing swings with Stephane Grappelli-inspired elegance. She leads a gypsy jazz quartet that plays weekly at a Shibuya wine bar."
 )
 
 musicians << Musician.create!(
   user: musician_users[43],
   name: "Makoto Aoki",
-  instrument: "Bass",
+  instrument: instruments.sample,
   age: 32,
   styles: "Jazz, Fusion, Session Work",
-  location: "Shinjuku, Tokyo",
+  location: locations.sample,
   bio: "Makoto is one of Tokyo's most in-demand session bassists. His versatility and solid time have made him a first-call for recording sessions."
 )
 
 musicians << Musician.create!(
   user: musician_users[44],
   name: "Hikari Noguchi",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 25,
   styles: "Musical Theater, Classical Crossover, Pop",
-  location: "Ginza, Tokyo",
+  location: locations.sample,
   bio: "Hikari's trained soprano voice and theatrical flair have led to roles in major Tokyo musicals. She also records pop ballads."
 )
 
 musicians << Musician.create!(
   user: musician_users[45],
   name: "Yusuke Otsuka",
-  instrument: "Guitar",
+  instrument: instruments.sample,
   age: 29,
   styles: "Jazz, Bossa Nova, Latin",
-  location: "Daikanyama, Tokyo",
+  location: locations.sample,
   bio: "Yusuke's nylon-string guitar playing is warm and sophisticated. He specializes in bossa nova and performs at intimate jazz venues."
 )
 
 musicians << Musician.create!(
   user: musician_users[46],
   name: "Momoka Fujita",
-  instrument: "Keyboards",
+  instrument: instruments.sample,
   age: 27,
   styles: "Funk, Soul, Gospel",
-  location: "Meguro, Tokyo",
+  location: locations.sample,
   bio: "Momoka's Hammond organ and Rhodes playing bring church-trained soul to funk bands. Her gospel roots shine through in every chord."
 )
 
 musicians << Musician.create!(
   user: musician_users[47],
   name: "Taiga Hayashi",
-  instrument: "Trombone",
+  instrument: instruments.sample,
   age: 31,
   styles: "Jazz, Big Band, Ska",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Taiga's trombone playing is powerful and expressive. He performs with big bands and ska groups, and teaches brass at a local college."
 )
 
 musicians << Musician.create!(
   user: musician_users[48],
   name: "Risa Ito",
-  instrument: "Bassoon",
+  instrument: instruments.sample,
   age: 28,
   styles: "Classical, Contemporary, Chamber Music",
-  location: "Nerima, Tokyo",
+  location: locations.sample,
   bio: "Risa brings the bassoon's rich voice to orchestral and chamber settings. She's passionate about contemporary music for bassoon."
 )
 
 musicians << Musician.create!(
   user: musician_users[49],
   name: "Hayato Kato",
-  instrument: "Percussion",
+  instrument: instruments.sample,
   age: 33,
   styles: "Orchestral, Film Scoring, Contemporary",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Hayato is a versatile percussionist who performs with orchestras and records for film scores. His mallet work is particularly acclaimed."
 )
 
 musicians << Musician.create!(
   user: musician_users[50],
   name: "Manami Sakamoto",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 26,
   styles: "Enka, Traditional Japanese, Pop",
-  location: "Asakusa, Tokyo",
+  location: locations.sample,
   bio: "Manami's voice carries the emotion of traditional enka while embracing modern pop sensibilities. She performs at festivals and theaters."
 )
 
 musicians << Musician.create!(
   user: musician_users[51],
   name: "Shun Watanabe",
-  instrument: "Guitar",
+  instrument: instruments.sample,
   age: 35,
   styles: "Blues, Delta Blues, Slide Guitar",
-  location: "Koenji, Tokyo",
+  location: locations.sample,
   bio: "Shun is a true blues devotee whose slide guitar playing evokes the Mississippi Delta. He runs blues jams and teaches guitar."
 )
 
 musicians << Musician.create!(
   user: musician_users[52],
   name: "Kaori Yamaguchi",
-  instrument: "Piano",
+  instrument: instruments.sample,
   age: 33,
   styles: "Classical, Romantic Era, Solo Recital",
-  location: "Minato, Tokyo",
+  location: locations.sample,
   bio: "Kaori is a concert pianist who specializes in Romantic era repertoire. Her Chopin interpretations have won international competition prizes."
 )
 
 musicians << Musician.create!(
   user: musician_users[53],
   name: "Naoto Suzuki",
-  instrument: "Drums",
+  instrument: instruments.sample,
   age: 30,
   styles: "Jazz, Bebop, Brush Work",
-  location: "Kichijoji, Tokyo",
+  location: locations.sample,
   bio: "Naoto's jazz drumming is subtle and swinging. His brush work is particularly admired, and he leads a straight-ahead jazz trio."
 )
 
 musicians << Musician.create!(
   user: musician_users[54],
   name: "Yuina Matsumoto",
-  instrument: "Flute",
+  instrument: instruments.sample,
   age: 24,
   styles: "Pop, Studio Recording, Commercial",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Yuina's clean flute tone has been featured on numerous pop recordings and TV commercials. She's building a career as a session musician."
 )
 
 musicians << Musician.create!(
   user: musician_users[55],
   name: "Riku Takahashi",
-  instrument: "Bass",
+  instrument: instruments.sample,
   age: 27,
   styles: "Funk, Slap Bass, Disco",
-  location: "Roppongi, Tokyo",
+  location: locations.sample,
   bio: "Riku's slap bass technique is funky and precise. He plays with disco revival bands and modern funk groups around Tokyo."
 )
 
 musicians << Musician.create!(
   user: musician_users[56],
   name: "Miyu Yamamoto",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 21,
   styles: "Anime, J-Pop, Voice Acting",
-  location: "Akihabara, Tokyo",
+  location: locations.sample,
   bio: "Miyu is a voice actress and singer whose anime theme songs have gained popularity. Her cute vocal style has a devoted fanbase."
 )
 
 musicians << Musician.create!(
   user: musician_users[57],
   name: "Takumi Hasegawa",
-  instrument: "Lead Guitar",
+  instrument: instruments.sample,
   age: 28,
   styles: "Rock, Hard Rock, Classic Rock",
-  location: "Ikebukuro, Tokyo",
+  location: locations.sample,
   bio: "Takumi's guitar playing channels classic rock heroes. His Les Paul tone and melodic solos anchor several popular Tokyo rock bands."
 )
 
 musicians << Musician.create!(
   user: musician_users[58],
   name: "Ai Nomura",
-  instrument: "Cello",
+  instrument: instruments.sample,
   age: 29,
   styles: "Contemporary, Experimental, Electronic",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Ai pushes the boundaries of cello with electronics and effects. Her experimental approach has led to collaborations with electronic artists."
 )
 
 musicians << Musician.create!(
   user: musician_users[59],
   name: "Keita Yamashita",
-  instrument: "Baritone Saxophone",
+  instrument: instruments.sample,
   age: 32,
   styles: "Jazz, Big Band, R&B",
-  location: "Shinjuku, Tokyo",
+  location: locations.sample,
   bio: "Keita's baritone saxophone provides the low end for big bands and R&B groups. His rich tone and solid time are always in demand."
 )
 
 musicians << Musician.create!(
   user: musician_users[60],
   name: "Hinata Koike",
-  instrument: "French Horn",
+  instrument: instruments.sample,
   age: 27,
   styles: "Classical, Film Scoring, Chamber Music",
-  location: "Bunkyo, Tokyo",
+  location: locations.sample,
   bio: "Hinata's French horn playing is warm and lyrical. She performs with orchestras and frequently records for film and TV soundtracks."
 )
 
 musicians << Musician.create!(
   user: musician_users[61],
   name: "Sora Abe",
-  instrument: "Drums",
+  instrument: instruments.sample,
   age: 24,
   styles: "Electronic, EDM, Live Electronic",
-  location: "Shibuya, Tokyo",
+  location: locations.sample,
   bio: "Sora combines acoustic drums with electronic pads and triggers. His hybrid drum setup creates unique sounds for electronic music acts."
 )
 
