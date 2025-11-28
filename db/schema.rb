@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_27_035712) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -55,12 +55,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_27_035712) do
   create_table "band_invitations", force: :cascade do |t|
     t.bigint "band_id", null: false
     t.bigint "musician_id", null: false
-    t.integer "inviter_id"
+    t.bigint "inviter_id"
     t.string "status"
     t.string "token"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["band_id"], name: "index_band_invitations_on_band_id"
+    t.index ["inviter_id"], name: "index_band_invitations_on_inviter_id"
     t.index ["musician_id"], name: "index_band_invitations_on_musician_id"
   end
 
@@ -96,12 +97,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_27_035712) do
   create_table "gigs", force: :cascade do |t|
     t.string "name"
     t.date "date"
-    t.date "start_time"
-    t.date "end_time"
     t.text "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "venue_id", null: false
+    t.time "start_time"
+    t.time "end_time"
     t.index ["venue_id"], name: "index_gigs_on_venue_id"
   end
 
@@ -110,6 +111,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_27_035712) do
     t.bigint "musician_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["band_id", "musician_id"], name: "index_involvements_on_band_and_musician_unique", unique: true
     t.index ["band_id"], name: "index_involvements_on_band_id"
     t.index ["musician_id"], name: "index_involvements_on_musician_id"
   end
@@ -136,6 +138,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_27_035712) do
     t.boolean "read", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.index ["message_id", "user_id"], name: "index_message_reads_on_message_and_user_unique", unique: true
     t.index ["message_id"], name: "index_message_reads_on_message_id"
     t.index ["user_id"], name: "index_message_reads_on_user_id"
   end
@@ -186,6 +189,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_27_035712) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["chat_id"], name: "index_participations_on_chat_id"
+    t.index ["user_id", "chat_id"], name: "index_participations_on_user_and_chat_unique", unique: true
     t.index ["user_id"], name: "index_participations_on_user_id"
   end
 
@@ -251,6 +255,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_27_035712) do
   add_foreign_key "attachments", "messages"
   add_foreign_key "band_invitations", "bands"
   add_foreign_key "band_invitations", "musicians"
+  add_foreign_key "band_invitations", "users", column: "inviter_id"
   add_foreign_key "bands", "users"
   add_foreign_key "bookings", "bands"
   add_foreign_key "bookings", "gigs"

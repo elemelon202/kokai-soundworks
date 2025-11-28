@@ -112,14 +112,16 @@ class Notification < ApplicationRecord
   end
 
   def path
+    return '#' if notifiable.nil?
+
     case notification_type
     when TYPES[:band_invitation]
       # Link to musician edit page where they can accept/decline
       Rails.application.routes.url_helpers.edit_musician_path(user.musician) if user.musician
     when TYPES[:band_invitation_accepted], TYPES[:band_invitation_declined], TYPES[:band_member_joined]
-      Rails.application.routes.url_helpers.band_path(notifiable.band) if notifiable.respond_to?(:band)
+      Rails.application.routes.url_helpers.band_path(notifiable.band) if notifiable.respond_to?(:band) && notifiable.band
     when TYPES[:direct_message]
-      Rails.application.routes.url_helpers.direct_message_path(notifiable.chat) if notifiable.respond_to?(:chat)
+      Rails.application.routes.url_helpers.direct_message_path(notifiable.chat) if notifiable.respond_to?(:chat) && notifiable.chat
     when TYPES[:band_message]
       band = notifiable.chat&.band
       Rails.application.routes.url_helpers.edit_band_path(band) if band

@@ -5,6 +5,8 @@ class Message < ApplicationRecord
   has_many :message_reads, dependent: :destroy
   has_many :readers, through: :message_reads, source: :user
 
+  validates :content, presence: true, length: { maximum: 10_000 }
+
   after_create :create_message_reads
 
   private
