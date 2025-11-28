@@ -2,7 +2,7 @@
   <!-- Banner Section -->
   <div class="band-banner">
     <% if @band.banner.attached? %>
-      <%= image_tag url_for(@band.banner) %>
+      <%= image_tag url_for(@band.banner), style: "object-position: center #{@band.banner_position || 50}%;" %>
     <% else %>
       <div class="banner-placeholder"></div>
     <% end %>
