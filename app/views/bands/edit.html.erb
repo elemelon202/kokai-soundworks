@@ -284,6 +284,25 @@
       <% end %>
     </div>
 
+    <!-- Spotify Tracks Section -->
+    <div class="band-dashboard-card full-width">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-brands fa-spotify"></i>
+        </div>
+        <h3>Your Music</h3>
+      </div>
+      <div class="spotify-tracks-section">
+        <p class="spotify-description">Paste Spotify links to tracks, albums, or playlists to feature on your profile.</p>
+
+        <div id="spotify-tracks">
+          <%= render partial: 'spotify_tracks/editable_track', collection: @band.spotify_tracks, as: :track %>
+        </div>
+
+        <%= render 'spotify_tracks/form', band: @band %>
+      </div>
+    </div>
+
     <% if @band.user_id == current_user.id %>
       <% other_members = @band.musicians.where.not(user_id: current_user.id) %>
       <% if other_members.any? %>

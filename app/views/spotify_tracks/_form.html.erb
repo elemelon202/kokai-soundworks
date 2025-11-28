@@ -1,0 +1,6 @@
+<%= form_with model: [band, SpotifyTrack.new], class: "spotify-track-form" do |f| %>
+  <div class="spotify-url-input">
+    <%= f.text_field :spotify_url, placeholder: "Paste Spotify URL (track, album, or playlist)", class: "spotify-url-field" %>
+    <%= f.submit "Add Track", class: "btn-add-track" %>
+  </div>
+<% end %>

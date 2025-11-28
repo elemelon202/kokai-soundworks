@@ -98,5 +98,13 @@
         </div>
       </div>
     <% end %>
+    <% if @band.spotify_tracks.any? %>
+      <div class="band-media-section">
+        <h3><i class="fa-brands fa-spotify"></i> Music</h3>
+        <div class="spotify-tracks-grid">
+          <%= render @band.spotify_tracks %>
+        </div>
+      </div>
+    <% end %>
   </div>
 </div>

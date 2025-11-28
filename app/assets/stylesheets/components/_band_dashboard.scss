@@ -1654,3 +1654,114 @@ $kokai-yellow-dark: #b8e020;
     }
   }
 }
+
+// Spotify Tracks Section
+.spotify-tracks-section {
+  .spotify-description {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+}
+
+#spotify-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.editable-track,
+.spotify-track {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+
+  iframe {
+    display: block;
+    border-radius: 12px;
+  }
+}
+
+.editable-track {
+  form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+  }
+
+  .remove-track-btn {
+    background: rgba(255, 71, 87, 0.9);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #ff4757;
+      transform: scale(1.05);
+    }
+  }
+}
+
+.spotify-track-form {
+  .spotify-url-input {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  .spotify-url-field {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #1DB954;
+      box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.15);
+      outline: none;
+    }
+  }
+
+  .btn-add-track {
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(29, 185, 84, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
