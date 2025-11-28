@@ -1,4 +1,9 @@
 // Specific CSS for your home-page
+.hero-text {
+  will-change: transform, opacity;
+  transition: opacity 0.1s ease-out;
+}
+
 .gradient {
   position:absolute;
   top: 0;
