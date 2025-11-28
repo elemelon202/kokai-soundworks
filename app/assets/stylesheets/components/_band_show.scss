@@ -334,3 +334,25 @@ $kokai-yellow-dark: #b8e020;
     border-radius: 12px;
   }
 }
+
+// Spotify Tracks Grid for Show Page
+.spotify-tracks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.spotify-track {
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+
+  iframe {
+    display: block;
+    border-radius: 12px;
+  }
+}

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_28_030029) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -193,6 +193,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
     t.index ["user_id"], name: "index_participations_on_user_id"
   end
 
+  create_table "spotify_tracks", force: :cascade do |t|
+    t.bigint "band_id", null: false
+    t.string "spotify_type"
+    t.string "spotify_id"
+    t.string "spotify_url"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["band_id"], name: "index_spotify_tracks_on_band_id"
+  end
+
   create_table "taggings", force: :cascade do |t|
     t.bigint "tag_id"
     t.string "taggable_type"
@@ -273,6 +284,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
   add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "participations", "chats"
   add_foreign_key "participations", "users"
+  add_foreign_key "spotify_tracks", "bands"
   add_foreign_key "taggings", "tags"
   add_foreign_key "venues", "users"
 end

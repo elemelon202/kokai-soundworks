@@ -23,6 +23,7 @@ Rails.application.routes.draw do
   resources :bands do
     resources :involvements, only: [:new, :create]
     resources :band_invitations, only: [:new, :create, :edit, :destroy]
+    resources :spotify_tracks, only: [:create, :destroy]
     member do
       patch :transfer_leadership
       delete :purge_attachment
