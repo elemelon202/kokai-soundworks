@@ -139,6 +139,97 @@ RSpec.describe "Musicians", type: :request do
           delete musician_path(musician)
         }.to change(Musician, :count).by(-1)
       end
+
+      it "redirects to root path" do
+        delete musician_path(musician)
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context "when logged in as non-owner" do
+      let(:other_user) { create(:user) }
+
+      before { sign_in other_user }
+
+      it "does not destroy the musician" do
+        expect {
+          delete musician_path(musician)
+        }.not_to change(Musician, :count)
+      end
+
+      it "redirects with unauthorized message" do
+        delete musician_path(musician)
+        expect(response).to redirect_to(root_path)
+      end
     end
   end
+
+  describe "PATCH /musicians/:id" do
+    let(:user) { create(:user) }
+    let(:musician) { create(:musician, user: user) }
+
+    context "when logged in as non-owner" do
+      let(:other_user) { create(:user) }
+
+      before { sign_in other_user }
+
+      it "does not update the musician" do
+        original_name = musician.name
+        patch musician_path(musician), params: { musician: { name: "Unauthorized Update" } }
+        expect(musician.reload.name).to eq(original_name)
+      end
+
+      it "redirects with unauthorized message" do
+        patch musician_path(musician), params: { musician: { name: "Unauthorized Update" } }
+        expect(response).to redirect_to(root_path)
+      end
+    end
+
+    context "when logged in as owner" do
+      before { sign_in user }
+
+      it "updates instrument" do
+        patch musician_path(musician), params: { musician: { instrument: "Drums" } }
+        expect(musician.reload.instrument).to eq("Drums")
+      end
+
+      it "updates location" do
+        patch musician_path(musician), params: { musician: { location: "Los Angeles" } }
+        expect(musician.reload.location).to eq("Los Angeles")
+      end
+
+      it "updates bio" do
+        patch musician_path(musician), params: { musician: { bio: "New bio text" } }
+        expect(musician.reload.bio).to eq("New bio text")
+      end
+
+      it "redirects to musician page after update" do
+        patch musician_path(musician), params: { musician: { name: "Updated Name" } }
+        expect(response).to redirect_to(musician_path(musician))
+      end
+    end
+  end
+
+  describe "POST /musicians" do
+    context "when logged in" do
+      let(:user) { create(:user) }
+
+      before { sign_in user }
+
+      it "creates musician with all attributes" do
+        post musicians_path, params: { musician: { name: "New Musician", instrument: "Drums", location: "NYC", bio: "Great drummer", styles: "Rock" } }
+        musician = Musician.last
+        expect(musician.name).to eq("New Musician")
+        expect(musician.instrument).to eq("Drums")
+        expect(musician.location).to eq("NYC")
+        expect(musician.bio).to eq("Great drummer")
+      end
+
+      it "redirects to musician page after creation" do
+        post musicians_path, params: { musician: { name: "New Musician", instrument: "Drums" } }
+        expect(response).to redirect_to(musician_path(Musician.last))
+      end
+    end
+  end
+
 end

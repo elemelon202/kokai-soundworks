@@ -261,4 +261,113 @@ RSpec.describe "Bands", type: :request do
       end
     end
   end
+
+  describe "PATCH /bands/:id/transfer_leadership" do
+    let(:owner) { create(:user) }
+    let(:band) { create(:band, user: owner) }
+    let(:member_user) { create(:user) }
+    let(:member_musician) { create(:musician, user: member_user) }
+
+    before do
+      create(:involvement, band: band, musician: member_musician)
+    end
+
+    context "when not logged in" do
+      it "redirects to login" do
+        patch transfer_leadership_band_path(band), params: { musician_id: member_musician.id }
+        expect(response).to redirect_to(new_user_session_path)
+      end
+    end
+
+    context "when logged in as band leader" do
+      before { sign_in owner }
+
+      it "transfers leadership to another member" do
+        patch transfer_leadership_band_path(band), params: { musician_id: member_musician.id }
+        expect(band.reload.user).to eq(member_user)
+      end
+
+      it "redirects to band edit page with success message" do
+        patch transfer_leadership_band_path(band), params: { musician_id: member_musician.id }
+        expect(response).to redirect_to(edit_band_path(band))
+        expect(flash[:notice]).to include("Leadership transferred")
+      end
+
+      it "fails when no musician is selected" do
+        patch transfer_leadership_band_path(band), params: { musician_id: "" }
+        expect(response).to redirect_to(edit_band_path(band))
+        expect(flash[:alert]).to include("select a band member")
+      end
+
+      it "fails when musician is not a band member" do
+        non_member = create(:musician)
+        patch transfer_leadership_band_path(band), params: { musician_id: non_member.id }
+        expect(response).to redirect_to(edit_band_path(band))
+        expect(flash[:alert]).to include("not a member")
+      end
+
+      it "fails when trying to transfer to self" do
+        owner_musician = owner.musician
+        patch transfer_leadership_band_path(band), params: { musician_id: owner_musician.id }
+        expect(response).to redirect_to(edit_band_path(band))
+        expect(flash[:alert]).to include("already the band leader")
+      end
+    end
+
+    context "when logged in as non-leader member" do
+      before { sign_in member_user }
+
+      it "does not allow transfer" do
+        other_user = create(:user)
+        other_musician = create(:musician, user: other_user)
+        create(:involvement, band: band, musician: other_musician)
+
+        patch transfer_leadership_band_path(band), params: { musician_id: other_musician.id }
+        expect(response).to redirect_to(edit_band_path(band))
+        expect(flash[:alert]).to include("Only the band leader")
+      end
+    end
+  end
+
+  describe "POST /bands" do
+    context "when logged in" do
+      let(:user) { create(:user) }
+
+      before { sign_in user }
+
+      it "sets the current user as the band owner" do
+        post bands_path, params: { band: { name: "New Band", description: "A new band" } }
+        expect(Band.last.user).to eq(user)
+      end
+
+      it "creates a chat for the new band" do
+        post bands_path, params: { band: { name: "New Band", description: "A new band" } }
+        expect(Band.last.chat).to be_present
+      end
+    end
+  end
+
+  describe "PATCH /bands/:id" do
+    let(:owner) { create(:user) }
+    let(:band) { create(:band, user: owner) }
+
+    context "with genre updates" do
+      before { sign_in owner }
+
+      it "updates genres" do
+        patch band_path(band), params: { band: { genre_list: ["Rock", "Jazz"] } }
+        expect(band.reload.genre_list).to include("Rock", "Jazz")
+      end
+
+      it "updates description" do
+        patch band_path(band), params: { band: { description: "New description" } }
+        expect(band.reload.description).to eq("New description")
+      end
+
+      it "updates location" do
+        patch band_path(band), params: { band: { location: "New York" } }
+        expect(band.reload.location).to eq("New York")
+      end
+    end
+  end
 end

@@ -84,6 +84,7 @@ class BandsController < ApplicationController
   end
 
   def transfer_leadership
+    authorize @band
     # Validate that a musician was selected
     if params[:musician_id].blank?
       redirect_to edit_band_path(@band), alert: "Please select a band member to transfer leadership to."
