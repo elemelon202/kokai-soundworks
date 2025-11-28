@@ -68,5 +68,13 @@ export default class extends Controller {
     this.imageTarget.style.objectPosition = `center ${value}%`
     this.inputTarget.value = value
     this.valueTarget.textContent = `${value}%`
+
+    // Also update the hidden field in the main media form if it exists
+    // This ensures banner position is saved when the user clicks "Save Media" or "Save Changes"
+    const mediaFormInput = document.getElementById('band-media-form-banner-position') ||
+                           document.getElementById('musician-form-banner-position')
+    if (mediaFormInput) {
+      mediaFormInput.value = value
+    }
   }
 }
