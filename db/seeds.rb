@@ -198,10 +198,11 @@ puts "Created #{Venue.count} venues"
 puts "Creating musicians..."
 
 musicians = []
+instruments = ["Guitar", "Bass", "Drums", "Vocals", "Keyboard", "Saxophone"]
 musicians << Musician.create!(
   user: musician_users[0],
   name: "Yuki Tanaka",
-  instrument: "Drums",
+  instrument: instruments.sample,
   age: 28,
   styles: "Jazz, Funk, R&B",
   location: "Shibuya, Tokyo",
@@ -211,7 +212,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[1],
   name: "Kenji Watanabe",
-  instrument: "Bass",
+  instrument: instruments.sample,
   age: 32,
   styles: "Jazz, Rock, Blues",
   location: "Shinjuku, Tokyo",
@@ -221,7 +222,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[2],
   name: "Sakura Kimura",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 25,
   styles: "Jazz, Soul, Pop",
   location: "Harajuku, Tokyo",
@@ -231,7 +232,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[3],
   name: "Takeshi Ito",
-  instrument: "Guitar",
+  instrument: instruments.sample,
   age: 30,
   styles: "Rock, Metal, Blues",
   location: "Ikebukuro, Tokyo",
@@ -241,7 +242,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[4],
   name: "Hiroshi Nakamura",
-  instrument: "Piano/Keyboards",
+  instrument: instruments.sample,
   age: 35,
   styles: "Jazz, Classical, Electronic",
   location: "Meguro, Tokyo",
@@ -251,7 +252,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[5],
   name: "Mika Yoshida",
-  instrument: "Saxophone",
+  instrument: instruments.sample,
   age: 29,
   styles: "Jazz, Funk, Soul",
   location: "Nakano, Tokyo",
@@ -261,7 +262,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[6],
   name: "Ryo Fujimoto",
-  instrument: "Trumpet",
+  instrument: instruments.sample,
   age: 27,
   styles: "Jazz, Latin, Fusion",
   location: "Koenji, Tokyo",
@@ -271,7 +272,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[7],
   name: "Aoi Suzuki",
-  instrument: "Violin",
+  instrument: instruments.sample,
   age: 24,
   styles: "Classical, Jazz, Folk",
   location: "Kichijoji, Tokyo",
@@ -281,7 +282,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[8],
   name: "Ken Yamamoto",
-  instrument: "Percussion",
+  instrument: instruments.sample,
   age: 33,
   styles: "World Music, Jazz, Electronic",
   location: "Shimokitazawa, Tokyo",
@@ -291,7 +292,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[9],
   name: "Yumi Hayashi",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 26,
   styles: "Pop, R&B, Jazz",
   location: "Daikanyama, Tokyo",
@@ -301,7 +302,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[10],
   name: "Daiki Morita",
-  instrument: "Acoustic Guitar",
+  instrument: instruments.sample,
   age: 31,
   styles: "Folk, Acoustic, Singer-Songwriter",
   location: "Sangenjaya, Tokyo",
@@ -311,7 +312,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[11],
   name: "Emi Takahashi",
-  instrument: "Synthesizer/Producer",
+  instrument: instruments.sample,
   age: 28,
   styles: "Electronic, Ambient, Experimental",
   location: "Shibuya, Tokyo",
@@ -322,7 +323,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[12],
   name: "Naomi Sato",
-  instrument: "Piano",
+  instrument: instruments.sample,
   age: 29,
   styles: "Classical, Jazz, Contemporary",
   location: "Ginza, Tokyo",
@@ -332,7 +333,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[13],
   name: "Taro Ogawa",
-  instrument: "Drums",
+  instrument: instruments.sample,
   age: 34,
   styles: "Rock, Punk, Alternative",
   location: "Koenji, Tokyo",
@@ -342,7 +343,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[14],
   name: "Mari Kobayashi",
-  instrument: "Flute",
+  instrument: instruments.sample,
   age: 26,
   styles: "Classical, World Music, New Age",
   location: "Ueno, Tokyo",
@@ -352,7 +353,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[15],
   name: "Shota Matsuda",
-  instrument: "Bass",
+  instrument: instruments.sample,
   age: 30,
   styles: "Funk, R&B, Neo-Soul",
   location: "Ebisu, Tokyo",
@@ -362,7 +363,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[16],
   name: "Hana Ishikawa",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 23,
   styles: "J-Pop, R&B, Dance",
   location: "Harajuku, Tokyo",
@@ -372,7 +373,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[17],
   name: "Koji Taniguchi",
-  instrument: "Electric Guitar",
+  instrument: instruments.sample,
   age: 36,
   styles: "Blues, Rock, Jazz Fusion",
   location: "Shimokitazawa, Tokyo",
@@ -382,7 +383,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[18],
   name: "Rina Yamada",
-  instrument: "Cello",
+  instrument: instruments.sample,
   age: 27,
   styles: "Classical, Chamber Music, Film Scores",
   location: "Bunkyo, Tokyo",
@@ -392,7 +393,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[19],
   name: "Masato Kondo",
-  instrument: "Tenor Saxophone",
+  instrument: instruments.sample,
   age: 31,
   styles: "Jazz, Bebop, Hard Bop",
   location: "Shinjuku, Tokyo",
@@ -402,7 +403,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[20],
   name: "Yuna Miyamoto",
-  instrument: "Harp",
+  instrument: instruments.sample,
   age: 25,
   styles: "Classical, Celtic, Ambient",
   location: "Setagaya, Tokyo",
@@ -412,7 +413,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[21],
   name: "Shin Okamoto",
-  instrument: "Drums",
+  instrument: instruments.sample,
   age: 28,
   styles: "Jazz, Fusion, Progressive",
   location: "Nakameguro, Tokyo",
@@ -422,7 +423,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[22],
   name: "Akiko Endo",
-  instrument: "Violin",
+  instrument: instruments.sample,
   age: 32,
   styles: "Classical, Tango, Crossover",
   location: "Roppongi, Tokyo",
@@ -432,7 +433,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[23],
   name: "Jun Nishimura",
-  instrument: "Electric Bass",
+  instrument: instruments.sample,
   age: 29,
   styles: "Progressive Rock, Metal, Jazz Fusion",
   location: "Ikebukuro, Tokyo",
@@ -442,7 +443,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[24],
   name: "Misaki Honda",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 27,
   styles: "Jazz, Bossa Nova, French Chanson",
   location: "Jiyugaoka, Tokyo",
@@ -452,7 +453,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[25],
   name: "Ryota Kimura",
-  instrument: "Lead Guitar",
+  instrument: instruments.sample,
   age: 25,
   styles: "Metal, Shred, Neoclassical",
   location: "Akihabara, Tokyo",
@@ -462,7 +463,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[26],
   name: "Ayumi Nakagawa",
-  instrument: "Synthesizer",
+  instrument: instruments.sample,
   age: 30,
   styles: "Electronic, Techno, House",
   location: "Shibuya, Tokyo",
@@ -472,7 +473,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[27],
   name: "Kazuki Inoue",
-  instrument: "Trumpet",
+  instrument: instruments.sample,
   age: 33,
   styles: "Jazz, Ska, Reggae",
   location: "Yokohama",
@@ -482,7 +483,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[28],
   name: "Saki Hashimoto",
-  instrument: "Clarinet",
+  instrument: instruments.sample,
   age: 26,
   styles: "Classical, Klezmer, Jazz",
   location: "Nerima, Tokyo",
@@ -492,7 +493,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[29],
   name: "Tomoya Saito",
-  instrument: "Percussion",
+  instrument: instruments.sample,
   age: 35,
   styles: "Latin, Afro-Cuban, Brazilian",
   location: "Asakusa, Tokyo",
@@ -502,7 +503,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[30],
   name: "Natsuki Arai",
-  instrument: "Vocals",
+  instrument: instruments.sample,
   age: 24,
   styles: "Indie, Folk, Alternative",
   location: "Kichijoji, Tokyo",
@@ -512,7 +513,7 @@ musicians << Musician.create!(
 musicians << Musician.create!(
   user: musician_users[31],
   name: "Haruki Mori",
-  instrument: "Acoustic Guitar",
+  instrument: instruments.sample,
   age: 28,
   styles: "Fingerstyle, Folk, Americana",
   location: "Mitaka, Tokyo",
