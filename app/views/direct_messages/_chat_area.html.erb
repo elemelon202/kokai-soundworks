@@ -1,5 +1,4 @@
 <%= turbo_stream_from "chat_#{@chat.id}_user_#{current_user.id}" %>
-
 <div class="chat-area">
   <div class="chat-header">
     <% other_user = @chat.other_participant(current_user) %>
@@ -22,7 +21,9 @@
               <i class="fa-solid fa-user-plus"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
-              <li><h6 class="dropdown-header">Invite to Band</h6></li>
+              <li>
+                <h6 class="dropdown-header">Invite to Band</h6>
+              </li>
               <% if current_user.musician.bands.any? %>
                 <% current_user.musician.bands.each do |band| %>
                   <% unless band.musicians.include?(other_user.musician) %>
@@ -39,7 +40,7 @@
                 <li><hr class="dropdown-divider"></li>
               <% end %>
               <li>
-                <%= link_to new_band_path, class: "dropdown-item" do %>
+                <%= link_to new_band_path(preselected_musician: other_user.musician.id), class: "dropdown-item" do %>
                   <i class="fa-solid fa-plus me-2"></i> Create a Band
                 <% end %>
               </li>
@@ -49,13 +50,10 @@
       <% end %>
     </div>
   </div>
-
   <div id="messages" class="messages-list" data-chat-id="<%= @chat.id %>" data-current-user-id="<%= current_user.id %>" data-controller="messages-scroll">
     <% @messages.each do |message| %>
       <%= render partial: "messages/message", locals: { message: message, current_user: current_user } %>
     <% end %>
   </div>
-
   <%= render partial: "messages/form", locals: { chat: @chat, message: @message } %>
 </div>
-
