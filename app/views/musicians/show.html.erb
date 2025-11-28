@@ -37,11 +37,11 @@
   <%# ----- MUSICIAN BANNER ----- %>
   <div class="musician-banner">
     <% if @musician.banner.attached? %>
-      <%= cl_image_tag(@musician.banner.key, class: "banner-image") %>
+      <%= cl_image_tag(@musician.banner.key, class: "banner-image", style: "object-position: center #{@musician.banner_position || 50}%;") %>
     <% elsif @musician.media.attached? %>
       <% first_image = @musician.media.find { |m| m.content_type.start_with?("image") } %>
       <% if first_image %>
-        <%= cl_image_tag(first_image.key, class: "banner-image") %>
+        <%= cl_image_tag(first_image.key, class: "banner-image", style: "object-position: center #{@musician.banner_position || 50}%;") %>
       <% else %>
         <%= image_tag "musician_placeholder.jpg", class: "banner-image" %>
       <% end %>

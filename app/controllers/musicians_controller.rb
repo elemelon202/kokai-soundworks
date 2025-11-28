@@ -123,11 +123,11 @@ end
   end
 
   def musician_params
-    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :bio, :avatar, :banner, images: [], videos: [])
+    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :bio, :avatar, :banner, :banner_position, images: [], videos: [])
   end
 
   def musician_params_without_media
-    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :bio)
+    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :bio, :banner_position)
   end
 
   def attach_new_media
