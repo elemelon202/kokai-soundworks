@@ -93,13 +93,14 @@
             available_musicians = Musician.where.not(instrument: [nil, '', 'Unknown'])
             available_musicians = available_musicians.where.not(id: current_user.musician.id) if current_user.musician
           %>
+          <% preselected_id = params[:preselect_musician].to_i %>
           <select name="band[musician_ids][]"
                   id="band_musician_ids"
                   multiple
                   data-controller="tom-select"
                   data-tom-select-placeholder-value="Search by name, instrument, or location...">
             <% available_musicians.order(:name).each do |musician| %>
-              <option value="<%= musician.id %>"><%= musician.name %> - <%= musician.instrument %><%= musician.location.present? ? " (#{musician.location})" : "" %></option>
+              <option value="<%= musician.id %>" <%= 'selected' if musician.id == preselected_id %>><%= musician.name %> - <%= musician.instrument %><%= musician.location.present? ? " (#{musician.location})" : "" %></option>
             <% end %>
           </select>
           <p class="form-hint">Type to search for musicians by name, instrument, or location</p>
