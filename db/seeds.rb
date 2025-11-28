@@ -30,6 +30,15 @@ venue_owners << User.create!(email: "kyoto.jazz@venue.com", password: "password1
 # ===========================================
 # MUSICIANS (standalone, not band leaders)
 # ===========================================
+#
+band_leaders = []
+band_leaders << User.create!(email: "neon@band.com", password: "password123", username: "neon_pulse_band", user_type: "band")
+band_leaders << User.create!(email: "midnight@band.com", password: "password123", username: "midnight_jazz", user_type: "band")
+band_leaders << User.create!(email: "thunder@band.com", password: "password123", username: "tokyo_thunder", user_type: "band")
+band_leaders << User.create!(email: "sakura.ensemble@band.com", password: "password123", username: "sakura_ensemble", user_type: "band")
+band_leaders << User.create!(email: "electric.dreams@band.com", password: "password123", username: "electric_dreams", user_type: "band")
+band_leaders << User.create!(email: "acoustic.soul@band.com", password: "password123", username: "acoustic_soul", user_type: "band")
+
 musician_users = []
 musician_users << User.create!(email: "yuki.drums@musician.com", password: "password123", username: "yuki_beats", user_type: "musician")
 musician_users << User.create!(email: "kenji.bass@musician.com", password: "password123", username: "kenji_groove", user_type: "musician")
@@ -99,13 +108,6 @@ musician_users << User.create!(email: "sora.drums@musician.com", password: "pass
 # ===========================================
 # BAND LEADERS
 # ===========================================
-band_leaders = []
-band_leaders << User.create!(email: "neon@band.com", password: "password123", username: "neon_pulse_band", user_type: "band")
-band_leaders << User.create!(email: "midnight@band.com", password: "password123", username: "midnight_jazz", user_type: "band")
-band_leaders << User.create!(email: "thunder@band.com", password: "password123", username: "tokyo_thunder", user_type: "band")
-band_leaders << User.create!(email: "sakura.ensemble@band.com", password: "password123", username: "sakura_ensemble", user_type: "band")
-band_leaders << User.create!(email: "electric.dreams@band.com", password: "password123", username: "electric_dreams", user_type: "band")
-band_leaders << User.create!(email: "acoustic.soul@band.com", password: "password123", username: "acoustic_soul", user_type: "band")
 
 puts "Created #{User.count} users"
 
