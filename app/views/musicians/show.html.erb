@@ -3,7 +3,11 @@
   <div class="profile-header">
     <div class="profile-header-left">
       <div class="profile-avatar">
-        <%= @musician.name.split.map(&:first).join.upcase[0..1] %>
+        <% if @musician.avatar.attached? %>
+          <%= cl_image_tag(@musician.avatar.key, class: "profile-avatar-image") %>
+        <% else %>
+          <%= @musician.name.split.map(&:first).join.upcase[0..1] %>
+        <% end %>
       </div>
       <div class="profile-info">
         <h1 class="profile-name"><%= @musician.name %></h1>

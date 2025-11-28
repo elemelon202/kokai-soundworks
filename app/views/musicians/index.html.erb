@@ -48,7 +48,9 @@
               <div class="musician-card position-relative">
                 <%= link_to musician_path(musician), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
                   <div class="musician-card-header">
-                    <% if musician.media.attached? %>
+                    <% if musician.avatar.attached? %>
+                      <%= cl_image_tag(musician.avatar.key, class: "musician-avatar") %>
+                    <% elsif musician.media.attached? %>
                       <% first_file = musician.media.first %>
                       <% if first_file.content_type.start_with?("image") %>
                         <%= cl_image_tag(first_file.key, class: "musician-avatar") %>

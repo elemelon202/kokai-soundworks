@@ -131,70 +131,21 @@
             </div>
           </div>
 
-          <!-- Current Media Display (only shows sections with content) -->
-          <% if @musician.banner.attached? || @musician.images.attached? || @musician.videos.attached? %>
-            <div class="current-media-section">
-              <h4 class="current-media-title"><i class="fa-solid fa-photo-film"></i> Current Media</h4>
-
-              <% if @musician.banner.attached? %>
-                <div class="media-display-group">
-                  <label class="media-group-label">Banner</label>
-                  <div class="current-media-preview banner-preview">
-                    <%= image_tag url_for(@musician.banner), class: "banner-image-preview" %>
-                    <%= button_to purge_attachment_musician_path(@musician, attachment_id: @musician.banner.id),
-                        method: :delete,
-                        class: "btn-remove-media",
-                        data: { turbo_confirm: "Remove this banner image?" } do %>
-                      <i class="fa-solid fa-trash"></i>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-
-              <% if @musician.images.attached? %>
-                <div class="media-display-group">
-                  <label class="media-group-label">Photos (<%= @musician.images.count %>)</label>
-                  <div class="current-media-grid">
-                    <% @musician.images.each do |image| %>
-                      <div class="media-grid-item">
-                        <%= image_tag url_for(image), class: "preview-image" %>
-                        <%= button_to purge_attachment_musician_path(@musician, attachment_id: image.id),
-                            method: :delete,
-                            class: "btn-remove-media",
-                            data: { turbo_confirm: "Remove this photo?" } do %>
-                          <i class="fa-solid fa-trash"></i>
-                        <% end %>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-
-              <% if @musician.videos.attached? %>
-                <div class="media-display-group">
-                  <label class="media-group-label">Videos (<%= @musician.videos.count %>)</label>
-                  <div class="current-media-grid videos-grid">
-                    <% @musician.videos.each do |video| %>
-                      <div class="media-grid-item video-item">
-                        <video controls class="preview-video">
-                          <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
-                        </video>
-                        <%= button_to purge_attachment_musician_path(@musician, attachment_id: video.id),
-                            method: :delete,
-                            class: "btn-remove-media",
-                            data: { turbo_confirm: "Remove this video?" } do %>
-                          <i class="fa-solid fa-trash"></i>
-                        <% end %>
-                      </div>
-                    <% end %>
-                  </div>
-                </div>
-              <% end %>
-            </div>
-          <% end %>
-
           <!-- Upload Form -->
           <div class="upload-fields-grid">
+            <div class="upload-field" data-controller="file-preview">
+              <label class="upload-field-label">Profile Avatar</label>
+              <div class="upload-input-wrapper">
+                <%= f.file_field :avatar, accept: "image/*", class: "media-file-input", id: "musician-avatar-input",
+                    data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
+                <label for="musician-avatar-input" class="upload-label compact" data-file-preview-target="placeholder">
+                  <i class="fa-solid fa-user-circle"></i>
+                  <span><%= @musician.avatar.attached? ? "Replace avatar" : "Choose avatar" %></span>
+                </label>
+              </div>
+              <div class="file-preview-container" data-file-preview-target="preview"></div>
+            </div>
+
             <div class="upload-field" data-controller="file-preview">
               <label class="upload-field-label">Banner Image</label>
               <div class="upload-input-wrapper">
@@ -241,6 +192,89 @@
         </div>
       <% end %>
     </div>
+
+    <%# Current Media Display - Outside form to avoid nested forms %>
+    <% if @musician.avatar.attached? || @musician.banner.attached? || @musician.images.attached? || @musician.videos.attached? %>
+      <div class="musician-dashboard-card full-width">
+        <div class="musician-card-header">
+          <div class="card-icon">
+            <i class="fa-solid fa-photo-film"></i>
+          </div>
+          <h3>Current Media</h3>
+        </div>
+        <div class="current-media-section">
+          <% if @musician.avatar.attached? %>
+            <div class="media-display-group">
+              <label class="media-group-label">Avatar</label>
+              <div class="current-media-preview avatar-preview">
+                <%= image_tag url_for(@musician.avatar), class: "avatar-image-preview" %>
+                <%= button_to purge_attachment_musician_path(@musician, attachment_id: @musician.avatar.id),
+                    method: :delete,
+                    class: "btn-remove-media",
+                    data: { turbo_confirm: "Remove your avatar image?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @musician.banner.attached? %>
+            <div class="media-display-group">
+              <label class="media-group-label">Banner</label>
+              <div class="current-media-preview banner-preview">
+                <%= image_tag url_for(@musician.banner), class: "banner-image-preview" %>
+                <%= button_to purge_attachment_musician_path(@musician, attachment_id: @musician.banner.id),
+                    method: :delete,
+                    class: "btn-remove-media",
+                    data: { turbo_confirm: "Remove this banner image?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @musician.images.attached? %>
+            <div class="media-display-group">
+              <label class="media-group-label">Photos (<%= @musician.images.count %>)</label>
+              <div class="current-media-grid">
+                <% @musician.images.each do |image| %>
+                  <div class="media-grid-item">
+                    <%= image_tag url_for(image), class: "preview-image" %>
+                    <%= button_to purge_attachment_musician_path(@musician, attachment_id: image.id),
+                        method: :delete,
+                        class: "btn-remove-media",
+                        data: { turbo_confirm: "Remove this photo?" } do %>
+                      <i class="fa-solid fa-trash"></i>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+
+          <% if @musician.videos.attached? %>
+            <div class="media-display-group">
+              <label class="media-group-label">Videos (<%= @musician.videos.count %>)</label>
+              <div class="current-media-grid videos-grid">
+                <% @musician.videos.each do |video| %>
+                  <div class="media-grid-item video-item">
+                    <video controls class="preview-video">
+                      <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
+                    </video>
+                    <%= button_to purge_attachment_musician_path(@musician, attachment_id: video.id),
+                        method: :delete,
+                        class: "btn-remove-media",
+                        data: { turbo_confirm: "Remove this video?" } do %>
+                      <i class="fa-solid fa-trash"></i>
+                    <% end %>
+                  </div>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
 
     <% if @musician.bands.any? %>
       <div class="musician-dashboard-card full-width">

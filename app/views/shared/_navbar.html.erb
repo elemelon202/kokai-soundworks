@@ -63,8 +63,18 @@
             <%= render 'shared/notifications' %>
           </li>
           <li class="nav-item dropdown">
-            <a href="#" class="avatar" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <%= image_tag "https://kitt.lewagon.com/placeholder/users/ssaunier", class: "avatar", alt: "dropdown menu" %>
+            <a href="#" class="navbar-avatar-link" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <% if current_user.musician&.avatar&.attached? %>
+                <%= cl_image_tag(current_user.musician.avatar.key, class: "avatar", alt: "dropdown menu") %>
+              <% elsif current_user.musician.present? %>
+                <div class="navbar-avatar-initials">
+                  <%= current_user.musician.name.split.map(&:first).join.upcase[0..1] %>
+                </div>
+              <% else %>
+                <div class="navbar-avatar-initials">
+                  <%= current_user.username[0..1].upcase %>
+                </div>
+              <% end %>
             </a>
             <!-- Avatar drop down -->
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">

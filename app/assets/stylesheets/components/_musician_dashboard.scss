@@ -525,6 +525,19 @@ $kokai-yellow-dark: #b8e020;
     display: block;
   }
 
+  .avatar-preview {
+    width: 80px;
+    height: 80px;
+  }
+
+  .avatar-image-preview {
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 50%;
+    display: block;
+  }
+
   .videos-grid {
     .media-grid-item {
       aspect-ratio: 16/9;
