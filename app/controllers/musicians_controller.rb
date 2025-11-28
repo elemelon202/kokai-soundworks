@@ -123,7 +123,7 @@ end
   end
 
   def musician_params
-    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :bio, :banner, images: [], videos: [])
+    params.require(:musician).permit(:name, :instrument, :age, :styles, :location, :bio, :avatar, :banner, images: [], videos: [])
   end
 
   def musician_params_without_media
@@ -132,6 +132,12 @@ end
 
   def attach_new_media
     return unless params[:musician].present?
+
+    # Only update avatar if a new one was uploaded
+    if params[:musician][:avatar].present?
+      @musician.avatar.purge if @musician.avatar.attached?
+      @musician.avatar.attach(params[:musician][:avatar])
+    end
 
     # Only update banner if a new one was uploaded
     if params[:musician][:banner].present?
