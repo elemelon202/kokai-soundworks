@@ -1,0 +1,621 @@
+// Mobile Responsive Styles
+// Comprehensive mobile-first responsive adjustments
+
+// ===== GLOBAL MOBILE ADJUSTMENTS =====
+@media (max-width: 768px) {
+  // Prevent horizontal scroll
+  body {
+    overflow-x: hidden;
+  }
+
+  .container {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
+}
+
+// ===== NAVBAR MOBILE =====
+@media (max-width: 991px) {
+  .navbar-lewagon {
+    padding: 10px 15px;
+
+    .navbar-brand img {
+      width: 35px;
+    }
+
+    .navbar-collapse {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background: #1e1e20;
+      padding: 20px;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      z-index: 1000;
+    }
+
+    .navbar-nav {
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+    }
+
+    .nav-item {
+      width: 100%;
+    }
+
+    .nav-link.btn-primary {
+      width: 100%;
+      text-align: center;
+      padding: 12px 20px;
+    }
+  }
+
+  .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.2);
+    padding: 8px 12px;
+
+    &:focus {
+      box-shadow: none;
+      outline: none;
+    }
+
+    .navbar-toggler-icon {
+      background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
+  }
+}
+
+// ===== INDEX PAGES (MUSICIANS & BANDS) =====
+@media (max-width: 768px) {
+  .index-heading {
+    text-align: center;
+    padding: 0 10px;
+
+    h1 {
+      font-size: 36px !important;
+      line-height: 1.2;
+    }
+
+    p {
+      font-size: 16px !important;
+    }
+  }
+
+  // Filters form mobile layout
+  .filters-form {
+    .d-flex {
+      flex-direction: column;
+      gap: 12px !important;
+      align-items: stretch !important;
+    }
+
+    input[type="text"] {
+      width: 100%;
+    }
+
+    .btn-outline-secondary {
+      width: 100%;
+    }
+
+    .dropdown {
+      width: 100%;
+
+      .btn {
+        width: 100%;
+      }
+
+      .dropdown-menu {
+        width: 100%;
+        max-height: 250px;
+        overflow-y: auto;
+      }
+    }
+  }
+
+  // Musicians index specific
+  .musicians-index-container {
+    &::after {
+      width: 100%;
+      height: 300px;
+    }
+  }
+
+  // Musician cards grid
+  .musicians-section {
+    .row {
+      margin: 0;
+    }
+
+    .col-8 {
+      width: 100%;
+      padding: 0;
+      margin-bottom: 15px !important;
+    }
+
+    .col-md-3 {
+      flex: 0 0 100%;
+      max-width: 100%;
+    }
+  }
+}
+
+@media (max-width: 576px) {
+  .index-heading {
+    h1 {
+      font-size: 28px !important;
+    }
+
+    p {
+      font-size: 14px !important;
+    }
+  }
+}
+
+// ===== MUSICIAN CARD MOBILE =====
+@media (max-width: 768px) {
+  .musician-card {
+    padding: 15px;
+
+    .btn {
+      opacity: 1;
+      pointer-events: auto;
+      width: 100%;
+      margin-top: 15px;
+    }
+  }
+
+  .musician-card-header {
+    margin-bottom: 15px;
+  }
+
+  .musician-avatar {
+    height: 50px;
+    width: 50px;
+    margin-right: 12px;
+  }
+
+  .musician-card-name {
+    font-size: 1.2em;
+  }
+
+  .musician-card-details {
+    p, span {
+      font-size: 0.95em;
+      margin: 3px 0;
+    }
+  }
+}
+
+// ===== BAND SHOW PAGE MOBILE =====
+@media (max-width: 576px) {
+  .band-show-container {
+    .band-banner {
+      height: 200px;
+    }
+
+    .banner-overlay {
+      padding: 15px;
+    }
+
+    .banner-content {
+      h1 {
+        font-size: 1.5rem;
+      }
+    }
+
+    .band-location {
+      font-size: 0.95rem;
+    }
+
+    .genre-badge {
+      font-size: 0.75rem;
+      padding: 4px 10px;
+    }
+
+    .btn-message-band {
+      padding: 10px 18px;
+      font-size: 0.85rem;
+      width: 100%;
+      justify-content: center;
+    }
+  }
+
+  .band-show-content {
+    padding: 20px 15px;
+  }
+
+  .band-stats-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
+  .members-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .photos-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+}
+
+// ===== HOME PAGE MOBILE =====
+@media (max-width: 768px) {
+  .hero-text {
+    text-align: center;
+    padding: 20px;
+
+    h1 {
+      font-size: 2.5rem;
+    }
+
+    p {
+      font-size: 16px;
+      line-height: 1.5;
+    }
+  }
+
+  .gradient {
+    background: radial-gradient(
+      ellipse at 50% 0%,
+      #a4c332 0%,
+      #1b1b1b 70%
+    );
+  }
+}
+
+@media (max-width: 576px) {
+  .hero-text {
+    h1 {
+      font-size: 2rem;
+    }
+
+    p {
+      font-size: 14px;
+    }
+  }
+}
+
+// ===== DM CHAT MOBILE IMPROVEMENTS =====
+@media (max-width: 576px) {
+  .dm-page-container {
+    padding: 10px;
+  }
+
+  .dm-container {
+    height: calc(100vh - 80px);
+    border-radius: 12px;
+  }
+
+  .dm-sidebar {
+    max-height: 150px;
+  }
+
+  .sidebar-header {
+    padding: 12px 15px;
+
+    h3 {
+      font-size: 1rem;
+    }
+
+    .btn {
+      padding: 6px 12px;
+      font-size: 0.85rem;
+    }
+  }
+
+  .conversation-link {
+    padding: 10px 15px;
+  }
+
+  .chat-header {
+    padding: 12px 15px;
+
+    h4 {
+      font-size: 1rem;
+    }
+  }
+
+  .messages-list {
+    padding: 15px;
+  }
+
+  .message {
+    max-width: 90%;
+    padding: 10px 14px;
+    font-size: 0.9rem;
+  }
+
+  .message-form {
+    padding: 12px 15px;
+  }
+
+  .message-input {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+
+  .message-form .btn-primary {
+    padding: 10px 18px;
+  }
+}
+
+// ===== FORMS MOBILE =====
+@media (max-width: 576px) {
+  .cool-form-container {
+    padding: 20px 10px;
+  }
+
+  .cool-form-card {
+    padding: 20px 15px;
+    margin: 0 5px;
+
+    .form-control, .form-select {
+      padding: 12px 14px;
+      font-size: 16px; // Prevents iOS zoom on focus
+    }
+
+    input[type="file"] {
+      padding: 20px 15px;
+
+      &::file-selector-button {
+        padding: 8px 14px;
+        font-size: 0.85rem;
+      }
+    }
+  }
+
+  .cool-form-header {
+    margin-bottom: 25px;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+
+    .cool-form-icon {
+      width: 50px;
+      height: 50px;
+      font-size: 24px;
+      border-radius: 14px;
+    }
+  }
+
+  .cool-form-section {
+    margin-bottom: 25px;
+    padding-bottom: 25px;
+  }
+
+  .cool-form-section-header {
+    flex-direction: column;
+    text-align: center;
+    gap: 10px;
+
+    .section-icon {
+      margin: 0 auto;
+    }
+  }
+
+  .cool-form-submit-btn,
+  .btn-submit {
+    padding: 14px 24px;
+    font-size: 1rem;
+  }
+}
+
+// ===== BAND CARD MOBILE =====
+@media (max-width: 768px) {
+  .band-card {
+    margin-bottom: 15px;
+
+    .card-body {
+      padding: 15px;
+    }
+
+    .card-title {
+      font-size: 1.1rem;
+    }
+  }
+}
+
+// ===== MODALS MOBILE =====
+@media (max-width: 576px) {
+  .modal-dialog {
+    margin: 10px;
+    max-width: calc(100% - 20px);
+  }
+
+  .modal-content {
+    border-radius: 16px;
+  }
+
+  .modal-header {
+    padding: 15px 20px;
+  }
+
+  .modal-body {
+    padding: 20px;
+  }
+
+  .modal-footer {
+    padding: 15px 20px;
+    flex-direction: column;
+    gap: 10px;
+
+    .btn {
+      width: 100%;
+    }
+  }
+}
+
+// ===== BUTTONS MOBILE =====
+@media (max-width: 576px) {
+  .btn {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+  }
+
+  .btn-lg {
+    padding: 12px 20px;
+    font-size: 1rem;
+  }
+
+  // Stack button groups vertically on mobile
+  .btn-group-vertical-mobile {
+    flex-direction: column;
+    width: 100%;
+
+    .btn {
+      width: 100%;
+      margin-bottom: 8px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// ===== NOTIFICATIONS DROPDOWN MOBILE =====
+@media (max-width: 576px) {
+  .notifications-dropdown {
+    .dropdown-menu {
+      width: calc(100vw - 20px);
+      max-width: 350px;
+      right: -10px !important;
+      left: auto !important;
+    }
+  }
+}
+
+// ===== SEARCH BARS MOBILE =====
+@media (max-width: 768px) {
+  .search-bar,
+  .search-container {
+    width: 100%;
+
+    input {
+      width: 100%;
+      font-size: 16px; // Prevents iOS zoom
+    }
+  }
+}
+
+// ===== TABLES MOBILE =====
+@media (max-width: 768px) {
+  .table-responsive-stack {
+    thead {
+      display: none;
+    }
+
+    tbody tr {
+      display: block;
+      margin-bottom: 15px;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 12px;
+      padding: 15px;
+    }
+
+    tbody td {
+      display: flex;
+      justify-content: space-between;
+      padding: 8px 0;
+      border: none;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+
+      &:last-child {
+        border-bottom: none;
+      }
+
+      &::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: rgba(255, 255, 255, 0.7);
+      }
+    }
+  }
+}
+
+// ===== UTILITY CLASSES FOR MOBILE =====
+@media (max-width: 768px) {
+  .hide-mobile {
+    display: none !important;
+  }
+
+  .show-mobile {
+    display: block !important;
+  }
+
+  .text-center-mobile {
+    text-align: center !important;
+  }
+
+  .full-width-mobile {
+    width: 100% !important;
+  }
+
+  .stack-mobile {
+    flex-direction: column !important;
+  }
+
+  .gap-sm-mobile {
+    gap: 10px !important;
+  }
+}
+
+@media (min-width: 769px) {
+  .show-mobile {
+    display: none !important;
+  }
+}
+
+// ===== FIX iOS SPECIFIC ISSUES =====
+@supports (-webkit-touch-callout: none) {
+  // Fix for iOS bottom safe area
+  .message-form,
+  .cool-form-actions {
+    padding-bottom: max(20px, env(safe-area-inset-bottom));
+  }
+
+  // Fix for iOS input zoom
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="search"],
+  textarea,
+  select {
+    font-size: 16px;
+  }
+}
+
+// ===== TOUCH DEVICE IMPROVEMENTS =====
+@media (hover: none) and (pointer: coarse) {
+  // Larger touch targets
+  .btn,
+  .nav-link,
+  .dropdown-item {
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  // Remove hover effects that don't work well on touch
+  .musician-card:hover {
+    transform: none;
+  }
+
+  .musician-card .btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+
+  .member-card:hover {
+    transform: none;
+  }
+
+  .photo-item:hover {
+    transform: none;
+  }
+}
