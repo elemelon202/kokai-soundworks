@@ -1,0 +1,9 @@
+<div class="spotify-embed" id="<%= dom_id(spotify_track) %>">
+  <iframe
+    src="<%= spotify_track.embed_url %>"
+    width="100%"
+    height="<%= spotify_track.embed_height %>"
+    frameborder="0"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    loading="lazy"
+  ></iframe>

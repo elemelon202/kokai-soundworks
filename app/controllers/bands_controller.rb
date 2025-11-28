@@ -141,7 +141,7 @@ class BandsController < ApplicationController
 
   def band_params_without_media
     # Exclude media attachments - they're handled separately in attach_new_media
-    params.require(:band).permit(:name, :location, :description, genre_list: [])
+    params.require(:band).permit(:name, :location, :description, :banner_position, genre_list: [])
   end
 
   def attach_new_media

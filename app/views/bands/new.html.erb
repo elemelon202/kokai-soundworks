@@ -89,20 +89,17 @@
               available_musicians = available_musicians.order(:name)
             end
           %>
+          <% preselected_id = params[:preselect_musician].to_i %>
           <select name="band[musician_ids][]"
-        id="band_musician_ids"
-        multiple
-        data-controller="tom-select"
-        data-tom-select-placeholder-value="Search by name, instrument, or location...">
-            <% available_musicians.each do |musician| %>
+                  id="band_musician_ids"
+                  multiple
+                  data-controller="tom-select"
+                  data-tom-select-placeholder-value="Search by name, instrument, or location...">
+            <% available_musicians.order(:name).each do |musician| %>
               <option value="<%= musician.id %>" <%= 'selected' if musician.id == preselected_id %>><%= musician.name %> - <%= musician.instrument %><%= musician.location.present? ? " (#{musician.location})" : "" %></option>
-              <% end %>
-            </select>
-            <p class="form-hint">Type to search for musicians by name, instrument, or location</p>
-          </div>
-        </div>
-        <div class="cool-form-submit">
-          <%= f.button :submit, "Create Band", class: "btn-submit" %>
+            <% end %>
+          </select>
+          <p class="form-hint">Type to search for musicians by name, instrument, or location</p>
         </div>
       <% end %>
       <div class="cool-form-back">

@@ -2,7 +2,7 @@
   <!-- Banner Section -->
   <div class="band-banner">
     <% if @band.banner.attached? %>
-      <%= image_tag url_for(@band.banner) %>
+      <%= image_tag url_for(@band.banner), style: "object-position: center #{@band.banner_position || 50}%;" %>
     <% else %>
       <div class="banner-placeholder"></div>
     <% end %>
@@ -95,6 +95,14 @@
               </video>
             </div>
           <% end %>
+        </div>
+      </div>
+    <% end %>
+    <% if @band.spotify_tracks.any? %>
+      <div class="band-media-section">
+        <h3><i class="fa-brands fa-spotify"></i> Music</h3>
+        <div class="spotify-tracks-grid">
+          <%= render @band.spotify_tracks %>
         </div>
       </div>
     <% end %>

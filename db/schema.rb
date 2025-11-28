@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_28_040031) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "location"
+    t.integer "banner_position", default: 50
     t.index ["user_id"], name: "index_bands_on_user_id"
   end
 
@@ -163,6 +164,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "bio"
+    t.integer "banner_position"
     t.index ["user_id"], name: "index_musicians_on_user_id"
   end
 
@@ -191,6 +193,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
     t.index ["chat_id"], name: "index_participations_on_chat_id"
     t.index ["user_id", "chat_id"], name: "index_participations_on_user_and_chat_unique", unique: true
     t.index ["user_id"], name: "index_participations_on_user_id"
+  end
+
+  create_table "spotify_tracks", force: :cascade do |t|
+    t.bigint "band_id", null: false
+    t.string "spotify_type"
+    t.string "spotify_id"
+    t.string "spotify_url"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["band_id"], name: "index_spotify_tracks_on_band_id"
   end
 
   create_table "taggings", force: :cascade do |t|
@@ -273,6 +286,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_021304) do
   add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "participations", "chats"
   add_foreign_key "participations", "users"
+  add_foreign_key "spotify_tracks", "bands"
   add_foreign_key "taggings", "tags"
   add_foreign_key "venues", "users"
 end

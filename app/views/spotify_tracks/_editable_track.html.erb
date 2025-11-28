@@ -1,0 +1,15 @@
+<div class="editable-track" id="<%= dom_id(track) %>">
+  <iframe
+    src="<%= track.embed_url %>"
+    width="100%"
+    height="<%= track.embed_height %>"
+    frameborder="0"
+    allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
+    loading="lazy"
+  ></iframe>
+
+  <%= button_to 'Remove', band_spotify_track_path(track.band, track),
+      method: :delete,
+      class: 'remove-track-btn',
+      data: { turbo_confirm: 'Remove this track?' } %>
+</div>

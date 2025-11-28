@@ -181,6 +181,32 @@
                 <% end %>
               </div>
             </div>
+
+            <!-- Banner Position Adjuster -->
+            <div class="media-display-group" data-controller="banner-position">
+              <label class="media-group-label">Banner Position</label>
+              <p class="banner-position-help">Drag the image up or down to adjust what part is visible</p>
+              <div class="banner-position-adjuster">
+                <div class="banner-position-preview" data-banner-position-target="preview">
+                  <%= image_tag url_for(@band.banner),
+                      data: { banner_position_target: "image" },
+                      style: "object-position: center #{@band.banner_position || 50}%;" %>
+                </div>
+                <div class="banner-position-controls">
+                  <button type="button" class="btn-position-adjust" data-action="click->banner-position#moveUp" title="Move up">
+                    <i class="fa-solid fa-chevron-up"></i>
+                  </button>
+                  <span class="position-value" data-banner-position-target="value"><%= @band.banner_position || 50 %>%</span>
+                  <button type="button" class="btn-position-adjust" data-action="click->banner-position#moveDown" title="Move down">
+                    <i class="fa-solid fa-chevron-down"></i>
+                  </button>
+                </div>
+              </div>
+              <%= form_with model: @band, local: true, class: "banner-position-form", data: { banner_position_target: "form" } do |f| %>
+                <%= f.hidden_field :banner_position, data: { banner_position_target: "input" }, value: @band.banner_position || 50 %>
+                <%= f.submit "Save Position", class: "btn-save-position" %>
+              <% end %>
+            </div>
           <% end %>
 
           <% if @band.images.attached? %>
@@ -226,7 +252,9 @@
       <% end %>
 
       <!-- Upload Form -->
-      <%= form_with model: @band, local: true, class: "band-media-form" do |f| %>
+      <%= form_with model: @band, local: true, class: "band-media-form", id: "band-media-form" do |f| %>
+        <%# Hidden field for banner position - updated by Stimulus controller when position is adjusted %>
+        <%= f.hidden_field :banner_position, id: "band-media-form-banner-position", value: @band.banner_position || 50 %>
         <div class="media-upload-section">
           <div class="media-section-header">
             <i class="fa-solid fa-cloud-upload-alt"></i>
@@ -282,6 +310,25 @@
           </div>
         </div>
       <% end %>
+    </div>
+
+    <!-- Spotify Tracks Section -->
+    <div class="band-dashboard-card full-width">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-brands fa-spotify"></i>
+        </div>
+        <h3>Your Music</h3>
+      </div>
+      <div class="spotify-tracks-section">
+        <p class="spotify-description">Paste Spotify links to tracks, albums, or playlists to feature on your profile.</p>
+
+        <div id="spotify-tracks">
+          <%= render partial: 'spotify_tracks/editable_track', collection: @band.spotify_tracks, as: :track %>
+        </div>
+
+        <%= render 'spotify_tracks/form', band: @band %>
+      </div>
     </div>
 
     <% if @band.user_id == current_user.id %>

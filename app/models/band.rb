@@ -12,6 +12,8 @@ class Band < ApplicationRecord
   has_many :involvements, dependent: :destroy
   has_many :musicians, through: :involvements
   has_many :band_invitations, dependent: :destroy
+  has_many :spotify_tracks, dependent: :destroy
+  accepts_nested_attributes_for :spotify_tracks, allow_destroy: true, reject_if: :all_blank
 
   has_one :chat, dependent: :destroy
   has_many :messages, through: :chat

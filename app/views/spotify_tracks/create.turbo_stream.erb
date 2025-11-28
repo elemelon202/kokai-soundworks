@@ -1,0 +1,3 @@
+<%= turbo_stream.append "spotify-tracks" do %>
+  <%= render partial: 'spotify_tracks/editable_track', locals: { track: @track } %>
+<% end %>

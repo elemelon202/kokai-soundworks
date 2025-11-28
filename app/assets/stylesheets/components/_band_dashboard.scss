@@ -1011,6 +1011,141 @@ $kokai-yellow-dark: #b8e020;
   margin-bottom: 10px;
 }
 
+// Banner Position Adjuster
+.banner-position-help {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.5);
+  margin: 0 0 15px 0;
+}
+
+.banner-position-adjuster {
+  display: flex;
+  gap: 20px;
+  align-items: center;
+
+  @media (max-width: 576px) {
+    flex-direction: column;
+  }
+}
+
+.banner-position-preview {
+  flex: 1;
+  height: 150px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  cursor: grab;
+  position: relative;
+
+  &:active {
+    cursor: grabbing;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    pointer-events: none;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 40px;
+    height: 40px;
+    background: rgba(213, 255, 64, 0.2);
+    border: 2px dashed rgba(213, 255, 64, 0.5);
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+  }
+
+  &:hover::after {
+    opacity: 1;
+  }
+}
+
+.banner-position-controls {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  @media (max-width: 576px) {
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+.btn-position-adjust {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: rgba(255, 255, 255, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(213, 255, 64, 0.15);
+    border-color: rgba(213, 255, 64, 0.3);
+    color: $kokai-yellow;
+    transform: scale(1.05);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  i {
+    font-size: 1rem;
+  }
+}
+
+.position-value {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: $kokai-yellow;
+  min-width: 45px;
+  text-align: center;
+}
+
+.banner-position-form {
+  margin-top: 15px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-save-position {
+  background: linear-gradient(135deg, $kokai-yellow, $kokai-yellow-dark);
+  border: none;
+  padding: 10px 24px;
+  border-radius: 10px;
+  font-weight: 600;
+  color: #171717;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-size: 0.9rem;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(213, 255, 64, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
 .upload-fields-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
@@ -1651,6 +1786,117 @@ $kokai-yellow-dark: #b8e020;
 
     span {
       font-size: 0.8rem;
+    }
+  }
+}
+
+// Spotify Tracks Section
+.spotify-tracks-section {
+  .spotify-description {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.95rem;
+    margin-bottom: 20px;
+  }
+}
+
+#spotify-tracks {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.editable-track,
+.spotify-track {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+
+  iframe {
+    display: block;
+    border-radius: 12px;
+  }
+}
+
+.editable-track {
+  form {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    z-index: 10;
+  }
+
+  .remove-track-btn {
+    background: rgba(255, 71, 87, 0.9);
+    border: none;
+    color: #fff;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+
+    &:hover {
+      background: #ff4757;
+      transform: scale(1.05);
+    }
+  }
+}
+
+.spotify-track-form {
+  .spotify-url-input {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+
+    @media (max-width: 576px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+  }
+
+  .spotify-url-field {
+    flex: 1;
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 14px 16px;
+    color: #fff;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+
+    &::placeholder {
+      color: rgba(255, 255, 255, 0.3);
+    }
+
+    &:focus {
+      background: rgba(255, 255, 255, 0.05);
+      border-color: #1DB954;
+      box-shadow: 0 0 0 3px rgba(29, 185, 84, 0.15);
+      outline: none;
+    }
+  }
+
+  .btn-add-track {
+    background: linear-gradient(135deg, #1DB954, #1ed760);
+    border: none;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-weight: 700;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 20px rgba(29, 185, 84, 0.3);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 }
