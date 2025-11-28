@@ -111,37 +111,94 @@
       <p class="no-bands">Not currently in any bands</p>
     <% end %>
   </div>
-  <%# ----- MEDIA CAROUSEL (if needed) ----- %>
-  <% all_media = (@musician.images.to_a + @musician.videos.to_a + @musician.media.to_a).uniq %>
-  <% if all_media.count > 1 %>
+  <%# ----- MEDIA SECTION ----- %>
+  <% all_images = (@musician.images.to_a + @musician.media.to_a.select { |m| m.content_type.start_with?('image') }).uniq %>
+  <% all_videos = (@musician.videos.to_a + @musician.media.to_a.select { |m| m.content_type.start_with?('video') }).uniq %>
+  <% if all_images.any? || all_videos.any? %>
     <div class="media-section">
       <h3 class="section-title">Media</h3>
-      <div id="musicianCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-indicators">
-          <% all_media.each_with_index do |file, index| %>
-            <button type="button" data-bs-target="#musicianCarousel" data-bs-slide-to="<%= index %>"
-                    class="<%= 'active' if index == 0 %>" aria-label="Slide <%= index + 1 %>"></button>
-          <% end %>
-        </div>
-        <div class="carousel-inner">
-          <% all_media.each_with_index do |file, index| %>
-            <div class="carousel-item <%= 'active' if index == 0 %>">
-              <% if file.content_type.start_with?('image') %>
-                <%= cl_image_tag(file.key, class: "carousel-media") %>
-              <% elsif file.content_type.start_with?('video') %>
-                <video class="carousel-media" controls>
-                  <source src="<%= url_for(file) %>" type="<%= file.content_type %>">
-                </video>
-              <% end %>
+
+      <div class="media-carousels-grid <%= 'single-carousel' unless all_images.any? && all_videos.any? %>">
+      <%# ----- PHOTOS CAROUSEL ----- %>
+      <% if all_images.any? %>
+        <div class="media-carousel-wrapper photos-carousel-wrapper">
+          <h4 class="media-subsection-title"><i class="fa-solid fa-camera"></i> Photos</h4>
+          <% if all_images.count > 1 %>
+            <div class="carousel-container">
+              <div id="photosCarousel" class="carousel slide" data-bs-ride="carousel">
+                <div class="carousel-indicators">
+                  <% all_images.each_with_index do |file, index| %>
+                    <button type="button" data-bs-target="#photosCarousel" data-bs-slide-to="<%= index %>"
+                            class="<%= 'active' if index == 0 %>" aria-label="Photo <%= index + 1 %>"></button>
+                  <% end %>
+                </div>
+                <div class="carousel-inner">
+                  <% all_images.each_with_index do |file, index| %>
+                    <div class="carousel-item <%= 'active' if index == 0 %>">
+                      <%= cl_image_tag(file.key, class: "carousel-media") %>
+                    </div>
+                  <% end %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#photosCarousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#photosCarousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </button>
+              </div>
+            </div>
+          <% else %>
+            <div class="single-media-display">
+              <%= cl_image_tag(all_images.first.key, class: "carousel-media") %>
             </div>
           <% end %>
         </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#musicianCarousel" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon"></span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#musicianCarousel" data-bs-slide="next">
-          <span class="carousel-control-next-icon"></span>
-        </button>
+      <% end %>
+
+      <%# ----- DIVIDER ----- %>
+      <% if all_images.any? && all_videos.any? %>
+        <div class="media-divider"></div>
+      <% end %>
+
+      <%# ----- VIDEOS CAROUSEL ----- %>
+      <% if all_videos.any? %>
+        <div class="media-carousel-wrapper videos-carousel-wrapper">
+          <h4 class="media-subsection-title"><i class="fa-solid fa-video"></i> Videos</h4>
+          <% if all_videos.count > 1 %>
+            <div class="carousel-container">
+              <div id="videosCarousel" class="carousel slide" data-bs-ride="false">
+                <div class="carousel-indicators">
+                  <% all_videos.each_with_index do |file, index| %>
+                    <button type="button" data-bs-target="#videosCarousel" data-bs-slide-to="<%= index %>"
+                            class="<%= 'active' if index == 0 %>" aria-label="Video <%= index + 1 %>"></button>
+                  <% end %>
+                </div>
+                <div class="carousel-inner">
+                  <% all_videos.each_with_index do |file, index| %>
+                    <div class="carousel-item <%= 'active' if index == 0 %>">
+                      <video class="carousel-media" controls>
+                        <source src="<%= url_for(file) %>" type="<%= file.content_type %>">
+                      </video>
+                    </div>
+                  <% end %>
+                </div>
+                <button class="carousel-control-prev" type="button" data-bs-target="#videosCarousel" data-bs-slide="prev">
+                  <span class="carousel-control-prev-icon"></span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#videosCarousel" data-bs-slide="next">
+                  <span class="carousel-control-next-icon"></span>
+                </button>
+              </div>
+            </div>
+          <% else %>
+            <div class="single-media-display">
+              <video class="carousel-media" controls>
+                <source src="<%= url_for(all_videos.first) %>" type="<%= all_videos.first.content_type %>">
+              </video>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
       </div>
     </div>
   <% end %>
