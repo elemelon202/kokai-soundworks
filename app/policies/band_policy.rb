@@ -35,6 +35,11 @@ class BandPolicy < ApplicationPolicy
     edit?
   end
 
+  def transfer_leadership?
+    return false unless user.present?
+    user_is_owner?
+  end
+
   private
 
   def user_is_owner?
