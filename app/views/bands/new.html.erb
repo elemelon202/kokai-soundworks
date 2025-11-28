@@ -101,11 +101,15 @@
           </select>
           <p class="form-hint">Type to search for musicians by name, instrument, or location</p>
         </div>
-      <% end %>
-      <div class="cool-form-back">
-        <%= link_to bands_path do %>
-          <i class="fa-solid fa-arrow-left"></i> Back to bands
-        <% end %>
       </div>
+      <div class="cool-form-actions">
+        <%= f.submit "Create Band", class: "cool-form-submit-btn" %>
+      </div>
+    <% end %>
+    <div class="cool-form-back">
+      <%= link_to bands_path do %>
+        <i class="fa-solid fa-arrow-left"></i> Back to bands
+      <% end %>
     </div>
   </div>
+</div>
