@@ -42,7 +42,8 @@
 </div>
 
 <!-- New Chat Modal -->
-<div class="modal fade" id="newChatModal" tabindex="-1" aria-labelledby="newChatModalLabel" aria-hidden="true">
+<div class="modal fade" id="newChatModal" tabindex="-1" aria-labelledby="newChatModalLabel" aria-hidden="true"
+     data-controller="new-chat-modal">
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
@@ -53,14 +54,16 @@
         <div class="musician-search-container">
           <div class="musician-search-wrapper">
             <i class="fa-solid fa-search"></i>
-            <input type="text" id="musicianSearch" class="musician-search-input" placeholder="Search musicians by name...">
+            <input type="text" class="musician-search-input" placeholder="Search musicians by name..."
+                   data-new-chat-modal-target="search"
+                   data-action="input->new-chat-modal#filter">
           </div>
         </div>
         <p class="search-hint">Select a musician to message:</p>
-        <div class="musician-list" id="musicianList">
+        <div class="musician-list" data-new-chat-modal-target="list">
           <% @musicians.each do |musician| %>
             <% next if musician.user_id == current_user.id %>
-            <%= link_to create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "musician-option", data: { turbo_method: :post, musician_name: musician.name.downcase, musician_instrument: musician.instrument&.downcase } do %>
+            <%= link_to create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "musician-option", data: { turbo_method: :post, musician_name: musician.name.downcase, musician_instrument: musician.instrument&.downcase, new_chat_modal_target: "musician" } do %>
               <div class="musician-info">
                 <strong><%= musician.name %></strong>
                 <span class="text-muted"><%= musician.instrument %></span>
@@ -71,7 +74,7 @@
             <% end %>
           <% end %>
         </div>
-        <div class="no-results-message" id="noResultsMessage" style="display: none;">
+        <div class="no-results-message" style="display: none;" data-new-chat-modal-target="noResults">
           <i class="fa-solid fa-user-slash"></i>
           <p>No musicians found matching your search</p>
         </div>
@@ -79,53 +82,3 @@
     </div>
   </div>
 </div>
-
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    setupMusicianSearch();
-  });
-
-  document.addEventListener("turbo:load", function() {
-    setupMusicianSearch();
-  });
-
-  function setupMusicianSearch() {
-    const searchInput = document.getElementById("musicianSearch");
-    const musicianList = document.getElementById("musicianList");
-    const noResultsMessage = document.getElementById("noResultsMessage");
-
-    if (!searchInput || !musicianList) return;
-
-    searchInput.addEventListener("input", function() {
-      const searchTerm = this.value.toLowerCase().trim();
-      const musicians = musicianList.querySelectorAll(".musician-option");
-      let visibleCount = 0;
-
-      musicians.forEach(function(musician) {
-        const name = musician.dataset.musicianName || "";
-        const instrument = musician.dataset.musicianInstrument || "";
-
-        if (name.includes(searchTerm) || instrument.includes(searchTerm)) {
-          musician.style.display = "block";
-          visibleCount++;
-        } else {
-          musician.style.display = "none";
-        }
-      });
-
-      if (noResultsMessage) {
-        noResultsMessage.style.display = visibleCount === 0 ? "block" : "none";
-      }
-    });
-
-    // Clear search when modal is opened
-    const modal = document.getElementById("newChatModal");
-    if (modal) {
-      modal.addEventListener("shown.bs.modal", function() {
-        searchInput.value = "";
-        searchInput.dispatchEvent(new Event("input"));
-        searchInput.focus();
-      });
-    }
-  }
-</script>
