@@ -1,4 +1,4 @@
-<div class="musician-show-page">
+<div class="musician-show-page" data-controller="tabs">
   <%# ----- PROFILE HEADER ----- %>
   <div class="profile-header">
     <div class="profile-header-left">
@@ -49,7 +49,7 @@
   <%# ----- BOTTOM PROFILE CONTENT ----- %>
   <div class="bottom-profile-content">
     <%# ----- LEFT COLUMN: ABOUT CARD ------ %>
-    <div class="about-card tab-content active" id="tab-about">
+    <div class="about-card tab-content active" id="tab-about" data-tabs-target="content">
       <h3 class="section-title">About</h3>
       <p class="about-text"><%= @musician.bio %></p>
       <h4 class="subsection-title">Genres</h4>
@@ -95,7 +95,7 @@
     </div>
   </div>
   <%# ----- BANDS SECTION (shown via tab) ----- %>
-  <div class="bands-card tab-content" id="tab-bands">
+  <div class="bands-card tab-content" id="tab-bands" data-tabs-target="content">
     <h3 class="section-title">Current Bands</h3>
     <% if @musician.bands.any? %>
       <ul class="bands-list">
@@ -142,28 +142,3 @@
     </div>
   <% end %>
 </div>
-<script>
-  document.addEventListener('DOMContentLoaded', function() {
-    const tabBtns = document.querySelectorAll('.tab-btn');
-    const tabContents = document.querySelectorAll('.tab-content');
-
-    tabBtns.forEach(btn => {
-      btn.addEventListener('click', function() {
-        const tabId = this.getAttribute('data-tab');
-
-        // Update active tab button
-        tabBtns.forEach(b => b.classList.remove('active'));
-        this.classList.add('active');
-
-        // Show/hide tab content
-        tabContents.forEach(content => {
-          if (content.id === 'tab-' + tabId) {
-            content.classList.add('active');
-          } else {
-            content.classList.remove('active');
-          }
-        });
-      });
-    });
-  });
-</script>

@@ -5,20 +5,3 @@
   </div>
 </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const messagesList = document.getElementById("messages");
-    if (messagesList) {
-      messagesList.scrollTop = messagesList.scrollHeight;
-    }
-  });
-
-  document.addEventListener("turbo:before-stream-render", function(event) {
-    setTimeout(() => {
-      const messagesList = document.getElementById("messages");
-      if (messagesList) {
-        messagesList.scrollTop = messagesList.scrollHeight;
-      }
-    }, 100);
-  });
-</script>

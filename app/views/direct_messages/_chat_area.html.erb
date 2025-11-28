@@ -50,7 +50,7 @@
     </div>
   </div>
 
-  <div id="messages" class="messages-list" data-chat-id="<%= @chat.id %>" data-current-user-id="<%= current_user.id %>">
+  <div id="messages" class="messages-list" data-chat-id="<%= @chat.id %>" data-current-user-id="<%= current_user.id %>" data-controller="messages-scroll">
     <% @messages.each do |message| %>
       <%= render partial: "messages/message", locals: { message: message, current_user: current_user } %>
     <% end %>
@@ -59,20 +59,3 @@
   <%= render partial: "messages/form", locals: { chat: @chat, message: @message } %>
 </div>
 
-<script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const messagesList = document.getElementById("messages");
-    if (messagesList) {
-      messagesList.scrollTop = messagesList.scrollHeight;
-    }
-  });
-
-  document.addEventListener("turbo:before-stream-render", function(event) {
-    setTimeout(() => {
-      const messagesList = document.getElementById("messages");
-      if (messagesList) {
-        messagesList.scrollTop = messagesList.scrollHeight;
-      }
-    }, 100);
-  });
-</script>
