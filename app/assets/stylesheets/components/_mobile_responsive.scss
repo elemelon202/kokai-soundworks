@@ -575,7 +575,8 @@
   // Fix for iOS bottom safe area
   .message-form,
   .cool-form-actions {
-    padding-bottom: #{"max(20px, env(safe-area-inset-bottom))"};
+    padding-bottom: 20px;
+    padding-bottom: env(safe-area-inset-bottom, 20px);
   }
 
   // Fix for iOS input zoom
