@@ -7,7 +7,7 @@ class FriendshipsController < ApplicationController
     @friends = current_user.friends
     @pending_requests = current_user.pending_friend_requests.includes(:requester)
     @sent_requests = current_user.sent_friend_requests.pending.includes(:addressee)
-  end
+     end
 
     def create
       @addressee = User.find(params[:addressee_id])
