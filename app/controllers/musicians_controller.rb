@@ -1,3 +1,5 @@
+#THE ACTIVITY TRACKER USES THE RAILS POLYMORPHIC ASSOCIATION TO BASICALLY MAKE A RECORD EVERYTIME ANYONE DOES ANYTHING. THEN IT USERS THE MUSICIAN ID TO POST THAT TO THE PROFILE OF THE RELEVANT MUSICIAN.
+
 class MusiciansController < ApplicationController
   # find musician before performing show, edit, update, or destroy
   skip_before_action :authenticate_user!, only: [:index, :show, :search]
@@ -30,13 +32,8 @@ class MusiciansController < ApplicationController
 
   def index
     @musicians = policy_scope(Musician)
-    # see all musicians
-    # singular musician
-    # get that musicians bands / can do that with iteration
-    #maybe have band name in card
-    # Musician.new for create a profile button
 
-    # for searching on the musicians index page -- kyle
+    # for searching on the musicians index page
     if params[:query].present?
       @musicians = @musicians.search_by_all(params[:query])
     end
@@ -49,6 +46,8 @@ class MusiciansController < ApplicationController
       @musicians = @musicians.where(location: params[:location])
     end
 
+    # Paginate results - 10 per page
+    @pagy, @musicians = pagy(@musicians, items: 10)
   end
 
   def show
@@ -57,7 +56,7 @@ class MusiciansController < ApplicationController
     @musician = Musician.find(params[:id])
     # should be able to see bands the musician is in
     @bands = @musician.bands
-    # should have a chat button?
+    track_profile_view(@musician)
   end
 
   def new
@@ -82,6 +81,14 @@ def edit
 
   # Mark band invitation notifications as read when visiting edit page
   mark_invitation_notifications_as_read
+
+   @stats = {
+      followers_count: @musician.followers.count,
+      profile_views_week: @musician.profile_views.where(viewed_at: 1.week.ago..).count,
+      profile_views_total: @musician.profile_views.count,
+      profile_saves: @musician.profile_saves.count,
+      new_followers_week: @musician.follows.where(created_at: 1.week.ago..).count
+    }
 end
 
 def update
@@ -114,6 +121,84 @@ end
     authorize @musician
     @musician.destroy
     redirect_to root_path, status: :see_other, notice: 'You have deleted your account. We hope to see you again'
+  end
+
+  def follow
+    @musician = Musician.find(params[:id])
+    skip_authorization
+
+    unless current_user.followed_musicians.include?(@musician)
+      current_user.followed_musicians << @musician
+      Activity.track(user: current_user, action: :follow, trackable: @musician, musician: @musician)
+    end
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: musician_path(@musician) }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "follow-button-musician-#{@musician.id}",
+          partial: "musicians/follow_button",
+          locals: { musician: @musician }
+        )
+      }
+    end
+  end
+
+  def unfollow
+    @musician = Musician.find(params[:id])
+    skip_authorization
+
+    current_user.followed_musicians.delete(@musician)
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: musician_path(@musician) }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "follow-button-musician-#{@musician.id}",
+          partial: "musicians/follow_button",
+          locals: { musician: @musician }
+        )
+      }
+    end
+  end
+
+   def save_profile
+    @musician = Musician.find(params[:id])
+    skip_authorization
+
+    unless current_user.saved_musicians.include?(@musician)
+      current_user.saved_musicians << @musician
+      Activity.track(user: current_user, action: :save, trackable: @musician, musician: @musician)
+    end
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: musician_path(@musician) }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "save-button-musician-#{@musician.id}",
+          partial: "musicians/save_button",
+          locals: { musician: @musician }
+        )
+      }
+    end
+   end
+
+  def unsave_profile
+    @musician = Musician.find(params[:id])
+    skip_authorization
+
+    current_user.saved_musicians.delete(@musician)
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: musician_path(@musician) }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "save-button-musician-#{@musician.id}",
+          partial: "musicians/save_button",
+          locals: { musician: @musician }
+        )
+      }
+    end
   end
 
   private
@@ -167,5 +252,16 @@ end
     current_user.notifications.unread
       .where(notification_type: Notification::TYPES[:band_invitation])
       .update_all(read: true)
+  end
+
+  def track_profile_view(profile)
+    return if current_user&.musician == profile
+
+    ProfileView.create!(
+      viewer: current_user,
+      viewable: profile,
+      viewed_at: Time.current,
+      ip_hash: current_user ? nil : Digest::SHA256.hexdigest(request.remote_ip)[0..15] #this is so we can count unique non members to the site. if they are logged in, we can count their user_id, but if they aren't, we can take their ip, hash it up and protect privacy and just take the first 16 digits. This way we know how many views a profile got. -Sam the spy
+    )
   end
 end

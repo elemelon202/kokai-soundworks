@@ -1,0 +1,176 @@
+
+<%# I DONT KNOW WHY BUT I HAD MAD TROUBLE WITH CSS FOR THIS. THATS WHY ITS ALL INLINE STYLES. WHEN I PUT IT IN THE SCSS FILE IT BREAKS??%>
+
+<style>
+  html, body {
+    overflow: hidden !important;
+    height: 100vh !important;
+    margin: 0 !important;
+    padding: 0 !important;
+  }
+  .discover-container {
+    overflow-y: scroll !important;
+    scroll-snap-type: y mandatory !important;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+  }
+  .discover-container::-webkit-scrollbar {
+    display: none;
+  }
+  .discover-short {
+    scroll-snap-align: start !important;
+    scroll-snap-stop: always !important;
+  }
+</style>
+
+<%# Back button %>
+<%= link_to musicians_path, style: "position: fixed; top: 80px; left: 20px; z-index: 9999; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.3);",
+    onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
+    onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
+  <i class="fa-solid fa-arrow-left"></i> Back to Musicians
+<% end %>
+
+<%# Vertical scroll feed with musician card on left %>
+<div data-controller="shorts-reel" style="height: 100vh; background: #171717; overflow: hidden;">
+  <% if @shorts.any? %>
+    <div data-shorts-reel-target="container" class="discover-container" style="height: 100vh;">
+    <% @shorts.each_with_index do |short, index| %>
+      <div data-shorts-reel-target="short" data-index="<%= index %>" class="discover-short" style="height: 100vh; display: flex; align-items: center; justify-content: center; gap: 32px; padding: 24px;">
+
+        <%# Left - Musician Card %>
+        <div style="flex: 0 0 280px; background: #1e1e1e; border-radius: 16px; overflow: hidden; align-self: center;">
+          <%# Banner %>
+          <div style="height: 100px; background: linear-gradient(135deg, #E936AD 0%, #7B2D8E 100%); position: relative;">
+            <% if short.musician.banner.attached? %>
+              <%= cl_image_tag(short.musician.banner.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+            <% end %>
+          </div>
+
+          <%# Avatar %>
+          <div style="display: flex; justify-content: center; margin-top: -40px; position: relative; z-index: 1;">
+            <div style="width: 80px; height: 80px; border-radius: 50%; background: #2a2a2a; border: 4px solid #1e1e1e; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+              <% if short.musician.avatar.attached? %>
+                <%= cl_image_tag(short.musician.avatar.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+              <% else %>
+                <span style="color: #fff; font-size: 1.5rem; font-weight: 600;"><%= short.musician.name.split.map(&:first).join.upcase[0..1] %></span>
+              <% end %>
+            </div>
+          </div>
+
+          <%# Info %>
+          <div style="padding: 12px 20px 20px; text-align: center;">
+            <h2 style="color: #fff; font-size: 1.1rem; margin: 0 0 4px 0;"><%= short.musician.name %></h2>
+            <p style="color: #888; font-size: 0.85rem; margin: 0 0 10px 0;">
+              <%= short.musician.instrument || "Musician" %>
+              <% if short.musician.location.present? %>
+                <span style="margin: 0 4px;">•</span><%= short.musician.location %>
+              <% end %>
+            </p>
+
+            <% if short.musician.styles.present? %>
+              <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center; margin-bottom: 14px;">
+                <% short.musician.styles.split(',').first(3).each do |style| %>
+                  <span style="background: #2a2a2a; color: #E936AD; padding: 3px 8px; border-radius: 10px; font-size: 0.7rem;"><%= style.strip %></span>
+                <% end %>
+              </div>
+            <% end %>
+
+            <div style="display: flex; gap: 10px; justify-content: center;">
+              <%= link_to musician_path(short.musician), style: "flex: 1; padding: 8px 12px; background: #E936AD; color: #fff; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 500; text-align: center;" do %>
+                <i class="fa-solid fa-user"></i> Profile
+              <% end %>
+              <% if current_user && current_user.id != short.musician.user_id %>
+                <%= button_to create_or_show_direct_messages_path(recipient_id: short.musician.user_id), method: :post, style: "flex: 1; padding: 8px 12px; background: #2a2a2a; color: #fff; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor: pointer;" do %>
+                  <i class="fa-solid fa-envelope"></i> Message
+                <% end %>
+              <% end %>
+            </div>
+          </div>
+        </div>
+
+        <%# Right - Short Video with action buttons %>
+        <div style="display: flex; align-items: center; gap: 16px;">
+          <%# Video %>
+          <div data-controller="video-player"
+               data-action="mouseenter->video-player#showMute mouseleave->video-player#hideMute"
+               style="position: relative; height: 85vh; max-height: 85vh; aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; background: #000;">
+            <% if short.video.attached? %>
+              <video preload="metadata"
+                     loop
+                     playsinline
+                     muted
+                     style="width: 100%; height: 100%; object-fit: cover;"
+                     data-video-player-target="video"
+                     data-action="click->video-player#toggle">
+                <source src="<%= url_for(short.video) %>" type="<%= short.video.content_type %>">
+              </video>
+
+              <%# Play button overlay %>
+              <div data-video-player-target="playButton"
+                   data-action="click->video-player#toggle"
+                   style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 72px; height: 72px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.3s ease;">
+                <i class="fa-solid fa-play" style="color: #171717; font-size: 1.75rem; margin-left: 4px;"></i>
+              </div>
+            <% end %>
+
+            <%# Gradient overlay %>
+            <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 30%); pointer-events: none;"></div>
+
+            <%# Short info overlay %>
+            <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; z-index: 2;">
+              <h3 style="color: #fff; font-size: 1rem; margin: 0 0 4px 0; font-weight: 600;"><%= short.title %></h3>
+              <% if short.description.present? %>
+                <p style="color: rgba(255,255,255,0.8); font-size: 0.85rem; margin: 0;"><%= truncate(short.description, length: 80) %></p>
+              <% end %>
+            </div>
+
+            <%# Mute/Unmute button - bottom right, visible on hover %>
+            <button data-video-player-target="muteButton"
+                    data-action="click->video-player#toggleMute"
+                    class="shorts-mute-btn"
+                    style="position: absolute; bottom: 16px; right: 16px; width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.6); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3; opacity: 0; transition: opacity 0.2s ease;">
+              <i class="fa-solid fa-volume-xmark" data-video-player-target="muteIcon" style="color: #fff; font-size: 1.1rem;"></i>
+            </button>
+          </div>
+
+          <%# Action buttons (like & comment) %>
+          <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
+            <%= render "musician_shorts/like_button", short: short %>
+
+            <%# Comment button %>
+            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+              <button onclick="var sidebar = document.getElementById('comments-sidebar-<%= short.id %>'); sidebar.style.display = sidebar.style.display === 'none' ? 'flex' : 'none';"
+                      style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                <i class="fa-regular fa-comment" style="color: #fff; font-size: 1.4rem;"></i>
+              </button>
+              <span id="comment-count-<%= short.id %>" style="color: #fff; font-size: 0.85rem; font-weight: 600;"><%= short.short_comments.count %></span>
+            </div>
+          </div>
+
+          <%# Comments sidebar - hidden by default %>
+          <div id="comments-sidebar-<%= short.id %>" style="display: none; width: 300px; height: 85vh; background: #1e1e1e; border-radius: 16px; flex-direction: column; overflow: hidden;">
+            <div style="padding: 16px; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center;">
+              <h3 style="color: #fff; margin: 0; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
+                <i class="fa-regular fa-comment" style="color: #E936AD;"></i>
+                Comments
+              </h3>
+              <button onclick="document.getElementById('comments-sidebar-<%= short.id %>').style.display = 'none';"
+                      style="background: none; border: none; color: #888; cursor: pointer; font-size: 1.2rem; padding: 0;">
+                <i class="fa-solid fa-xmark"></i>
+              </button>
+            </div>
+            <div style="flex: 1; overflow-y: auto; padding: 16px;">
+              <%= render "musician_shorts/comments_section", short: short %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div style="height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
+      <i class="fa-solid fa-film" style="font-size: 4rem; color: rgba(255,255,255,0.15); margin-bottom: 20px;"></i>
+      <h3 style="color: #fff; margin: 0 0 8px 0;">No shorts yet</h3>
+      <p style="color: #888; margin: 0;">Be the first to upload a short!</p>
+    </div>
+  <% end %>
+</div>

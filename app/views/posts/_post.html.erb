@@ -1,0 +1,130 @@
+<% comments_open = local_assigns[:comments_open] || false %>
+<div class="post-card" id="post-<%= post.id %>" style="background: #1e1e1e; border-radius: 12px; padding: 20px;">
+  <%# Post Header %>
+  <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 12px;">
+    <div style="width: 48px; height: 48px; border-radius: 50%; background: #444; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+      <% if post.user.musician&.avatar&.attached? %>
+        <%= image_tag post.user.musician.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+      <% else %>
+        <span style="color: #888; font-size: 1.2rem;"><%= post.user.email[0].upcase %></span>
+      <% end %>
+    </div>
+    <div style="flex: 1;">
+      <% if post.user.musician %>
+        <%= link_to musician_path(post.user.musician), style: "color: #fff; text-decoration: none; font-weight: 500;" do %>
+          <%= post.user.musician.name %>
+        <% end %>
+      <% else %>
+        <span style="color: #fff; font-weight: 500;"><%= post.user.email.split('@').first %></span>
+      <% end %>
+      <p style="color: #666; margin: 0; font-size: 0.8rem;"><%= time_ago_in_words(post.created_at) %> ago</p>
+    </div>
+    <% if post.user == current_user %>
+      <%= button_to post_path(post), method: :delete, data: { confirm: "Delete this post?" }, style: "background: none; border: none; color: #666; cursor: pointer; padding: 8px;" do %>
+        <i class="fa-solid fa-trash"></i>
+      <% end %>
+    <% end %>
+  </div>
+
+  <%# Post Content %>
+  <% if post.content.present? %>
+    <p style="color: #fff; margin: 0 0 12px 0; white-space: pre-wrap;"><%= post.content %></p>
+  <% end %>
+
+  <%# Post Images %>
+  <% if post.images.attached? %>
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 8px; margin-bottom: 12px;">
+      <% post.images.each do |image| %>
+        <%= image_tag url_for(image), style: "width: 100%; border-radius: 8px; object-fit: cover; max-height: 300px;" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Post Videos %>
+  <% if post.videos.attached? %>
+    <div style="margin-bottom: 12px;">
+      <% post.videos.each do |video| %>
+        <video controls style="width: 100%; border-radius: 8px; max-height: 400px;">
+          <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
+        </video>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Post Actions %>
+  <div style="display: flex; align-items: center; gap: 20px; padding-top: 12px; border-top: 1px solid #333;">
+    <%# Like Button %>
+    <% if post.liked_by?(current_user) %>
+      <%= button_to unlike_post_path(post), method: :delete, class: "btn-post-action btn-post-action-active" do %>
+        <i class="fa-solid fa-heart"></i>
+        <span><%= post.post_likes.count %></span>
+      <% end %>
+    <% else %>
+      <%= button_to like_post_path(post), method: :post, class: "btn-post-action" do %>
+        <i class="fa-regular fa-heart"></i>
+        <span><%= post.post_likes.count %></span>
+      <% end %>
+    <% end %>
+
+    <%# Comment Toggle %>
+    <button type="button" class="btn-post-action" onclick="this.closest('.post-card').querySelector('.post-comments-section').classList.toggle('hidden')">
+      <i class="fa-regular fa-comment"></i>
+      <span><%= post.post_comments.count %></span>
+    </button>
+
+    <%# Repost Button %>
+    <% if post.user != current_user %>
+      <%= button_to repost_post_path(post), method: :post, class: "btn-post-action #{post.reposted_by?(current_user) ? 'btn-post-action-reposted' : ''}" do %>
+        <i class="fa-solid fa-retweet"></i>
+        <span><%= post.reposts.count %></span>
+      <% end %>
+    <% else %>
+      <span class="btn-post-action" style="cursor: default;">
+        <i class="fa-solid fa-retweet"></i>
+        <span><%= post.reposts.count %></span>
+      </span>
+    <% end %>
+  </div>
+
+  <%# Comments Section %>
+  <div class="post-comments-section <%= comments_open ? '' : 'hidden' %>" style="margin-top: 20px; padding-top: 20px; border-top: 1px solid #333;">
+    <%# Comment Form %>
+    <div style="margin-bottom: 32px;">
+      <%= form_with model: [post, PostComment.new], local: true, style: "display: flex; gap: 12px;" do |f| %>
+        <%= f.text_field :content, placeholder: "Write a comment...", style: "flex: 1; padding: 12px 16px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.9rem;" %>
+        <%= f.submit "Post", class: "btn-post", style: "padding: 10px 16px; font-size: 0.85rem;" %>
+      <% end %>
+    </div>
+
+    <%# Comments List %>
+    <% if post.post_comments.any? %>
+      <div style="display: flex; flex-direction: column; gap: 20px;">
+        <% post.post_comments.recent.limit(5).each do |comment| %>
+          <div style="display: flex; gap: 14px; align-items: flex-start;">
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #444; display: flex; align-items: center; justify-content: center; overflow: hidden; flex-shrink: 0;">
+              <% if comment.user.musician&.avatar&.attached? %>
+                <%= image_tag comment.user.musician.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+              <% else %>
+                <span style="color: #888; font-size: 0.8rem;"><%= comment.user.email[0].upcase %></span>
+              <% end %>
+            </div>
+            <div style="flex: 1; background: #2a2a2a; border-radius: 12px; padding: 14px 18px;">
+              <div style="display: flex; align-items: center; gap: 10px; margin-bottom: 8px;">
+                <span style="color: #fff; font-weight: 500; font-size: 0.9rem;">
+                  <%= comment.user.musician&.name || comment.user.email.split('@').first %>
+                </span>
+                <span style="color: #666; font-size: 0.75rem;"><%= time_ago_in_words(comment.created_at) %> ago</span>
+              </div>
+              <p style="color: #ddd; margin: 0; font-size: 0.95rem; line-height: 1.5;"><%= comment.content %></p>
+            </div>
+            <% if comment.user == current_user || post.user == current_user %>
+              <%= button_to post_post_comment_path(post, comment), method: :delete, style: "background: none; border: none; color: #666; cursor: pointer; padding: 8px; font-size: 0.8rem; align-self: center;" do %>
+                <i class="fa-solid fa-trash"></i>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+</div>

@@ -1,6 +1,20 @@
 // Define variables for your color scheme
 
-// For example:
+// Kokai Brand Colors
+$kokai-yellow: #C8E938;          // Primary brand yellow
+$kokai-yellow-light: #D5FF40;    // Lighter variant
+$kokai-yellow-dark: #b8d020;     // Darker/hover variant
+$kokai-pink: #E936AD;            // Secondary accent
+$kokai-pink-dark: #c42891;       // Pink hover variant
+
+// Backgrounds (dark theme)
+$bg-darkest: #121212;            // Page backgrounds
+$bg-dark: #171717;               // Main content background
+$bg-card: #1e1e1e;               // Card backgrounds
+$bg-elevated: #2a2a2a;           // Elevated elements (buttons, inputs)
+$bg-hover: #3a3a3a;              // Hover states
+
+// Legacy colors (for compatibility)
 $red: #FD1015;
 $blue: #0D6EFD;
 $yellow: #FFC65A;
@@ -8,4 +22,3 @@ $orange: #E67E22;
 $green: #1EDD88;
 $gray: #0E0000;
 $light-gray: #F4F4F4;
-$kokai-yellow: #D5FF40;

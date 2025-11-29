@@ -1,0 +1,118 @@
+<div style="max-width: 800px; margin: 0 auto; padding: 24px;">
+    <h1 style="color: #fff; font-size: 1.75rem; margin-bottom: 24px;">
+      <i class="fa-solid fa-user-group"></i> Friends
+    </h1>
+
+    <%# Pending Friend Requests %>
+    <% if @pending_requests.any? %>
+      <div style="background: #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+        <h2 style="color: #fff; font-size: 1.1rem; margin: 0 0 16px 0;">
+          <i class="fa-solid fa-inbox" style="color: #E936AD;"></i>
+          Friend Requests (<%= @pending_requests.count %>)
+        </h2>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <% @pending_requests.each do |request| %>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: #444; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <% if request.requester.musician&.avatar&.attached? %>
+                  <%= image_tag request.requester.musician.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+                <% else %>
+                  <span style="color: #888; font-size: 1.2rem;"><%= request.requester.email[0].upcase %></span>
+                <% end %>
+              </div>
+              <div style="flex: 1;">
+                <p style="color: #fff; margin: 0; font-weight: 500;">
+                  <%= request.requester.musician&.name || request.requester.email.split('@').first %>
+                </p>
+                <p style="color: #666; margin: 0; font-size: 0.8rem;">
+                  <%= time_ago_in_words(request.created_at) %> ago
+                </p>
+              </div>
+              <div style="display: flex; gap: 8px;">
+                <%= button_to accept_friendship_path(request), method: :patch, style: "padding: 8px 16px; background: #C8E938; color: #000; border: none; border-radius: 6px; font-size:
+   0.85rem; cursor: pointer;" do %>
+                  <i class="fa-solid fa-check"></i> Accept
+                <% end %>
+                <%= button_to decline_friendship_path(request), method: :patch, style: "padding: 8px 16px; background: #444; color: #fff; border: none; border-radius: 6px; font-size:
+  0.85rem; cursor: pointer;" do %>
+                  <i class="fa-solid fa-xmark"></i>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Sent Requests %>
+    <% if @sent_requests.any? %>
+      <div style="background: #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+        <h2 style="color: #fff; font-size: 1.1rem; margin: 0 0 16px 0;">
+          <i class="fa-solid fa-paper-plane" style="color: #888;"></i>
+          Sent Requests (<%= @sent_requests.count %>)
+        </h2>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <% @sent_requests.each do |request| %>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: #444; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <% if request.addressee.musician&.avatar&.attached? %>
+                  <%= image_tag request.addressee.musician.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+                <% else %>
+                  <span style="color: #888; font-size: 1.2rem;"><%= request.addressee.email[0].upcase %></span>
+                <% end %>
+              </div>
+              <div style="flex: 1;">
+                <p style="color: #fff; margin: 0; font-weight: 500;">
+                  <%= request.addressee.musician&.name || request.addressee.email.split('@').first %>
+                </p>
+                <p style="color: #888; margin: 0; font-size: 0.8rem;">Pending</p>
+              </div>
+              <%= button_to friendship_path(request), method: :delete, style: "padding: 8px 16px; background: #444; color: #fff; border: none; border-radius: 6px; font-size: 0.85rem;
+  cursor: pointer;" do %>
+                Cancel
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
+    <%# Friends List %>
+    <div style="background: #1e1e1e; border-radius: 12px; padding: 20px;">
+      <h2 style="color: #fff; font-size: 1.1rem; margin: 0 0 16px 0;">
+        <i class="fa-solid fa-users" style="color: #C8E938;"></i>
+        Your Friends (<%= @friends.count %>)
+      </h2>
+      <% if @friends.any? %>
+        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px;">
+          <% @friends.each do |friend| %>
+            <div style="display: flex; align-items: center; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 8px;">
+              <div style="width: 48px; height: 48px; border-radius: 50%; background: #444; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                <% if friend.musician&.avatar&.attached? %>
+                  <%= image_tag friend.musician.avatar, style: "width: 100%; height: 100%; object-fit: cover;" %>
+                <% else %>
+                  <span style="color: #888; font-size: 1.2rem;"><%= friend.email[0].upcase %></span>
+                <% end %>
+              </div>
+              <div style="flex: 1; min-width: 0;">
+                <p style="color: #fff; margin: 0; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                  <%= friend.musician&.name || friend.email.split('@').first %>
+                </p>
+                <% if friend.musician %>
+                  <%= link_to musician_path(friend.musician), style: "color: #888; font-size: 0.8rem; text-decoration: none;" do %>
+                    View profile
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div style="text-align: center; padding: 40px;">
+          <i class="fa-solid fa-user-group" style="font-size: 2.5rem; color: #333; margin-bottom: 12px;"></i>
+          <p style="color: #666; margin: 0;">No friends yet</p>
+          <p style="color: #555; margin: 8px 0 0 0; font-size: 0.9rem;">Find musicians and send them friend requests!</p>
+        </div>
+      <% end %>
+    </div>
+  </div>

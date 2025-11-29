@@ -1,0 +1,18 @@
+<div id="like-button-<%= short.id %>" style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
+  <% if user_signed_in? %>
+    <% if current_user.liked_shorts.include?(short) %>
+      <%= button_to unlike_discover_short_path(short), method: :delete, style: "width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;", data: { turbo_frame: "_top" } do %>
+        <i class="fa-solid fa-heart" style="color: #E936AD; font-size: 1.4rem;"></i>
+      <% end %>
+    <% else %>
+      <%= button_to like_discover_short_path(short), method: :post, style: "width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;", data: { turbo_frame: "_top" } do %>
+        <i class="fa-regular fa-heart" style="color: #fff; font-size: 1.4rem;"></i>
+      <% end %>
+    <% end %>
+  <% else %>
+    <%= link_to new_user_session_path, style: "width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s; text-decoration: none;" do %>
+      <i class="fa-regular fa-heart" style="color: #fff; font-size: 1.4rem;"></i>
+    <% end %>
+  <% end %>
+  <span style="color: #fff; font-size: 0.85rem; font-weight: 600;"><%= short.short_likes.count %></span>
+</div>

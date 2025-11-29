@@ -9,6 +9,13 @@
     <div class="banner-overlay">
       <div class="banner-content">
         <h1><%= @band.name %></h1>
+         <div style="margin: 12px 0;">
+    <%= render "bands/follow_button", band: @band %>
+    <span style="color: #888; font-size: 0.9rem; margin-left: 8px;">
+      <%= pluralize(@band.followers.count, "follower") %>
+    </span>
+    <%= render "bands/save_button", band: @band %>
+  </div>
         <% if @band.location.present? %>
           <p class="band-location"><i class="fa-solid fa-location-dot"></i> <%= @band.location %></p>
         <% end %>
@@ -49,22 +56,24 @@
         <h3>Members</h3>
         <div class="members-grid">
           <% @band.musicians.each do |musician| %>
-            <%= link_to musician_path(musician), class: "member-card" do %>
-              <div class="member-avatar">
-                <% if musician.media.attached? && musician.media.first.content_type.start_with?("image") %>
-                  <%= image_tag url_for(musician.media.first), class: "avatar-image" %>
-                <% else %>
-                  <i class="fa-solid fa-user"></i>
+            <div class="member-card">
+              <%= link_to musician_path(musician), style: "display: flex; align-items: center; gap: 12px; text-decoration: none;" do %>
+                <div class="member-avatar">
+                  <% if musician.media.attached? && musician.media.first.content_type.start_with?("image") %>
+                    <%= image_tag url_for(musician.media.first), class: "avatar-image" %>
+                  <% else %>
+                    <i class="fa-solid fa-user"></i>
+                  <% end %>
+                </div>
+                <div class="member-info">
+                  <strong><%= musician.name %></strong>
+                  <span><%= musician.instrument %></span>
+                </div>
+                <% if musician.user_id == @band.user_id %>
+                  <span class="leader-badge"><i class="fa-solid fa-crown"></i></span>
                 <% end %>
-              </div>
-              <div class="member-info">
-                <strong><%= musician.name %></strong>
-                <span><%= musician.instrument %></span>
-              </div>
-              <% if musician.user_id == @band.user_id %>
-                <span class="leader-badge"><i class="fa-solid fa-crown"></i></span>
               <% end %>
-            <% end %>
+            </div>
           <% end %>
         </div>
       </div>

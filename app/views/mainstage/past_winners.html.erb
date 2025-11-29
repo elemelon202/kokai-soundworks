@@ -1,0 +1,64 @@
+<div class="mainstage-winners-page" style="max-width: 900px; margin: 0 auto; padding: 24px;">
+  <%# Header %>
+  <div style="text-align: center; margin-bottom: 32px;">
+    <h1 style="color: #C8E938; font-size: 2rem; margin: 0 0 8px 0; display: flex; align-items: center; justify-content: center; gap: 12px;">
+      <i class="fa-solid fa-crown"></i> MAINSTAGE Hall of Fame
+    </h1>
+    <p style="color: #888; font-size: 1rem; margin: 0;">
+      Previous weekly winners
+    </p>
+  </div>
+
+  <%# Back link %>
+  <div style="margin-bottom: 24px;">
+    <%= link_to mainstage_path, style: "color: #C8E938; text-decoration: none; font-size: 0.9rem;" do %>
+      <i class="fa-solid fa-arrow-left"></i> Back to Current Contest
+    <% end %>
+  </div>
+
+  <%# Winners list %>
+  <% if @winners.any? %>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <% @winners.each do |winner| %>
+        <div class="winner-card" style="display: flex; align-items: center; gap: 20px; padding: 20px; background: #1e1e1e; border-radius: 12px;">
+          <%# Trophy %>
+          <div style="width: 50px; text-align: center;">
+            <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.8rem;"></i>
+          </div>
+
+          <%# Avatar %>
+          <div style="width: 60px; height: 60px; border-radius: 50%; background: #333; overflow: hidden; flex-shrink: 0;">
+            <% if winner.musician.avatar.attached? %>
+              <%= cl_image_tag(winner.musician.avatar.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+            <% else %>
+              <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #888; font-weight: 600; font-size: 1.2rem;">
+                <%= winner.musician.name[0].upcase %>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Info %>
+          <div style="flex: 1;">
+            <%= link_to musician_path(winner.musician), style: "color: #fff; text-decoration: none; font-weight: 600; font-size: 1.1rem;" do %>
+              <%= winner.musician.name %>
+            <% end %>
+            <div style="color: #888; font-size: 0.85rem; margin-top: 4px;">
+              <i class="fa-solid fa-calendar" style="color: #C8E938;"></i> <%= winner.week_label %>
+            </div>
+          </div>
+
+          <%# Score %>
+          <div style="text-align: right;">
+            <div style="color: #C8E938; font-size: 1.5rem; font-weight: 700;"><%= winner.final_score %></div>
+            <div style="color: #666; font-size: 0.75rem;">final score</div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div style="text-align: center; padding: 60px; background: #1e1e1e; border-radius: 12px;">
+      <i class="fa-solid fa-trophy" style="color: #333; font-size: 3rem; margin-bottom: 16px;"></i>
+      <p style="color: #666; margin: 0;">No winners yet. The first contest is underway!</p>
+    </div>
+  <% end %>
+</div>

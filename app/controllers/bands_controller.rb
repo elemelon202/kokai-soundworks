@@ -20,6 +20,7 @@ class BandsController < ApplicationController
   end
   def show
     authorize @band
+    track_profile_view(@band)
   end
   def new
     @band = Band.new
@@ -133,6 +134,82 @@ class BandsController < ApplicationController
     end
   end
 
+  def follow
+    @band = Band.find(params[:id])
+    skip_authorization
+
+    unless current_user.followed_bands.include?(@band)
+      current_user.followed_bands << @band
+    end
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: band_path(@band) }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "follow-button-band-#{@band.id}",
+          partial: "bands/follow_button",
+          locals: { band: @band }
+        )
+      }
+    end
+  end
+
+  def unfollow
+    @band = Band.find(params[:id])
+    skip_authorization
+
+    current_user.followed_bands.delete(@band)
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: band_path(@band) }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "follow-button-band-#{@band.id}",
+          partial: "bands/follow_button",
+          locals: { band: @band }
+        )
+      }
+    end
+  end
+
+   def save_profile
+    @band = Band.find(params[:id])
+    skip_authorization
+
+    unless current_user.saved_bands.include?(@band)
+      current_user.saved_bands << @band
+    end
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: band_path(@band) }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "save-button-band-#{@band.id}",
+          partial: "bands/save_button",
+          locals: { band: @band }
+        )
+      }
+    end
+   end
+
+  def unsave_profile
+    @band = Band.find(params[:id])
+    skip_authorization
+
+    current_user.saved_bands.delete(@band)
+
+    respond_to do |format|
+      format.html { redirect_back fallback_location: band_path(@band) }
+      format.turbo_stream {
+        render turbo_stream: turbo_stream.replace(
+          "save-button-band-#{@band.id}",
+          partial: "bands/save_button",
+          locals: { band: @band }
+        )
+      }
+    end
+  end
+
   private
   def band_params
     # Don't permit musician_ids - we handle invitations separately
@@ -232,5 +309,16 @@ class BandsController < ApplicationController
         notification.update(read: true)
       end
     end
+  end
+
+  def track_profile_view(profile)
+    return if current_user&.musician && profile.musicians.include?(current_user.musician)
+
+    ProfileView.create(
+      viewer: current_user,
+      viewable: profile,
+      viewed_at: Time.current,
+      ip_hash: current_user ? nil : Digest::SHA256.hexdigest(request.remote_ip)[0..15]
+    )
   end
 end

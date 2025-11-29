@@ -16,6 +16,28 @@ class User < ApplicationRecord
   has_many :read_messages, through: :message_reads, source: :message
   has_one :musician, dependent: :destroy
   has_many :notifications, dependent: :destroy
+  has_many :short_likes, dependent: :destroy
+  has_many :liked_shorts, through: :short_likes, source: :musician_short
+  has_many :short_comments, dependent: :destroy
+  has_many :follows, foreign_key: :follower_id, dependent: :destroy # Follows initiated by this user
+  has_many :followed_musicians, through: :follows, source: :followable, source_type: 'Musician' # Musicians this user follows
+  has_many :followed_bands, through: :follows, source: :followable, source_type: 'Band' # Bands this user follows
+  has_many :profile_saves, class_name: 'ProfileSave', dependent: :destroy
+  has_many :saved_musicians, through: :profile_saves, source: :saveable, source_type: 'Musician'
+  has_many :saved_bands, through: :profile_saves, source: :saveable, source_type: 'Band'
+  has_many :sent_friend_requests, class_name: 'Friendship', foreign_key: :requester_id, dependent: :destroy
+  has_many :received_friend_requests, class_name: 'Friendship', foreign_key: :addressee_id, dependent: :destroy
+  has_many :posts, dependent: :destroy
+  has_many :reposts, dependent: :destroy
+  has_many :reposted_posts, through: :reposts, source: :post
+  has_many :post_likes, dependent: :destroy
+  has_many :liked_posts, through: :post_likes, source: :post
+  has_many :post_comments, dependent: :destroy
+  has_many :endorsements, dependent: :destroy
+  has_many :endorsed_musicians, through: :endorsements, source: :musician
+  has_many :shoutouts, dependent: :destroy
+  has_many :shouted_out_musicians, through: :shoutouts, source: :musician
+  has_many :activities, dependent: :destroy
 
   # convenience: check roles
   def musician?
@@ -39,5 +61,32 @@ class User < ApplicationRecord
 
   def chat_with(other_user)
     Chat.between(self, other_user)
+  end
+
+   def friends
+    accepted_sent = sent_friend_requests.accepted.pluck(:addressee_id)
+    accepted_received = received_friend_requests.accepted.pluck(:requester_id)
+    User.where(id: accepted_sent + accepted_received)
+   end
+
+  def pending_friend_requests
+    received_friend_requests.pending
+  end
+
+  def friend_with?(user)
+    friends.include?(user)
+  end
+
+  def feed
+    # Get posts from: self, friends, followed musicians' users
+    friend_ids = friends.pluck(:id)
+    followed_user_ids = followed_musicians.joins(:user).pluck('users.id')
+    all_user_ids = ([id] + friend_ids + followed_user_ids).uniq
+
+    # Get original posts and reposts
+    original_posts = Post.where(user_id: all_user_ids)
+    reposted_post_ids = Repost.where(user_id: all_user_ids).pluck(:post_id)
+
+    Post.where(id: original_posts.pluck(:id) + reposted_post_ids).distinct.recent
   end
 end

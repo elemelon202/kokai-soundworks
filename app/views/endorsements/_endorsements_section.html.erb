@@ -1,0 +1,45 @@
+<div id="endorsements-<%= musician.id %>" class="endorsements-section">
+  <h3 style="color: #fff; font-size: 1.1rem; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+    <i class="fa-solid fa-award" style="color: #C8E938;"></i> Endorsements
+  </h3>
+
+  <%# Display top skills with counts %>
+  <% top_skills = musician.top_skills(8) %>
+  <% if top_skills.any? %>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; margin-bottom: 20px;">
+      <% top_skills.each do |skill, count| %>
+        <% endorsed = musician.endorsed_by?(current_user, skill) %>
+        <div class="endorsement-badge <%= endorsed ? 'endorsed' : '' %>" style="display: flex; align-items: center; gap: 8px; padding: 8px 14px; background: <%= endorsed ? '#C8E938' : '#2a2a2a' %>; border-radius: 20px; color: <%= endorsed ? '#000' : '#fff' %>;">
+          <span style="font-size: 0.9rem;"><%= skill %></span>
+          <span style="font-size: 0.8rem; opacity: 0.8;"><%= count %></span>
+          <% if current_user && current_user.id != musician.user_id %>
+            <% if endorsed %>
+              <%= button_to musician_endorsement_path(musician, musician.endorsements.find_by(user: current_user, skill: skill)), method: :delete, class: "endorsement-btn endorsed" do %>
+                <i class="fa-solid fa-check"></i>
+              <% end %>
+            <% else %>
+              <%= form_with url: musician_endorsements_path(musician), method: :post, scope: :endorsement, style: "display: inline;" do |f| %>
+                <%= f.hidden_field :skill, value: skill %>
+                <%= f.submit "+", class: "endorsement-btn" %>
+              <% end %>
+            <% end %>
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Add new endorsement dropdown %>
+  <% if current_user && current_user.id != musician.user_id %>
+    <div style="margin-top: 16px;">
+      <%= form_with url: musician_endorsements_path(musician), method: :post, scope: :endorsement, style: "display: flex; gap: 10px; align-items: center;" do |f| %>
+        <%= f.select :skill, Endorsement::SKILLS.map { |s| [s, s] }, { prompt: "Endorse a skill..." }, style: "padding: 10px 14px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.9rem; min-width: 180px;" %>
+        <%= f.submit "Endorse", class: "btn-post", style: "padding: 10px 20px; font-size: 0.85rem;" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <% if top_skills.empty? && (!current_user || current_user.id == musician.user_id) %>
+    <p style="color: #666; font-size: 0.9rem; margin: 0;">No endorsements yet.</p>
+  <% end %>
+</div>

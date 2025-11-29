@@ -13,6 +13,9 @@ class Band < ApplicationRecord
   has_many :musicians, through: :involvements
   has_many :band_invitations, dependent: :destroy
   has_many :spotify_tracks, dependent: :destroy
+  has_many :follows, as: :followable, dependent: :destroy # Enable follow functionality
+  has_many :followers, through: :follows, source: :follower # Users who follow this band
+  has_many :profile_saves, as: :saveable, class_name: 'ProfileSave', dependent: :destroy
   accepts_nested_attributes_for :spotify_tracks, allow_destroy: true, reject_if: :all_blank
 
   has_one :chat, dependent: :destroy

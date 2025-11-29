@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   root to: "pages#home"
+
+  # MAINSTAGE weekly contest
+  get 'mainstage', to: 'mainstage#index', as: :mainstage
+  post 'mainstage/vote', to: 'mainstage#vote', as: :mainstage_vote
+  get 'mainstage/winners', to: 'mainstage#past_winners', as: :mainstage_winners
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
@@ -12,6 +17,13 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  resources :musician_shorts, only: [:index], path: 'discover', as: 'discover_shorts' do
+    member do
+      post :like
+      delete :unlike
+    end
+    resources :short_comments, only: [:create, :destroy], path: 'comments'
+  end
   resources :musicians do
     collection do
       get :search
@@ -19,7 +31,37 @@ Rails.application.routes.draw do
     member do
       delete :purge_attachment
     end
+  #   GET    /musicians/:musician_id/shorts/new     -> new
+  #   POST   /musicians/:musician_id/shorts         -> create
+  #   GET    /musicians/:musician_id/shorts/:id/edit -> edit
+  #   PATCH  /musicians/:musician_id/shorts/:id     -> update
+  #   DELETE /musicians/:musician_id/shorts/:id     -> destroy
+    resources :shorts, controller: "musician_shorts", only: [:new, :create,:edit, :update, :destroy] do
+      collection do
+        patch :reorder
+    # collection routes don't require :id parameter
+    # Generates: PATCH /musicians/:musician_id/shorts/reorder -> reorder
+      end
+    end
+    collection do
+      get :search # Generates: GET /musicians/search -> search
+    end
+    member do
+      delete :purge_attachment # Generates: DELETE /musicians/:id/purge_attachment -> purge_attachment
+      post :follow   # Generates: POST /musicians/:id/follow -> follow
+      delete :unfollow # Generates: DELETE /musicians/:id/unfollow -> unfollow
+      post :save_profile
+      delete :unsave_profile
+    end
+    resources :endorsements, only: [:create, :destroy]
+    resources :shoutouts, only: [:create, :destroy]
+    resources :shorts, controller: "musician_shorts", only: [:new, :create, :edit, :update, :destroy] do
+      collection do
+        patch :reorder # Generates: PATCH /musicians/:musician_id/shorts/reorder -> reorder
+      end
+    end
   end
+
   resources :bands do
     resources :involvements, only: [:new, :create]
     resources :band_invitations, only: [:new, :create, :edit, :destroy]
@@ -27,6 +69,10 @@ Rails.application.routes.draw do
     member do
       patch :transfer_leadership
       delete :purge_attachment
+      post :follow
+      delete :unfollow
+      post :save_profile
+      delete :unsave_profile
     end
   end
 
@@ -75,5 +121,21 @@ Rails.application.routes.draw do
   end
    resources :chats, only: [:show] do
     resources :messages, only: [:create, :destroy]
+  end
+
+  resources :friendships, only: [:index, :create, :destroy] do
+    member do
+      patch :accept
+      patch :decline
+    end
+  end
+
+  resources :posts, only: [:index, :create, :destroy], path: 'feed' do
+    member do
+      post :repost
+      post :like
+      delete :unlike
+    end
+    resources :post_comments, only: [:create, :destroy], path: 'comments'
   end
 end
