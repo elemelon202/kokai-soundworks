@@ -4,6 +4,8 @@ class MusicianShort < ApplicationRecord
   has_many :short_likes, dependent: :destroy
   has_many :likers, through: :short_likes, source: :user
   has_many :short_comments, dependent: :destroy
+  has_many :challenges, foreign_key: :original_short_id, dependent: :destroy
+  has_one :challenge_response, dependent: :destroy
 
   validates :title, presence: true, length: { maximum: 100 }
   validates :video, presence: true

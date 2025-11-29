@@ -1,0 +1,90 @@
+<div class="container py-4" style="max-width: 900px;">
+  <%= link_to challenge_path(@challenge), class: "btn btn-outline-secondary mb-4" do %>
+    <i class="fa-solid fa-arrow-left me-1"></i> Back to Challenge
+  <% end %>
+
+  <div class="row">
+    <%# Left: Original Challenge preview %>
+    <div class="col-md-5 mb-4">
+      <div class="card" style="background: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 12px; overflow: hidden;">
+        <div class="card-header" style="background: #2a2a2a; border: none; padding: 12px 16px;">
+          <span style="color: #888; font-size: 0.8rem;">ORIGINAL CHALLENGE</span>
+        </div>
+        <div style="aspect-ratio: 9/16; max-height: 350px; background: #000;">
+          <% if @challenge.original_short.video.attached? %>
+            <video controls loop playsinline muted style="width: 100%; height: 100%; object-fit: contain;">
+              <source src="<%= url_for(@challenge.original_short.video) %>" type="<%= @challenge.original_short.video.content_type %>">
+            </video>
+          <% end %>
+        </div>
+        <div class="card-body">
+          <h5 style="color: #fff;"><%= @challenge.title %></h5>
+          <p style="color: #888; font-size: 0.9rem;"><%= @challenge.description %></p>
+          <p style="color: #666; font-size: 0.8rem;">
+            by <%= @challenge.creator.name %>
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <%# Right: Submit response %>
+    <div class="col-md-7">
+      <div class="card" style="background: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 16px;">
+        <div class="card-header" style="background: linear-gradient(135deg, #C8E938 0%, #a0c42e 100%); border: none; padding: 20px;">
+          <h3 style="color: #000; margin: 0;">
+            <i class="fa-solid fa-guitar me-2"></i> Submit Your Response
+          </h3>
+          <p style="color: rgba(0,0,0,0.7); margin: 8px 0 0 0;">
+            Choose one of your shorts as your response
+          </p>
+        </div>
+
+        <div class="card-body" style="padding: 24px;">
+          <%= form_with url: submit_response_challenge_path(@challenge), method: :post, local: true do |f| %>
+            <% if @shorts.any? %>
+              <p style="color: #fff; margin-bottom: 16px;">Select your response video:</p>
+              <div class="row g-3">
+                <% @shorts.each do |short| %>
+                  <div class="col-6">
+                    <label class="d-block" style="cursor: pointer;">
+                      <input type="radio" name="musician_short_id" value="<%= short.id %>" class="d-none" data-short-selector="true" required>
+                      <div class="short-option p-2" style="background: #2a2a2a; border: 2px solid #3a3a3a; border-radius: 12px; transition: all 0.2s;">
+                        <div style="aspect-ratio: 9/16; background: #000; border-radius: 8px; overflow: hidden; margin-bottom: 8px; max-height: 200px;">
+                          <% if short.video.attached? %>
+                            <video muted preload="metadata" style="width: 100%; height: 100%; object-fit: cover;">
+                              <source src="<%= url_for(short.video) %>" type="<%= short.video.content_type %>">
+                            </video>
+                          <% end %>
+                        </div>
+                        <p style="color: #fff; font-size: 0.8rem; margin: 0; text-align: center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                          <%= short.title %>
+                        </p>
+                      </div>
+                    </label>
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="d-grid mt-4">
+                <%= f.submit "Submit Response", class: "btn btn-lg", style: "background: #C8E938; color: #000; font-weight: 600;" %>
+              </div>
+            <% else %>
+              <div class="alert" style="background: #2a2a2a; border: 1px solid #fbbf24; color: #fbbf24;">
+                <i class="fa-solid fa-exclamation-triangle me-2"></i>
+                You need to upload a short first before responding.
+                <%= link_to "Upload a Short", new_musician_short_path(current_user.musician), class: "alert-link", style: "color: #fbbf24;" %>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  input[data-short-selector]:checked + .short-option {
+    border-color: #C8E938 !important;
+    background: #3a3a3a !important;
+  }
+</style>

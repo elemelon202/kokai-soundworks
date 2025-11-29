@@ -36,6 +36,11 @@
               <i class="fa-solid fa-newspaper"></i> Feed
             <% end %>
           </li>
+          <li class="nav-item">
+            <%= link_to challenges_path, class: "nav-link btn btn-primary text-white" do %>
+              <i class="fa-solid fa-trophy"></i> Challenges
+            <% end %>
+          </li>
           <li class="nav-item dropdown">
             <a href="#" class="nav-link btn text-white dropdown-toggle" id="mainstageDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">
               <i class="fa-solid fa-trophy"></i> MAINSTAGE
@@ -99,6 +104,9 @@
               <% if current_user&.musician.present? %>
                 <%= link_to "Profile", musician_path(current_user.musician), class: "dropdown-item" %>
                 <%= link_to "Messages", direct_messages_path, class: "dropdown-item" %>
+                <%= link_to friendships_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-user-group me-1"></i> Friends
+                <% end %>
                 <h6 class="dropdown-header">Bands</h6>
                 <% if current_user.musician.bands.any? %>
                   <% current_user.musician.bands.each do |band| %>
