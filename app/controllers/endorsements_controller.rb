@@ -9,6 +9,7 @@ class EndorsementsController < ApplicationController
 
     if @endorsement.save
       Activity.track(user: current_user, action: :endorse, trackable: @endorsement, musician: @musician)
+      Notification.create_for_endorsement(@endorsement)
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("endorsements-#{@musician.id}", partial: "endorsements/endorsements_section", locals: { musician: @musician }) }
         format.html { redirect_back fallback_location: musician_path(@musician), notice: "Endorsement added!" }

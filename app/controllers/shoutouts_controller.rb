@@ -9,6 +9,7 @@ class ShoutoutsController < ApplicationController
 
     if @shoutout.save
       Activity.track(user: current_user, action: :shoutout, trackable: @shoutout, musician: @musician)
+      Notification.create_for_shoutout(@shoutout)
       respond_to do |format|
         format.turbo_stream { render turbo_stream: turbo_stream.replace("shoutouts-#{@musician.id}", partial: "shoutouts/shoutouts_section", locals: { musician: @musician }) }
         format.html { redirect_back fallback_location: musician_path(@musician), notice: "Shoutout posted!" }

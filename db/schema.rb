@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_29_093334) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_29_101424) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -77,6 +77,40 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_093334) do
     t.index ["band_id"], name: "index_band_invitations_on_band_id"
     t.index ["inviter_id"], name: "index_band_invitations_on_inviter_id"
     t.index ["musician_id"], name: "index_band_invitations_on_musician_id"
+  end
+
+  create_table "band_mainstage_contests", force: :cascade do |t|
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.string "status", default: "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["start_date", "end_date"], name: "index_band_mainstage_contests_on_start_date_and_end_date"
+    t.index ["status"], name: "index_band_mainstage_contests_on_status"
+  end
+
+  create_table "band_mainstage_votes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "band_id", null: false
+    t.bigint "band_mainstage_contest_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["band_id"], name: "index_band_mainstage_votes_on_band_id"
+    t.index ["band_mainstage_contest_id"], name: "index_band_mainstage_votes_on_band_mainstage_contest_id"
+    t.index ["user_id", "band_mainstage_contest_id"], name: "idx_band_mainstage_votes_user_contest", unique: true
+    t.index ["user_id"], name: "index_band_mainstage_votes_on_user_id"
+  end
+
+  create_table "band_mainstage_winners", force: :cascade do |t|
+    t.bigint "band_id", null: false
+    t.bigint "band_mainstage_contest_id", null: false
+    t.integer "final_score", default: 0
+    t.integer "engagement_score", default: 0
+    t.integer "vote_score", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["band_id"], name: "index_band_mainstage_winners_on_band_id"
+    t.index ["band_mainstage_contest_id"], name: "idx_band_mainstage_winners_contest", unique: true
   end
 
   create_table "bands", force: :cascade do |t|
@@ -454,6 +488,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_093334) do
   add_foreign_key "band_invitations", "bands"
   add_foreign_key "band_invitations", "musicians"
   add_foreign_key "band_invitations", "users", column: "inviter_id"
+  add_foreign_key "band_mainstage_votes", "band_mainstage_contests"
+  add_foreign_key "band_mainstage_votes", "bands"
+  add_foreign_key "band_mainstage_votes", "users"
+  add_foreign_key "band_mainstage_winners", "band_mainstage_contests"
+  add_foreign_key "band_mainstage_winners", "bands"
   add_foreign_key "bands", "users"
   add_foreign_key "bookings", "bands"
   add_foreign_key "bookings", "gigs"

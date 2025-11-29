@@ -105,7 +105,7 @@ class MainstageContest < ApplicationRecord
   end
 
   private
-
+# THIS IS THE BIG ONE, THIS IS HOW THE POINTS GET DECIDED. I DUNNO WHAT EACH THING SHOULD BE WORTH BUT HERE YA GO -Sam
   def calculate_engagement_score(musician)
     contest_period = start_date.beginning_of_day..end_date.end_of_day
     account_cutoff = start_date - ACCOUNT_AGE_REQUIREMENT

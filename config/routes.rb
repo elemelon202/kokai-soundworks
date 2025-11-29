@@ -2,10 +2,15 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   root to: "pages#home"
 
-  # MAINSTAGE weekly contest
+  # MAINSTAGE weekly contest (Musicians)
   get 'mainstage', to: 'mainstage#index', as: :mainstage
   post 'mainstage/vote', to: 'mainstage#vote', as: :mainstage_vote
   get 'mainstage/winners', to: 'mainstage#past_winners', as: :mainstage_winners
+
+  # BAND MAINSTAGE weekly contest
+  get 'band-mainstage', to: 'band_mainstage#index', as: :band_mainstage
+  post 'band-mainstage/vote', to: 'band_mainstage#vote', as: :band_mainstage_vote
+  get 'band-mainstage/winners', to: 'band_mainstage#past_winners', as: :band_mainstage_winners
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }

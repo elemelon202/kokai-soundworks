@@ -16,7 +16,11 @@ class Notification < ApplicationRecord
     band_member_joined: 'band_member_joined',
     band_member_left: 'band_member_left',
     friend_request: 'friend_request',
-    friend_request_accepted: 'friend_request_accepted'
+    friend_request_accepted: 'friend_request_accepted',
+    mainstage_win: 'mainstage_win',
+    endorsement: 'endorsement',
+    shoutout: 'shoutout',
+    new_follower: 'new_follower'
   }.freeze
 
   validates :notification_type, presence: true, inclusion: { in: TYPES.values }
@@ -112,6 +116,57 @@ class Notification < ApplicationRecord
     )
   end
 
+  def self.create_for_mainstage_win(winner)
+    create!(
+      user: winner.musician.user,
+      notifiable: winner,
+      notification_type: TYPES[:mainstage_win],
+      message: "Congratulations! You won MAINSTAGE for #{winner.week_label} with #{winner.final_score} points!"
+    )
+  end
+
+  def self.create_for_endorsement(endorsement)
+    return if endorsement.musician.user == endorsement.user # Don't notify self
+
+    actor_name = endorsement.user.musician&.name || endorsement.user.email.split('@').first
+    create!(
+      user: endorsement.musician.user,
+      notifiable: endorsement,
+      notification_type: TYPES[:endorsement],
+      actor: endorsement.user,
+      message: "#{actor_name} endorsed you for #{endorsement.skill}"
+    )
+  end
+
+  def self.create_for_shoutout(shoutout)
+    return if shoutout.musician.user == shoutout.user # Don't notify self
+
+    actor_name = shoutout.user.musician&.name || shoutout.user.email.split('@').first
+    create!(
+      user: shoutout.musician.user,
+      notifiable: shoutout,
+      notification_type: TYPES[:shoutout],
+      actor: shoutout.user,
+      message: "#{actor_name} gave you a shoutout!"
+    )
+  end
+
+  def self.create_for_new_follower(follow)
+    return unless follow.followable_type == 'Musician'
+
+    musician = follow.followable
+    return if musician.user == follow.follower # Don't notify self
+
+    actor_name = follow.follower.musician&.name || follow.follower.email.split('@').first
+    create!(
+      user: musician.user,
+      notifiable: follow,
+      notification_type: TYPES[:new_follower],
+      actor: follow.follower,
+      message: "#{actor_name} started following you"
+    )
+  end
+
   def icon_class
     case notification_type
     when TYPES[:band_invitation]
@@ -132,6 +187,14 @@ class Notification < ApplicationRecord
       'fa-solid fa-user-plus'
     when TYPES[:friend_request_accepted]
       'fa-solid fa-user-check'
+    when TYPES[:mainstage_win]
+      'fa-solid fa-trophy'
+    when TYPES[:endorsement]
+      'fa-solid fa-award'
+    when TYPES[:shoutout]
+      'fa-solid fa-bullhorn'
+    when TYPES[:new_follower]
+      'fa-solid fa-heart'
     else
       'fa-solid fa-bell'
     end
@@ -153,6 +216,10 @@ class Notification < ApplicationRecord
       Rails.application.routes.url_helpers.edit_band_path(band) if band
     when TYPES[:friend_request], TYPES[:friend_request_accepted]
       Rails.application.routes.url_helpers.friendships_path
+    when TYPES[:mainstage_win]
+      Rails.application.routes.url_helpers.mainstage_path
+    when TYPES[:endorsement], TYPES[:shoutout], TYPES[:new_follower]
+      Rails.application.routes.url_helpers.musician_path(user.musician) if user.musician
     else
       '#'
     end

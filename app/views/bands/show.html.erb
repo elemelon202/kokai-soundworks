@@ -8,7 +8,7 @@
     <% end %>
     <div class="banner-overlay">
       <div class="banner-content">
-        <h1><%= @band.name %></h1>
+        <h1><%= @band.name %><% if @band.mainstage_winner? %><%= render "band_mainstage/winner_badge", band: @band %><% end %></h1>
          <div style="margin: 12px 0;">
     <%= render "bands/follow_button", band: @band %>
     <span style="color: #888; font-size: 0.9rem; margin-left: 8px;">

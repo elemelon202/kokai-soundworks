@@ -1,0 +1,15 @@
+one:
+  name: Test Musician One
+  user: one
+  instrument: Guitar
+  location: New York
+  age: 25
+  styles: Rock, Jazz
+
+two:
+  name: Test Musician Two
+  user: two
+  instrument: Drums
+  location: Los Angeles
+  age: 28
+  styles: Pop, Electronic
