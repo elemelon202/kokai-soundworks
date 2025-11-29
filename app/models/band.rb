@@ -16,6 +16,8 @@ class Band < ApplicationRecord
   has_many :follows, as: :followable, dependent: :destroy # Enable follow functionality
   has_many :followers, through: :follows, source: :follower # Users who follow this band
   has_many :profile_saves, as: :saveable, class_name: 'ProfileSave', dependent: :destroy
+  has_many :band_mainstage_votes, dependent: :destroy
+  has_many :band_mainstage_wins, class_name: 'BandMainstageWinner', dependent: :destroy
   accepts_nested_attributes_for :spotify_tracks, allow_destroy: true, reject_if: :all_blank
 
   has_one :chat, dependent: :destroy
@@ -37,6 +39,19 @@ class Band < ApplicationRecord
   GENRES = ['Rock', 'Pop', 'Jazz', 'Classical', 'Hip Hop', 'Country', 'Electronic', 'Reggae', 'Blues', 'Folk'].freeze
 
   scope :with_genres, ->(genres) { tagged_with(genres, on: :genres, any: true) }
+
+  # Check if band has won MAINSTAGE
+  def mainstage_winner?
+    band_mainstage_wins.exists?
+  end
+
+  def mainstage_win_count
+    band_mainstage_wins.count
+  end
+
+  def latest_mainstage_win
+    band_mainstage_wins.recent.first
+  end
 
   private
 

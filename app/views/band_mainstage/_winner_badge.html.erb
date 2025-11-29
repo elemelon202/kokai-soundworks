@@ -1,0 +1,11 @@
+<%# BAND MAINSTAGE winner badge - displays next to band name %>
+<% win_count = band.mainstage_win_count %>
+<%= link_to band_mainstage_winners_path, class: "mainstage-badge", style: "display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; background: linear-gradient(135deg, #E936AD 0%, #c72391 100%); border-radius: 20px; text-decoration: none; margin-left: 8px; vertical-align: middle;", title: "BAND MAINSTAGE Winner - #{win_count} #{'win'.pluralize(win_count)}" do %>
+  <i class="fa-solid fa-trophy" style="color: #fff; font-size: 0.75rem;"></i>
+  <span style="color: #fff; font-size: 0.75rem; font-weight: 600;">
+    MAINSTAGE
+    <% if win_count > 1 %>
+      <span style="opacity: 0.9;">x<%= win_count %></span>
+    <% end %>
+  </span>
+<% end %>

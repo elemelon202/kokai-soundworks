@@ -130,6 +130,8 @@ end
     unless current_user.followed_musicians.include?(@musician)
       current_user.followed_musicians << @musician
       Activity.track(user: current_user, action: :follow, trackable: @musician, musician: @musician)
+      follow = Follow.find_by(follower: current_user, followable: @musician)
+      Notification.create_for_new_follower(follow) if follow
     end
 
     respond_to do |format|
