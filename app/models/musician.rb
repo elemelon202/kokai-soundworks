@@ -10,8 +10,11 @@ class Musician < ApplicationRecord
   has_many_attached :images
   has_many_attached :videos
   has_many_attached :media # keeping for backwards compatibility
+  has_many :musician_shorts, dependent: :destroy
 
   validates :name, presence: true
+
+  scope :with_shorts, -> { joins(:musician_shorts).distinct }
 
   # for searching on the musicians index page -- kyle
   pg_search_scope :search_by_all,

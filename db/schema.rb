@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_28_040031) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -154,6 +154,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_040031) do
     t.index ["user_id"], name: "index_messages_on_user_id"
   end
 
+  create_table "musician_shorts", force: :cascade do |t|
+    t.bigint "musician_id", null: false
+    t.string "title"
+    t.text "description"
+    t.integer "position"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["musician_id"], name: "index_musician_shorts_on_musician_id"
+  end
+
   create_table "musicians", force: :cascade do |t|
     t.string "name"
     t.string "instrument"
@@ -193,6 +203,26 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_040031) do
     t.index ["chat_id"], name: "index_participations_on_chat_id"
     t.index ["user_id", "chat_id"], name: "index_participations_on_user_and_chat_unique", unique: true
     t.index ["user_id"], name: "index_participations_on_user_id"
+  end
+
+  create_table "short_comments", force: :cascade do |t|
+    t.bigint "musician_short_id", null: false
+    t.bigint "user_id", null: false
+    t.text "body"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["musician_short_id"], name: "index_short_comments_on_musician_short_id"
+    t.index ["user_id"], name: "index_short_comments_on_user_id"
+  end
+
+  create_table "short_likes", force: :cascade do |t|
+    t.bigint "musician_short_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["musician_short_id", "user_id"], name: "index_short_likes_on_musician_short_id_and_user_id", unique: true
+    t.index ["musician_short_id"], name: "index_short_likes_on_musician_short_id"
+    t.index ["user_id"], name: "index_short_likes_on_user_id"
   end
 
   create_table "spotify_tracks", force: :cascade do |t|
@@ -281,11 +311,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_28_040031) do
   add_foreign_key "message_reads", "users"
   add_foreign_key "messages", "chats"
   add_foreign_key "messages", "users"
+  add_foreign_key "musician_shorts", "musicians"
   add_foreign_key "musicians", "users"
   add_foreign_key "notifications", "users"
   add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "participations", "chats"
   add_foreign_key "participations", "users"
+  add_foreign_key "short_comments", "musician_shorts"
+  add_foreign_key "short_comments", "users"
+  add_foreign_key "short_likes", "musician_shorts"
+  add_foreign_key "short_likes", "users"
   add_foreign_key "spotify_tracks", "bands"
   add_foreign_key "taggings", "tags"
   add_foreign_key "venues", "users"

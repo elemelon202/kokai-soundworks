@@ -85,3 +85,4 @@ gem 'cloudinary'
 gem 'pundit'
 gem 'pg_search'
 gem "redis", "~> 5.0"
+gem 'pagy', '~> 6.0'

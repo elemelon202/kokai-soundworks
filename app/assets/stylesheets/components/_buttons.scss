@@ -1,0 +1,299 @@
+// Global button hover effects
+
+// CSS Variables for button colors
+:root {
+  --kokai-yellow: #C8E938;
+  --kokai-yellow-hover: #b8d020;
+  --kokai-pink: #E936AD;
+  --kokai-pink-hover: #c42891;
+  --btn-secondary: #2a2a2a;
+  --btn-secondary-hover: #3a3a3a;
+  --btn-danger: #dc2626;
+  --btn-danger-hover: #b91c1c;
+  --dark-bg: #171717;
+}
+
+// Base transition for all interactive elements
+button,
+input[type="submit"],
+.btn,
+a.btn,
+[class*="btn-"] {
+  transition: all 0.2s ease;
+}
+
+// Primary button (kokai yellow)
+.btn-primary,
+input[type="submit"].btn-primary {
+  background-color: var(--kokai-yellow) !important;
+  border-color: var(--kokai-yellow) !important;
+  color: var(--dark-bg) !important;
+
+  &:hover, &:focus {
+    background-color: var(--kokai-yellow-hover) !important;
+    border-color: var(--kokai-yellow-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(213, 255, 64, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Secondary button (dark)
+.btn-secondary {
+  background-color: var(--btn-secondary) !important;
+  border-color: var(--btn-secondary) !important;
+
+  &:hover, &:focus {
+    background-color: var(--btn-secondary-hover) !important;
+    border-color: var(--btn-secondary-hover) !important;
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Danger button (red)
+.btn-danger {
+  &:hover, &:focus {
+    background-color: var(--btn-danger-hover) !important;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Icon buttons
+.btn-icon {
+  transition: all 0.2s ease;
+
+  &:hover, &:focus {
+    transform: scale(1.1);
+    color: var(--kokai-yellow);
+  }
+}
+
+// Generic hover for all buttons with inline styles (using attribute selectors)
+button:not([disabled]),
+input[type="submit"]:not([disabled]) {
+  &:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+    filter: brightness(0.95);
+  }
+}
+
+// Links styled as buttons
+a[style*="background"] {
+  &:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Specific app button classes
+.btn-save-profile,
+.btn-edit-profile,
+.btn-message-profile,
+.btn-view-profile {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Kokai yellow themed buttons
+.btn-save-profile,
+.shorts-add-btn {
+  &:hover {
+    background-color: var(--kokai-yellow-hover) !important;
+    box-shadow: 0 4px 12px rgba(213, 255, 64, 0.3);
+  }
+}
+
+// Pink themed buttons
+.btn-edit-profile {
+  &:hover {
+    background-color: var(--kokai-pink-hover) !important;
+    box-shadow: 0 4px 12px rgba(233, 54, 173, 0.3);
+  }
+}
+
+// Card hover effects
+.short-card,
+.band-item,
+.musician-stat-card {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  }
+}
+
+// Form submit buttons with inline styles
+form input[type="submit"],
+form button[type="submit"] {
+  transition: all 0.2s ease !important;
+
+  &:hover:not([disabled]) {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(213, 255, 64, 0.25);
+  }
+
+  &:active:not([disabled]) {
+    transform: translateY(0);
+  }
+
+  &[disabled] {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+}
+
+// Delete/remove buttons
+.btn-remove-media,
+.btn-delete-account,
+[style*="background: #dc2626"],
+[style*="background:#dc2626"] {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--btn-danger-hover) !important;
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.4);
+  }
+}
+
+// Accept/decline buttons
+.btn-accept {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(30, 221, 136, 0.3);
+  }
+}
+
+.btn-decline {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(220, 38, 38, 0.3);
+  }
+}
+
+// Navigation/action buttons
+.btn-band-action {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: var(--kokai-yellow) !important;
+    color: var(--dark-bg) !important;
+    transform: scale(1.1);
+  }
+}
+
+// Carousel controls
+.carousel-control-prev,
+.carousel-control-next {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background-color: rgba(213, 255, 64, 0.2);
+  }
+}
+
+// File upload labels (styled as buttons)
+.upload-label {
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--kokai-yellow);
+    background-color: rgba(213, 255, 64, 0.1);
+  }
+}
+
+// Toggle switches
+.toggle {
+  transition: all 0.2s ease;
+
+  &:hover .toggle-slider {
+    box-shadow: 0 0 8px rgba(213, 255, 64, 0.4);
+  }
+}
+
+// Links in navigation
+.navbar a,
+.nav-link {
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--kokai-yellow) !important;
+  }
+}
+
+// Profile/discover button hovers
+[style*="background: #E936AD"],
+[style*="background:#E936AD"] {
+  transition: all 0.2s ease;
+
+  &:hover {
+    filter: brightness(1.15);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(233, 54, 173, 0.4);
+  }
+}
+
+// Kokai yellow buttons
+.btn-kokai-yellow,
+[style*="background: #C8E938"],
+[style*="background:#C8E938"],
+[style*="background: #D5FF40"],
+[style*="background:#D5FF40"] {
+  transition: all 0.2s ease !important;
+
+  &:hover {
+    filter: brightness(1.1) !important;
+    transform: translateY(-2px) !important;
+    box-shadow: 0 4px 12px rgba(213, 255, 64, 0.4) !important;
+  }
+
+  &:active {
+    transform: translateY(0) !important;
+  }
+}
+
+// Secondary/gray buttons
+[style*="background: #2a2a2a"],
+[style*="background:#2a2a2a"] {
+  transition: all 0.2s ease;
+
+  &:hover {
+    filter: brightness(1.3);
+    transform: translateY(-1px);
+  }
+}

@@ -12,6 +12,13 @@ Rails.application.routes.draw do
 
   # Defines the root path route ("/")
   # root "posts#index"
+  resources :musician_shorts, only: [:index], path: 'discover', as: 'discover_shorts' do
+    member do
+      post :like
+      delete :unlike
+    end
+    resources :short_comments, only: [:create, :destroy], path: 'comments'
+  end
   resources :musicians do
     collection do
       get :search
@@ -19,7 +26,20 @@ Rails.application.routes.draw do
     member do
       delete :purge_attachment
     end
+  #   GET    /musicians/:musician_id/shorts/new     -> new
+  #   POST   /musicians/:musician_id/shorts         -> create
+  #   GET    /musicians/:musician_id/shorts/:id/edit -> edit
+  #   PATCH  /musicians/:musician_id/shorts/:id     -> update
+  #   DELETE /musicians/:musician_id/shorts/:id     -> destroy
+    resources :shorts, controller: "musician_shorts", only: [:new, :create,:edit, :update, :destroy] do
+      collection do
+        patch :reorder
+    # collection routes don't require :id parameter
+    # Generates: PATCH /musicians/:musician_id/shorts/reorder -> reorder
+      end
+    end
   end
+
   resources :bands do
     resources :involvements, only: [:new, :create]
     resources :band_invitations, only: [:new, :create, :edit, :destroy]

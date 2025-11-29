@@ -30,13 +30,8 @@ class MusiciansController < ApplicationController
 
   def index
     @musicians = policy_scope(Musician)
-    # see all musicians
-    # singular musician
-    # get that musicians bands / can do that with iteration
-    #maybe have band name in card
-    # Musician.new for create a profile button
 
-    # for searching on the musicians index page -- kyle
+    # for searching on the musicians index page
     if params[:query].present?
       @musicians = @musicians.search_by_all(params[:query])
     end
@@ -49,6 +44,8 @@ class MusiciansController < ApplicationController
       @musicians = @musicians.where(location: params[:location])
     end
 
+    # Paginate results - 10 per page
+    @pagy, @musicians = pagy(@musicians, items: 10)
   end
 
   def show

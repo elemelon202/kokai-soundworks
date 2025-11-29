@@ -1,8 +1,32 @@
 <div class="container musicians-index-container">
   <div class="index-heading m-3 mt-5">
     <h1>Musicians</h1>
-    <p>New potential bandmates</p>
+    <p>Future artists</p>
+
+    <%# DISCOVER SHORTS CTA %>
+    <div style="margin-top: 16px;">
+      <%= link_to discover_shorts_path, style: "display: inline-flex; align-items: center; gap: 12px; padding: 12px 20px; background: linear-gradient(135deg, #E936AD 0%, #7B2D8E 50%, #E936AD 100%); background-size: 200% 200%; color: #fff; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 16px rgba(233, 54, 173, 0.4); transition: all 0.3s ease; animation: gradient-shift 3s ease infinite;",
+          onmouseover: "this.style.transform='translateY(-2px) scale(1.02)'; this.style.boxShadow='0 6px 24px rgba(233, 54, 173, 0.5)';",
+          onmouseout: "this.style.transform=''; this.style.boxShadow='0 4px 16px rgba(233, 54, 173, 0.4)';" do %>
+        <div style="width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
+          <i class="fa-solid fa-play" style="font-size: 1rem; margin-left: 2px;"></i>
+        </div>
+        <div>
+          <span style="font-size: 1rem; font-weight: 600; display: block;">Discover Shorts</span>
+          <span style="font-size: 0.75rem; opacity: 0.9;">The fastest way to discover talent!</span>
+        </div>
+        <i class="fa-solid fa-arrow-right" style="font-size: 1rem;"></i>
+      <% end %>
+    </div>
   </div>
+
+  <style>
+    @keyframes gradient-shift {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+  </style>
   <%= form_with url: musicians_path, method: :get, data: { turbo_frame: "musicians_list" }, class: "filters-form" do %>
     <!-- Search Field -->
     <div class="mt-5 mb-5 d-flex gap-2 align-items-center">
@@ -40,7 +64,48 @@
   <% end %>
   <!-- Musicians list -->
   <turbo-frame id="musicians_list">
-    <div class="musicians-section">
+    <div class="musicians-section" id="musicians-top">
+      <%# Top Pagination %>
+      <% if @pagy.pages > 1 %>
+        <nav style="display: flex; justify-content: center; margin-bottom: 20px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <% if @pagy.prev %>
+              <%= link_to musicians_path(page: @pagy.prev, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
+                  style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
+                  onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
+                  onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
+                <i class="fa-solid fa-chevron-left"></i> Prev
+              <% end %>
+            <% end %>
+
+            <% @pagy.series.each do |item| %>
+              <% if item == :gap %>
+                <span style="padding: 10px 12px; color: #666;">...</span>
+              <% elsif item.is_a?(Integer) %>
+                <%= link_to item, musicians_path(page: item, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
+                    style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
+                    onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
+                    onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" %>
+              <% elsif item.is_a?(String) %>
+                <span style="padding: 10px 16px; background: #C8E938; color: #000; border-radius: 8px; font-weight: 600;"><%= item %></span>
+              <% end %>
+            <% end %>
+
+            <% if @pagy.next %>
+              <%= link_to musicians_path(page: @pagy.next, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
+                  style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
+                  onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
+                  onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
+                Next <i class="fa-solid fa-chevron-right"></i>
+              <% end %>
+            <% end %>
+          </div>
+        </nav>
+        <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 20px;">
+          Showing <%= @pagy.from %>-<%= @pagy.to %> of <%= @pagy.count %> musicians
+        </p>
+      <% end %>
+
       <div class="row justify-content-center flex-wrap align-items-stretch">
         <% if @musicians.any? %>
           <% @musicians.each do |musician| %>
@@ -77,6 +142,47 @@
           <em>Sorry, no musicians found.</em>
         <% end %>
       </div>
+
+      <%# Bottom Pagination %>
+      <% if @pagy.pages > 1 %>
+        <nav style="display: flex; justify-content: center; margin-top: 40px; margin-bottom: 20px;">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <% if @pagy.prev %>
+              <%= link_to musicians_path(page: @pagy.prev, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
+                  style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
+                  onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
+                  onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
+                <i class="fa-solid fa-chevron-left"></i> Prev
+              <% end %>
+            <% end %>
+
+            <% @pagy.series.each do |item| %>
+              <% if item == :gap %>
+                <span style="padding: 10px 12px; color: #666;">...</span>
+              <% elsif item.is_a?(Integer) %>
+                <%= link_to item, musicians_path(page: item, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
+                    style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
+                    onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
+                    onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" %>
+              <% elsif item.is_a?(String) %>
+                <span style="padding: 10px 16px; background: #C8E938; color: #000; border-radius: 8px; font-weight: 600;"><%= item %></span>
+              <% end %>
+            <% end %>
+
+            <% if @pagy.next %>
+              <%= link_to musicians_path(page: @pagy.next, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
+                  style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
+                  onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
+                  onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
+                Next <i class="fa-solid fa-chevron-right"></i>
+              <% end %>
+            <% end %>
+          </div>
+        </nav>
+        <p style="text-align: center; color: #666; font-size: 0.9rem;">
+          Showing <%= @pagy.from %>-<%= @pagy.to %> of <%= @pagy.count %> musicians
+        </p>
+      <% end %>
     </div>
   </turbo-frame>
 </div>
