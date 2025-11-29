@@ -64,125 +64,73 @@
   <% end %>
   <!-- Musicians list -->
   <turbo-frame id="musicians_list">
-    <div class="musicians-section" id="musicians-top">
-      <%# Top Pagination %>
+    <div class="musicians-section" id="musicians-top"
+         data-controller="horizontal-scroll"
+         data-horizontal-scroll-current-page-value="<%= @pagy.page %>"
+         data-horizontal-scroll-total-pages-value="<%= @pagy.pages %>"
+         data-horizontal-scroll-items-per-page-value="<%= @pagy.items %>"
+         data-horizontal-scroll-base-url-value="<%= musicians_path %>"
+         data-horizontal-scroll-query-value="<%= params[:query] %>"
+         data-horizontal-scroll-instrument-value="<%= (params[:instrument] || []).to_json %>"
+         data-horizontal-scroll-location-value="<%= (params[:location] || []).to_json %>">
+
+      <%# Page Indicator %>
       <% if @pagy.pages > 1 %>
-        <nav style="display: flex; justify-content: center; margin-bottom: 20px;">
+        <nav style="display: flex; justify-content: center; margin-bottom: 20px;" data-horizontal-scroll-target="pageIndicator">
           <div style="display: flex; gap: 8px; align-items: center;">
-            <% if @pagy.prev %>
-              <%= link_to musicians_path(page: @pagy.prev, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
-                  style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
-                  onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
-                  onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
-                <i class="fa-solid fa-chevron-left"></i> Prev
-              <% end %>
-            <% end %>
-
-            <% @pagy.series.each do |item| %>
-              <% if item == :gap %>
-                <span style="padding: 10px 12px; color: #666;">...</span>
-              <% elsif item.is_a?(Integer) %>
-                <%= link_to item, musicians_path(page: item, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
-                    style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
-                    onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
-                    onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" %>
-              <% elsif item.is_a?(String) %>
-                <span style="padding: 10px 16px; background: #C8E938; color: #000; border-radius: 8px; font-weight: 600;"><%= item %></span>
-              <% end %>
-            <% end %>
-
-            <% if @pagy.next %>
-              <%= link_to musicians_path(page: @pagy.next, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
-                  style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
-                  onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
-                  onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
-                Next <i class="fa-solid fa-chevron-right"></i>
-              <% end %>
+            <% (1..@pagy.pages).each do |page_num| %>
+              <button type="button"
+                      data-page-number="<%= page_num %>"
+                      data-action="click->horizontal-scroll#goToPage"
+                      style="padding: 10px 16px; background: <%= page_num == @pagy.page ? '#C8E938' : '#2a2a2a' %>; color: <%= page_num == @pagy.page ? '#000' : '#fff' %>; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; font-weight: <%= page_num == @pagy.page ? '600' : 'normal' %>;">
+                <%= page_num %>
+              </button>
             <% end %>
           </div>
         </nav>
-        <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 20px;">
-          Showing <%= @pagy.from %>-<%= @pagy.to %> of <%= @pagy.count %> musicians
+        <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 20px;" data-horizontal-scroll-target="pageInfo">
+          Viewing page <%= @pagy.page %> of <%= @pagy.pages %>
         </p>
       <% end %>
 
-      <div class="row justify-content-center flex-wrap align-items-stretch">
-        <% if @musicians.any? %>
-          <% @musicians.each do |musician| %>
-            <div class="col-8 col-md-3 m-2 h-100 d-flex">
-              <div class="musician-card position-relative">
-                <%= link_to musician_path(musician), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
-                  <div class="musician-card-header">
-                    <% if musician.avatar.attached? %>
-                      <%= cl_image_tag(musician.avatar.key, class: "musician-avatar") %>
-                    <% elsif musician.media.attached? %>
-                      <% first_file = musician.media.first %>
-                      <% if first_file.content_type.start_with?("image") %>
-                        <%= cl_image_tag(first_file.key, class: "musician-avatar") %>
+      <div class="record-shelf-container">
+        <div class="record-shelf" data-horizontal-scroll-target="shelf">
+          <% if @musicians.any? %>
+            <% @musicians.each do |musician| %>
+              <div class="record-item" data-page="<%= @pagy.page %>">
+                <div class="musician-card position-relative">
+                  <%= link_to musician_path(musician), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
+                    <div class="musician-card-header">
+                      <% if musician.avatar.attached? %>
+                        <%= cl_image_tag(musician.avatar.key, class: "musician-avatar") %>
+                      <% elsif musician.media.attached? %>
+                        <% first_file = musician.media.first %>
+                        <% if first_file.content_type.start_with?("image") %>
+                          <%= cl_image_tag(first_file.key, class: "musician-avatar") %>
+                        <% end %>
+                      <% else %>
+                        <%= image_tag "musician_placeholder.jpg", class: "musician-avatar" %>
                       <% end %>
-                    <% else %>
-                      <%= image_tag "musician_placeholder.jpg", class: "musician-avatar" %>
-                    <% end %>
-                    <div class="musician-card-name-wrapper">
-                      <h4 class="musician-card-name"><%= musician.name %></h4>
+                      <div class="musician-card-name-wrapper">
+                        <h4 class="musician-card-name"><%= musician.name %></h4>
+                      </div>
                     </div>
-                  </div>
-                  <div class="musician-card-details">
-                    <p><i class="fa-solid fa-location-dot"></i> <%= musician.location %></p>
-                    <p><i class="fa-solid fa-guitar"></i> <%= musician.instrument %></p>
-                    <p><i class="fa-solid fa-music"></i> <%= musician.styles %></p>
-                    <p><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
-                  </div>
-                <% end %>
-                <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary", style: "background-color: #a4fe35ff;", data: { turbo: false } %>
+                    <div class="musician-card-details">
+                      <p><i class="fa-solid fa-location-dot"></i> <%= musician.location %></p>
+                      <p><i class="fa-solid fa-guitar"></i> <%= musician.instrument %></p>
+                      <p><i class="fa-solid fa-music"></i> <%= musician.styles %></p>
+                      <p><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
+                    </div>
+                  <% end %>
+                  <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary", style: "background-color: #a4fe35ff;", data: { turbo: false } %>
+                </div>
               </div>
-            </div>
+            <% end %>
+          <% else %>
+            <em>Sorry, no musicians found.</em>
           <% end %>
-        <% else %>
-          <em>Sorry, no musicians found.</em>
-        <% end %>
+        </div>
       </div>
-
-      <%# Bottom Pagination %>
-      <% if @pagy.pages > 1 %>
-        <nav style="display: flex; justify-content: center; margin-top: 40px; margin-bottom: 20px;">
-          <div style="display: flex; gap: 8px; align-items: center;">
-            <% if @pagy.prev %>
-              <%= link_to musicians_path(page: @pagy.prev, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
-                  style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
-                  onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
-                  onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
-                <i class="fa-solid fa-chevron-left"></i> Prev
-              <% end %>
-            <% end %>
-
-            <% @pagy.series.each do |item| %>
-              <% if item == :gap %>
-                <span style="padding: 10px 12px; color: #666;">...</span>
-              <% elsif item.is_a?(Integer) %>
-                <%= link_to item, musicians_path(page: item, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
-                    style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
-                    onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
-                    onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" %>
-              <% elsif item.is_a?(String) %>
-                <span style="padding: 10px 16px; background: #C8E938; color: #000; border-radius: 8px; font-weight: 600;"><%= item %></span>
-              <% end %>
-            <% end %>
-
-            <% if @pagy.next %>
-              <%= link_to musicians_path(page: @pagy.next, query: params[:query], instrument: params[:instrument], location: params[:location], anchor: 'musicians-top'),
-                  style: "padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; transition: all 0.2s;",
-                  onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
-                  onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
-                Next <i class="fa-solid fa-chevron-right"></i>
-              <% end %>
-            <% end %>
-          </div>
-        </nav>
-        <p style="text-align: center; color: #666; font-size: 0.9rem;">
-          Showing <%= @pagy.from %>-<%= @pagy.to %> of <%= @pagy.count %> musicians
-        </p>
-      <% end %>
     </div>
   </turbo-frame>
 </div>
