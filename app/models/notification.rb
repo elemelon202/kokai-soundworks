@@ -18,6 +18,7 @@ class Notification < ApplicationRecord
     friend_request: 'friend_request',
     friend_request_accepted: 'friend_request_accepted',
     mainstage_win: 'mainstage_win',
+    band_mainstage_win: 'band_mainstage_win',
     endorsement: 'endorsement',
     shoutout: 'shoutout',
     new_follower: 'new_follower'
@@ -125,6 +126,18 @@ class Notification < ApplicationRecord
     )
   end
 
+  def self.create_for_band_mainstage_win(winner)
+    # Notify all band members
+    winner.band.musicians.each do |musician|
+      create!(
+        user: musician.user,
+        notifiable: winner,
+        notification_type: TYPES[:band_mainstage_win],
+        message: "Congratulations! #{winner.band.name} won BAND MAINSTAGE for #{winner.week_label} with #{winner.final_score} points!"
+      )
+    end
+  end
+
   def self.create_for_endorsement(endorsement)
     return if endorsement.musician.user == endorsement.user # Don't notify self
 
@@ -189,6 +202,8 @@ class Notification < ApplicationRecord
       'fa-solid fa-user-check'
     when TYPES[:mainstage_win]
       'fa-solid fa-trophy'
+    when TYPES[:band_mainstage_win]
+      'fa-solid fa-trophy'
     when TYPES[:endorsement]
       'fa-solid fa-award'
     when TYPES[:shoutout]
@@ -218,6 +233,8 @@ class Notification < ApplicationRecord
       Rails.application.routes.url_helpers.friendships_path
     when TYPES[:mainstage_win]
       Rails.application.routes.url_helpers.mainstage_path
+    when TYPES[:band_mainstage_win]
+      Rails.application.routes.url_helpers.band_mainstage_path
     when TYPES[:endorsement], TYPES[:shoutout], TYPES[:new_follower]
       Rails.application.routes.url_helpers.musician_path(user.musician) if user.musician
     else

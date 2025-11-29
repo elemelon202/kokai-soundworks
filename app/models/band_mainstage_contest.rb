@@ -125,6 +125,17 @@ class BandMainstageContest < ApplicationRecord
       total += 10 # Bookings are organic engagement
     end
 
+    # Member short likes: 2 points each (when a band member's short gets liked)
+    band.musicians.each do |musician|
+      musician.musician_shorts.each do |short|
+        short.short_likes.where(created_at: contest_period).each do |like|
+          next unless eligible_user?(like.user, account_cutoff)
+          points = add_capped_points(user_points, like.user_id, 2)
+          total += points
+        end
+      end
+    end
+
     total
   end
 

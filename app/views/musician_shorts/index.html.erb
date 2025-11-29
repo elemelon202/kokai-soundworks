@@ -75,6 +75,28 @@
               </div>
             <% end %>
 
+            <% if short.musician.bands.any? %>
+              <div style="margin-bottom: 14px; padding-top: 10px; border-top: 1px solid #2a2a2a;">
+                <p style="color: #666; font-size: 0.7rem; margin: 0 0 8px 0; text-transform: uppercase; letter-spacing: 0.5px;">
+                  <i class="fa-solid fa-users" style="color: #E936AD;"></i> Bands
+                </p>
+                <div style="display: flex; flex-wrap: wrap; gap: 6px; justify-content: center;">
+                  <% short.musician.bands.each do |band| %>
+                    <%= link_to band_path(band), style: "display: inline-flex; align-items: center; gap: 6px; background: #2a2a2a; padding: 4px 10px; border-radius: 12px; text-decoration: none; transition: background 0.2s;", onmouseover: "this.style.background='#3a3a3a'", onmouseout: "this.style.background='#2a2a2a'" do %>
+                      <% if band.banner.attached? %>
+                        <%= cl_image_tag(band.banner.key, style: "width: 18px; height: 18px; border-radius: 4px; object-fit: cover;") %>
+                      <% else %>
+                        <div style="width: 18px; height: 18px; border-radius: 4px; background: #444; display: flex; align-items: center; justify-content: center;">
+                          <span style="color: #888; font-size: 0.6rem; font-weight: 600;"><%= band.name[0].upcase %></span>
+                        </div>
+                      <% end %>
+                      <span style="color: #fff; font-size: 0.75rem; font-weight: 500;"><%= band.name %></span>
+                    <% end %>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
             <div style="display: flex; gap: 10px; justify-content: center;">
               <%= link_to musician_path(short.musician), style: "flex: 1; padding: 8px 12px; background: #E936AD; color: #fff; border-radius: 8px; text-decoration: none; font-size: 0.85rem; font-weight: 500; text-align: center;" do %>
                 <i class="fa-solid fa-user"></i> Profile

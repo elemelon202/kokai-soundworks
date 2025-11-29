@@ -1,0 +1,11 @@
+one:
+  name: Test Band One
+  user: one
+  description: A test band for testing
+  location: New York
+
+two:
+  name: Test Band Two
+  user: two
+  description: Another test band
+  location: Los Angeles
