@@ -1,6 +1,11 @@
 Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   root to: "pages#home"
+
+  # MAINSTAGE weekly contest
+  get 'mainstage', to: 'mainstage#index', as: :mainstage
+  post 'mainstage/vote', to: 'mainstage#vote', as: :mainstage_vote
+  get 'mainstage/winners', to: 'mainstage#past_winners', as: :mainstage_winners
   devise_for :users, controllers: {
     registrations: 'users/registrations'
   }
@@ -38,6 +43,23 @@ Rails.application.routes.draw do
     # Generates: PATCH /musicians/:musician_id/shorts/reorder -> reorder
       end
     end
+    collection do
+      get :search # Generates: GET /musicians/search -> search
+    end
+    member do
+      delete :purge_attachment # Generates: DELETE /musicians/:id/purge_attachment -> purge_attachment
+      post :follow   # Generates: POST /musicians/:id/follow -> follow
+      delete :unfollow # Generates: DELETE /musicians/:id/unfollow -> unfollow
+      post :save_profile
+      delete :unsave_profile
+    end
+    resources :endorsements, only: [:create, :destroy]
+    resources :shoutouts, only: [:create, :destroy]
+    resources :shorts, controller: "musician_shorts", only: [:new, :create, :edit, :update, :destroy] do
+      collection do
+        patch :reorder # Generates: PATCH /musicians/:musician_id/shorts/reorder -> reorder
+      end
+    end
   end
 
   resources :bands do
@@ -47,6 +69,10 @@ Rails.application.routes.draw do
     member do
       patch :transfer_leadership
       delete :purge_attachment
+      post :follow
+      delete :unfollow
+      post :save_profile
+      delete :unsave_profile
     end
   end
 
@@ -95,5 +121,21 @@ Rails.application.routes.draw do
   end
    resources :chats, only: [:show] do
     resources :messages, only: [:create, :destroy]
+  end
+
+  resources :friendships, only: [:index, :create, :destroy] do
+    member do
+      patch :accept
+      patch :decline
+    end
+  end
+
+  resources :posts, only: [:index, :create, :destroy], path: 'feed' do
+    member do
+      post :repost
+      post :like
+      delete :unlike
+    end
+    resources :post_comments, only: [:create, :destroy], path: 'comments'
   end
 end

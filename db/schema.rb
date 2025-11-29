@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_29_093334) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -40,6 +40,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
     t.bigint "blob_id", null: false
     t.string "variation_digest", null: false
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
+  end
+
+  create_table "activities", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "trackable_type", null: false
+    t.bigint "trackable_id", null: false
+    t.bigint "musician_id"
+    t.string "action"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["musician_id", "created_at"], name: "index_activities_on_musician_id_and_created_at"
+    t.index ["musician_id"], name: "index_activities_on_musician_id"
+    t.index ["trackable_type", "trackable_id"], name: "index_activities_on_trackable"
+    t.index ["user_id"], name: "index_activities_on_user_id"
   end
 
   create_table "attachments", force: :cascade do |t|
@@ -95,6 +109,40 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
     t.index ["band_id"], name: "index_chats_on_band_id"
   end
 
+  create_table "endorsements", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "musician_id", null: false
+    t.string "skill", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["musician_id"], name: "index_endorsements_on_musician_id"
+    t.index ["user_id", "musician_id", "skill"], name: "index_endorsements_on_user_id_and_musician_id_and_skill", unique: true
+    t.index ["user_id"], name: "index_endorsements_on_user_id"
+  end
+
+  create_table "follows", force: :cascade do |t|
+    t.bigint "follower_id", null: false
+    t.string "followable_type", null: false
+    t.bigint "followable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["followable_type", "followable_id"], name: "index_follows_on_followable_type_and_followable_id"
+    t.index ["follower_id", "followable_type", "followable_id"], name: "index_follows_on_uniqueness", unique: true
+    t.index ["follower_id"], name: "index_follows_on_follower_id"
+  end
+
+  create_table "friendships", force: :cascade do |t|
+    t.bigint "requester_id", null: false
+    t.bigint "addressee_id", null: false
+    t.string "status", default: "pending", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["addressee_id"], name: "index_friendships_on_addressee_id"
+    t.index ["requester_id", "addressee_id"], name: "index_friendships_on_requester_id_and_addressee_id", unique: true
+    t.index ["requester_id"], name: "index_friendships_on_requester_id"
+    t.index ["status"], name: "index_friendships_on_status"
+  end
+
   create_table "gigs", force: :cascade do |t|
     t.string "name"
     t.date "date"
@@ -131,6 +179,40 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
     t.index ["deadline"], name: "index_kanban_tasks_on_deadline"
     t.index ["status"], name: "index_kanban_tasks_on_status"
     t.index ["task_type"], name: "index_kanban_tasks_on_task_type"
+  end
+
+  create_table "mainstage_contests", force: :cascade do |t|
+    t.date "start_date", null: false
+    t.date "end_date", null: false
+    t.string "status", default: "active"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["start_date", "end_date"], name: "index_mainstage_contests_on_start_date_and_end_date"
+    t.index ["status"], name: "index_mainstage_contests_on_status"
+  end
+
+  create_table "mainstage_votes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "musician_id", null: false
+    t.bigint "mainstage_contest_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mainstage_contest_id"], name: "index_mainstage_votes_on_mainstage_contest_id"
+    t.index ["musician_id"], name: "index_mainstage_votes_on_musician_id"
+    t.index ["user_id", "mainstage_contest_id"], name: "index_mainstage_votes_on_user_id_and_mainstage_contest_id", unique: true
+    t.index ["user_id"], name: "index_mainstage_votes_on_user_id"
+  end
+
+  create_table "mainstage_winners", force: :cascade do |t|
+    t.bigint "musician_id", null: false
+    t.bigint "mainstage_contest_id", null: false
+    t.integer "final_score", default: 0
+    t.integer "engagement_score", default: 0
+    t.integer "vote_score", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["mainstage_contest_id"], name: "index_mainstage_winners_on_mainstage_contest_id", unique: true
+    t.index ["musician_id"], name: "index_mainstage_winners_on_musician_id"
   end
 
   create_table "message_reads", force: :cascade do |t|
@@ -205,6 +287,67 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
     t.index ["user_id"], name: "index_participations_on_user_id"
   end
 
+  create_table "post_comments", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_comments_on_post_id"
+    t.index ["user_id"], name: "index_post_comments_on_user_id"
+  end
+
+  create_table "post_likes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_post_likes_on_post_id"
+    t.index ["user_id", "post_id"], name: "index_post_likes_on_user_id_and_post_id", unique: true
+    t.index ["user_id"], name: "index_post_likes_on_user_id"
+  end
+
+  create_table "posts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_posts_on_user_id"
+  end
+
+  create_table "profile_saves", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "saveable_type", null: false
+    t.bigint "saveable_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["saveable_type", "saveable_id"], name: "index_profile_saves_on_saveable_type_and_saveable_id"
+    t.index ["user_id", "saveable_type", "saveable_id"], name: "index_profile_saves_uniqueness", unique: true
+    t.index ["user_id"], name: "index_profile_saves_on_user_id"
+  end
+
+  create_table "profile_views", force: :cascade do |t|
+    t.bigint "viewer_id"
+    t.string "viewable_type", null: false
+    t.bigint "viewable_id", null: false
+    t.datetime "viewed_at", null: false
+    t.string "ip_hash"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["viewable_type", "viewable_id", "viewed_at"], name: "index_profile_views_on_viewable_and_time"
+    t.index ["viewer_id"], name: "index_profile_views_on_viewer_id"
+  end
+
+  create_table "reposts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "post_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["post_id"], name: "index_reposts_on_post_id"
+    t.index ["user_id", "post_id"], name: "index_reposts_on_user_id_and_post_id", unique: true
+    t.index ["user_id"], name: "index_reposts_on_user_id"
+  end
+
   create_table "short_comments", force: :cascade do |t|
     t.bigint "musician_short_id", null: false
     t.bigint "user_id", null: false
@@ -223,6 +366,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
     t.index ["musician_short_id", "user_id"], name: "index_short_likes_on_musician_short_id_and_user_id", unique: true
     t.index ["musician_short_id"], name: "index_short_likes_on_musician_short_id"
     t.index ["user_id"], name: "index_short_likes_on_user_id"
+  end
+
+  create_table "shoutouts", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "musician_id", null: false
+    t.text "content"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["musician_id"], name: "index_shoutouts_on_musician_id"
+    t.index ["user_id"], name: "index_shoutouts_on_user_id"
   end
 
   create_table "spotify_tracks", force: :cascade do |t|
@@ -295,6 +448,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "activities", "musicians"
+  add_foreign_key "activities", "users"
   add_foreign_key "attachments", "messages"
   add_foreign_key "band_invitations", "bands"
   add_foreign_key "band_invitations", "musicians"
@@ -303,10 +458,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
   add_foreign_key "bookings", "bands"
   add_foreign_key "bookings", "gigs"
   add_foreign_key "chats", "bands"
+  add_foreign_key "endorsements", "musicians"
+  add_foreign_key "endorsements", "users"
+  add_foreign_key "follows", "users", column: "follower_id"
+  add_foreign_key "friendships", "users", column: "addressee_id"
+  add_foreign_key "friendships", "users", column: "requester_id"
   add_foreign_key "gigs", "venues"
   add_foreign_key "involvements", "bands"
   add_foreign_key "involvements", "musicians"
   add_foreign_key "kanban_tasks", "users", column: "created_by_id"
+  add_foreign_key "mainstage_votes", "mainstage_contests"
+  add_foreign_key "mainstage_votes", "musicians"
+  add_foreign_key "mainstage_votes", "users"
+  add_foreign_key "mainstage_winners", "mainstage_contests"
+  add_foreign_key "mainstage_winners", "musicians"
   add_foreign_key "message_reads", "messages"
   add_foreign_key "message_reads", "users"
   add_foreign_key "messages", "chats"
@@ -317,10 +482,21 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_060212) do
   add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "participations", "chats"
   add_foreign_key "participations", "users"
+  add_foreign_key "post_comments", "posts"
+  add_foreign_key "post_comments", "users"
+  add_foreign_key "post_likes", "posts"
+  add_foreign_key "post_likes", "users"
+  add_foreign_key "posts", "users"
+  add_foreign_key "profile_saves", "users"
+  add_foreign_key "profile_views", "users", column: "viewer_id", on_delete: :nullify
+  add_foreign_key "reposts", "posts"
+  add_foreign_key "reposts", "users"
   add_foreign_key "short_comments", "musician_shorts"
   add_foreign_key "short_comments", "users"
   add_foreign_key "short_likes", "musician_shorts"
   add_foreign_key "short_likes", "users"
+  add_foreign_key "shoutouts", "musicians"
+  add_foreign_key "shoutouts", "users"
   add_foreign_key "spotify_tracks", "bands"
   add_foreign_key "taggings", "tags"
   add_foreign_key "venues", "users"

@@ -1,0 +1,52 @@
+<div id="activity-feed-<%= musician.id %>" class="activity-feed-section">
+  <h3 style="color: #fff; font-size: 1.1rem; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+    <i class="fa-solid fa-bolt" style="color: #C8E938;"></i> Recent Activity
+  </h3>
+
+  <% activities = musician.activities.includes(:user).recent.limit(10) %>
+
+  <% if activities.any? %>
+    <div style="display: flex; flex-direction: column; gap: 12px;">
+      <% activities.each do |activity| %>
+        <div class="activity-item" style="display: flex; align-items: flex-start; gap: 12px; padding: 12px; background: #2a2a2a; border-radius: 10px;">
+          <%# Activity icon %>
+          <div style="width: 36px; height: 36px; border-radius: 50%; background: <%= activity.icon_color %>20; display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+            <i class="fa-solid <%= activity.icon %>" style="color: <%= activity.icon_color %>; font-size: 0.9rem;"></i>
+          </div>
+
+          <div style="flex: 1; min-width: 0;">
+            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+              <%# User name/link %>
+              <% if activity.user.musician %>
+                <%= link_to musician_path(activity.user.musician), style: "color: #fff; text-decoration: none; font-weight: 500; font-size: 0.9rem;" do %>
+                  <%= activity.user.musician.name %>
+                <% end %>
+              <% else %>
+                <span style="color: #fff; font-weight: 500; font-size: 0.9rem;"><%= activity.user.email.split('@').first %></span>
+              <% end %>
+
+              <%# Action text %>
+              <span style="color: #888; font-size: 0.85rem;"><%= activity.action_text %></span>
+
+              <%# Target (musician name) %>
+              <%= link_to musician_path(musician), style: "color: #C8E938; text-decoration: none; font-weight: 500; font-size: 0.9rem;" do %>
+                <%= musician.name %>
+              <% end %>
+
+              <%# Extra context for endorsements %>
+              <% if activity.action == 'endorse' && activity.trackable.respond_to?(:skill) %>
+                <span style="color: #888; font-size: 0.85rem;">for</span>
+                <span style="color: #C8E938; font-size: 0.85rem;"><%= activity.trackable.skill %></span>
+              <% end %>
+            </div>
+
+            <%# Timestamp %>
+            <span style="color: #666; font-size: 0.75rem;"><%= time_ago_in_words(activity.created_at) %> ago</span>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <p style="color: #666; font-size: 0.9rem; margin: 0; text-align: center; padding: 20px;">No recent activity yet.</p>
+  <% end %>
+</div>

@@ -14,7 +14,9 @@ class Notification < ApplicationRecord
     direct_message: 'direct_message',
     band_message: 'band_message',
     band_member_joined: 'band_member_joined',
-    band_member_left: 'band_member_left'
+    band_member_left: 'band_member_left',
+    friend_request: 'friend_request',
+    friend_request_accepted: 'friend_request_accepted'
   }.freeze
 
   validates :notification_type, presence: true, inclusion: { in: TYPES.values }
@@ -90,6 +92,26 @@ class Notification < ApplicationRecord
     end
   end
 
+  def self.create_for_friend_request(friendship)
+    create!(
+      user: friendship.addressee,
+      notifiable: friendship,
+      notification_type: TYPES[:friend_request],
+      actor: friendship.requester,
+      message: "#{friendship.requester.username} sent you a friend request"
+    )
+  end
+
+  def self.create_for_friend_request_accepted(friendship)
+    create!(
+      user: friendship.requester,
+      notifiable: friendship,
+      notification_type: TYPES[:friend_request_accepted],
+      actor: friendship.addressee,
+      message: "#{friendship.addressee.username} accepted your friend request"
+    )
+  end
+
   def icon_class
     case notification_type
     when TYPES[:band_invitation]
@@ -106,6 +128,10 @@ class Notification < ApplicationRecord
       'fa-solid fa-user-plus'
     when TYPES[:band_member_left]
       'fa-solid fa-user-minus'
+    when TYPES[:friend_request]
+      'fa-solid fa-user-plus'
+    when TYPES[:friend_request_accepted]
+      'fa-solid fa-user-check'
     else
       'fa-solid fa-bell'
     end
@@ -125,6 +151,8 @@ class Notification < ApplicationRecord
     when TYPES[:band_message]
       band = notifiable.chat&.band
       Rails.application.routes.url_helpers.edit_band_path(band) if band
+    when TYPES[:friend_request], TYPES[:friend_request_accepted]
+      Rails.application.routes.url_helpers.friendships_path
     else
       '#'
     end

@@ -1,0 +1,68 @@
+<div id="shoutouts-<%= musician.id %>" class="shoutouts-section">
+  <h3 style="color: #fff; font-size: 1.1rem; margin: 0 0 16px 0; display: flex; align-items: center; gap: 8px;">
+    <i class="fa-solid fa-bullhorn" style="color: #E936AD;"></i> Shoutouts
+    <span style="color: #666; font-size: 0.85rem; font-weight: normal;">(<%= musician.shoutouts.count %>)</span>
+  </h3>
+
+  <%# Add shoutout form - only for logged in users who haven't already given a shoutout %>
+  <% if current_user && current_user.id != musician.user_id && !musician.shoutout_from?(current_user) %>
+    <div style="margin-bottom: 20px;">
+      <%= form_with url: musician_shoutouts_path(musician), method: :post, scope: :shoutout, style: "display: flex; flex-direction: column; gap: 10px;" do |f| %>
+        <%= f.text_area :content, placeholder: "Give #{musician.name} a shoutout...", rows: 3, style: "padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 0.9rem; resize: none;" %>
+        <div style="display: flex; justify-content: flex-end;">
+          <%= f.submit "Post Shoutout", class: "btn-post", style: "padding: 10px 20px; font-size: 0.85rem;" %>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Display shoutouts %>
+  <% if musician.shoutouts.any? %>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <% musician.shoutouts.recent.each do |shoutout| %>
+        <div class="shoutout-card" style="background: #2a2a2a; border-radius: 12px; padding: 16px;">
+          <div style="display: flex; align-items: flex-start; gap: 12px;">
+            <%# User avatar %>
+            <div style="width: 40px; height: 40px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; flex-shrink: 0; overflow: hidden;">
+              <% if shoutout.user.musician&.avatar&.attached? %>
+                <%= cl_image_tag(shoutout.user.musician.avatar.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+              <% else %>
+                <span style="color: #888; font-size: 0.9rem;"><%= shoutout.user.email[0].upcase %></span>
+              <% end %>
+            </div>
+
+            <div style="flex: 1; min-width: 0;">
+              <%# Header with name and time %>
+              <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                  <% if shoutout.user.musician %>
+                    <%= link_to musician_path(shoutout.user.musician), style: "color: #fff; text-decoration: none; font-weight: 500; font-size: 0.9rem;" do %>
+                      <%= shoutout.user.musician.name %>
+                    <% end %>
+                  <% else %>
+                    <span style="color: #fff; font-weight: 500; font-size: 0.9rem;"><%= shoutout.user.email.split('@').first %></span>
+                  <% end %>
+                  <span style="color: #666; font-size: 0.8rem;"><%= time_ago_in_words(shoutout.created_at) %> ago</span>
+                </div>
+
+                <%# Delete button for own shoutouts %>
+                <% if current_user && shoutout.user == current_user %>
+                  <%= button_to musician_shoutout_path(musician, shoutout), method: :delete, class: "btn-remove-shoutout", style: "background: none; border: none; color: #666; cursor: pointer; padding: 4px 8px; font-size: 0.8rem;" do %>
+                    <i class="fa-solid fa-trash"></i>
+                  <% end %>
+                <% end %>
+              </div>
+
+              <%# Shoutout content %>
+              <p style="color: #ccc; font-size: 0.9rem; margin: 0; line-height: 1.5;"><%= shoutout.content %></p>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <% if !current_user || current_user.id == musician.user_id %>
+      <p style="color: #666; font-size: 0.9rem; margin: 0;">No shoutouts yet.</p>
+    <% end %>
+  <% end %>
+</div>

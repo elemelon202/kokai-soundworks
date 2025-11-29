@@ -1,0 +1,42 @@
+<div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
+  <h1 style="color: #fff; font-size: 1.75rem; margin-bottom: 24px;">
+    <i class="fa-solid fa-newspaper"></i> Feed
+  </h1>
+
+  <%# New Post Form %>
+  <div style="background: #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+    <%= form_with model: @post, local: true, style: "display: flex; flex-direction: column; gap: 12px;" do |f| %>
+      <%= f.text_area :content, placeholder: "What's on your mind?", rows: 3, style: "width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1rem; resize: none; box-sizing: border-box;" %>
+
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <label style="cursor: pointer; color: #888; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-image"></i>
+          <span style="font-size: 0.85rem;">Photo</span>
+          <%= f.file_field :images, multiple: true, style: "display: none;", accept: "image/*" %>
+        </label>
+        <label style="cursor: pointer; color: #888; display: flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-video"></i>
+          <span style="font-size: 0.85rem;">Video</span>
+          <%= f.file_field :videos, multiple: true, style: "display: none;", accept: "video/*" %>
+        </label>
+        <div style="flex: 1;"></div>
+        <%= f.submit "Post", class: "btn-post" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Posts Feed %>
+  <% if @posts.any? %>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <% @posts.each do |post| %>
+        <%= render "posts/post", post: post %>
+      <% end %>
+    </div>
+  <% else %>
+    <div style="background: #1e1e1e; border-radius: 12px; padding: 40px; text-align: center;">
+      <i class="fa-solid fa-newspaper" style="font-size: 2.5rem; color: #333; margin-bottom: 12px;"></i>
+      <p style="color: #666; margin: 0;">Your feed is empty</p>
+      <p style="color: #555; margin: 8px 0 0 0; font-size: 0.9rem;">Follow musicians and add friends to see their posts!</p>
+    </div>
+  <% end %>
+</div>

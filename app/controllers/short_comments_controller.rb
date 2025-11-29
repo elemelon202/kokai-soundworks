@@ -9,6 +9,7 @@ class ShortCommentsController < ApplicationController
     skip_authorization
 
     if @comment.save
+      Activity.track(user: current_user, action: :comment_short, trackable: @comment, musician: @short.musician)
       respond_to do |format|
         format.html { redirect_back fallback_location: discover_shorts_path }
         format.turbo_stream {

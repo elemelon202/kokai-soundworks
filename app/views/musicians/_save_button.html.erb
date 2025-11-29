@@ -1,0 +1,22 @@
+<div id="save-button-musician-<%= musician.id %>" style="display: inline-block;">
+    <% if user_signed_in? %>
+      <% if current_user.musician == musician %>
+        <%# Don't show save button on own profile %>
+      <% elsif current_user.saved_musicians.include?(musician) %>
+        <%= button_to unsave_profile_musician_path(musician), method: :delete, style: "padding: 8px 16px; background: #2a2a2a; color: #C8E938; border: 1px solid #C8E938; border-radius:
+   8px; font-size: 0.85rem; font-weight: 500; cursor: pointer;" do %>
+          <i class="fa-solid fa-bookmark"></i> Saved
+        <% end %>
+      <% else %>
+        <%= button_to save_profile_musician_path(musician), method: :post, style: "padding: 8px 16px; background: #2a2a2a; color: #fff; border: 1px solid #444; border-radius: 8px;
+  font-size: 0.85rem; font-weight: 500; cursor: pointer;" do %>
+          <i class="fa-regular fa-bookmark"></i> Save
+        <% end %>
+      <% end %>
+    <% else %>
+      <%= link_to new_user_session_path, style: "padding: 8px 16px; background: #2a2a2a; color: #fff; border: 1px solid #444; border-radius: 8px; font-size: 0.85rem; font-weight: 500;
+  cursor: pointer; text-decoration: none;" do %>
+        <i class="fa-regular fa-bookmark"></i> Save
+      <% end %>
+    <% end %>
+  </div>

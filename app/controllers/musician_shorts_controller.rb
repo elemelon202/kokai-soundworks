@@ -66,6 +66,7 @@ class MusicianShortsController < ApplicationController
 
     unless current_user.liked_shorts.include?(@short)
       current_user.liked_shorts << @short
+      Activity.track(user: current_user, action: :like_short, trackable: @short, musician: @short.musician)
     end
 
     respond_to do |format|

@@ -67,6 +67,107 @@
     </div>
   </div>
 
+  <%# Feed and Analytics Row %>
+  <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+    <%# Feed Section - Left %>
+    <div class="musician-dashboard-card" style="height: fit-content;">
+      <div class="musician-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-newspaper"></i>
+        </div>
+        <h3>Feed</h3>
+      </div>
+      <div style="padding: 20px;">
+        <%# New Post Form %>
+        <%= form_with model: Post.new, local: true, style: "display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;" do |f| %>
+          <%= f.text_area :content, placeholder: "What's on your mind?", rows: 3, style: "width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1rem; resize: none; box-sizing: border-box;" %>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <label style="cursor: pointer; color: #888; display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-image"></i>
+              <span style="font-size: 0.85rem;">Photo</span>
+              <%= f.file_field :images, multiple: true, style: "display: none;", accept: "image/*" %>
+            </label>
+            <label style="cursor: pointer; color: #888; display: flex; align-items: center; gap: 6px;">
+              <i class="fa-solid fa-video"></i>
+              <span style="font-size: 0.85rem;">Video</span>
+              <%= f.file_field :videos, multiple: true, style: "display: none;", accept: "video/*" %>
+            </label>
+            <div style="flex: 1;"></div>
+            <%= f.submit "Post", class: "btn-post" %>
+          </div>
+        <% end %>
+
+        <%# Posts Feed %>
+        <% feed_posts = current_user.feed.includes(:user, :reposts, images_attachments: :blob, videos_attachments: :blob).limit(5) %>
+        <% if feed_posts.any? %>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <% feed_posts.each do |post| %>
+              <%= render "posts/post", post: post %>
+            <% end %>
+          </div>
+          <div style="text-align: center; margin-top: 16px;">
+            <%= link_to posts_path, class: "link-view-all" do %>
+              View all posts <i class="fa-solid fa-arrow-right"></i>
+            <% end %>
+          </div>
+        <% else %>
+          <div style="text-align: center; padding: 20px;">
+            <i class="fa-solid fa-newspaper" style="font-size: 2rem; color: #333; margin-bottom: 8px;"></i>
+            <p style="color: #666; margin: 0;">Your feed is empty</p>
+            <p style="color: #555; margin: 4px 0 0 0; font-size: 0.85rem;">Follow musicians and add friends to see their posts!</p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Analytics Section - Right %>
+    <div class="musician-dashboard-card" style="height: fit-content;">
+      <div class="musician-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <h3>Your Analytics</h3>
+        <span style="color: #666; font-size: 0.8rem; margin-left: auto;">Only you can see this</span>
+      </div>
+      <% if @stats.present? %>
+        <div class="musician-stats-grid" style="padding: 20px;">
+          <div class="musician-stat-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div class="stat-value"><%= @stats[:followers_count] %></div>
+            <div class="stat-label">Followers</div>
+            <% if @stats[:new_followers_week] > 0 %>
+              <div style="color: #C8E938; font-size: 0.75rem; margin-top: 4px;">+<%= @stats[:new_followers_week] %> this week</div>
+            <% end %>
+          </div>
+
+          <div class="musician-stat-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-eye"></i>
+            </div>
+            <div class="stat-value"><%= @stats[:profile_views_week] %></div>
+            <div class="stat-label">Views This Week</div>
+            <div style="color: #666; font-size: 0.75rem; margin-top: 4px;"><%= @stats[:profile_views_total] %> total</div>
+          </div>
+
+          <div class="musician-stat-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-bookmark"></i>
+            </div>
+            <div class="stat-value"><%= @stats[:profile_saves] %></div>
+            <div class="stat-label">Profile Saves</div>
+          </div>
+        </div>
+      <% else %>
+        <div style="padding: 40px; text-align: center;">
+          <i class="fa-solid fa-chart-line" style="font-size: 2rem; color: #333; margin-bottom: 8px;"></i>
+          <p style="color: #666; margin: 0;">No analytics data yet</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
   <div class="musician-dashboard-content">
     <div class="musician-dashboard-card full-width">
       <div class="musician-card-header">

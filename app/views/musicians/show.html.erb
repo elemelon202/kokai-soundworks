@@ -10,7 +10,12 @@
         <% end %>
       </div>
       <div class="profile-info">
-        <h1 class="profile-name"><%= @musician.name %></h1>
+        <h1 class="profile-name">
+          <%= @musician.name %>
+          <% if @musician.mainstage_winner? %>
+            <%= render "mainstage/winner_badge", musician: @musician %>
+          <% end %>
+        </h1>
         <div class="profile-meta">
           <span class="profile-badge"><%= @musician.styles&.split(',')&.first || 'Musician' %></span>
           <span class="profile-location"><i class="fa-solid fa-location-dot"></i> <%= @musician.location %></span>
@@ -19,6 +24,11 @@
           <span>Age: <strong><%= @musician.age %></strong></span>
           <span>Active Bands: <strong><%= @musician.bands.count %></strong></span>
         </div>
+          <%= render "musicians/follow_button", musician: @musician %>
+          <span style="color: #888; font-size: 0.9rem;">
+    <%= pluralize(@musician.followers.count, "follower") %>
+  </span>
+   <%= render "musicians/save_button", musician: @musician %>
       </div>
     </div>
     <div class="profile-header-right">
@@ -31,6 +41,7 @@
         <%= button_to create_or_show_direct_messages_path(recipient_id: @musician.user_id), method: :post, class: "btn-message-profile" do %>
           <i class="fa-solid fa-envelope"></i> Message
         <% end %>
+        <%= render "friendships/friend_button", user: @musician.user %>
       <% end %>
     </div>
   </div>
@@ -68,6 +79,16 @@
           <span class="tag"><%= instrument.strip %></span>
         <% end %>
       </div>
+
+      <%# Endorsements Section %>
+      <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+        <%= render "endorsements/endorsements_section", musician: @musician %>
+      </div>
+
+      <%# Shoutouts Section %>
+      <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+        <%= render "shoutouts/shoutouts_section", musician: @musician %>
+      </div>
     </div>
     <%# ----- RIGHT COLUMN: STATS & AVAILABILITY ------ %>
     <div class="right-column">
@@ -95,6 +116,11 @@
             <span class="toggle-slider"></span>
           </label>
         </div>
+      </div>
+
+      <%# Activity Feed %>
+      <div style="margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 12px;">
+        <%= render "activities/activity_feed", musician: @musician %>
       </div>
     </div>
   </div>

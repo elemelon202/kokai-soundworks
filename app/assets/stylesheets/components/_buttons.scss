@@ -297,3 +297,222 @@ form button[type="submit"] {
     transform: translateY(-1px);
   }
 }
+
+// Feed post button
+.btn-post {
+  padding: 10px 24px;
+  background: #C8E938;
+  color: #000;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #d4f04a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(213, 255, 64, 0.4);
+  }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// View all posts link
+.link-view-all {
+  color: #C8E938;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+  display: inline-block;
+
+  &:hover {
+    color: #d4f04a;
+    transform: translateX(4px);
+  }
+}
+
+// Post action buttons (like, comment, repost)
+.btn-post-action {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #888;
+  cursor: pointer;
+  display: inline-flex !important;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.9rem;
+  padding: 6px 12px !important;
+  transition: color 0.2s ease !important;
+  filter: none !important;
+  transform: none !important;
+
+  &:hover {
+    color: #C8E938;
+    filter: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  &:active, &:focus {
+    filter: none !important;
+    transform: none !important;
+    box-shadow: none !important;
+  }
+
+  &.btn-post-action-active {
+    color: #E936AD;
+
+    &:hover {
+      color: #ff4dc4;
+    }
+  }
+
+  &.btn-post-action-reposted {
+    color: #C8E938;
+  }
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+// Override for button_to forms wrapping post actions
+form:has(.btn-post-action) {
+  display: inline;
+
+  .btn-post-action {
+    background: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    filter: none !important;
+    transform: none !important;
+
+    &:hover, &:focus, &:active {
+      background: none !important;
+      border: none !important;
+      box-shadow: none !important;
+      filter: none !important;
+      transform: none !important;
+    }
+  }
+}
+
+// Hidden utility class
+.hidden {
+  display: none !important;
+}
+
+// Endorsement badges and buttons
+.endorsement-badge {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &.endorsed {
+    box-shadow: 0 2px 8px rgba(200, 233, 56, 0.3);
+  }
+}
+
+.endorsement-btn {
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: inherit;
+  cursor: pointer;
+  padding: 2px 6px !important;
+  font-size: 0.85rem;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.2) !important;
+    transform: none !important;
+    filter: none !important;
+  }
+
+  &.endorsed {
+    color: #000;
+  }
+}
+
+// Shoutout cards
+.shoutout-card {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #333 !important;
+  }
+}
+
+.btn-remove-shoutout {
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: #dc2626 !important;
+    transform: none !important;
+    filter: none !important;
+  }
+}
+
+// Activity feed items
+.activity-item {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #333 !important;
+  }
+}
+
+// MAINSTAGE
+.leaderboard-row {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #333 !important;
+  }
+}
+
+.btn-vote-mainstage {
+  transition: all 0.2s ease;
+
+  &:hover {
+    filter: brightness(1.15);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(233, 54, 173, 0.4);
+  }
+}
+
+.winner-card {
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: #252525 !important;
+    transform: translateX(4px);
+  }
+}
+
+.mainstage-badge {
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.4);
+  }
+}
+
+.mainstage-spotlight {
+  a {
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      filter: brightness(1.1);
+    }
+  }
+}

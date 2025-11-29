@@ -1,0 +1,80 @@
+<%# MAINSTAGE homepage spotlight - shows current winner or current contest %>
+<% current_winner = MainstageWinner.recent.first %>
+<% current_contest = MainstageContest.current_contest %>
+
+<div class="mainstage-spotlight" style="max-width: 700px; margin: 0 auto 32px auto; padding: 0 16px;">
+  <% if current_winner && current_winner.created_at > 1.week.ago %>
+    <%# Show current week's winner %>
+    <div style="background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 24px; text-align: center;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;">
+        <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.5rem;"></i>
+        <span style="color: #fbbf24; font-size: 1.2rem; font-weight: 700;">MAINSTAGE WINNER</span>
+        <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.5rem;"></i>
+      </div>
+
+      <div style="display: flex; align-items: center; justify-content: center; gap: 20px; flex-wrap: wrap;">
+        <%# Winner avatar %>
+        <div style="width: 80px; height: 80px; border-radius: 50%; background: #333; overflow: hidden; border: 3px solid #fbbf24; flex-shrink: 0;">
+          <% if current_winner.musician.avatar.attached? %>
+            <%= cl_image_tag(current_winner.musician.avatar.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+          <% else %>
+            <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #888; font-weight: 600; font-size: 1.5rem;">
+              <%= current_winner.musician.name[0].upcase %>
+            </div>
+          <% end %>
+        </div>
+
+        <%# Winner info %>
+        <div style="text-align: left;">
+          <%= link_to musician_path(current_winner.musician), style: "color: #fff; text-decoration: none; font-size: 1.5rem; font-weight: 700;" do %>
+            <%= current_winner.musician.name %>
+          <% end %>
+          <div style="color: #888; font-size: 0.9rem; margin-top: 4px;">
+            <%= current_winner.week_label %>
+          </div>
+          <div style="display: flex; gap: 16px; margin-top: 8px;">
+            <span style="color: #C8E938; font-size: 0.85rem;">
+              <i class="fa-solid fa-bolt"></i> <%= current_winner.engagement_score %> engagement
+            </span>
+            <span style="color: #E936AD; font-size: 0.85rem;">
+              <i class="fa-solid fa-hand-pointer"></i> <%= current_winner.vote_score / 10 %> votes
+            </span>
+          </div>
+        </div>
+
+        <%# Score badge %>
+        <div style="padding: 12px 20px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 12px;">
+          <div style="color: #000; font-size: 1.8rem; font-weight: 800;"><%= current_winner.final_score %></div>
+          <div style="color: #000; font-size: 0.7rem; opacity: 0.8;">POINTS</div>
+        </div>
+      </div>
+
+      <div style="margin-top: 20px; display: flex; justify-content: center; gap: 12px;">
+        <%= link_to musician_path(current_winner.musician), style: "padding: 10px 24px; background: #C8E938; color: #000; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;" do %>
+          View Profile
+        <% end %>
+        <%= link_to mainstage_path, style: "padding: 10px 24px; background: #2a2a2a; color: #fff; border-radius: 8px; text-decoration: none; font-weight: 500; font-size: 0.9rem; border: 1px solid #3a3a3a;" do %>
+          See Leaderboard
+        <% end %>
+      </div>
+    </div>
+  <% else %>
+    <%# Show current contest in progress %>
+    <div style="background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 24px; text-align: center;">
+      <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px;">
+        <i class="fa-solid fa-fire" style="color: #C8E938; font-size: 1.3rem;"></i>
+        <span style="color: #C8E938; font-size: 1.1rem; font-weight: 700;">MAINSTAGE CONTEST LIVE</span>
+      </div>
+
+      <p style="color: #888; font-size: 0.95rem; margin: 0 0 16px 0;">
+        <%= current_contest.start_date.strftime('%b %d') %> - <%= current_contest.end_date.strftime('%b %d') %> &bull;
+        <% days_left = (current_contest.end_date - Date.current).to_i %>
+        <span style="color: #fff;"><%= days_left %> <%= 'day'.pluralize(days_left) %> left</span>
+      </p>
+
+      <%= link_to mainstage_path, style: "display: inline-block; padding: 12px 32px; background: linear-gradient(135deg, #C8E938 0%, #a8c92e 100%); color: #000; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 1rem;" do %>
+        <i class="fa-solid fa-trophy"></i> View Leaderboard & Vote
+      <% end %>
+    </div>
+  <% end %>
+</div>

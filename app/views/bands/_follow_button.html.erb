@@ -1,0 +1,22 @@
+<div id="follow-button-band-<%= band.id %>" style="display: inline-block;">
+    <% if user_signed_in? %>
+     <% if current_user.musician && band.musicians.include?(current_user.musician) %>
+        <%# Don't show follow button for band members %>
+      <% elsif current_user.followed_bands.include?(band) %>
+        <%= button_to unfollow_band_path(band), method: :delete, style: "padding: 8px 16px; background: #2a2a2a; color: #fff; border: 1px solid #444; border-radius: 8px; font-size:
+  0.85rem; font-weight: 500; cursor: pointer;" do %>
+          <i class="fa-solid fa-check"></i> Following
+        <% end %>
+      <% else %>
+        <%= button_to follow_band_path(band), method: :post, style: "padding: 8px 16px; background: #E936AD; color: #fff; border: none; border-radius: 8px; font-size: 0.85rem;
+  font-weight: 500; cursor: pointer;" do %>
+          <i class="fa-solid fa-plus"></i> Follow
+        <% end %>
+      <% end %>
+    <% else %>
+      <%= link_to new_user_session_path, style: "padding: 8px 16px; background: #E936AD; color: #fff; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor:
+  pointer; text-decoration: none;" do %>
+        <i class="fa-solid fa-plus"></i> Follow
+      <% end %>
+    <% end %>
+  </div>
