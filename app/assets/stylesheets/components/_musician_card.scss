@@ -4,13 +4,12 @@
   transition: 0.3s;
   width: 100%;
   margin: 0 auto;
-  padding: 20px;
+  padding: 16px;
   display: flex;
   flex-direction: column;
   align-items: flex-start;
   text-align: left;
   position: relative;
-  height: 100%;
   border: none;
   border-radius: 20px;
   overflow: hidden;
@@ -19,12 +18,18 @@
 
   a {
     width: 100%;
-    flex-grow: 1;
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    gap: 0;
     position: relative;
     z-index: 3;
+  }
+
+  form {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    z-index: 4;
   }
 
   .btn {
@@ -83,17 +88,17 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 16px;
+  margin-bottom: 8px;
   z-index: 2;
   width: 100%;
 }
 
 .musician-avatar {
   width: 100%;
-  height: 160px;
-  border-radius: 12px;
+  height: 120px;
+  border-radius: 10px;
   object-fit: cover;
-  margin-bottom: 12px;
+  margin-bottom: 8px;
   z-index: 2;
 }
 
@@ -109,10 +114,30 @@
 .musician-card-name {
   padding-left: 0;
   margin: 0;
-  font-size: 1.3em;
+  font-size: 1.5em;
   color: white;
   text-align: center;
   z-index: 2;
+}
+
+.musician-card-details {
+  z-index: 2;
+
+  p {
+    margin: 5px 0;
+    color: #ccc;
+    font-size: 1em;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      font-size: 12px;
+      width: 16px;
+      color: #888;
+    }
+  }
 }
 
 .musician-card-details span {

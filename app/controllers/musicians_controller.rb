@@ -48,6 +48,11 @@ class MusiciansController < ApplicationController
 
     # Paginate results - 10 per page
     @pagy, @musicians = pagy(@musicians, items: 10)
+
+    respond_to do |format|
+      format.html
+      format.turbo_stream
+    end
   end
 
   def show
