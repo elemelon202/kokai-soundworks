@@ -21,13 +21,99 @@
     scroll-snap-align: start !important;
     scroll-snap-stop: always !important;
   }
+  .discover-back-btn {
+    position: fixed;
+    top: 70px;
+    left: 20px;
+    z-index: 1000;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 16px;
+    background: #2a2a2a;
+    color: #fff;
+    border-radius: 10px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: all 0.2s;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+  }
+  .discover-back-btn:hover {
+    background: #C8E938;
+    color: #000;
+  }
+  /* Comments panel - adapts to screen size */
+  .comments-panel {
+    width: 300px;
+    height: 85vh;
+    background: #1e1e1e;
+    border-radius: 16px;
+    flex-direction: column;
+    overflow: hidden;
+  }
+  .comments-panel.active {
+    display: flex !important;
+  }
+  @media (max-width: 992px) {
+    .discover-back-btn {
+      top: 65px;
+      left: 12px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+    }
+    .discover-short {
+      flex-direction: column !important;
+      padding: 12px !important;
+    }
+    .discover-short > div:first-child {
+      flex: none !important;
+      width: 100% !important;
+      max-width: 400px !important;
+      margin: 0 auto;
+    }
+    /* Comments panel becomes bottom sheet on mobile */
+    .comments-panel {
+      position: fixed !important;
+      bottom: 0 !important;
+      left: 0 !important;
+      right: 0 !important;
+      width: 100% !important;
+      height: 70vh !important;
+      border-radius: 20px 20px 0 0 !important;
+      z-index: 9999 !important;
+      box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+    }
+  }
+  @media (max-width: 576px) {
+    .discover-back-btn {
+      top: 62px;
+    }
+  }
 </style>
 
+<script>
+  function toggleCommentsPanel(shortId) {
+    var panel = document.getElementById('comments-panel-' + shortId);
+    if (panel.classList.contains('active')) {
+      panel.classList.remove('active');
+      panel.style.display = 'none';
+    } else {
+      panel.classList.add('active');
+      panel.style.display = 'flex';
+    }
+  }
+
+  function closeCommentsPanel(shortId) {
+    var panel = document.getElementById('comments-panel-' + shortId);
+    panel.classList.remove('active');
+    panel.style.display = 'none';
+  }
+</script>
+
 <%# Back button %>
-<%= link_to musicians_path, style: "position: fixed; top: 80px; left: 20px; z-index: 9999; display: inline-flex; align-items: center; gap: 8px; padding: 10px 16px; background: #2a2a2a; color: #fff; border-radius: 10px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s; box-shadow: 0 2px 8px rgba(0,0,0,0.3);",
-    onmouseover: "this.style.background='#C8E938'; this.style.color='#000';",
-    onmouseout: "this.style.background='#2a2a2a'; this.style.color='#fff';" do %>
-  <i class="fa-solid fa-arrow-left"></i> Back to Musicians
+<%= link_to musicians_path, class: "discover-back-btn" do %>
+  <i class="fa-solid fa-arrow-left"></i> Back
 <% end %>
 
 <%# Vertical scroll feed with musician card on left %>
@@ -110,11 +196,12 @@
           </div>
         </div>
 
-        <%# Right - Short Video with action buttons %>
+        <%# Right - Short Video with action buttons INSIDE %>
         <div style="display: flex; align-items: center; gap: 16px;">
-          <%# Video %>
+          <%# Video container %>
           <div data-controller="video-player"
                data-action="mouseenter->video-player#showMute mouseleave->video-player#hideMute"
+               class="video-container"
                style="position: relative; height: 85vh; max-height: 85vh; aspect-ratio: 9/16; border-radius: 16px; overflow: hidden; background: #000;">
             <% if short.video.attached? %>
               <video preload="metadata"
@@ -138,46 +225,76 @@
             <%# Gradient overlay %>
             <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 30%); pointer-events: none;"></div>
 
-            <%# Short info overlay %>
-            <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 16px; z-index: 2;">
+            <%# Short info overlay - bottom left %>
+            <div style="position: absolute; bottom: 16px; left: 16px; right: 80px; z-index: 2;">
               <h3 style="color: #fff; font-size: 1rem; margin: 0 0 4px 0; font-weight: 600;"><%= short.title %></h3>
               <% if short.description.present? %>
                 <p style="color: rgba(255,255,255,0.8); font-size: 0.85rem; margin: 0;"><%= truncate(short.description, length: 80) %></p>
               <% end %>
             </div>
 
-            <%# Mute/Unmute button - bottom right, visible on hover %>
-            <button data-video-player-target="muteButton"
-                    data-action="click->video-player#toggleMute"
-                    class="shorts-mute-btn"
-                    style="position: absolute; bottom: 16px; right: 16px; width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.6); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3; opacity: 0; transition: opacity 0.2s ease;">
-              <i class="fa-solid fa-volume-xmark" data-video-player-target="muteIcon" style="color: #fff; font-size: 1.1rem;"></i>
-            </button>
-          </div>
+            <%# Action buttons - bottom right, INSIDE video, always visible %>
+            <div class="video-actions" style="position: absolute; bottom: 16px; right: 16px; display: flex; flex-direction: column; gap: 12px; align-items: center; z-index: 5;">
+              <%# Like button %>
+              <%= render "musician_shorts/like_button", short: short %>
 
-          <%# Action buttons (like & comment) %>
-          <div style="display: flex; flex-direction: column; gap: 16px; align-items: center;">
-            <%= render "musician_shorts/like_button", short: short %>
+              <%# Comment button %>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <button onclick="toggleCommentsPanel(<%= short.id %>)"
+                        style="width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
+                  <i class="fa-regular fa-comment" style="color: #fff; font-size: 1.2rem;"></i>
+                </button>
+                <span id="comment-count-<%= short.id %>" style="color: #fff; font-size: 0.75rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5);"><%= short.short_comments.count %></span>
+              </div>
 
-            <%# Comment button %>
-            <div style="display: flex; flex-direction: column; align-items: center; gap: 4px;">
-              <button onclick="var sidebar = document.getElementById('comments-sidebar-<%= short.id %>'); sidebar.style.display = sidebar.style.display === 'none' ? 'flex' : 'none';"
-                      style="width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.15); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;">
-                <i class="fa-regular fa-comment" style="color: #fff; font-size: 1.4rem;"></i>
+              <%# Challenge button %>
+              <div style="display: flex; flex-direction: column; align-items: center; gap: 2px;">
+                <% challenge = short.challenges.first %>
+                <% if challenge&.open? %>
+                  <%# Open challenge - fire icon, accepting responses %>
+                  <%= link_to challenge_path(challenge), style: "width: 44px; height: 44px; border-radius: 50%; background: #E936AD; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none;" do %>
+                    <i class="fa-solid fa-fire" style="color: #fff; font-size: 1.1rem;"></i>
+                  <% end %>
+                  <span style="color: #E936AD; font-size: 0.7rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">OPEN</span>
+                <% elsif challenge&.voting? %>
+                  <%# Voting phase - vote icon %>
+                  <%= link_to challenge_path(challenge), style: "width: 44px; height: 44px; border-radius: 50%; background: #fbbf24; border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none;" do %>
+                    <i class="fa-solid fa-check-to-slot" style="color: #000; font-size: 1.1rem;"></i>
+                  <% end %>
+                  <span style="color: #fbbf24; font-size: 0.7rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">VOTE</span>
+                <% elsif challenge&.closed? %>
+                  <%# Closed challenge - trophy icon %>
+                  <%= link_to challenge_path(challenge), style: "width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.5); border: 2px solid #fbbf24; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none;" do %>
+                    <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.1rem;"></i>
+                  <% end %>
+                  <span style="color: #888; font-size: 0.7rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">ENDED</span>
+                <% elsif current_user&.musician == short.musician %>
+                  <%# Owner can create a challenge from their short %>
+                  <%= link_to new_challenge_path(original_short_id: short.id), style: "width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; text-decoration: none;" do %>
+                    <i class="fa-solid fa-bolt" style="color: #fff; font-size: 1.1rem;"></i>
+                  <% end %>
+                  <span style="color: #fff; font-size: 0.7rem; font-weight: 600; text-shadow: 0 1px 2px rgba(0,0,0,0.5);">Challenge</span>
+                <% end %>
+              </div>
+
+              <%# Mute button %>
+              <button data-video-player-target="muteButton"
+                      data-action="click->video-player#toggleMute"
+                      style="width: 44px; height: 44px; border-radius: 50%; background: rgba(0,0,0,0.5); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer;">
+                <i class="fa-solid fa-volume-xmark" data-video-player-target="muteIcon" style="color: #fff; font-size: 1rem;"></i>
               </button>
-              <span id="comment-count-<%= short.id %>" style="color: #fff; font-size: 0.85rem; font-weight: 600;"><%= short.short_comments.count %></span>
             </div>
           </div>
 
-          <%# Comments sidebar - hidden by default %>
-          <div id="comments-sidebar-<%= short.id %>" style="display: none; width: 300px; height: 85vh; background: #1e1e1e; border-radius: 16px; flex-direction: column; overflow: hidden;">
+          <%# Comments panel - appears next to video on desktop, bottom sheet on mobile %>
+          <div id="comments-panel-<%= short.id %>" class="comments-panel" style="display: none;">
             <div style="padding: 16px; border-bottom: 1px solid #2a2a2a; display: flex; justify-content: space-between; align-items: center;">
               <h3 style="color: #fff; margin: 0; font-size: 1rem; display: flex; align-items: center; gap: 8px;">
                 <i class="fa-regular fa-comment" style="color: #E936AD;"></i>
                 Comments
               </h3>
-              <button onclick="document.getElementById('comments-sidebar-<%= short.id %>').style.display = 'none';"
-                      style="background: none; border: none; color: #888; cursor: pointer; font-size: 1.2rem; padding: 0;">
+              <button onclick="closeCommentsPanel(<%= short.id %>)"
+                      style="background: none; border: none; color: #888; cursor: pointer; font-size: 1.2rem; padding: 4px;">
                 <i class="fa-solid fa-xmark"></i>
               </button>
             </div>

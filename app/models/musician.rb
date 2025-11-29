@@ -22,6 +22,8 @@ class Musician < ApplicationRecord
   has_many :activities, dependent: :destroy
   has_many :mainstage_votes, dependent: :destroy
   has_many :mainstage_wins, class_name: 'MainstageWinner', dependent: :destroy
+  has_many :created_challenges, class_name: 'Challenge', foreign_key: :creator_id, dependent: :destroy
+  has_many :challenge_responses, dependent: :destroy
 
   validates :name, presence: true
 

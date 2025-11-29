@@ -143,4 +143,21 @@ Rails.application.routes.draw do
     end
     resources :post_comments, only: [:create, :destroy], path: 'comments'
   end
+
+  # Challenges (Phase 4)
+  resources :challenges do
+    member do
+      get :respond
+      post :submit_response
+      post :start_voting
+      post :close
+      post :pick_winner
+    end
+    collection do
+      post :vote
+      delete :unvote
+    end
+  end
+  post 'challenges/vote/:response_id', to: 'challenges#vote', as: :challenge_vote
+  delete 'challenges/unvote/:response_id', to: 'challenges#unvote', as: :challenge_unvote
 end

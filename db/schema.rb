@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_29_101424) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_29_120038) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -133,6 +133,44 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_101424) do
     t.datetime "updated_at", null: false
     t.index ["band_id"], name: "index_bookings_on_band_id"
     t.index ["gig_id"], name: "index_bookings_on_gig_id"
+  end
+
+  create_table "challenge_responses", force: :cascade do |t|
+    t.bigint "challenge_id", null: false
+    t.bigint "musician_short_id", null: false
+    t.bigint "musician_id", null: false
+    t.integer "votes_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_id", "musician_id"], name: "index_challenge_responses_on_challenge_id_and_musician_id", unique: true
+    t.index ["challenge_id"], name: "index_challenge_responses_on_challenge_id"
+    t.index ["musician_id"], name: "index_challenge_responses_on_musician_id"
+    t.index ["musician_short_id"], name: "index_challenge_responses_on_musician_short_id"
+  end
+
+  create_table "challenge_votes", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "challenge_response_id", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["challenge_response_id"], name: "index_challenge_votes_on_challenge_response_id"
+    t.index ["user_id", "challenge_response_id"], name: "index_challenge_votes_on_user_id_and_challenge_response_id", unique: true
+    t.index ["user_id"], name: "index_challenge_votes_on_user_id"
+  end
+
+  create_table "challenges", force: :cascade do |t|
+    t.bigint "creator_id", null: false
+    t.bigint "original_short_id", null: false
+    t.string "title", null: false
+    t.text "description"
+    t.string "status", default: "open", null: false
+    t.bigint "winner_id"
+    t.integer "responses_count", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["creator_id"], name: "index_challenges_on_creator_id"
+    t.index ["original_short_id"], name: "index_challenges_on_original_short_id"
+    t.index ["status"], name: "index_challenges_on_status"
   end
 
   create_table "chats", force: :cascade do |t|
@@ -496,6 +534,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_101424) do
   add_foreign_key "bands", "users"
   add_foreign_key "bookings", "bands"
   add_foreign_key "bookings", "gigs"
+  add_foreign_key "challenge_responses", "challenges"
+  add_foreign_key "challenge_responses", "musician_shorts"
+  add_foreign_key "challenge_responses", "musicians"
+  add_foreign_key "challenge_votes", "challenge_responses"
+  add_foreign_key "challenge_votes", "users"
+  add_foreign_key "challenges", "musician_shorts", column: "original_short_id"
+  add_foreign_key "challenges", "musicians", column: "creator_id"
   add_foreign_key "chats", "bands"
   add_foreign_key "endorsements", "musicians"
   add_foreign_key "endorsements", "users"

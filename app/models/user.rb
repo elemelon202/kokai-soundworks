@@ -38,6 +38,7 @@ class User < ApplicationRecord
   has_many :shoutouts, dependent: :destroy
   has_many :shouted_out_musicians, through: :shoutouts, source: :musician
   has_many :activities, dependent: :destroy
+  has_many :challenge_votes, dependent: :destroy
 
   # convenience: check roles
   def musician?

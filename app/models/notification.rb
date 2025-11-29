@@ -21,7 +21,9 @@ class Notification < ApplicationRecord
     band_mainstage_win: 'band_mainstage_win',
     endorsement: 'endorsement',
     shoutout: 'shoutout',
-    new_follower: 'new_follower'
+    new_follower: 'new_follower',
+    challenge_response: 'challenge_response',
+    challenge_win: 'challenge_win'
   }.freeze
 
   validates :notification_type, presence: true, inclusion: { in: TYPES.values }
@@ -210,6 +212,10 @@ class Notification < ApplicationRecord
       'fa-solid fa-bullhorn'
     when TYPES[:new_follower]
       'fa-solid fa-heart'
+    when TYPES[:challenge_response]
+      'fa-solid fa-guitar'
+    when TYPES[:challenge_win]
+      'fa-solid fa-trophy'
     else
       'fa-solid fa-bell'
     end
@@ -237,6 +243,14 @@ class Notification < ApplicationRecord
       Rails.application.routes.url_helpers.band_mainstage_path
     when TYPES[:endorsement], TYPES[:shoutout], TYPES[:new_follower]
       Rails.application.routes.url_helpers.musician_path(user.musician) if user.musician
+    when TYPES[:challenge_response], TYPES[:challenge_win]
+      if notifiable.respond_to?(:challenge)
+        Rails.application.routes.url_helpers.challenge_path(notifiable.challenge)
+      elsif notifiable.is_a?(Challenge)
+        Rails.application.routes.url_helpers.challenge_path(notifiable)
+      else
+        Rails.application.routes.url_helpers.challenges_path
+      end
     else
       '#'
     end
