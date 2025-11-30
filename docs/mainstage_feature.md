@@ -8,9 +8,60 @@ This document also covers the engagement features needed to drive traffic from f
 
 ---
 
+# 📊 IMPLEMENTATION STATUS SUMMARY
+
+*Last updated: December 2025*
+
+## ✅ COMPLETED FEATURES (20/24 core features - 83%)
+
+| Feature | Status | Notes |
+|---------|--------|-------|
+| Follow System | ✅ COMPLETE | Polymorphic for musicians & bands |
+| Profile View Tracking | ✅ COMPLETE | With IP hashing for anonymous |
+| Profile Saves/Bookmarks | ✅ COMPLETE | Polymorphic saves |
+| Spotify/Music Embeds | ✅ COMPLETE | Full oEmbed integration |
+| Endorsements | ✅ COMPLETE | 15 skill types, MAINSTAGE scoring |
+| Shoutouts | ✅ COMPLETE | With notifications |
+| Challenge/Duet System | ✅ COMPLETE | Full workflow with voting |
+| Owner Dashboard | ✅ COMPLETE | Analytics in edit pages |
+| Fan Accounts | ✅ COMPLETE | User types (musician, band_leader, fan) |
+| MAINSTAGE (Musicians) | ✅ COMPLETE | Weekly contests with anti-gaming |
+| MAINSTAGE (Bands) | ✅ COMPLETE | Separate band contests |
+| Notifications | ✅ COMPLETE | 16+ types, ActionCable |
+| Direct Messages | ✅ COMPLETE | 1:1 and band chats |
+| Posts/Feed | ✅ COMPLETE | Personal and band posts |
+| Reposts | ✅ COMPLETE | Share posts to followers |
+| Fan-to-Fan Friendships | ✅ COMPLETE | Request/accept workflow |
+| Activity Tracking | ✅ COMPLETE | Polymorphic activities |
+| Musician Shorts | ✅ COMPLETE | Video uploads with likes/comments |
+| Short Likes & Comments | ✅ COMPLETE | Engagement tracking |
+| Post Comments & Likes | ✅ COMPLETE | Feed engagement |
+
+## 🚧 NOT YET IMPLEMENTED (4 features)
+
+| Feature | Status | Priority |
+|---------|--------|----------|
+| Gig Check-ins | ❌ NOT STARTED | High - Part 10 |
+| Fan Points System | ❌ NOT STARTED | Medium - Part 2 |
+| Groups/Communities | ❌ NOT STARTED | Low - Part 6 |
+| Industry Accounts | ❌ NOT STARTED | Low - Part 7 |
+
+## 📋 FUTURE FEATURES (Not Started)
+
+| Feature | Part | Status |
+|---------|------|--------|
+| Setlist Requests | Part 2 | ❌ NOT STARTED |
+| Merch Store | Part 2 | ❌ NOT STARTED |
+| Advanced Reactions | Part 6 | ❌ NOT STARTED |
+| Real-World Check-ins | Part 10 | ❌ NOT STARTED |
+| Extended Real-World Features | Part 11 | ❌ NOT STARTED |
+| Monetization/Subscriptions | Part 12 | ❌ NOT STARTED |
+
+---
+
 # Part 1: Engagement Features
 
-## 1.1 Follow System
+## 1.1 Follow System ✅ COMPLETE
 
 Allow users to follow musicians and bands.
 
@@ -67,7 +118,7 @@ end
 
 ---
 
-## 1.2 Profile View Tracking
+## 1.2 Profile View Tracking ✅ COMPLETE
 
 Track unique profile visits per week (private to profile owner).
 
@@ -118,7 +169,7 @@ end
 
 ---
 
-## 1.3 Profile Saves/Bookmarks
+## 1.3 Profile Saves/Bookmarks ✅ COMPLETE
 
 Let users save profiles for later.
 
@@ -1785,3 +1836,1849 @@ What artists get from industry features:
 - Artists discovered by industry
 - Booking requests received
 - MAINSTAGE winners who get signed/booked
+
+---
+
+# Part 10: Real-Life Engagement & Verified Check-ins
+
+## 10.1 The Problem
+
+Online engagement is only half the picture. A musician might have viral shorts but empty shows. Conversely, some artists pack venues but have minimal online presence. We need to bridge the gap between digital engagement and real-world attendance.
+
+**Goals:**
+- Verify that fans actually attend shows (not just click "interested")
+- Reward fans for real-world support
+- Give artists proof of draw for booking negotiations
+- Create a flywheel: online engagement → show attendance → more online engagement
+
+---
+
+## 10.2 Verified Check-in System
+
+### How It Works
+
+1. **Fan arrives at venue** for a gig
+2. **Opens Kokai app** and taps "Check In"
+3. **Location verified** via GPS (must be within ~500m of venue)
+4. **Time verified** (must be during or shortly before the gig)
+5. **Check-in confirmed** - fan earns points and badge
+6. **Artist gets credit** for verified attendance
+
+### Verification Methods
+
+| Method | Accuracy | Effort | Notes |
+|--------|----------|--------|-------|
+| GPS Location | Medium | Low | Can be spoofed, but good enough for most cases |
+| QR Code at Venue | High | Medium | Venue displays code, fan scans |
+| NFC Tap | High | Medium | Tap phone at venue terminal |
+| Photo + Location | High | Low | Photo with geotag, manual review if flagged |
+| Ticket Integration | Very High | High | Connect to Eventbrite/Ticketmaster |
+
+**Recommendation:** Start with GPS + Photo, add QR codes for venues that want them.
+
+---
+
+## 10.3 Database Schema
+
+#### `event_checkins`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| user_id | bigint | Fan checking in |
+| gig_id | bigint | The gig (nullable if ad-hoc) |
+| venue_id | bigint | Venue (for non-gig check-ins) |
+| musician_id | bigint | If checking in for specific artist |
+| band_id | bigint | If checking in for specific band |
+| verification_method | string | `gps`, `qr_code`, `nfc`, `photo`, `ticket` |
+| latitude | decimal | User's location at check-in |
+| longitude | decimal | |
+| checked_in_at | datetime | |
+| verified | boolean | Default true, flagged if suspicious |
+| photo | attachment | Optional photo from the show |
+| notes | text | Fan's comment about the show |
+| points_awarded | integer | Points earned |
+| created_at | datetime | |
+
+**Indexes:**
+- `[user_id, gig_id]` unique (one check-in per gig per user)
+- `[gig_id, checked_in_at]` for counting attendance
+- `[musician_id, checked_in_at]` for artist stats
+
+#### `venue_checkin_codes`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| venue_id | bigint | |
+| gig_id | bigint | Optional - code for specific gig |
+| code | string | Unique QR/NFC code |
+| active | boolean | |
+| expires_at | datetime | |
+| created_at | datetime | |
+
+#### `checkin_rewards`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| event_checkin_id | bigint | |
+| reward_type | string | `points`, `badge`, `discount`, `exclusive_content` |
+| reward_value | string | Points amount or reward identifier |
+| claimed | boolean | |
+| claimed_at | datetime | |
+
+---
+
+## 10.4 Check-in Flow
+
+### Basic GPS Check-in
+
+```ruby
+class EventCheckinsController < ApplicationController
+  def create
+    @gig = Gig.find(params[:gig_id])
+
+    # Verify location
+    unless within_venue_radius?(params[:latitude], params[:longitude], @gig.venue)
+      return render json: { error: "You don't appear to be at the venue" }, status: :unprocessable_entity
+    end
+
+    # Verify time (allow 2 hours before start, up to 4 hours after)
+    unless valid_checkin_window?(@gig)
+      return render json: { error: "Check-in window has passed" }, status: :unprocessable_entity
+    end
+
+    @checkin = current_user.event_checkins.create!(
+      gig: @gig,
+      venue: @gig.venue,
+      musician: @gig.band&.musicians&.first, # or specific headliner
+      band: @gig.band,
+      verification_method: 'gps',
+      latitude: params[:latitude],
+      longitude: params[:longitude],
+      points_awarded: calculate_points(@gig)
+    )
+
+    # Award points
+    current_user.fan_points.increment!(:points, @checkin.points_awarded)
+    FanPointTransaction.create!(user: current_user, amount: @checkin.points_awarded, action: 'gig_checkin')
+
+    # Award badges if applicable
+    award_checkin_badges(current_user, @gig)
+
+    # Notify artist
+    notify_artist_of_checkin(@checkin)
+  end
+
+  private
+
+  def within_venue_radius?(lat, lng, venue, radius_meters: 500)
+    # Haversine formula for distance
+    distance = Geocoder::Calculations.distance_between(
+      [lat, lng],
+      [venue.latitude, venue.longitude],
+      units: :m
+    )
+    distance <= radius_meters
+  end
+
+  def valid_checkin_window?(gig)
+    window_start = gig.start_time - 2.hours
+    window_end = gig.start_time + 4.hours
+    Time.current.between?(window_start, window_end)
+  end
+
+  def calculate_points(gig)
+    base_points = 20
+
+    # Bonus for first-time seeing this artist
+    first_time_bonus = first_time_seeing?(current_user, gig.band) ? 10 : 0
+
+    # Bonus for checking in early (not last minute)
+    early_bird_bonus = Time.current < gig.start_time ? 5 : 0
+
+    base_points + first_time_bonus + early_bird_bonus
+  end
+end
+```
+
+### QR Code Check-in
+
+```ruby
+class QrCheckinsController < ApplicationController
+  def scan
+    code = VenueCheckinCode.active.find_by(code: params[:code])
+
+    unless code
+      return render json: { error: "Invalid or expired code" }, status: :not_found
+    end
+
+    gig = code.gig || code.venue.current_gig
+
+    @checkin = current_user.event_checkins.create!(
+      gig: gig,
+      venue: code.venue,
+      verification_method: 'qr_code',
+      points_awarded: 25 # Bonus for QR verification
+    )
+
+    # Same rewards flow as above
+  end
+end
+```
+
+---
+
+## 10.5 Fan Rewards for Check-ins
+
+### Points System (Enhanced)
+
+| Action | Points | Notes |
+|--------|--------|-------|
+| Basic check-in (GPS) | 20 | Standard show attendance |
+| QR/NFC verified check-in | 25 | Higher trust verification |
+| First time seeing artist | +10 | Discovery bonus |
+| Early bird (before show starts) | +5 | Encourages arriving early |
+| Photo with check-in | +5 | User-generated content |
+| Check-in streak (3+ shows/month) | +15 | Loyalty bonus |
+| Bringing a friend (both check in) | +10 each | Referral to real life |
+
+### Badges
+
+| Badge | Requirement | Description |
+|-------|-------------|-------------|
+| 🎫 Gig Goer | 5 check-ins | Regular show attendee |
+| 🎪 Festival Fan | 10 check-ins | Dedicated live music fan |
+| 🌟 Super Supporter | 25 check-ins | Serious scene supporter |
+| 🏆 Scene Legend | 50 check-ins | Legendary live music presence |
+| 🔥 Streak Master | 4-week streak | Consistent attendance |
+| 🎸 Artist Superfan | 5 shows same artist | Dedicated follower |
+| 🌍 Venue Explorer | 10 different venues | Variety seeker |
+| 🌅 Early Bird | 10 early check-ins | Always there early |
+
+### Exclusive Rewards
+
+```ruby
+# Fan can redeem points for:
+REWARDS = {
+  merch_discount_10: { points: 100, description: "10% off merch at any artist" },
+  merch_discount_25: { points: 200, description: "25% off merch at any artist" },
+  meet_greet_raffle: { points: 150, description: "Entry into meet & greet lottery" },
+  exclusive_content: { points: 50, description: "Unlock behind-the-scenes content" },
+  front_row_priority: { points: 300, description: "Priority entry at next show" },
+  signed_poster: { points: 500, description: "Signed poster from artist (if available)" }
+}
+```
+
+---
+
+## 10.6 Artist Benefits
+
+### Dashboard Stats
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🎫 LIVE PERFORMANCE STATS                                  │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Total Verified Attendees: 1,247                            │
+│                                                             │
+│  ┌──────────────┐ ┌──────────────┐ ┌──────────────┐        │
+│  │ Last Show    │ │ Avg per Show │ │ Return Rate  │        │
+│  │     156      │ │     89       │ │    34%       │        │
+│  └──────────────┘ └──────────────┘ └──────────────┘        │
+│                                                             │
+│  Recent Shows                                               │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ Nov 23 - The Echo       | 156 verified | 78 new fans│   │
+│  │ Nov 15 - The Satellite  | 98 verified  | 45 new fans│   │
+│  │ Nov 8 - The Troubadour  | 134 verified | 52 new fans│   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│  Fan Geography (from check-ins)                             │
+│  Los Angeles: 67%  |  San Diego: 12%  |  Other: 21%        │
+│                                                             │
+│  [Download Proof of Draw Report]                            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Proof of Draw Document
+
+Artists can generate a PDF report showing:
+- Total verified attendees across shows
+- Average attendance per show
+- Fan geography distribution
+- Return visitor rate
+- Growth trend over time
+
+**This is GOLD for booking negotiations.** Instead of saying "we draw about 100 people," artists can say "We have 1,247 verified unique attendees across 14 shows, with a 34% return rate and 89 average per show."
+
+### MAINSTAGE Integration
+
+Real-life engagement feeds into MAINSTAGE score:
+
+| Metric | Points per Instance |
+|--------|---------------------|
+| Verified fan check-in | 5 points to artist |
+| New fan's first check-in | 8 points (discovery bonus) |
+| Fan photo posted | 3 points |
+| Return visitor check-in | 7 points (loyalty bonus) |
+
+---
+
+## 10.7 Venue Benefits
+
+### Venue Dashboard
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🏢 VENUE: The Echo - Dashboard                             │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Tonight's Show                                             │
+│  Band: The Vibes  |  Doors: 8pm  |  QR Code: [ACTIVE]       │
+│                                                             │
+│  Real-time Check-ins: 47 (and counting...)                  │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │ [QR Code for Tonight]                               │   │
+│  │                                                      │   │
+│  │ Display this at the entrance for                    │   │
+│  │ fans to scan and check in                           │   │
+│  │                                                      │   │
+│  │ [Download] [Print] [Send to Door Staff]             │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+│  Historical Data                                            │
+│  • Total check-ins this month: 1,892                        │
+│  • Average per show: 126                                    │
+│  • Top performing night: Saturday (avg 167)                 │
+│                                                             │
+│  [Generate Monthly Report]                                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Benefits for Venues
+- Real attendance data (not just ticket sales - some shows are free)
+- Fan demographics and preferences
+- Proof of venue popularity for sponsors
+- Understand which artists draw best
+
+---
+
+## 10.8 Anti-Fraud Measures
+
+### Detection Methods
+
+1. **Velocity Check**: Flag if same user checks in to multiple distant venues quickly
+2. **Photo Analysis**: EXIF data verification, duplicate image detection
+3. **Device Fingerprinting**: Track if same device is used for multiple accounts
+4. **Time Pattern Analysis**: Flag users who always check in at exactly the same time
+5. **Social Verification**: Option for friends to "verify" each other's attendance
+
+### Suspicious Activity Flags
+
+```ruby
+class CheckinFraudDetector
+  def analyze(checkin)
+    flags = []
+
+    # Check for GPS spoofing patterns
+    if suspicious_location_pattern?(checkin.user)
+      flags << :location_anomaly
+    end
+
+    # Check for impossible travel
+    if impossible_travel?(checkin)
+      flags << :impossible_travel
+    end
+
+    # Check for duplicate photos
+    if duplicate_photo?(checkin.photo)
+      flags << :duplicate_photo
+    end
+
+    # Flag but don't auto-reject
+    if flags.any?
+      checkin.update(flagged: true, flag_reasons: flags)
+      AdminNotification.create(subject: checkin, type: 'suspicious_checkin')
+    end
+  end
+
+  def impossible_travel?(checkin)
+    last_checkin = checkin.user.event_checkins.where.not(id: checkin.id).order(created_at: :desc).first
+    return false unless last_checkin
+
+    time_diff = checkin.created_at - last_checkin.created_at
+    distance = Geocoder::Calculations.distance_between(
+      [checkin.latitude, checkin.longitude],
+      [last_checkin.latitude, last_checkin.longitude],
+      units: :km
+    )
+
+    # If distance/time suggests >200 km/h travel, flag it
+    speed_kmh = (distance / (time_diff / 1.hour))
+    speed_kmh > 200
+  end
+end
+```
+
+### Penalty System
+
+- **First offense**: Warning, points not awarded
+- **Second offense**: Points revoked, 30-day check-in suspension
+- **Third offense**: Permanent ban from check-in rewards
+- **Severe fraud**: Account suspension pending review
+
+---
+
+## 10.9 Integration with Existing Features
+
+### Feed Integration
+
+When a fan checks in:
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 🎫 Sarah just checked in at The Echo                       │
+│    Seeing: The Vibes                                        │
+│    [Photo from the show]                                    │
+│    "Amazing energy tonight! 🔥"                             │
+│                                                             │
+│    ❤️ 23  💬 5  •  2 hours ago                              │
+│    [Like] [Comment] [I'm here too!]                         │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Friend Meetup Feature
+
+When friends are at the same show:
+```
+┌─────────────────────────────────────────────────────────────┐
+│ 🎉 3 of your friends are at The Echo tonight!               │
+│                                                             │
+│ [Avatar] Mike  [Avatar] Sarah  [Avatar] John                │
+│                                                             │
+│ [Message Group] [Find Them]                                 │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Post-Show Engagement
+
+After a show, fans can:
+- Rate the performance (1-5 stars, private to artist)
+- Leave a review (public or private)
+- Share their photo to the artist's page
+- Tag the short they want to see next
+
+---
+
+## 10.10 Implementation Phases
+
+### Phase 1: Basic Check-ins (Week 1-2)
+- GPS-based check-in
+- Basic points system
+- Simple badges
+- Artist notification of check-ins
+
+### Phase 2: Enhanced Verification (Week 3-4)
+- Photo upload with check-in
+- QR code generation for venues
+- Anti-fraud detection (basic)
+- Venue dashboard
+
+### Phase 3: Rewards & Integration (Week 5-6)
+- Full badge system
+- Points redemption
+- Feed integration
+- Friend meetup features
+
+### Phase 4: Artist Analytics (Week 7-8)
+- Proof of draw reports
+- MAINSTAGE integration
+- Geographic fan data
+- Return visitor tracking
+
+### Phase 5: Advanced Features (Week 9-10)
+- NFC tap check-ins
+- Ticket platform integration
+- Premium venue features
+- Enterprise analytics
+
+---
+
+## 10.11 Success Metrics
+
+| Metric | Target |
+|--------|--------|
+| Check-in adoption rate | 30% of users with gig nearby |
+| Verified check-ins per gig | 50+ average |
+| Points redemption rate | 40% of earned points |
+| Fraud rate | <2% flagged, <0.5% confirmed |
+| Artist satisfaction | 4.5/5 on "useful for booking" |
+| Return attendance rate | 25%+ fans return to same artist |
+
+---
+
+## 10.12 Future Possibilities
+
+### Ticket Integration
+- Partner with Eventbrite, Ticketmaster, DICE
+- Auto-check-in when ticket is scanned
+- Import past attendance history
+
+### Wearables
+- Apple Watch / WearOS app for quick check-ins
+- NFC wristbands at festivals
+
+### AR Features
+- "Fan cam" - AR overlay showing other Kokai users nearby
+- Shared AR experiences at shows
+
+### Gamification
+- "Collect all venues" city-based achievements
+- Artist scavenger hunts
+- Fan-vs-fan attendance competitions
+
+### Monetization
+- Premium check-in features (detailed stats)
+- Venue subscriptions for advanced analytics
+- "VIP Fan" status with real-world perks
+
+---
+
+# Part 11: Extended Real-World Engagement Features
+
+Beyond gig check-ins, there are many more ways to bridge physical and digital engagement.
+
+---
+
+## 11.1 Merch Verification System
+
+Physical merchandise becomes a verified connection between fan and artist.
+
+### How It Works
+
+1. Artist adds unique QR codes to merch (printed on tags, stickers, or packaging)
+2. Fan purchases merch at show or online
+3. Fan scans QR code to "register" the item
+4. Fan unlocks exclusive content and earns points
+5. Artist gets verified sales data
+
+### Database Schema
+
+#### `merch_codes`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| band_id | bigint | |
+| musician_id | bigint | |
+| code | string | Unique scannable code |
+| item_type | string | `tshirt`, `hoodie`, `vinyl`, `poster`, `sticker`, etc. |
+| item_name | string | e.g., "Tour 2025 Black Tee" |
+| batch_id | string | For tracking production runs |
+| redeemed | boolean | Default false |
+| redeemed_by_id | bigint | User who claimed it |
+| redeemed_at | datetime | |
+| created_at | datetime | |
+
+#### `merch_registrations`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| user_id | bigint | |
+| merch_code_id | bigint | |
+| points_awarded | integer | |
+| unlocked_content | jsonb | What they got access to |
+| photo | attachment | Optional photo of them with merch |
+| created_at | datetime | |
+
+### Rewards for Merch Registration
+
+| Item Type | Points | Bonus |
+|-----------|--------|-------|
+| Sticker | 10 | - |
+| Poster | 20 | - |
+| T-shirt | 30 | Unlock exclusive wallpaper |
+| Hoodie | 40 | Unlock behind-the-scenes video |
+| Vinyl/CD | 50 | Unlock bonus track or demo |
+| Limited Edition | 75 | Early access to next release |
+
+### Artist Benefits
+
+- Know exactly how many items sold (not just shipped to retailers)
+- See geographic distribution of merch sales
+- Connect with superfans who buy multiple items
+- "X verified owners" badge on merch store
+
+### Merch Collector Badges
+
+| Badge | Requirement |
+|-------|-------------|
+| 👕 Merch Supporter | Register 1 item |
+| 🛍️ Merch Collector | Register 5 items |
+| 💎 Superfan Collector | Register 10+ items from same artist |
+| 🌈 Variety Collector | Register items from 10 different artists |
+
+---
+
+## 11.2 Tip Jar / Street Performer Mode
+
+For buskers, open mic performers, and impromptu performances.
+
+### How It Works
+
+1. Musician enables "Tip Jar Mode" in app
+2. App generates a QR code with their profile
+3. Display QR code while performing (phone stand, printed sign)
+4. Passersby scan to tip (Stripe/PayPal integration)
+5. Tipper automatically follows artist, earns points
+6. Creates verified "discovered in the wild" connection
+
+### Database Schema
+
+#### `tip_jar_sessions`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| musician_id | bigint | |
+| location_name | string | e.g., "Pike Place Market" |
+| latitude | decimal | |
+| longitude | decimal | |
+| started_at | datetime | |
+| ended_at | datetime | |
+| total_tips_cents | integer | |
+| tip_count | integer | |
+| new_followers_count | integer | |
+
+#### `tips`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| tip_jar_session_id | bigint | |
+| tipper_id | bigint | User who tipped |
+| musician_id | bigint | |
+| amount_cents | integer | |
+| message | text | Optional note |
+| stripe_payment_id | string | |
+| created_at | datetime | |
+
+### Fan Rewards
+
+| Action | Points |
+|--------|--------|
+| Tip any amount | 15 |
+| Tip $5+ | 25 |
+| First tip to new artist | +10 bonus |
+| Tip streak (3 different artists) | +20 bonus |
+
+### Badges
+
+| Badge | Requirement |
+|-------|-------------|
+| 🎩 Street Supporter | Tip 1 busker |
+| 🌟 Talent Scout | Tip 5 different street performers |
+| 💰 Generous Patron | Tip $50+ total |
+| 🗺️ City Explorer | Tip performers in 3 different cities |
+
+### Artist Dashboard
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🎩 TIP JAR STATS                                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Total Tips Received: $342.50                               │
+│  Unique Tippers: 67                                         │
+│  Converted to Followers: 45 (67%)                           │
+│                                                             │
+│  Best Locations                                             │
+│  1. Pike Place Market - $156 (23 tips)                      │
+│  2. Santa Monica Pier - $98 (18 tips)                       │
+│  3. Union Square - $88 (26 tips)                            │
+│                                                             │
+│  [Start Tip Jar Session]                                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 11.3 Live Setlist Voting
+
+Real-time song voting during performances.
+
+### How It Works
+
+1. Artist starts a "Live Set" mode before performing
+2. Fans at the venue (location-verified) can vote on songs
+3. Artist sees real-time results on their device
+4. Winning song gets played, voters earn points
+5. Creates engagement DURING the show, not just before/after
+
+### Database Schema
+
+#### `live_sets`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| band_id | bigint | |
+| gig_id | bigint | Optional |
+| venue_id | bigint | |
+| started_at | datetime | |
+| ended_at | datetime | |
+| status | string | `active`, `paused`, `ended` |
+
+#### `setlist_polls`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| live_set_id | bigint | |
+| question | string | e.g., "What should we play next?" |
+| status | string | `open`, `closed` |
+| winner_option_id | bigint | |
+| opened_at | datetime | |
+| closed_at | datetime | |
+
+#### `setlist_poll_options`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| setlist_poll_id | bigint | |
+| song_title | string | |
+| votes_count | integer | Counter cache |
+
+#### `setlist_poll_votes`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| setlist_poll_option_id | bigint | |
+| user_id | bigint | |
+| latitude | decimal | For location verification |
+| longitude | decimal | |
+| created_at | datetime | |
+
+### Fan Experience
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🎤 LIVE: The Vibes @ The Echo                              │
+│  "What should we play next?"                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ████████████████████░░░░  "Midnight Drive" (67%)           │
+│  ██████████░░░░░░░░░░░░░░  "Summer Haze" (23%)              │
+│  ████░░░░░░░░░░░░░░░░░░░░  "City Lights" (10%)              │
+│                                                             │
+│  47 fans voting • Closes in 0:45                            │
+│                                                             │
+│  [Vote] You voted for "Midnight Drive" ✓                    │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Rewards
+
+| Action | Points |
+|--------|--------|
+| Vote in live poll | 5 |
+| Vote for winning song | +3 bonus |
+| Vote in 5+ polls same show | +10 bonus |
+
+### Artist Benefits
+
+- Real-time crowd feedback
+- Know which songs fans actually want
+- Data on song popularity by city/venue
+- "Fan favorite" tags on songs
+
+---
+
+## 11.4 Physical Music Verification (Vinyl/CD)
+
+Verify ownership of physical music releases.
+
+### How It Works
+
+1. Artist includes unique code inside vinyl sleeve, CD booklet, or cassette case
+2. Fan purchases physical music
+3. Fan enters code or scans QR to register
+4. Unlocks bonus content (demos, stems, commentary)
+5. Creates "vinyl collector" connection
+
+### Database Schema
+
+#### `physical_release_codes`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| band_id | bigint | |
+| musician_id | bigint | |
+| release_title | string | Album/EP name |
+| format | string | `vinyl`, `cd`, `cassette`, `box_set` |
+| code | string | Unique code |
+| edition | string | `standard`, `limited`, `signed` |
+| redeemed | boolean | |
+| redeemed_by_id | bigint | |
+| redeemed_at | datetime | |
+
+### Unlockable Content
+
+| Format | Unlocks |
+|--------|---------|
+| CD | Digital download + bonus track |
+| Vinyl | High-res audio files + liner notes PDF |
+| Cassette | Exclusive B-side + retro filter for profile |
+| Limited Edition | All above + video commentary |
+| Signed Copy | All above + artist shoutout video |
+
+### Collector Badges
+
+| Badge | Requirement |
+|-------|-------------|
+| 💿 CD Collector | Register 3 CDs |
+| 🎵 Vinyl Head | Register 3 vinyl records |
+| 📼 Retro Fan | Register any cassette |
+| 📦 Complete Set | Register all formats from one release |
+| 🏆 Physical Purist | Register 20+ physical items |
+
+---
+
+## 11.5 Lesson & Workshop Verification
+
+Connect teachers and students through verified instruction.
+
+### How It Works
+
+1. Musician marks themselves as offering lessons
+2. Creates a lesson session with unique code
+3. Student checks in at start of lesson
+4. Both earn points and build connection
+5. Student can display "learned from" on profile
+
+### Database Schema
+
+#### `lesson_sessions`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| teacher_id | bigint | Musician teaching |
+| student_id | bigint | User learning |
+| lesson_type | string | `private`, `group`, `workshop`, `masterclass` |
+| topic | string | e.g., "Jazz improvisation basics" |
+| duration_minutes | integer | |
+| location | string | |
+| verified | boolean | Both parties confirmed |
+| teacher_points | integer | |
+| student_points | integer | |
+| session_date | datetime | |
+| created_at | datetime | |
+
+#### `mentorship_connections`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| teacher_id | bigint | |
+| student_id | bigint | |
+| total_lessons | integer | Counter |
+| skills_taught | string[] | Array of skills |
+| public_display | boolean | Show on profiles |
+| started_at | datetime | |
+
+### Profile Display
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🎓 LEARNING JOURNEY                                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Studied with:                                              │
+│  [Avatar] Jane Doe - Jazz Guitar (12 lessons)               │
+│  [Avatar] Mike Smith - Music Theory (5 lessons)             │
+│                                                             │
+│  Skills Learned:                                            │
+│  [Jazz Improv] [Chord Voicings] [Sight Reading]            │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Teacher Profile
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🎓 TEACHING STATS                                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Total Students: 47                                         │
+│  Total Lessons Given: 234                                   │
+│  Specialties: Jazz Guitar, Music Theory                     │
+│                                                             │
+│  Recent Students:                                           │
+│  [Avatar] [Avatar] [Avatar] [Avatar] +43 more              │
+│                                                             │
+│  [I Offer Lessons] ← Toggle to show on profile              │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Badges
+
+| Badge | Requirement |
+|-------|-------------|
+| 📚 Student | Complete 5 lessons |
+| 🎓 Dedicated Learner | Complete 20 lessons |
+| 👨‍🏫 Teacher | Teach 10 lessons |
+| 🏫 Master Instructor | Teach 50 lessons |
+| 🤝 Mentorship | 10+ lessons with same teacher |
+
+---
+
+## 11.6 Jam Session & Open Mic Verification
+
+Verify collaborative musical experiences.
+
+### How It Works
+
+1. Musician creates a "Jam Session" event
+2. Other musicians check in when they join
+3. All participants verify each other
+4. Creates "played with" connections
+5. Builds collaboration network with real-world proof
+
+### Database Schema
+
+#### `jam_sessions`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| creator_id | bigint | Musician who started it |
+| venue_id | bigint | Optional |
+| location_name | string | |
+| latitude | decimal | |
+| longitude | decimal | |
+| session_type | string | `jam`, `open_mic`, `rehearsal`, `recording` |
+| started_at | datetime | |
+| ended_at | datetime | |
+| public | boolean | Visible on feed |
+
+#### `jam_participants`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| jam_session_id | bigint | |
+| musician_id | bigint | |
+| instrument_played | string | What they played |
+| verified_by_count | integer | How many others verified them |
+| joined_at | datetime | |
+
+#### `jam_verifications`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| verifier_id | bigint | Musician verifying |
+| verified_id | bigint | Musician being verified |
+| jam_session_id | bigint | |
+| created_at | datetime | |
+
+### Collaboration Network
+
+When two musicians verify each other at a jam:
+- Both get "Played with [Name]" on profile
+- Connection strength increases with more jams
+- Creates a visual collaboration graph
+
+### Profile Display
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🎸 COLLABORATION NETWORK                                   │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Played with 23 musicians                                   │
+│                                                             │
+│  Frequent Collaborators:                                    │
+│  [Avatar] Mike (Drums) - 12 sessions                        │
+│  [Avatar] Sarah (Bass) - 8 sessions                         │
+│  [Avatar] John (Keys) - 5 sessions                          │
+│                                                             │
+│  Recent Sessions:                                           │
+│  • Jazz Jam @ Blue Note - Nov 28 (4 musicians)              │
+│  • Open Mic @ The Local - Nov 21 (verified)                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Badges
+
+| Badge | Requirement |
+|-------|-------------|
+| 🎵 Jammer | Attend 5 jam sessions |
+| 🤝 Collaborator | Play with 10 different musicians |
+| 🎪 Session Regular | 20+ jams at same venue |
+| 🌐 Network Builder | 50+ verified connections |
+| 🎤 Open Mic Hero | 10 open mic appearances |
+
+---
+
+## 11.7 AI-Powered Photo Verification
+
+Use computer vision to verify attendance and purchases.
+
+### How It Works
+
+1. Fan uploads photo from show or with merch
+2. AI analyzes for: band logos, stage presence, venue markers, merch items
+3. Auto-tags relevant artist/venue
+4. Creates verified connection without manual codes
+
+### Use Cases
+
+| Photo Type | AI Detection | Result |
+|------------|--------------|--------|
+| Concert photo | Stage, band members, venue logo | Verify attendance |
+| Selfie with merch | T-shirt logo, design pattern | Verify merch ownership |
+| Ticket stub | Event name, date, venue | Verify purchase |
+| Meet & greet | Face matching with artist | Verify VIP experience |
+| Signed item | Signature pattern matching | Verify authenticity |
+
+### Database Schema
+
+#### `photo_verifications`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| user_id | bigint | |
+| photo | attachment | |
+| verification_type | string | `concert`, `merch`, `ticket`, `meet_greet` |
+| ai_confidence | decimal | 0.0-1.0 |
+| detected_entities | jsonb | What AI found |
+| verified | boolean | Manual override if needed |
+| linked_band_id | bigint | |
+| linked_musician_id | bigint | |
+| linked_gig_id | bigint | |
+| linked_venue_id | bigint | |
+| created_at | datetime | |
+
+### AI Detection Response
+
+```json
+{
+  "detected_entities": {
+    "band_logo": { "name": "The Vibes", "confidence": 0.94 },
+    "venue": { "name": "The Echo", "confidence": 0.87 },
+    "stage_presence": true,
+    "crowd_visible": true,
+    "estimated_date": "2025-11-28",
+    "merch_items": []
+  },
+  "suggested_verification": "gig_attendance",
+  "overall_confidence": 0.91
+}
+```
+
+### Privacy Considerations
+
+- No facial recognition of other fans (only artist matching if enabled)
+- Photos stored securely, not shared without permission
+- AI runs on-device when possible
+- User can delete verification data anytime
+
+---
+
+## 11.8 Local Music Business Partnerships
+
+Partner with music-related businesses for check-ins.
+
+### Partner Types
+
+| Business Type | Check-in Benefit |
+|---------------|------------------|
+| Guitar/Music Shops | "Gear Head" points, store discounts |
+| Record Stores | "Vinyl Hunter" points, exclusive releases |
+| Music Venues | Early show announcements, priority entry |
+| Rehearsal Studios | "Dedicated Musician" badge |
+| Music Schools | Student/teacher verification |
+| Instrument Repair | "Gear Care" badge |
+
+### Database Schema
+
+#### `partner_locations`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| name | string | |
+| business_type | string | |
+| address | string | |
+| latitude | decimal | |
+| longitude | decimal | |
+| partner_tier | string | `basic`, `premium`, `exclusive` |
+| checkin_points | integer | |
+| active | boolean | |
+
+#### `partner_checkins`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| user_id | bigint | |
+| partner_location_id | bigint | |
+| verification_method | string | `gps`, `qr_code`, `purchase` |
+| points_awarded | integer | |
+| purchase_amount_cents | integer | Optional |
+| checked_in_at | datetime | |
+
+### Partner Dashboard
+
+Partners get analytics on:
+- Check-in traffic from Kokai users
+- Demographics of music fans visiting
+- Conversion from check-in to purchase
+- Comparison to other partner locations
+
+### Badges
+
+| Badge | Requirement |
+|-------|-------------|
+| 🎸 Gear Head | 5 music shop check-ins |
+| 💿 Crate Digger | 10 record store check-ins |
+| 🏠 Local Supporter | Check in at 10 different local businesses |
+| 🌟 Scene Builder | 50 total partner check-ins |
+
+### Rewards
+
+- Partner-specific discounts (10% off at participating stores)
+- Exclusive merch only available through check-ins
+- Early access to limited releases at record stores
+- Free rehearsal room time at partner studios
+
+---
+
+## 11.9 MAINSTAGE Integration for All Real-World Features
+
+All real-world engagement feeds into MAINSTAGE scoring.
+
+### Points to Artist
+
+| Real-World Action | MAINSTAGE Points |
+|-------------------|------------------|
+| Verified gig attendance | 5 |
+| Merch registration | 8 |
+| Tip received | 3 per dollar (capped at 30) |
+| Setlist vote received | 2 |
+| Physical release registered | 10 |
+| Lesson taught | 5 |
+| Jam session (verified) | 4 |
+| Photo verification | 3 |
+| Partner check-in (at artist's show venue) | 2 |
+
+### "Real-World Champion" Category
+
+New MAINSTAGE category for artists with strongest real-world presence:
+- Weighs physical engagement higher
+- Rewards artists who tour actively
+- Recognizes teaching and mentorship
+- Highlights local scene builders
+
+### Leaderboard Display
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🏆 MAINSTAGE: Real-World Champions                         │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. 🥇 Jane Doe                                             │
+│     📍 12 shows | 👕 89 merch | 🎓 47 students | Score: 1,847│
+│                                                             │
+│  2. 🥈 The Vibes                                            │
+│     📍 18 shows | 👕 234 merch | 🎤 14 jams | Score: 1,623  │
+│                                                             │
+│  3. 🥉 DrummerBoi                                           │
+│     📍 8 shows | 🎩 $450 tips | 🎓 23 students | Score: 1,456│
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 11.10 Implementation Priority
+
+### Phase 1: Foundation (Weeks 1-3)
+1. Gig check-ins (from Part 10)
+2. Merch verification (basic QR codes)
+3. Tip jar mode
+
+### Phase 2: Collaboration (Weeks 4-6)
+4. Jam session verification
+5. Lesson tracking
+6. Open mic check-ins
+
+### Phase 3: Advanced Verification (Weeks 7-9)
+7. Physical music codes
+8. Live setlist voting
+9. AI photo verification (basic)
+
+### Phase 4: Partnerships (Weeks 10-12)
+10. Partner location network
+11. Partner dashboard
+12. Cross-promotion system
+
+### Phase 5: MAINSTAGE Integration (Weeks 13-14)
+13. Real-world scoring weights
+14. "Real-World Champion" category
+15. Combined analytics dashboard
+
+---
+
+## 11.11 Success Metrics
+
+| Feature | Target Metric |
+|---------|---------------|
+| Merch verification | 20% of merch buyers register |
+| Tip jar | 500 active buskers, $10k monthly tips |
+| Setlist voting | 40% of checked-in fans vote |
+| Physical releases | 15% registration rate |
+| Lessons | 200 active teacher profiles |
+| Jam sessions | 1,000 monthly verified jams |
+| Photo verification | 80% AI accuracy |
+| Partner check-ins | 50 partner locations, 5k monthly check-ins |
+
+---
+
+## 11.12 The Flywheel Effect
+
+All these features create a virtuous cycle:
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                                                             │
+│     Fan discovers artist online (shorts, feed)              │
+│                    ↓                                        │
+│     Fan attends show (verified check-in)                    │
+│                    ↓                                        │
+│     Fan buys merch (verified registration)                  │
+│                    ↓                                        │
+│     Fan shares photo (AI verified)                          │
+│                    ↓                                        │
+│     Artist gains MAINSTAGE points                           │
+│                    ↓                                        │
+│     Artist ranks higher, more visibility                    │
+│                    ↓                                        │
+│     More fans discover artist online                        │
+│                    ↓                                        │
+│     (Cycle repeats, growing each time)                      │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+**The key insight:** Every real-world interaction strengthens the digital connection, and every digital connection drives real-world action. This creates a platform that's impossible to replicate by competitors who only track one or the other.
+
+---
+
+# Part 12: Monetization Strategy
+
+## 12.1 Core Philosophy
+
+**"Free to thrive, pay to accelerate."**
+
+The platform must remain valuable and fully functional for free users. Paid features should:
+- Save time, not gate essential functionality
+- Provide professional tools for serious users
+- Never create a "pay-to-win" dynamic for MAINSTAGE
+- Feel like a natural upgrade, not a restriction removal
+
+### What Stays Free Forever
+
+| Feature | Why It's Free |
+|---------|---------------|
+| Profile creation | Core value prop |
+| Uploading shorts | Content is the platform |
+| Following/followers | Network effects need scale |
+| Basic analytics | Artists need to see growth |
+| MAINSTAGE participation | Competition drives engagement |
+| Check-ins & badges | Gamification needs mass adoption |
+| Messaging (basic) | Communication is essential |
+| Applying to gigs | Bands need opportunities |
+| Fan features | Fans drive artist success |
+
+---
+
+## 12.2 Revenue Streams Overview
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  KOKAI REVENUE MODEL                                        │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  1. Artist Subscriptions (PRO)         ~40% of revenue      │
+│     └─ Monthly fee for professional tools                   │
+│                                                             │
+│  2. Industry Subscriptions (B2B)       ~25% of revenue      │
+│     └─ Labels, agents, venues pay for discovery tools       │
+│                                                             │
+│  3. Transaction Fees                   ~20% of revenue      │
+│     └─ Tips, merch, ticket sales, booking fees              │
+│                                                             │
+│  4. Promoted Content                   ~10% of revenue      │
+│     └─ Artists pay for visibility boost                     │
+│                                                             │
+│  5. Premium Fan Features               ~5% of revenue       │
+│     └─ Superfan perks and exclusive access                  │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 12.3 Artist PRO Subscription
+
+### Pricing Tiers
+
+| Tier | Price | Target User |
+|------|-------|-------------|
+| **Free** | $0/month | Hobbyists, new artists |
+| **PRO** | $9.99/month | Serious independent artists |
+| **PRO Band** | $19.99/month | Full bands (all members get PRO) |
+| **PRO Annual** | $99/year | Committed artists (save 17%) |
+
+### PRO Features
+
+#### Analytics & Insights
+| Feature | Free | PRO |
+|---------|------|-----|
+| Profile views (this week) | ✓ | ✓ |
+| Profile views (all time + trends) | - | ✓ |
+| Follower demographics (age, location) | - | ✓ |
+| Best posting times | - | ✓ |
+| Competitor benchmarking | - | ✓ |
+| Export analytics to PDF/CSV | - | ✓ |
+| Real-time engagement alerts | - | ✓ |
+
+#### Profile Customization
+| Feature | Free | PRO |
+|---------|------|-----|
+| Basic profile | ✓ | ✓ |
+| Custom banner | ✓ | ✓ |
+| Verified badge eligibility | - | ✓ |
+| Custom profile URL (kokai.fm/yourname) | - | ✓ |
+| Profile themes/colors | - | ✓ |
+| Pinned shorts (up to 3) | 1 | 3 |
+| Featured video autoplay | - | ✓ |
+| Hide "Powered by Kokai" on embeds | - | ✓ |
+
+#### Content Tools
+| Feature | Free | PRO |
+|---------|------|-----|
+| Upload shorts | ✓ | ✓ |
+| Schedule posts | - | ✓ |
+| Draft saving | 3 | Unlimited |
+| Video quality (upload) | 1080p | 4K |
+| Longer shorts (up to 3 min) | - | ✓ |
+| Watermark removal on downloads | - | ✓ |
+| Bulk upload | - | ✓ |
+
+#### Communication
+| Feature | Free | PRO |
+|---------|------|-----|
+| DMs with fans | 20/day | Unlimited |
+| Broadcast messages to followers | - | ✓ |
+| Auto-reply setup | - | ✓ |
+| Priority inbox (industry contacts first) | - | ✓ |
+
+#### MAINSTAGE & Competitions
+| Feature | Free | PRO |
+|---------|------|-----|
+| Participate in MAINSTAGE | ✓ | ✓ |
+| See detailed score breakdown | - | ✓ |
+| Historical ranking trends | - | ✓ |
+| Personalized tips to improve rank | - | ✓ |
+
+#### Real-World Tools
+| Feature | Free | PRO |
+|---------|------|-----|
+| Gig check-in visibility | ✓ | ✓ |
+| Proof of Draw report | Basic | Detailed PDF |
+| Merch code generation | 50/month | Unlimited |
+| Tip jar (transaction fee) | 10% | 5% |
+| Live setlist polling | - | ✓ |
+
+### PRO Value Proposition
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  🎸 UPGRADE TO PRO                                          │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  You're leaving opportunities on the table.                 │
+│                                                             │
+│  This week you missed:                                      │
+│  • 47 profile views you can't analyze                       │
+│  • 3 industry professionals who viewed your profile         │
+│  • The best time to post (your fans are most active at 8pm) │
+│                                                             │
+│  PRO artists grow 3x faster on average.                     │
+│                                                             │
+│  ┌─────────────────────────────────────────────────────┐   │
+│  │  $9.99/month • Cancel anytime                       │   │
+│  │  [Start 14-Day Free Trial]                          │   │
+│  └─────────────────────────────────────────────────────┘   │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 12.4 Industry Subscriptions (B2B)
+
+Already detailed in Part 7, but summarized here:
+
+| Tier | Price | Features |
+|------|-------|----------|
+| **Free** | $0 | Browse public profiles, basic search |
+| **Pro** | $75/month | Advanced search, watchlists, contact artists |
+| **Enterprise** | $500+/month | API access, custom reports, A&R alerts |
+
+### Revenue Potential
+
+- 500 Pro subscribers = $37,500/month
+- 50 Enterprise subscribers = $25,000+/month
+- **Total B2B potential: $60,000+/month**
+
+---
+
+## 12.5 Transaction Fees
+
+Take a small cut of money flowing through the platform.
+
+### Fee Structure
+
+| Transaction Type | Platform Fee | Notes |
+|------------------|--------------|-------|
+| Tips (free users) | 10% | Incentive to go PRO |
+| Tips (PRO users) | 5% | PRO benefit |
+| Merch sales | 8% | If using native store |
+| Ticket sales | 5% + $0.50 | For gigs booked through platform |
+| Booking deposits | 3% | When bands get booked via platform |
+| Lesson payments | 10% | If booked through platform |
+
+### Why This Works
+
+- Fans are used to transaction fees (Venmo, PayPal, etc.)
+- Artists accept fees when the platform brings them business
+- Lower fees than competitors (Bandcamp takes 15%, Patreon 8-12%)
+
+### Revenue Projections
+
+| Scenario | Monthly GMV | Platform Revenue |
+|----------|-------------|------------------|
+| Year 1 | $50,000 | $3,500 |
+| Year 2 | $500,000 | $35,000 |
+| Year 3 | $2,000,000 | $140,000 |
+
+---
+
+## 12.6 Promoted Content
+
+Artists pay to boost visibility without gaming MAINSTAGE.
+
+### Promotion Types
+
+#### 1. Promoted Shorts
+- Appears in "Discover" feed with "Promoted" label
+- Targeted by genre, location, or interests
+- **Pricing:** $5-50/day depending on reach
+
+#### 2. Featured Profile
+- Appears in "Featured Artists" section
+- Homepage visibility for 24 hours
+- **Pricing:** $25/day (limited slots)
+
+#### 3. Gig Promotion
+- Boost upcoming gig to local users
+- Push notification to followers + nearby users
+- **Pricing:** $10-30 per gig
+
+#### 4. Challenge Sponsorship
+- Sponsor a challenge with your branding
+- Your short as the "original" challenge starter
+- **Pricing:** $100-500 depending on engagement guarantee
+
+### Promotion Rules
+
+**Critical:** Promoted content NEVER affects MAINSTAGE scoring.
+- Paid engagement doesn't count toward scores
+- Clear "Promoted" labels maintain trust
+- Organic engagement on promoted content does count
+
+### Self-Serve Ad Platform
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│  📢 PROMOTE YOUR SHORT                                      │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  Select a short to promote:                                 │
+│  [Dropdown: "Jazz Improv Session" ▼]                        │
+│                                                             │
+│  Target Audience:                                           │
+│  ☑ Jazz fans       ☑ Guitar enthusiasts                    │
+│  ☐ Rock fans       ☐ Drummers                               │
+│                                                             │
+│  Location:                                                  │
+│  [Los Angeles area (25 mile radius) ▼]                      │
+│                                                             │
+│  Budget:                                                    │
+│  [$20_____] per day × [3___] days = $60 total              │
+│                                                             │
+│  Estimated reach: 2,500 - 4,000 users                       │
+│                                                             │
+│  [Launch Promotion]                                         │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+---
+
+## 12.7 Premium Fan Features (Fan PRO)
+
+Superfans can pay for enhanced experiences.
+
+### Fan PRO Subscription
+
+**Price:** $4.99/month
+
+| Feature | Free Fan | Fan PRO |
+|---------|----------|---------|
+| Follow artists | ✓ | ✓ |
+| Like/comment | ✓ | ✓ |
+| Ad-free experience | - | ✓ |
+| Early access to shorts | - | ✓ (24 hours before) |
+| Exclusive "PRO Fan" badge | - | ✓ |
+| Double points on all actions | - | ✓ |
+| Priority in artist giveaways | - | ✓ |
+| See who else is at shows | Basic | Detailed |
+| Custom profile themes | - | ✓ |
+| Download shorts for offline | - | ✓ |
+
+### Why Fans Would Pay
+
+- **Superfan identity**: Badge shows dedication
+- **Double points**: Faster badge/reward progression
+- **Early access**: See new content before others
+- **No ads**: Clean, distraction-free experience
+
+---
+
+## 12.8 Venue & Promoter Subscriptions
+
+Venues and promoters get their own tier.
+
+### Venue PRO
+
+**Price:** $49/month
+
+| Feature | Free | Venue PRO |
+|---------|------|-----------|
+| List venue on platform | ✓ | ✓ |
+| Receive band applications | ✓ | ✓ |
+| Analytics on check-ins | Basic | Detailed |
+| QR code check-in system | - | ✓ |
+| See fan demographics | - | ✓ |
+| Priority in "Venues Near Me" | - | ✓ |
+| Booking management tools | - | ✓ |
+| Artist comparison reports | - | ✓ |
+| White-label check-in page | - | ✓ |
+
+### Value for Venues
+
+- Know exactly who's coming to shows
+- Compare artist draw power before booking
+- Build direct relationship with local fans
+- Prove venue popularity to sponsors
+
+---
+
+## 12.9 Kokai Credits (Virtual Currency)
+
+Optional virtual currency for microtransactions.
+
+### How It Works
+
+1. Users buy credits ($1 = 100 credits)
+2. Credits used for small transactions
+3. Bonus credits for larger purchases
+
+### Credit Packages
+
+| Package | Price | Credits | Bonus |
+|---------|-------|---------|-------|
+| Starter | $5 | 500 | - |
+| Popular | $20 | 2,200 | +10% |
+| Best Value | $50 | 6,000 | +20% |
+
+### What Credits Buy
+
+- Tip artists in any amount (no minimum)
+- Boost a comment (appear first)
+- Send "super likes" (artist gets notified)
+- Entry to exclusive contests
+- Virtual gifts during live streams (future feature)
+
+### Why Virtual Currency
+
+- Reduces transaction fees (batch purchases)
+- Encourages spending ("I have credits, might as well use them")
+- Enables microtransactions (<$1)
+- Creates engagement loop
+
+---
+
+## 12.10 Partnerships & Sponsorships
+
+### Brand Partnerships
+
+| Partner Type | Integration | Revenue |
+|--------------|-------------|---------|
+| Instrument brands | "Gear of the Week" sponsored feature | $5-20k/month |
+| Music software | Exclusive deals for PRO users | Revenue share |
+| Streaming services | Cross-promotion | Per-signup bounty |
+| Music schools | Student/teacher verification | Referral fees |
+
+### Event Sponsorships
+
+- MAINSTAGE presented by [Brand]
+- Challenge of the Week sponsored by [Brand]
+- "Rising Star" award sponsored by [Brand]
+
+### Affiliate Revenue
+
+- Recommend gear mentioned in shorts (Amazon affiliate)
+- Link to Spotify/Apple Music (streaming payouts)
+- Ticket sales affiliate (Eventbrite, DICE)
+
+---
+
+## 12.11 Database Schema for Monetization
+
+#### `subscriptions`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| user_id | bigint | |
+| plan_type | string | `artist_pro`, `band_pro`, `fan_pro`, `venue_pro`, `industry_pro`, `industry_enterprise` |
+| status | string | `active`, `canceled`, `past_due`, `trialing` |
+| stripe_subscription_id | string | |
+| current_period_start | datetime | |
+| current_period_end | datetime | |
+| cancel_at_period_end | boolean | |
+| created_at | datetime | |
+
+#### `transactions`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| sender_id | bigint | User paying |
+| recipient_id | bigint | User receiving |
+| transaction_type | string | `tip`, `merch`, `ticket`, `booking`, `lesson` |
+| gross_amount_cents | integer | |
+| platform_fee_cents | integer | |
+| net_amount_cents | integer | |
+| stripe_payment_id | string | |
+| status | string | `pending`, `completed`, `refunded` |
+| created_at | datetime | |
+
+#### `promotions`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| user_id | bigint | Artist promoting |
+| promotable_type | string | `MusicianShort`, `Gig`, `Musician` |
+| promotable_id | bigint | |
+| budget_cents | integer | |
+| spent_cents | integer | |
+| target_genres | string[] | |
+| target_location | string | |
+| target_radius_km | integer | |
+| impressions | integer | |
+| clicks | integer | |
+| status | string | `active`, `paused`, `completed`, `exhausted` |
+| starts_at | datetime | |
+| ends_at | datetime | |
+| created_at | datetime | |
+
+#### `credit_balances`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| user_id | bigint | |
+| balance | integer | Current credits |
+| lifetime_purchased | integer | |
+| lifetime_spent | integer | |
+| updated_at | datetime | |
+
+#### `credit_transactions`
+| Column | Type | Description |
+|--------|------|-------------|
+| id | bigint | Primary key |
+| user_id | bigint | |
+| amount | integer | Positive = earned/bought, negative = spent |
+| transaction_type | string | `purchase`, `tip_sent`, `tip_received`, `boost`, `gift` |
+| reference_type | string | |
+| reference_id | bigint | |
+| created_at | datetime | |
+
+---
+
+## 12.12 Pricing Psychology
+
+### Anchor Pricing
+
+Show the most expensive option first:
+```
+┌─────────────────────────────────────────────────────────────┐
+│  Choose Your Plan                                           │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────┐ ┌─────────────┐ ┌─────────────┐           │
+│  │ PRO ANNUAL  │ │ PRO MONTHLY │ │    FREE     │           │
+│  │             │ │             │ │             │           │
+│  │   $99/yr    │ │ $9.99/mo    │ │    $0       │           │
+│  │  BEST VALUE │ │             │ │             │           │
+│  │             │ │             │ │             │           │
+│  │ Save $21    │ │ Most        │ │ Limited     │           │
+│  │ vs monthly  │ │ Flexible    │ │ Features    │           │
+│  │             │ │             │ │             │           │
+│  │ [Choose]    │ │ [Choose]    │ │ [Stay Free] │           │
+│  └─────────────┘ └─────────────┘ └─────────────┘           │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Conversion Triggers
+
+1. **Milestone-based**: "You hit 100 followers! Unlock insights with PRO"
+2. **FOMO**: "3 industry professionals viewed your profile this week"
+3. **Feature discovery**: "You tried to schedule a post. That's a PRO feature!"
+4. **Social proof**: "Top artists on MAINSTAGE are 5x more likely to be PRO"
+5. **Time-limited**: "First month 50% off - expires in 48 hours"
+
+### Free Trial Strategy
+
+- 14-day free trial for Artist PRO
+- No credit card required to start
+- Day 10: "Your trial ends in 4 days, here's what you'll lose"
+- Day 13: "Last chance! Keep your analytics history"
+- Day 14: Downgrade, but show "What you're missing" weekly
+
+---
+
+## 12.13 Revenue Projections
+
+### Year 1 (Launch + Growth)
+
+| Revenue Stream | Monthly | Annual |
+|----------------|---------|--------|
+| Artist PRO (500 @ $10) | $5,000 | $60,000 |
+| Industry Pro (50 @ $75) | $3,750 | $45,000 |
+| Transaction fees | $3,500 | $42,000 |
+| Promoted content | $2,000 | $24,000 |
+| Fan PRO (200 @ $5) | $1,000 | $12,000 |
+| **Total Year 1** | **$15,250** | **$183,000** |
+
+### Year 2 (Traction)
+
+| Revenue Stream | Monthly | Annual |
+|----------------|---------|--------|
+| Artist PRO (3,000 @ $10) | $30,000 | $360,000 |
+| Industry Pro (200 @ $75) | $15,000 | $180,000 |
+| Industry Enterprise (20 @ $500) | $10,000 | $120,000 |
+| Transaction fees | $35,000 | $420,000 |
+| Promoted content | $15,000 | $180,000 |
+| Fan PRO (2,000 @ $5) | $10,000 | $120,000 |
+| Venue PRO (100 @ $49) | $4,900 | $58,800 |
+| **Total Year 2** | **$119,900** | **$1,438,800** |
+
+### Year 3 (Scale)
+
+| Revenue Stream | Monthly | Annual |
+|----------------|---------|--------|
+| Artist PRO (15,000 @ $10) | $150,000 | $1,800,000 |
+| Industry subscriptions | $75,000 | $900,000 |
+| Transaction fees | $140,000 | $1,680,000 |
+| Promoted content | $60,000 | $720,000 |
+| Fan PRO (10,000 @ $5) | $50,000 | $600,000 |
+| Venue PRO (500 @ $49) | $24,500 | $294,000 |
+| Partnerships | $25,000 | $300,000 |
+| **Total Year 3** | **$524,500** | **$6,294,000** |
+
+---
+
+## 12.14 Competitive Pricing Analysis
+
+### vs. Competitors
+
+| Platform | Artist Cost | What You Get |
+|----------|-------------|--------------|
+| **Kokai PRO** | $9.99/mo | Full analytics, scheduling, verified badge, lower fees |
+| Bandcamp Pro | $10/mo | Just basic stats and batch downloads |
+| Linktree Pro | $9/mo | Just link management |
+| Patreon | 8-12% of revenue | Just payment processing |
+| DistroKid | $22.99/yr | Just distribution |
+
+### Our Advantage
+
+Kokai PRO gives you analytics + promotion + booking + real-world verification all in one place. Competitors would cost $50+/month combined.
+
+---
+
+## 12.15 Implementation Phases
+
+### Phase 1: Foundation (Months 1-2)
+1. Stripe integration for payments
+2. Basic Artist PRO subscription
+3. Transaction fee infrastructure
+
+### Phase 2: Expansion (Months 3-4)
+4. Industry subscriptions (Pro tier)
+5. Venue PRO tier
+6. Fan PRO tier
+
+### Phase 3: Advanced (Months 5-6)
+7. Self-serve promotion platform
+8. Kokai Credits system
+9. Industry Enterprise tier
+
+### Phase 4: Optimization (Months 7-8)
+10. A/B test pricing
+11. Conversion optimization
+12. Partnership integrations
+
+---
+
+## 12.16 Key Metrics to Track
+
+| Metric | Target |
+|--------|--------|
+| Free → PRO conversion | 5-8% |
+| PRO churn rate | <5%/month |
+| Average revenue per user (ARPU) | $2.50 |
+| Lifetime value (LTV) | $150 |
+| Customer acquisition cost (CAC) | <$30 |
+| LTV:CAC ratio | >5:1 |
+| Transaction GMV growth | 20%/month |
+| Promotion fill rate | 80% |
+
+---
+
+## 12.17 Anti-Patterns to Avoid
+
+### What We Will NEVER Do
+
+1. **Pay-to-win MAINSTAGE**: Paying never affects rankings
+2. **Essential feature gating**: Free users can still succeed
+3. **Hidden fees**: All costs clearly disclosed
+4. **Aggressive upselling**: Prompts are helpful, not annoying
+5. **Data selling**: User data is never sold to third parties
+6. **Exclusive content lockout**: Fans can always see artist content
+7. **Communication blocking**: Free users can always message (with limits)
+
+### Why This Matters
+
+Trust is everything. If users feel nickel-and-dimed, they leave. If free users feel like second-class citizens, they won't invite friends. The platform only works at scale, and scale requires trust.

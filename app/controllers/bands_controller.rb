@@ -63,6 +63,24 @@ class BandsController < ApplicationController
     # Mark band-related notifications as read when visiting the dashboard
     mark_band_notifications_as_read
 
+    # Calculate mainstage stats for current contest
+    current_contest = BandMainstageContest.current_contest
+    mainstage_engagement = 0
+    mainstage_votes = 0
+    mainstage_total = 0
+    mainstage_rank = nil
+
+    if current_contest
+      leaderboard = current_contest.leaderboard(100)
+      band_entry = leaderboard.find { |e| e[:band].id == @band.id }
+      if band_entry
+        mainstage_engagement = band_entry[:engagement_score]
+        mainstage_votes = band_entry[:vote_score] / 10  # Convert back to vote count
+        mainstage_total = band_entry[:total_score]
+        mainstage_rank = leaderboard.index(band_entry) + 1
+      end
+    end
+
     # Analytics stats for the band
     @stats = {
       followers_count: @band.followers.count,
@@ -70,7 +88,11 @@ class BandsController < ApplicationController
       profile_views_total: @band.profile_views.count,
       profile_saves: @band.profile_saves.count,
       new_followers_week: @band.follows.where(created_at: 1.week.ago..).count,
-      mainstage_wins: @band.mainstage_win_count
+      mainstage_wins: @band.mainstage_win_count,
+      mainstage_engagement: mainstage_engagement,
+      mainstage_votes: mainstage_votes,
+      mainstage_total: mainstage_total,
+      mainstage_rank: mainstage_rank
     }
   end
   def update
