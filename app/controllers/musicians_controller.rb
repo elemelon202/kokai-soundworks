@@ -87,12 +87,35 @@ def edit
   # Mark band invitation notifications as read when visiting edit page
   mark_invitation_notifications_as_read
 
-   @stats = {
+   # Calculate mainstage stats for current contest
+    current_contest = MainstageContest.current_contest
+    mainstage_engagement = 0
+    mainstage_votes = 0
+    mainstage_total = 0
+    mainstage_rank = nil
+
+    if current_contest
+      leaderboard = current_contest.leaderboard(100)
+      musician_entry = leaderboard.find { |e| e[:musician].id == @musician.id }
+      if musician_entry
+        mainstage_engagement = musician_entry[:engagement_score]
+        mainstage_votes = musician_entry[:vote_score] / 10  # Convert back to vote count
+        mainstage_total = musician_entry[:total_score]
+        mainstage_rank = leaderboard.index(musician_entry) + 1
+      end
+    end
+
+    @stats = {
       followers_count: @musician.followers.count,
       profile_views_week: @musician.profile_views.where(viewed_at: 1.week.ago..).count,
       profile_views_total: @musician.profile_views.count,
       profile_saves: @musician.profile_saves.count,
-      new_followers_week: @musician.follows.where(created_at: 1.week.ago..).count
+      new_followers_week: @musician.follows.where(created_at: 1.week.ago..).count,
+      mainstage_wins: @musician.mainstage_win_count,
+      mainstage_engagement: mainstage_engagement,
+      mainstage_votes: mainstage_votes,
+      mainstage_total: mainstage_total,
+      mainstage_rank: mainstage_rank
     }
 end
 
