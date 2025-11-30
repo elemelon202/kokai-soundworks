@@ -1,0 +1,292 @@
+<%# I tried to put this as a section in the edit page with the rest but it cause the browser to crash, it seems like its rerendering over and over and over again but I cant figure it out. For now, it works better here and tbh it isnt as useful a feature unless you were flicking through musicians to potentially audition. I can see more music business execs using it than musicians. %>
+
+<div class="saved-page-container">
+  <div class="saved-page-header">
+    <h1><i class="fa-solid fa-bookmark"></i> Saved</h1>
+    <p>Musicians and bands you've bookmarked</p>
+  </div>
+
+  <div class="saved-columns">
+    <%# Musicians Column %>
+    <div class="saved-column">
+      <h2 class="saved-column-header">
+        <i class="fa-solid fa-user"></i> Musicians
+        <span class="saved-count"><%= @saved_musicians.count %></span>
+      </h2>
+
+      <% if @saved_musicians.any? %>
+        <div class="saved-items-list">
+          <% @saved_musicians.each do |musician| %>
+            <div class="saved-item-card">
+              <%= link_to musician_path(musician), class: "saved-item-link" do %>
+                <div class="saved-item-avatar">
+                  <% if musician.media.attached? && musician.media.first&.content_type&.start_with?("image") %>
+                    <%= image_tag url_for(musician.media.first), class: "saved-item-image" %>
+                  <% else %>
+                    <i class="fa-solid fa-user"></i>
+                  <% end %>
+                </div>
+                <div class="saved-item-info">
+                  <h3><%= musician.name %></h3>
+                  <p><%= musician.instrument || "Musician" %></p>
+                  <% if musician.location.present? %>
+                    <span class="saved-item-location"><i class="fa-solid fa-location-dot"></i> <%= musician.location %></span>
+                  <% end %>
+                </div>
+              <% end %>
+              <%= button_to unsave_profile_musician_path(musician), method: :delete, class: "btn-unsave", data: { turbo_confirm: "Remove from saved?" } do %>
+                <i class="fa-solid fa-bookmark"></i>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="saved-empty">
+          <i class="fa-solid fa-user-plus"></i>
+          <p>No saved musicians yet</p>
+          <span>Browse musicians and click the bookmark icon to save them here</span>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Bands Column %>
+    <div class="saved-column">
+      <h2 class="saved-column-header">
+        <i class="fa-solid fa-users"></i> Bands
+        <span class="saved-count"><%= @saved_bands.count %></span>
+      </h2>
+
+      <% if @saved_bands.any? %>
+        <div class="saved-items-list">
+          <% @saved_bands.each do |band| %>
+            <div class="saved-item-card">
+              <%= link_to band_path(band), class: "saved-item-link" do %>
+                <div class="saved-item-avatar">
+                  <% if band.banner.attached? %>
+                    <%= image_tag url_for(band.banner), class: "saved-item-image" %>
+                  <% else %>
+                    <i class="fa-solid fa-users"></i>
+                  <% end %>
+                </div>
+                <div class="saved-item-info">
+                  <h3><%= band.name %></h3>
+                  <p><%= pluralize(band.musicians.count, "member") %></p>
+                  <% if band.location.present? %>
+                    <span class="saved-item-location"><i class="fa-solid fa-location-dot"></i> <%= band.location %></span>
+                  <% end %>
+                </div>
+              <% end %>
+              <%= button_to unsave_profile_band_path(band), method: :delete, class: "btn-unsave", data: { turbo_confirm: "Remove from saved?" } do %>
+                <i class="fa-solid fa-bookmark"></i>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div class="saved-empty">
+          <i class="fa-solid fa-users"></i>
+          <p>No saved bands yet</p>
+          <span>Browse bands and click the bookmark icon to save them here</span>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<style>
+.saved-page-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.saved-page-header {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.saved-page-header h1 {
+  color: #fff;
+  font-size: 2rem;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+}
+
+.saved-page-header h1 i {
+  color: #C8E938;
+}
+
+.saved-page-header p {
+  color: #888;
+  margin: 0;
+  font-size: 1rem;
+}
+
+.saved-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+}
+
+@media (max-width: 768px) {
+  .saved-columns {
+    grid-template-columns: 1fr;
+  }
+}
+
+.saved-column {
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 20px;
+}
+
+.saved-column-header {
+  color: #fff;
+  font-size: 1.2rem;
+  margin: 0 0 20px 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #2a2a2a;
+}
+
+.saved-column-header i {
+  color: #C8E938;
+}
+
+.saved-count {
+  background: #2a2a2a;
+  color: #888;
+  font-size: 0.8rem;
+  padding: 4px 10px;
+  border-radius: 12px;
+  margin-left: auto;
+}
+
+.saved-items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.saved-item-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #252525;
+  border-radius: 12px;
+  transition: background 0.2s ease;
+}
+
+.saved-item-card:hover {
+  background: #2a2a2a;
+}
+
+.saved-item-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+  text-decoration: none;
+}
+
+.saved-item-avatar {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #333;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.saved-item-avatar i {
+  color: #666;
+  font-size: 1.3rem;
+}
+
+.saved-item-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.saved-item-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.saved-item-info h3 {
+  color: #fff;
+  font-size: 1rem;
+  margin: 0 0 4px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.saved-item-info p {
+  color: #888;
+  font-size: 0.85rem;
+  margin: 0;
+}
+
+.saved-item-location {
+  color: #666;
+  font-size: 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 4px;
+}
+
+.btn-unsave {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: transparent;
+  border: 1px solid #C8E938;
+  color: #C8E938;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.btn-unsave:hover {
+  background: #C8E938;
+  color: #171717;
+}
+
+.saved-empty {
+  text-align: center;
+  padding: 40px 20px;
+  color: #666;
+}
+
+.saved-empty i {
+  font-size: 2.5rem;
+  margin-bottom: 12px;
+  opacity: 0.3;
+}
+
+.saved-empty p {
+  color: #888;
+  margin: 0 0 8px 0;
+  font-size: 1rem;
+}
+
+.saved-empty span {
+  font-size: 0.85rem;
+  color: #555;
+}
+</style>

@@ -1,32 +1,23 @@
 <div class="container musicians-index-container">
   <div class="index-heading m-3 mt-5">
-    <h1>Musicians</h1>
+    <h1 style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 40px rgba(200, 233, 56, 0.5), 0 0 80px rgba(200, 233, 56, 0.3); margin-bottom: 8px;">Musicians</h1>
     <p>Future artists</p>
 
     <%# DISCOVER SHORTS CTA %>
-    <div style="margin-top: 16px;">
-      <%= link_to discover_shorts_path, style: "display: inline-flex; align-items: center; gap: 12px; padding: 12px 20px; background: linear-gradient(135deg, #E936AD 0%, #7B2D8E 50%, #E936AD 100%); background-size: 200% 200%; color: #fff; border-radius: 12px; text-decoration: none; box-shadow: 0 4px 16px rgba(233, 54, 173, 0.4); transition: all 0.3s ease; animation: gradient-shift 3s ease infinite;",
-          onmouseover: "this.style.transform='translateY(-2px) scale(1.02)'; this.style.boxShadow='0 6px 24px rgba(233, 54, 173, 0.5)';",
-          onmouseout: "this.style.transform=''; this.style.boxShadow='0 4px 16px rgba(233, 54, 173, 0.4)';" do %>
-        <div style="width: 36px; height: 36px; background: rgba(255,255,255,0.2); border-radius: 8px; display: flex; align-items: center; justify-content: center;">
-          <i class="fa-solid fa-play" style="font-size: 1rem; margin-left: 2px;"></i>
+    <div class="discover-shorts-cta-wrapper">
+      <%= link_to discover_shorts_path, class: "discover-shorts-cta" do %>
+        <div class="discover-shorts-icon">
+          <i class="fa-solid fa-play"></i>
         </div>
-        <div>
-          <span style="font-size: 1rem; font-weight: 600; display: block;">Discover Shorts</span>
-          <span style="font-size: 0.75rem; opacity: 0.9;">The fastest way to discover talent!</span>
+        <div class="discover-shorts-text">
+          <span class="discover-shorts-title">Discover Shorts</span>
+          <span class="discover-shorts-subtitle">The fastest way to discover talent!</span>
         </div>
-        <i class="fa-solid fa-arrow-right" style="font-size: 1rem;"></i>
+        <i class="fa-solid fa-arrow-right discover-shorts-arrow"></i>
       <% end %>
     </div>
   </div>
 
-  <style>
-    @keyframes gradient-shift {
-      0% { background-position: 0% 50%; }
-      50% { background-position: 100% 50%; }
-      100% { background-position: 0% 50%; }
-    }
-  </style>
   <%= form_with url: musicians_path, method: :get, data: { turbo_frame: "musicians_list" }, class: "filters-form" do %>
     <!-- Search Field -->
     <div class="mt-5 mb-5 d-flex gap-2 align-items-center">
@@ -116,10 +107,11 @@
                       </div>
                     </div>
                     <div class="musician-card-details">
+                      <p class="musician-mobile-name"><%= musician.name %></p>
                       <p><i class="fa-solid fa-location-dot"></i> <%= musician.location %></p>
                       <p><i class="fa-solid fa-guitar"></i> <%= musician.instrument %></p>
                       <p><i class="fa-solid fa-music"></i> <%= musician.styles %></p>
-                      <p><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
+                      <p class="musician-bio-line"><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
                     </div>
                   <% end %>
                   <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary", style: "background-color: #a4fe35ff;", data: { turbo: false } %>

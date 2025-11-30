@@ -63,6 +63,15 @@ class BandsController < ApplicationController
     # Mark band-related notifications as read when visiting the dashboard
     mark_band_notifications_as_read
 
+    # Analytics stats for the band
+    @stats = {
+      followers_count: @band.followers.count,
+      profile_views_week: @band.profile_views.where(viewed_at: 1.week.ago..).count,
+      profile_views_total: @band.profile_views.count,
+      profile_saves: @band.profile_saves.count,
+      new_followers_week: @band.follows.where(created_at: 1.week.ago..).count,
+      mainstage_wins: @band.mainstage_win_count
+    }
   end
   def update
     authorize @band #* Tyrhen was here

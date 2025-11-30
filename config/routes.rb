@@ -135,6 +135,9 @@ Rails.application.routes.draw do
     end
   end
 
+  # Saved musicians and bands
+  get 'saved', to: 'saved#index', as: :saved
+
   resources :posts, only: [:index, :create, :destroy], path: 'feed' do
     member do
       post :repost

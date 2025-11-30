@@ -84,3 +84,265 @@ body {
   width: 320px;
   min-width: 320px;
 }
+
+// Hide mobile-only name on desktop
+.musician-mobile-name {
+  display: none;
+}
+
+// Discover Shorts CTA
+.discover-shorts-cta-wrapper {
+  margin-top: 16px;
+}
+
+.discover-shorts-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #E936AD 0%, #7B2D8E 50%, #E936AD 100%);
+  background-size: 200% 200%;
+  color: #fff;
+  border-radius: 12px;
+  text-decoration: none;
+  box-shadow: 0 4px 16px rgba(233, 54, 173, 0.4);
+  transition: all 0.3s ease;
+  animation: gradient-shift 3s ease infinite;
+
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 24px rgba(233, 54, 173, 0.5);
+    color: #fff;
+  }
+}
+
+@keyframes gradient-shift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+.discover-shorts-icon {
+  width: 36px;
+  height: 36px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 1rem;
+    margin-left: 2px;
+  }
+}
+
+.discover-shorts-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.discover-shorts-title {
+  font-size: 1rem;
+  font-weight: 600;
+}
+
+.discover-shorts-subtitle {
+  font-size: 0.75rem;
+  opacity: 0.9;
+}
+
+.discover-shorts-arrow {
+  font-size: 1rem;
+}
+
+// ===== MOBILE: Convert horizontal scroll to vertical list =====
+@media (max-width: 768px) {
+  // Make Discover Shorts CTA full width on mobile
+  .discover-shorts-cta-wrapper {
+    margin-top: 12px;
+  }
+
+  .discover-shorts-cta {
+    width: 100%;
+    padding: 10px 14px;
+    gap: 10px;
+    border-radius: 10px;
+  }
+
+  .discover-shorts-icon {
+    width: 32px;
+    height: 32px;
+
+    i {
+      font-size: 0.9rem;
+    }
+  }
+
+  .discover-shorts-title {
+    font-size: 0.9rem;
+  }
+
+  .discover-shorts-subtitle {
+    font-size: 0.7rem;
+  }
+
+  .record-shelf-container {
+    width: 100%;
+    margin-left: 0;
+    padding: 0 12px;
+  }
+
+  .record-shelf {
+    flex-direction: column;
+    gap: 12px;
+    overflow-x: visible;
+    padding: 10px 0;
+
+    // Hide horizontal scrollbar on mobile
+    &::-webkit-scrollbar {
+      display: none;
+    }
+    scrollbar-width: none;
+  }
+
+  .record-item {
+    width: 100%;
+    min-width: 100%;
+  }
+
+  // Simplified card layout for mobile
+  .musician-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px;
+    gap: 12px;
+    background: rgba(40, 40, 40, 0.9);
+    border-radius: 12px;
+
+    .stretched-link {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+  }
+
+  .musician-card-header {
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .musician-avatar {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .musician-card-name-wrapper {
+    display: none; // Hide name from header, show in details
+  }
+
+  .musician-card-details {
+    flex: 1;
+    min-width: 0; // Allow text truncation
+
+    p {
+      margin: 0 0 2px 0;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    // Show mobile name on mobile - prominent
+    .musician-mobile-name {
+      display: block;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    // Hide bio and styles on mobile cards to save space
+    .musician-bio-line {
+      display: none;
+    }
+
+    // Hide styles line too - keep just name, location, instrument
+    p:nth-child(4) {
+      display: none;
+    }
+
+    i {
+      width: 14px;
+      margin-right: 5px;
+      opacity: 0.7;
+      font-size: 0.7rem;
+    }
+  }
+
+  // Message button - smaller on mobile
+  .musician-card .btn {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  // Page indicator - scrollable on mobile if many pages
+  .musicians-section nav[style*="display: flex"] {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 8px;
+
+    > div {
+      flex-wrap: nowrap;
+    }
+
+    button {
+      padding: 8px 12px !important;
+      font-size: 0.85rem;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .record-shelf-container {
+    padding: 0 8px;
+  }
+
+  .record-shelf {
+    gap: 8px;
+  }
+
+  .musician-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .musician-avatar {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .musician-card-details {
+    p {
+      font-size: 0.75rem;
+    }
+
+    .musician-mobile-name {
+      font-size: 0.9rem;
+    }
+  }
+
+  .musician-card .btn {
+    padding: 4px 8px;
+    font-size: 0.65rem;
+  }
+}

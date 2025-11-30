@@ -7,12 +7,19 @@
       <% end %>
       <%# USER STATUS %>
       <% if user_signed_in? %>
-        <div class="ms-3 text-start">
-          <p class="mb-0" style="color: #f8f9fa;">Currently signed in as: <strong><%= current_user.username %></strong> (<strong><%= current_user.user_type %>)</strong></p>
+        <div class="ms-3 text-start d-none d-md-block">
+          <p class="mb-0" style="color: #888; font-size: 0.8rem;">
+            <i class="fa-solid fa-circle" style="color: #C8E938; font-size: 0.5rem; vertical-align: middle; margin-right: 6px;"></i>
+            <span style="color: #aaa;"><%= current_user.username %></span>
+            <span style="color: #555; margin-left: 4px;">(<%= current_user.user_type %>)</span>
+          </p>
         </div>
       <% else %>
-        <div class="ms-3 text-start">
-          <p class="mb-0" style="color: #f8f9fa;">You <strong>are not</strong> signed in</p>
+        <div class="ms-3 text-start d-none d-md-block">
+          <p class="mb-0" style="color: #666; font-size: 0.8rem;">
+            <i class="fa-solid fa-circle" style="color: #666; font-size: 0.5rem; vertical-align: middle; margin-right: 6px;"></i>
+            Not signed in
+          </p>
         </div>
       <% end %>
     </div>
@@ -23,13 +30,19 @@
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
           <li class="nav-item active">
-            <%= link_to "Musicians", musicians_path, class: "nav-link btn btn-primary text-white" %>
+            <%= link_to musicians_path, class: "nav-link btn btn-primary text-white" do %>
+              <i class="fa-solid fa-guitar"></i> Musicians
+            <% end %>
           </li>
           <li class="nav-item">
-            <%= link_to "Bands", bands_path, class: "nav-link btn btn-primary text-white" %>
+            <%= link_to bands_path, class: "nav-link btn btn-primary text-white" do %>
+              <i class="fa-solid fa-users"></i> Bands
+            <% end %>
           </li>
           <li class="nav-item">
-            <%= link_to "Venues", venues_path, class: "nav-link btn btn-primary text-white" %>
+            <%= link_to venues_path, class: "nav-link btn btn-primary text-white" do %>
+              <i class="fa-solid fa-location-dot"></i> Venues
+            <% end %>
           </li>
           <li class="nav-item">
             <%= link_to posts_path, class: "nav-link btn btn-primary text-white" do %>
@@ -38,7 +51,7 @@
           </li>
           <li class="nav-item">
             <%= link_to challenges_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-trophy"></i> Challenges
+              <i class="fa-solid fa-bolt"></i> Challenges
             <% end %>
           </li>
           <li class="nav-item dropdown">
@@ -79,13 +92,15 @@
               </div>
             </li>
           <% end %>
-          <li class="nav-item">
-            <%= render 'shared/messages_notification' %>
-          </li>
-          <li class="nav-item">
-            <%= render 'shared/notifications' %>
-          </li>
-          <li class="nav-item dropdown">
+          <%# Mobile: These 3 items appear in a horizontal row %>
+          <div class="navbar-mobile-icons-row">
+            <li class="nav-item">
+              <%= render 'shared/messages_notification' %>
+            </li>
+            <li class="nav-item">
+              <%= render 'shared/notifications' %>
+            </li>
+            <li class="nav-item dropdown">
             <a href="#" class="navbar-avatar-link" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               <% if current_user.musician&.avatar&.attached? %>
                 <%= cl_image_tag(current_user.musician.avatar.key, class: "avatar", alt: "dropdown menu") %>
@@ -102,30 +117,47 @@
             <!-- Avatar drop down -->
             <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
               <% if current_user&.musician.present? %>
-                <%= link_to "Profile", musician_path(current_user.musician), class: "dropdown-item" %>
-                <%= link_to "Messages", direct_messages_path, class: "dropdown-item" %>
+                <%= link_to musician_path(current_user.musician), class: "dropdown-item" do %>
+                  <i class="fa-solid fa-user me-1"></i> Profile
+                <% end %>
+                <%= link_to direct_messages_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-envelope me-1"></i> Messages
+                <% end %>
                 <%= link_to friendships_path, class: "dropdown-item" do %>
                   <i class="fa-solid fa-user-group me-1"></i> Friends
+                <% end %>
+                <%= link_to saved_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-bookmark me-1"></i> Saved
                 <% end %>
                 <h6 class="dropdown-header">Bands</h6>
                 <% if current_user.musician.bands.any? %>
                   <% current_user.musician.bands.each do |band| %>
-                    <%= link_to "- #{band.name}", band_path(band), class: "dropdown-item" %>
+                    <%= link_to band_path(band), class: "dropdown-item" do %>
+                      <i class="fa-solid fa-users me-1"></i> <%= band.name %>
+                    <% end %>
                   <% end %>
                 <% end %>
-                <%= link_to "Create a band", new_band_path, class: "dropdown-item" %>
+                <%= link_to new_band_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-plus me-1"></i> Create a band
+                <% end %>
                 <div class="dropdown-divider"></div>
               <% else %>
-                <%= link_to "Create Musician Profile", new_musician_path, class: "dropdown-item" %>
+                <%= link_to new_musician_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-plus me-1"></i> Create Musician Profile
+                <% end %>
                 <div class="dropdown-divider"></div>
               <% end %>
-              <%= link_to "Log out", destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" %>
+              <%= link_to destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" do %>
+                <i class="fa-solid fa-right-from-bracket me-1"></i> Log out
+              <% end %>
             </div>
           </li>
+          </div><%# End navbar-mobile-icons-row %>
         <% else %>
           <li class="nav-item">
-            <%= link_to "Login", new_user_session_path, class: "btn btn-primary text-dark" %>
-            <%# might need to add nav-link class later if kokai yellow is annoying %>
+            <%= link_to new_user_session_path, class: "btn btn-primary text-dark" do %>
+              <i class="fa-solid fa-right-to-bracket me-1"></i> Login
+            <% end %>
           </li>
         <% end %>
       </ul>

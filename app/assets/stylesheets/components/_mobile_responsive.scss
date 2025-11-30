@@ -14,6 +14,24 @@
   }
 }
 
+// ===== NAVBAR - Desktop icons row (always horizontal) =====
+.navbar-mobile-icons-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  gap: 10px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+
+  .nav-item {
+    width: auto !important;
+    display: flex;
+    justify-content: center;
+    list-style: none;
+  }
+}
+
 // ===== NAVBAR MOBILE =====
 @media (max-width: 991px) {
   .navbar-lewagon {
@@ -49,6 +67,27 @@
       width: 100%;
       text-align: center;
       padding: 12px 20px;
+    }
+  }
+
+  // Horizontal row for messages/notifications/avatar on mobile
+  .navbar-mobile-icons-row {
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-around;
+    align-items: center;
+    width: 100%;
+    margin-top: 16px;
+    padding-top: 16px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    gap: 10px;
+
+    .nav-item {
+      width: auto !important;
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      list-style: none;
     }
   }
 

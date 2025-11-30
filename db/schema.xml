@@ -84,6 +84,10 @@
 <datatype>TEXT</datatype>
 <default>NULL</default>
 </row>
+<row name="banner_position" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default>
+</row>
 <row name="user_id" null="0" autoincrement="0">
 <datatype>BIGINT</datatype>
 <relation table="users" row="id" />
@@ -113,6 +117,10 @@
 <row name="location" null="1" autoincrement="0">
 <datatype>VARCHAR(255)</datatype>
 <default>NULL</default>
+</row>
+<row name="banner_position" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>50</default>
 </row>
 <row name="user_id" null="0" autoincrement="0">
 <datatype>BIGINT</datatype>
@@ -201,8 +209,9 @@
 <relation table="musicians" row="id" />
 </row>
 <row name="inviter_id" null="1" autoincrement="0">
-<datatype>INTEGER</datatype>
+<datatype>BIGINT</datatype>
 <default>NULL</default>
+<relation table="users" row="id" />
 </row>
 <row name="status" null="1" autoincrement="0">
 <datatype>VARCHAR(255)</datatype>
@@ -362,11 +371,11 @@
 <default>NULL</default>
 </row>
 <row name="start_time" null="1" autoincrement="0">
-<datatype>DATE</datatype>
+<datatype>TIME</datatype>
 <default>NULL</default>
 </row>
 <row name="end_time" null="1" autoincrement="0">
-<datatype>DATE</datatype>
+<datatype>TIME</datatype>
 <default>NULL</default>
 </row>
 <row name="status" null="1" autoincrement="0">
@@ -549,6 +558,661 @@
 <datatype>BIGINT</datatype>
 <default>NULL</default>
 <relation table="users" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="20" y="400" name="musician_shorts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="musician_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musicians" row="id" />
+</row>
+<row name="title" null="1" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>NULL</default>
+</row>
+<row name="description" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default>
+</row>
+<row name="position" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="20" y="580" name="short_likes">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="musician_short_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musician_shorts" row="id" />
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="20" y="720" name="short_comments">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="musician_short_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musician_shorts" row="id" />
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="body" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1050" y="280" name="follows">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="follower_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="followable_type" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+</row>
+<row name="followable_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1050" y="420" name="profile_views">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="viewer_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default>
+<relation table="users" row="id" />
+</row>
+<row name="viewable_type" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+</row>
+<row name="viewable_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+</row>
+<row name="viewed_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="ip_hash" null="1" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>NULL</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1050" y="580" name="profile_saves">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="saveable_type" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+</row>
+<row name="saveable_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1350" y="280" name="friendships">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="requester_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="addressee_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="status" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>'pending'</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1350" y="420" name="posts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="content" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1350" y="540" name="post_likes">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="post_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="posts" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1350" y="660" name="post_comments">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="post_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="posts" row="id" />
+</row>
+<row name="content" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1350" y="800" name="reposts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="post_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="posts" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="560" y="280" name="endorsements">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="musician_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musicians" row="id" />
+</row>
+<row name="skill" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="560" y="420" name="shoutouts">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="musician_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musicians" row="id" />
+</row>
+<row name="content" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1600" y="17" name="mainstage_contests">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="start_date" null="0" autoincrement="0">
+<datatype>DATE</datatype>
+</row>
+<row name="end_date" null="0" autoincrement="0">
+<datatype>DATE</datatype>
+</row>
+<row name="status" null="1" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>'active'</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1600" y="150" name="mainstage_votes">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="musician_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musicians" row="id" />
+</row>
+<row name="mainstage_contest_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="mainstage_contests" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1600" y="300" name="mainstage_winners">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="musician_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musicians" row="id" />
+</row>
+<row name="mainstage_contest_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="mainstage_contests" row="id" />
+</row>
+<row name="final_score" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default>
+</row>
+<row name="engagement_score" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default>
+</row>
+<row name="vote_score" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1800" y="17" name="band_mainstage_contests">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="start_date" null="0" autoincrement="0">
+<datatype>DATE</datatype>
+</row>
+<row name="end_date" null="0" autoincrement="0">
+<datatype>DATE</datatype>
+</row>
+<row name="status" null="1" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>'active'</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1800" y="150" name="band_mainstage_votes">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="band_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="bands" row="id" />
+</row>
+<row name="band_mainstage_contest_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="band_mainstage_contests" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="1800" y="300" name="band_mainstage_winners">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="band_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="bands" row="id" />
+</row>
+<row name="band_mainstage_contest_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="band_mainstage_contests" row="id" />
+</row>
+<row name="final_score" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default>
+</row>
+<row name="engagement_score" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default>
+</row>
+<row name="vote_score" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="200" y="17" name="challenges">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="creator_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musicians" row="id" />
+</row>
+<row name="original_short_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musician_shorts" row="id" />
+</row>
+<row name="title" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+</row>
+<row name="description" null="1" autoincrement="0">
+<datatype>TEXT</datatype>
+<default>NULL</default>
+</row>
+<row name="status" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>'open'</default>
+</row>
+<row name="winner_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default>
+</row>
+<row name="responses_count" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="200" y="200" name="challenge_responses">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="challenge_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="challenges" row="id" />
+</row>
+<row name="musician_short_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musician_shorts" row="id" />
+</row>
+<row name="musician_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="musicians" row="id" />
+</row>
+<row name="votes_count" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>0</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="200" y="360" name="challenge_votes">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="challenge_response_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="challenge_responses" row="id" />
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="560" y="540" name="spotify_tracks">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="band_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="bands" row="id" />
+</row>
+<row name="spotify_type" null="1" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>NULL</default>
+</row>
+<row name="spotify_id" null="1" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>NULL</default>
+</row>
+<row name="spotify_url" null="1" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>NULL</default>
+</row>
+<row name="position" null="1" autoincrement="0">
+<datatype>INTEGER</datatype>
+<default>NULL</default>
+</row>
+<row name="created_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<row name="updated_at" null="0" autoincrement="0">
+<datatype>TIMESTAMP</datatype>
+</row>
+<key type="PRIMARY" name="">
+<part>id</part>
+</key>
+</table>
+<table x="560" y="700" name="activities">
+<row name="id" null="0" autoincrement="1">
+<datatype>BIGINT</datatype>
+</row>
+<row name="user_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+<relation table="users" row="id" />
+</row>
+<row name="trackable_type" null="0" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+</row>
+<row name="trackable_id" null="0" autoincrement="0">
+<datatype>BIGINT</datatype>
+</row>
+<row name="musician_id" null="1" autoincrement="0">
+<datatype>BIGINT</datatype>
+<default>NULL</default>
+<relation table="musicians" row="id" />
+</row>
+<row name="action" null="1" autoincrement="0">
+<datatype>VARCHAR(255)</datatype>
+<default>NULL</default>
 </row>
 <row name="created_at" null="0" autoincrement="0">
 <datatype>TIMESTAMP</datatype>

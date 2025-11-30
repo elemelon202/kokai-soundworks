@@ -1,12 +1,13 @@
 # Scheduled job to finalize MAINSTAGE contests and pick winners
+# There is a rake file -> rake mainstage   SAM
 # Run this weekly on Sunday at midnight to finalize the previous week's contest
 #
-# To schedule with Heroku Scheduler or cron:
+# To schedule with Heroku Scheduler:
 #   bin/rails mainstage:finalize
 #
 # Or call directly:
 #   MainstageFinalizationJob.perform_now
-
+#UPDATE: IVE PUT THIS ON HEROKU SO IT SHOULD IN THEORY END THE CONTEST< NOTIFY THE WINNERS AND RESET THE CONTEST. ALSO THERES A BAND ONE.
 class MainstageFinalizationJob < ApplicationJob
   queue_as :default
 
