@@ -1,7 +1,14 @@
+<% content_for :body_class, "discover-shorts-page" %>
 
 <%# I DONT KNOW WHY BUT I HAD MAD TROUBLE WITH CSS FOR THIS. THATS WHY ITS ALL INLINE STYLES. WHEN I PUT IT IN THE SCSS FILE IT BREAKS??%>
 
 <style>
+  /* Hide navbar on mobile for immersive discover experience */
+  @media (max-width: 768px) {
+    .discover-shorts-page .navbar-lewagon {
+      display: none !important;
+    }
+  }
   html, body {
     overflow: hidden !important;
     height: 100vh !important;
@@ -43,6 +50,10 @@
     background: #C8E938;
     color: #000;
   }
+  /* Mobile back button - inside musician card banner */
+  .discover-back-btn-mobile {
+    display: none;
+  }
   /* Comments panel - adapts to screen size */
   .comments-panel {
     width: 300px;
@@ -61,6 +72,30 @@
       left: 12px;
       padding: 8px 12px;
       font-size: 0.8rem;
+    }
+  }
+  @media (max-width: 768px) {
+    /* Hide the fixed back button on mobile */
+    .discover-back-btn {
+      display: none !important;
+    }
+    /* Show back button inside the musician card banner */
+    .discover-back-btn-mobile {
+      display: inline-flex;
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      background: rgba(0, 0, 0, 0.5);
+      color: #fff;
+      border-radius: 8px;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 500;
+      z-index: 10;
+      backdrop-filter: blur(4px);
     }
     .discover-short {
       flex-direction: column !important;
@@ -83,11 +118,6 @@
       border-radius: 20px 20px 0 0 !important;
       z-index: 9999 !important;
       box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
-    }
-  }
-  @media (max-width: 576px) {
-    .discover-back-btn {
-      top: 62px;
     }
   }
 </style>
@@ -129,6 +159,10 @@
           <div style="height: 100px; background: linear-gradient(135deg, #E936AD 0%, #7B2D8E 100%); position: relative;">
             <% if short.musician.banner.attached? %>
               <%= cl_image_tag(short.musician.banner.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+            <% end %>
+            <%# Back button inside banner - mobile only %>
+            <%= link_to musicians_path, class: "discover-back-btn-mobile" do %>
+              <i class="fa-solid fa-arrow-left"></i> Back
             <% end %>
           </div>
 

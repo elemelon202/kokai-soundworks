@@ -46,6 +46,65 @@
     </div>
   </div>
 
+  <%# Analytics Section %>
+  <div class="band-analytics-section" style="max-width: 1200px; margin: 0 auto 30px;">
+    <div class="band-dashboard-card">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-chart-line"></i>
+        </div>
+        <h3>Band Analytics</h3>
+        <span style="color: #666; font-size: 0.8rem; margin-left: auto;">Only band members can see this</span>
+      </div>
+      <% if @stats.present? %>
+        <div class="band-stats-grid" style="padding: 20px; margin: 0;">
+          <div class="band-stat-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-user-plus"></i>
+            </div>
+            <div class="stat-value"><%= @stats[:followers_count] %></div>
+            <div class="stat-label">Followers</div>
+            <% if @stats[:new_followers_week] > 0 %>
+              <div class="stat-sub" style="color: #C8E938;">+<%= @stats[:new_followers_week] %> this week</div>
+            <% end %>
+          </div>
+
+          <div class="band-stat-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-eye"></i>
+            </div>
+            <div class="stat-value"><%= @stats[:profile_views_week] %></div>
+            <div class="stat-label">Views This Week</div>
+            <div class="stat-sub"><%= @stats[:profile_views_total] %> total</div>
+          </div>
+
+          <div class="band-stat-card">
+            <div class="stat-icon">
+              <i class="fa-solid fa-bookmark"></i>
+            </div>
+            <div class="stat-value"><%= @stats[:profile_saves] %></div>
+            <div class="stat-label">Profile Saves</div>
+          </div>
+
+          <% if @stats[:mainstage_wins] > 0 %>
+            <div class="band-stat-card">
+              <div class="stat-icon" style="background: rgba(251, 191, 36, 0.15); color: #fbbf24;">
+                <i class="fa-solid fa-trophy"></i>
+              </div>
+              <div class="stat-value" style="color: #fbbf24;"><%= @stats[:mainstage_wins] %></div>
+              <div class="stat-label">MAINSTAGE Wins</div>
+            </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div style="padding: 40px; text-align: center;">
+          <i class="fa-solid fa-chart-line" style="font-size: 2rem; color: #333; margin-bottom: 8px;"></i>
+          <p style="color: #666; margin: 0;">No analytics data yet</p>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
   <div class="band-dashboard-content">
     <div class="band-dashboard-card">
       <div class="band-card-header">
@@ -56,6 +115,63 @@
       </div>
       <div class="band-chat-wrapper">
         <%= render 'chat', band: @band %>
+      </div>
+    </div>
+
+    <%# Band Feed Section - Only leader can post %>
+    <div class="band-dashboard-card">
+      <div class="band-card-header">
+        <div class="card-icon" style="background: rgba(200, 233, 56, 0.15); color: #C8E938;">
+          <i class="fa-solid fa-newspaper"></i>
+        </div>
+        <h3>Band Feed</h3>
+        <span style="color: #666; font-size: 0.8rem; margin-left: auto;">Posts appear to band followers</span>
+      </div>
+      <div style="padding: 20px;">
+        <% if @band.user_id == current_user.id %>
+          <%# New Post Form - Only for band leader %>
+          <%= form_with model: Post.new, local: true, style: "display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px;" do |f| %>
+            <%= f.hidden_field :band_id, value: @band.id %>
+            <%= f.text_area :content, placeholder: "Post an update as #{@band.name}...", rows: 3, style: "width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1rem; resize: none; box-sizing: border-box;" %>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <label style="cursor: pointer; color: #888; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-image"></i>
+                <span style="font-size: 0.85rem;">Photo</span>
+                <%= f.file_field :images, multiple: true, style: "display: none;", accept: "image/*" %>
+              </label>
+              <label style="cursor: pointer; color: #888; display: flex; align-items: center; gap: 6px;">
+                <i class="fa-solid fa-video"></i>
+                <span style="font-size: 0.85rem;">Video</span>
+                <%= f.file_field :videos, multiple: true, style: "display: none;", accept: "video/*" %>
+              </label>
+              <div style="flex: 1;"></div>
+              <%= f.submit "Post as #{@band.name}", class: "btn-post" %>
+            </div>
+          <% end %>
+        <% else %>
+          <p style="color: #666; font-size: 0.9rem; margin-bottom: 16px;">
+            <i class="fa-solid fa-info-circle" style="margin-right: 6px;"></i>
+            Only the band leader can create posts for the band feed.
+          </p>
+        <% end %>
+
+        <%# Recent Band Posts %>
+        <% band_posts = @band.posts.includes(:user, images_attachments: :blob, videos_attachments: :blob).recent.limit(5) %>
+        <% if band_posts.any? %>
+          <div style="display: flex; flex-direction: column; gap: 16px;">
+            <% band_posts.each do |post| %>
+              <%= render "posts/post", post: post %>
+            <% end %>
+          </div>
+        <% else %>
+          <div style="text-align: center; padding: 20px;">
+            <i class="fa-solid fa-newspaper" style="font-size: 2rem; color: #333; margin-bottom: 8px;"></i>
+            <p style="color: #666; margin: 0;">No band posts yet</p>
+            <% if @band.user_id == current_user.id %>
+              <p style="color: #555; margin: 4px 0 0 0; font-size: 0.85rem;">Post updates to reach your followers!</p>
+            <% end %>
+          </div>
+        <% end %>
       </div>
     </div>
 

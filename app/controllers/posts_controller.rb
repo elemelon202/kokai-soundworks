@@ -11,10 +11,24 @@ class PostsController < ApplicationController
 
   def create
     @post = current_user.posts.build(post_params)
+
+    # If band_id is provided, verify user is the band leader
+    if params[:post][:band_id].present?
+      band = Band.find_by(id: params[:post][:band_id])
+      if band && band.user_id == current_user.id
+        @post.band = band
+      end
+    end
+
     skip_authorization
 
     if @post.save
-      redirect_to posts_path, notice: "Post created!"
+      # Redirect back to band edit page if it was a band post
+      if @post.band.present?
+        redirect_to edit_band_path(@post.band), notice: "Band post created!"
+      else
+        redirect_to posts_path, notice: "Post created!"
+      end
     else
       @posts = current_user.feed.includes(:user, :reposts)
       render :index, status: :unprocessable_entity
@@ -82,6 +96,6 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:content, images: [], videos: [])
+    params.require(:post).permit(:content, :band_id, images: [], videos: [])
   end
 end

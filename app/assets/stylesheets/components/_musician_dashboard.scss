@@ -959,6 +959,12 @@ $kokai-yellow-dark: #b8e020;
   }
 }
 
+// Feed and Analytics row - vertical on mobile
+.dashboard-feed-analytics-row {
+  max-width: 1200px;
+  margin: 0 auto 24px;
+}
+
 // Responsive
 @media (max-width: 768px) {
   .musician-dashboard-header {
@@ -990,5 +996,10 @@ $kokai-yellow-dark: #b8e020;
     .btn-decline {
       justify-content: center;
     }
+  }
+
+  // Feed and Analytics - stack vertically on mobile
+  .dashboard-feed-analytics-row {
+    grid-template-columns: 1fr !important;
   }
 }

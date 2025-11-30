@@ -1,7 +1,7 @@
 # Scheduled job to finalize BAND MAINSTAGE contests and pick winners
 # Run this weekly on Sunday at midnight to finalize the previous week's contest
 #
-# To schedule with Heroku Scheduler or cron:
+# To schedule with Heroku Scheduler:
 #   bin/rails band_mainstage:finalize
 #
 # Or call directly:

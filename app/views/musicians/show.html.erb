@@ -89,6 +89,21 @@
       <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
         <%= render "shoutouts/shoutouts_section", musician: @musician %>
       </div>
+
+      <%# Posts/Activity Section %>
+      <% musician_posts = @musician.user.posts.where(band_id: nil).includes(:post_likes, :post_comments, images_attachments: :blob, videos_attachments: :blob).recent.limit(5) %>
+      <% if musician_posts.any? %>
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+          <h3 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-newspaper" style="color: #C8E938;"></i> Posts
+          </h3>
+          <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+            <% musician_posts.each do |post| %>
+              <%= render "posts/post", post: post %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
     </div>
     <%# ----- RIGHT COLUMN: STATS & AVAILABILITY ------ %>
     <div class="right-column">

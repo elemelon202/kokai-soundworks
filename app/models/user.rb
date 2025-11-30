@@ -79,15 +79,22 @@ class User < ApplicationRecord
   end
 
   def feed
-    # Get posts from: self, friends, followed musicians' users
+    # Get posts from: self, friends, followed musicians' users, and followed bands
     friend_ids = friends.pluck(:id)
     followed_user_ids = followed_musicians.joins(:user).pluck('users.id')
     all_user_ids = ([id] + friend_ids + followed_user_ids).uniq
 
-    # Get original posts and reposts
-    original_posts = Post.where(user_id: all_user_ids)
+    # Get IDs of bands the user follows
+    followed_band_ids = followed_bands.pluck(:id)
+
+    # Get original posts (personal posts from users + posts from followed bands)
+    personal_posts = Post.where(user_id: all_user_ids, band_id: nil)
+    band_posts = Post.where(band_id: followed_band_ids)
+    original_post_ids = personal_posts.pluck(:id) + band_posts.pluck(:id)
+
+    # Get reposts
     reposted_post_ids = Repost.where(user_id: all_user_ids).pluck(:post_id)
 
-    Post.where(id: original_posts.pluck(:id) + reposted_post_ids).distinct.recent
+    Post.where(id: original_post_ids + reposted_post_ids).distinct.recent
   end
 end

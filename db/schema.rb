@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_29_120038) do
+ActiveRecord::Schema[7.1].define(version: 2025_11_30_101758) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -384,6 +384,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_120038) do
     t.text "content"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "band_id"
+    t.index ["band_id"], name: "index_posts_on_band_id"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -570,6 +572,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_29_120038) do
   add_foreign_key "post_comments", "users"
   add_foreign_key "post_likes", "posts"
   add_foreign_key "post_likes", "users"
+  add_foreign_key "posts", "bands"
   add_foreign_key "posts", "users"
   add_foreign_key "profile_saves", "users"
   add_foreign_key "profile_views", "users", column: "viewer_id", on_delete: :nullify

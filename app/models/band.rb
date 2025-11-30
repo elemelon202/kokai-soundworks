@@ -16,6 +16,8 @@ class Band < ApplicationRecord
   has_many :follows, as: :followable, dependent: :destroy # Enable follow functionality
   has_many :followers, through: :follows, source: :follower # Users who follow this band
   has_many :profile_saves, as: :saveable, class_name: 'ProfileSave', dependent: :destroy
+  has_many :profile_views, as: :viewable, dependent: :destroy # Track profile views
+  has_many :posts, dependent: :destroy # Band feed posts
   has_many :band_mainstage_votes, dependent: :destroy
   has_many :band_mainstage_wins, class_name: 'BandMainstageWinner', dependent: :destroy
   accepts_nested_attributes_for :spotify_tracks, allow_destroy: true, reject_if: :all_blank

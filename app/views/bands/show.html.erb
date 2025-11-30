@@ -78,6 +78,20 @@
         </div>
       </div>
     </div>
+
+    <!-- Band Activity/Feed Section -->
+    <% band_posts = @band.posts.includes(:user, :post_likes, :post_comments, images_attachments: :blob, videos_attachments: :blob).recent.limit(10) %>
+    <% if band_posts.any? %>
+      <div class="band-media-section">
+        <h3><i class="fa-solid fa-newspaper"></i> Activity</h3>
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+          <% band_posts.each do |post| %>
+            <%= render "posts/post", post: post %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <!-- Photos Section -->
     <% if @band.images.attached? %>
       <div class="band-media-section">
