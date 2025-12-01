@@ -8,6 +8,14 @@
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
+
+    <%# ====================================================================== %>
+    <%# MAPBOX GL JS - Interactive map library for displaying venue locations %>
+    <%# Loaded from CDN for better caching and simpler setup                  %>
+    <%# ====================================================================== %>
+    <link href="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.css" rel="stylesheet">
+    <script src="https://api.mapbox.com/mapbox-gl-js/v3.3.0/mapbox-gl.js"></script>
+
     <%= javascript_importmap_tags %>
   </head>
 

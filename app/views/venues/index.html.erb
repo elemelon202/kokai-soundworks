@@ -1,14 +1,112 @@
+<%# ============================================================================ %>
+<%# Prepare venue data for the map controller                                   %>
+<%# We convert venues to a JSON array with the data needed for map pins         %>
+<%# ============================================================================ %>
+<%
+  # Combine all venues for the map (both played and recommended)
+  all_venues_for_map = (@played_venues.to_a + @recommended_venues.to_a).uniq
+
+  # Convert to JSON format with only the fields needed for the map
+  venues_json = all_venues_for_map.map do |v|
+    {
+      id: v.id,
+      name: v.name,
+      address: v.address,
+      city: v.city,
+      capacity: v.capacity,
+      latitude: v.latitude,
+      longitude: v.longitude
+    }
+  end
+
+  # Get IDs of venues the user has played at (for green pins)
+  played_venue_ids = @played_venues.pluck(:id)
+
+  # Get user's location for centering the map (if they have a musician profile)
+  user_lat = nil
+  user_lng = nil
+  # TODO: Add geocoding to musician locations for better map centering
+%>
+
 <div class="container venues-index-container">
   <div class="index-heading m-3 mt-5">
     <h1 style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 40px rgba(251, 191, 36, 0.5), 0 0 80px rgba(251, 191, 36, 0.3); margin-bottom: 8px;">Venues</h1>
     <p>Find places to play</p>
   </div>
 
+  <%# ======================================================================== %>
+  <%# VENUE MAP SECTION                                                        %>
+  <%# Collapsible map showing all venues with colored pins                     %>
+  <%# - Green pins: Venues you've played at                                    %>
+  <%# - Muted red pins: Venues you haven't played at yet                       %>
+  <%# ======================================================================== %>
+  <div class="venue-map-wrapper"
+       data-controller="venue-map"
+       data-venue-map-api-key-value="<%= ENV['MAPBOX_API_KEY'] %>"
+       data-venue-map-venues-value="<%= venues_json.to_json %>"
+       data-venue-map-played-venue-ids-value="<%= played_venue_ids.to_json %>">
+
+    <%# Toggle button to expand/collapse the map %>
+    <button type="button"
+            class="venue-map-toggle"
+            data-venue-map-target="toggle"
+            data-action="click->venue-map#toggle">
+      <i class="fa-solid fa-map"></i> Show Map
+    </button>
+
+    <%# The map container - hidden by default, shown when expanded %>
+    <div class="venue-map-container" data-venue-map-target="container"></div>
+  </div>
+
+  <% if user_signed_in? %>
+    <div class="played-venues-section mb-5">
+      <h3 class="venues-section-title"><i class="fa-solid fa-star"></i> Venues You've Played</h3>
+      <% if @played_venues.any? %>
+        <div class="venues-section">
+          <div class="record-shelf-container">
+            <div class="record-shelf">
+              <% @played_venues.each do |venue| %>
+                <div class="record-item">
+                  <div class="venue-card position-relative played-venue">
+                    <%= link_to venue_path(venue), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
+                      <div class="venue-card-header">
+                        <% if venue.photos.attached? %>
+                          <%= cl_image_tag(venue.photos.first.key, class: "venue-image") %>
+                        <% else %>
+                          <%= image_tag "venue_placeholder.jpg", class: "venue-image" %>
+                        <% end %>
+                        <div class="venue-card-name-wrapper">
+                          <h4 class="venue-card-name"><%= venue.name %></h4>
+                        </div>
+                      </div>
+                      <div class="venue-card-details">
+                        <p class="venue-mobile-name"><%= venue.name %></p>
+                        <p><i class="fa-solid fa-location-dot"></i> <%= venue.address %></p>
+                        <p><i class="fa-solid fa-city"></i> <%= venue.city %></p>
+                        <p><i class="fa-solid fa-users"></i> <%= venue.capacity %> capacity</p>
+                        <p class="venue-description-line"><i class="fa-solid fa-pen-to-square"></i> <%= venue.description %></p>
+                      </div>
+                    <% end %>
+                    <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: venue.user_id), method: :post, class: "btn btn-primary", style: "background-color: #FBBF24;", data: { turbo: false } %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        </div>
+      <% else %>
+        <div class="no-played-venues">
+          <p><i class="fa-solid fa-music"></i> You haven't played at any venues yet.</p>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+  <h3 class="venues-section-title"><i class="fa-solid fa-compass"></i> Recommended For You</h3>
   <div class="venues-section" id="venues">
     <div class="record-shelf-container">
       <div class="record-shelf">
-        <% if @venues.any? %>
-          <% @venues.each do |venue| %>
+        <% if @recommended_venues.any? %>
+          <% @recommended_venues.each do |venue| %>
             <div class="record-item">
               <div class="venue-card position-relative">
                 <%= link_to venue_path(venue), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
@@ -35,7 +133,7 @@
             </div>
           <% end %>
         <% else %>
-          <em>Sorry, no venues found.</em>
+          <em>No venues found matching your profile.</em>
         <% end %>
       </div>
     </div>
