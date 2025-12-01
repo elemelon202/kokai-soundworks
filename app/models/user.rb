@@ -41,6 +41,7 @@ class User < ApplicationRecord
   has_many :challenge_votes, dependent: :destroy
   has_many :gig_attendances, dependent: :destroy
   has_many :attending_gigs, through: :gig_attendances, source: :gig
+  has_many :led_bands, class_name: 'Band', foreign_key: 'user_id'
   has_one :fan, dependent: :destroy
 
   # convenience: check roles
@@ -52,9 +53,6 @@ class User < ApplicationRecord
     user_type == "band_leader"
   end
 
-  def band_member?
-    bands.exists?
-  end
 
   def direct_message_chats
     chats.direct_messages.includes(:messages, :users)
