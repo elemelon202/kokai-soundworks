@@ -1,6 +1,7 @@
 class Venue < ApplicationRecord
   belongs_to :user
   has_many :gigs, dependent: :destroy
+  has_one_attached :banner
   has_many_attached :photos
 
   # ============================================================================

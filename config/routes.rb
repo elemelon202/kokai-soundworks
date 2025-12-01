@@ -102,6 +102,9 @@ Rails.application.routes.draw do
   # end
   resources :venues do
     resources :gigs, only: [:new, :create, :index]
+    member do
+      delete :purge_photo
+    end
   end
   resources :gigs, only: [:show, :index] do
     resources :bookings, only: [:new, :create, :destroy]

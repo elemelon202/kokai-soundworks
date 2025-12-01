@@ -5,6 +5,7 @@ class Gig < ApplicationRecord
   has_many :gig_attendances, dependent: :destroy
   has_many :attendees, through: :gig_attendances, source: :user
 
+  GENRES = ['Rock', 'Pop', 'Jazz', 'Classical', 'Hip Hop', 'Country', 'Electronic', 'Reggae', 'Blues', 'Folk'].freeze
   ATTENDANCE_RATE = 0.05 #5% of followers
 
 

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_01_023639) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -250,6 +250,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_023639) do
     t.time "start_time"
     t.time "end_time"
     t.decimal "ticket_price"
+    t.text "description"
+    t.string "genre"
     t.index ["venue_id"], name: "index_gigs_on_venue_id"
   end
 
@@ -545,6 +547,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_023639) do
     t.datetime "updated_at", null: false
     t.float "latitude"
     t.float "longitude"
+    t.integer "banner_position"
     t.index ["user_id"], name: "index_venues_on_user_id"
   end
 

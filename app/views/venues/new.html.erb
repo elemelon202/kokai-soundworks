@@ -6,7 +6,19 @@
     <%= f.input :city %>
     <%= f.input :capacity %>
     <%= f.input :description %>
-    <%= f.input :photos, as: :file, input_html: { multiple: true } %>
+
+    <div class="mb-3">
+      <%= f.label :banner, "Banner Image", class: "form-label" %>
+      <%= f.input :banner, as: :file, label: false, input_html: { accept: "image/*", class: "form-control" } %>
+      <small class="text-muted">Recommended size: 1200x400px</small>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :photos, "Venue Photos", class: "form-label" %>
+      <%= f.input :photos, as: :file, label: false, input_html: { multiple: true, accept: "image/*", class: "form-control" } %>
+      <small class="text-muted">You can select multiple photos</small>
+    </div>
+
     <%= f.submit class: 'btn btn-primary' %>
   <% end %>
   <%= link_to "Back to list", venues_path  %>

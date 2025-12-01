@@ -6,7 +6,36 @@
     <%= f.input :city %>
     <%= f.input :capacity %>
     <%= f.input :description %>
-    <%= f.input :photos, as: :file, input_html: { multiple: true } %>
+
+    <div class="mb-3">
+      <%= f.label :banner, "Banner Image", class: "form-label" %>
+      <% if @venue.banner.attached? %>
+        <div class="mb-2">
+          <%= cl_image_tag(@venue.banner.key, style: "max-width: 300px; border-radius: 8px;") %>
+        </div>
+      <% end %>
+      <%= f.input :banner, as: :file, label: false, input_html: { accept: "image/*", class: "form-control" } %>
+      <small class="text-muted">Recommended size: 1200x400px</small>
+    </div>
+
+    <div class="mb-3">
+      <%= f.label :photos, "Venue Photos", class: "form-label" %>
+      <% if @venue.photos.attached? %>
+        <div class="d-flex flex-wrap gap-2 mb-2">
+          <% @venue.photos.each do |photo| %>
+            <div class="position-relative">
+              <%= cl_image_tag(photo.key, style: "width: 100px; height: 100px; object-fit: cover; border-radius: 8px;") %>
+              <%= link_to purge_photo_venue_path(@venue, photo_id: photo.id), method: :delete, data: { confirm: "Remove this photo?" }, class: "position-absolute top-0 end-0 bg-danger text-white rounded-circle d-flex align-items-center justify-content-center", style: "width: 20px; height: 20px; font-size: 12px; text-decoration: none;" do %>
+                &times;
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+      <%= f.input :photos, as: :file, label: false, input_html: { multiple: true, accept: "image/*", class: "form-control" } %>
+      <small class="text-muted">You can select multiple photos (new photos will be added to existing)</small>
+    </div>
+
     <%= f.submit class: 'btn btn-primary' %>
   <% end %>
   <%= link_to "Back to list", venues_path %>
