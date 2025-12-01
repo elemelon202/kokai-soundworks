@@ -29,6 +29,7 @@ class GigsController < ApplicationController
   def show
     @gig = Gig.find(params[:id])
     @venue = @gig.venue
+    @booking = Booking.new
     authorize @gig
   end
 

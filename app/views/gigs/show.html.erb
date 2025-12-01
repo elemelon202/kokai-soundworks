@@ -2,4 +2,22 @@
   <h2><%= @gig.name %></h2>
   <li><%= "Date: #{@gig.date}" %></li>
   <li><%= "Time: #{@gig.start_time} - #{@gig.end_time}" %></li>
+  <h1>Book a Band for <%= @gig.name %></h1>
+  <%= simple_form_for [@gig, @booking] do |f| %>
+    <%= f.association :band, collection: Band.all, prompt: "Select a band" %>
+    <%= f.submit "Invite a band", class: "btn btn-primary" %>
+  <% end %>
+  <h2>Booked Bands</h2>
+  <% if @gig.bookings.any? %>
+    <% @gig.bookings.each do |booking| %>
+      <p>
+        <%= booking.band.name %>
+        <%= link_to "Remove", gig_booking_path(@gig, booking),
+            data: { turbo_method: :delete, confirm: "Are you sure?" } %>
+      </p>
+    <% end %>
+  <% else %>
+    <p>No bands booked yet.</p>
+  <% end %>
+  <%= link_to "Back to venue", request.referer || root_path, class: "btn btn-secondary" %>
 </div>
