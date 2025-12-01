@@ -141,6 +141,24 @@
                   <i class="fa-solid fa-plus me-1"></i> Create a band
                 <% end %>
                 <div class="dropdown-divider"></div>
+              <% elsif current_user.user_type == 'venue' %>
+                <h6 class="dropdown-header">My Venues</h6>
+                <% current_user.venues.each do |venue| %>
+                  <%= link_to edit_venue_path(venue), class: "dropdown-item" do %>
+                    <i class="fa-solid fa-location-dot me-1"></i> <%= venue.name %>
+                  <% end %>
+                <% end %>
+                <%= link_to new_venue_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-plus me-1"></i> Add Venue
+                <% end %>
+                <div class="dropdown-divider"></div>
+                <%= link_to gig_applications_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-clipboard-list me-1"></i> Gig Applications
+                <% end %>
+                <%= link_to direct_messages_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-envelope me-1"></i> Messages
+                <% end %>
+                <div class="dropdown-divider"></div>
               <% elsif current_user&.fan.present? %>
                 <%= link_to edit_fan_path(current_user.fan), class: "dropdown-item" do %>
                   <i class="fa-solid fa-gauge-high me-1"></i> Dashboard
