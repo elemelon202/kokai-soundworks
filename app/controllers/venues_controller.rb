@@ -102,6 +102,14 @@ class VenuesController < ApplicationController
   end
 
   def venue_params
-    params.require(:venue).permit(:name, :address, :city, :capacity, :description, photos: [])
+    params.require(:venue).permit(:name, :address, :city, :capacity, :description, :banner, :banner_position, photos: [])
+  end
+
+  def purge_photo
+    @venue = Venue.find(params[:id])
+    authorize @venue
+    photo = @venue.photos.find(params[:photo_id])
+    photo.purge
+    redirect_to edit_venue_path(@venue), notice: "Photo removed successfully."
   end
 end

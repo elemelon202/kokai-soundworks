@@ -115,7 +115,7 @@ class GigsController < ApplicationController
   end
 
   def gig_params
-    params.require(:gig).permit(:name, :date, :start_time, :end_time, :poster, :ticket_price)
+    params.require(:gig).permit(:name, :date, :start_time, :end_time, :poster, :ticket_price, :description, :genre)
   end
 
 end

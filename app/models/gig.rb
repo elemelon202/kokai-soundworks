@@ -9,6 +9,7 @@ class Gig < ApplicationRecord
   has_one_attached :poster
 
 
+  GENRES = ['Rock', 'Pop', 'Jazz', 'Classical', 'Hip Hop', 'Country', 'Electronic', 'Reggae', 'Blues', 'Folk'].freeze
   ATTENDANCE_RATE = 0.05 #5% of followers
 
 
