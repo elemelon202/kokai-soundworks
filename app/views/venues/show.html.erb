@@ -23,14 +23,12 @@
         </div>
       <% end %>
     </div>
-
     <% if @venue.description.present? %>
       <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #333;">
         <p style="color: #ccc; margin: 0; line-height: 1.6;"><%= @venue.description %></p>
       </div>
     <% end %>
   </div>
-
   <%# Upcoming Gigs %>
   <% upcoming_gigs = @venue.gigs.where('date >= ?', Date.current).order(:date) %>
   <% if upcoming_gigs.any? %>
@@ -43,7 +41,7 @@
           <div style="background: #252525; padding: 16px; border-radius: 12px;">
             <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
               <div>
-                <h3 style="color: #fff; margin: 0 0 8px 0; font-size: 1.1rem;"><%= gig.name %></h3>
+                <h3 style="color: #fff; margin: 0 0 8px 0; font-size: 1.1rem;"><%= link_to gig.name, gig_path(gig), style: "text-decoration: none;" %></h3>
                 <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
                   <i class="fa-solid fa-clock" style="margin-right: 4px;"></i>
                   <%= gig.date.strftime("%A, %B %d, %Y") %>
@@ -73,8 +71,6 @@
       </div>
     </div>
   <% end %>
-
-
   <%# Past Gigs %>
   <% past_gigs = @venue.gigs.where('date < ?', Date.current).order(date: :desc).limit(5) %>
   <% if past_gigs.any? %>
@@ -102,11 +98,9 @@
       </div>
     </div>
   <% end %>
-
   <div style="margin-top: 24px;">
     <%= link_to venues_path, style: "color: #C8E938; text-decoration: none; font-size: 0.9rem;" do %>
       <i class="fa-solid fa-arrow-left"></i> Back to venues
-
     <% end %>
   </div>
 </div>

@@ -1,6 +1,6 @@
 class GigsController < ApplicationController
 
-  skip_before_action :authenticate_user!, only: [:index, :show, :search, :new, :create]
+  skip_before_action :authenticate_user!, only: [:index, :show, :search, :new, :create, :edit, :update]
 
   def new
     @gig = Gig.new
@@ -14,7 +14,7 @@ class GigsController < ApplicationController
     @gig.venue = @venue
     authorize @gig
     if @gig.save
-      redirect_to venue_path(@venue)
+      redirect_to edit_gig_path(@gig)
     else
       render :new, status: :unprocessable_entity
     end
@@ -31,6 +31,22 @@ class GigsController < ApplicationController
     @venue = @gig.venue
     @booking = Booking.new
     authorize @gig
+  end
+
+  def edit
+    @gig = Gig.find(params[:id])
+    @booking = Booking.new
+    authorize @gig
+  end
+
+  def update
+     @gig = Gig.find(params[:id])
+    authorize @gig
+    if @gig.update(gig_params)
+      redirect_to gig_path(@gig)
+    else
+      render :edit, status: :unprocessable_entity
+    end
   end
 
   private
