@@ -3,6 +3,8 @@ class GigApplicationsController < ApplicationController
 
   # Venue owner sees applications for their gigs
   def index
+    authorize GigApplication
+    skip_policy_scope
     @pending = GigApplication.joins(gig: :venue)
                              .where(venues: { user_id: current_user.id }, status: :pending)
                              .includes(:band, gig: :venue)
@@ -12,7 +14,6 @@ class GigApplicationsController < ApplicationController
                                .includes(:band, gig: :venue)
                                .order(updated_at: :desc)
                                .limit(20)
-    authorize GigApplication
   end
 
   # Band applies to a gig

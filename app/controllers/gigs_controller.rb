@@ -14,7 +14,7 @@ class GigsController < ApplicationController
     @gig.venue = @venue
     authorize @gig
     if @gig.save
-      redirect_to edit_gig_path(@gig)
+      redirect_to gig_path(@gig)
     else
       render :new, status: :unprocessable_entity
     end
@@ -115,7 +115,7 @@ class GigsController < ApplicationController
   end
 
   def gig_params
-    params.require(:gig).permit(:name, :date, :start_time, :end_time)
+    params.require(:gig).permit(:name, :date, :start_time, :end_time, :poster, :ticket_price)
   end
 
 end

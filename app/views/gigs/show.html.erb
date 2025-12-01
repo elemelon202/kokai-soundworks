@@ -1,103 +1,160 @@
-<div class="container">
-  <h2><%= @gig.name %></h2>
-  <li><%= "Date: #{@gig.date}" %></li>
-  <li><%= "Time: #{@gig.start_time} - #{@gig.end_time}" %></li>
+<div class="gig-show-container">
+  <%# Header with gig title and venue %>
+  <div class="gig-show-header">
+    <div class="gig-header-content">
+      <h1 class="gig-title"><%= @gig.name %></h1>
+      <div class="gig-venue-info">
+        <%= link_to venue_path(@venue), class: "venue-link" do %>
+          <i class="fa-solid fa-location-dot"></i> <%= @venue.name %>
+        <% end %>
+        <% if @venue.city.present? %>
+          <span class="venue-city"><%= @venue.city %></span>
+        <% end %>
+      </div>
+    </div>
+    <% if policy(@gig).edit? %>
+      <%= link_to edit_gig_path(@gig), class: "btn-edit-gig" do %>
+        <i class="fa-solid fa-cog"></i> Manage Gig
+      <% end %>
+    <% end %>
+  </div>
 
-  <%# Apply to Play Section - for band leaders %>
-  <% if current_user && current_user.led_bands.any? %>
-    <div style="background: #1e1e1e; border-radius: 12px; padding: 20px; margin: 20px 0;">
-      <h3 style="color: #fff; margin: 0 0 16px 0;">
-        <i class="fa-solid fa-guitar" style="color: #C8E938;"></i> Apply to Play
-      </h3>
-      <% available_bands = current_user.led_bands.where.not(id: @gig.bands.pluck(:id)).where.not(id: @gig.gig_applications.pluck(:band_id)) %>
+  <%# Main content grid: Poster + Details %>
+  <div class="gig-content-grid">
+    <%# Poster Section %>
+    <div class="gig-poster-section">
+      <% if @gig.poster.attached? %>
+        <%= cl_image_tag @gig.poster.key, class: "gig-poster-image" %>
+      <% else %>
+        <div class="gig-poster-placeholder">
+          <i class="fa-solid fa-image"></i>
+          <span>Gig Poster</span>
+        </div>
+      <% end %>
+    </div>
+
+    <%# Details Section %>
+    <div class="gig-details-section">
+      <%# Date and Time Card %>
+      <div class="gig-info-card">
+        <div class="gig-info-icon">
+          <i class="fa-solid fa-calendar"></i>
+        </div>
+        <div class="gig-info-content">
+          <h3>Date & Time</h3>
+          <p class="gig-date"><%= @gig.date.strftime("%A, %B %d, %Y") %></p>
+          <% if @gig.start_time.present? %>
+            <p class="gig-time">
+              <%= @gig.start_time.strftime("%l:%M %p") %>
+              <% if @gig.end_time.present? %>
+                - <%= @gig.end_time.strftime("%l:%M %p") %>
+              <% end %>
+            </p>
+          <% end %>
+        </div>
+      </div>
+
+      <%# RSVP Section - only show to non-performing users %>
+      <% performing_band_ids = @gig.bands.pluck(:id) %>
+      <% is_performing = current_user && (
+        current_user.led_bands.where(id: performing_band_ids).exists? ||
+        current_user.musician&.bands&.where(id: performing_band_ids)&.exists?
+      ) %>
+      <% is_venue_owner = current_user && @gig.venue.user_id == current_user.id %>
+
+      <% unless is_performing || is_venue_owner %>
+        <div class="gig-rsvp-section">
+          <h3><i class="fa-solid fa-calendar-check"></i> Are you going?</h3>
+          <%= render partial: "gig_attendances/buttons", locals: { gig: @gig } %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Band Lineup Section %>
+  <div class="gig-lineup-section">
+    <div class="lineup-header">
+      <h2><i class="fa-solid fa-users"></i> Band Lineup</h2>
+    </div>
+    <% if @gig.bands.any? %>
+      <div class="lineup-grid">
+        <% @gig.bands.each_with_index do |band, index| %>
+          <%= link_to band_path(band), class: "lineup-band-card" do %>
+            <div class="band-card-content">
+              <% if band.images.attached? %>
+                <%= cl_image_tag band.images.first.key, class: "band-avatar" %>
+              <% else %>
+                <div class="band-avatar-placeholder">
+                  <i class="fa-solid fa-users"></i>
+                </div>
+              <% end %>
+              <div class="band-info">
+                <h3 class="band-name"><%= band.name %></h3>
+                <% if band.location.present? %>
+                  <p class="band-location"><i class="fa-solid fa-map-marker-alt"></i> <%= band.location %></p>
+                <% end %>
+              </div>
+            </div>
+            <div class="band-card-arrow">
+              <i class="fa-solid fa-chevron-right"></i>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="no-bands-message">
+        <i class="fa-solid fa-music"></i>
+        <p>No bands announced yet. Check back soon!</p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Apply to Play Section - for band leaders whose bands aren't already playing %>
+  <% if current_user && current_user.led_bands.any? && !is_venue_owner %>
+    <% available_bands = current_user.led_bands.where.not(id: @gig.bands.pluck(:id)).where.not(id: @gig.gig_applications.pluck(:band_id)) %>
+    <% applied_bands = current_user.led_bands.where(id: @gig.gig_applications.pluck(:band_id)) %>
+    <% booked_bands = current_user.led_bands.where(id: @gig.bands.pluck(:id)) %>
+
+    <div class="gig-apply-section">
+      <div class="apply-header">
+        <h2><i class="fa-solid fa-guitar"></i> Apply to Play</h2>
+      </div>
+
       <% if available_bands.any? %>
-        <%= form_with url: gig_gig_applications_path(@gig), method: :post, local: true, style: "display: flex; flex-direction: column; gap: 12px;" do |f| %>
-          <div>
-            <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 6px;">Select your band</label>
+        <%= form_with url: gig_gig_applications_path(@gig), method: :post, local: true, class: "apply-form" do |f| %>
+          <div class="form-field">
+            <label>Select your band</label>
             <%= select_tag "gig_application[band_id]",
                 options_from_collection_for_select(available_bands, :id, :name),
-                style: "width: 100%; background: #252525; border: 1px solid #333; border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 0.9rem;" %>
+                class: "form-select" %>
           </div>
-          <div>
-            <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 6px;">Message to venue (optional)</label>
+          <div class="form-field">
+            <label>Message to venue (optional)</label>
             <%= text_area_tag "gig_application[message]", nil,
                 placeholder: "Tell the venue why your band would be a great fit...",
                 rows: 3,
-                style: "width: 100%; background: #252525; border: 1px solid #333; border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 0.9rem; resize: none; box-sizing: border-box;" %>
+                class: "form-textarea" %>
           </div>
-          <%= submit_tag "Submit Application", style: "background: #C8E938; color: #171717; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; width: fit-content;" %>
+          <%= submit_tag "Submit Application", class: "btn-submit-application" %>
         <% end %>
-      <% else %>
-        <% applied_bands = current_user.led_bands.where(id: @gig.gig_applications.pluck(:band_id)) %>
-        <% booked_bands = current_user.led_bands.where(id: @gig.bands.pluck(:id)) %>
-        <% if booked_bands.any? %>
-          <p style="color: #C8E938; margin: 0;">
-            <i class="fa-solid fa-check-circle"></i> Your band is already booked for this gig!
-          </p>
-        <% elsif applied_bands.any? %>
-          <p style="color: #fbbf24; margin: 0;">
-            <i class="fa-solid fa-clock"></i> You've already applied with your band. Waiting for venue response.
-          </p>
-        <% end %>
+      <% elsif booked_bands.any? %>
+        <div class="apply-status booked">
+          <i class="fa-solid fa-check-circle"></i>
+          <p>Your band is already booked for this gig!</p>
+        </div>
+      <% elsif applied_bands.any? %>
+        <div class="apply-status pending">
+          <i class="fa-solid fa-clock"></i>
+          <p>Application submitted! Waiting for venue response.</p>
+        </div>
       <% end %>
     </div>
   <% end %>
 
-  <%# Venue Owner Section %>
-  <% if current_user && @gig.venue.user_id == current_user.id %>
-    <h1>Book a Band for <%= @gig.name %></h1>
-    <%= simple_form_for [@gig, @booking] do |f| %>
-      <%= f.association :band, collection: Band.all, prompt: "Select a band" %>
-      <%= f.submit "Invite a band", class: "btn btn-primary" %>
+  <%# Back Link %>
+  <div class="gig-footer">
+    <%= link_to request.referer || venue_path(@venue), class: "btn-back" do %>
+      <i class="fa-solid fa-arrow-left"></i> Back
     <% end %>
-
-    <%# Pending Applications %>
-    <% pending_applications = @gig.gig_applications.pending.includes(:band) %>
-    <% if pending_applications.any? %>
-      <div style="background: #1e1e1e; border-radius: 12px; padding: 20px; margin: 20px 0;">
-        <h3 style="color: #C8E938; margin: 0 0 16px 0;">
-          <i class="fa-solid fa-inbox"></i> Pending Applications (<%= pending_applications.count %>)
-        </h3>
-        <div style="display: flex; flex-direction: column; gap: 10px;">
-          <% pending_applications.each do |application| %>
-            <div style="background: #252525; padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px;">
-              <div>
-                <%= link_to application.band.name, band_path(application.band), style: "color: #fff; text-decoration: none; font-weight: 600;" %>
-                <% if application.message.present? %>
-                  <p style="color: #888; margin: 4px 0 0 0; font-size: 0.85rem; font-style: italic;">"<%= truncate(application.message, length: 60) %>"</p>
-                <% end %>
-              </div>
-              <div style="display: flex; gap: 8px;">
-                <%= button_to approve_gig_application_path(application), method: :patch, style: "background: #C8E938; color: #171717; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; font-weight: 600; cursor: pointer;" do %>
-                  <i class="fa-solid fa-check"></i> Approve
-                <% end %>
-                <%= button_to reject_gig_application_path(application), method: :patch, style: "background: #ff4444; color: #fff; border: none; padding: 6px 12px; border-radius: 6px; font-size: 0.8rem; cursor: pointer;" do %>
-                  <i class="fa-solid fa-xmark"></i> Reject
-                <% end %>
-              </div>
-            </div>
-          <% end %>
-        </div>
-      </div>
-    <% end %>
-  <% end %>
-
-  <h2>Booked Bands</h2>
-  <% if @gig.bookings.any? %>
-    <% @gig.bookings.each do |booking| %>
-      <p>
-        <%= booking.band.name %>
-        <% if current_user && @gig.venue.user_id == current_user.id %>
-          <%= link_to "Remove", gig_booking_path(@gig, booking),
-              data: { turbo_method: :delete, confirm: "Are you sure?" } %>
-        <% end %>
-      </p>
-    <% end %>
-  <% else %>
-    <p>No bands booked yet.</p>
-  <% end %>
-  <% if policy(@gig).edit? %>
-    <%= link_to "Edit Gig", edit_gig_path(@gig), class: "btn btn-primary" %>
-  <% end %>
-  <%= link_to "Back to venue", request.referer || root_path, class: "btn btn-secondary" %>
+  </div>
 </div>
