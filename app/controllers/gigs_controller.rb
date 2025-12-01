@@ -1,6 +1,6 @@
 class GigsController < ApplicationController
 
-  skip_before_action :authenticate_user!, only: [:index, :show, :search, :new, :create]
+  skip_before_action :authenticate_user!, only: [:index, :show, :search, :new, :create, :edit, :update]
 
   def new
     @gig = Gig.new

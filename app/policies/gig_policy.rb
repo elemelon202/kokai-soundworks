@@ -16,11 +16,11 @@ class GigPolicy < ApplicationPolicy
     true
   end
 
-  def edit
+  def edit?
     user.present? && record.venue.user == user
   end
 
-  def update
+  def update?
     edit?
   end
 
