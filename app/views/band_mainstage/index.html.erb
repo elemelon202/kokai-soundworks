@@ -1,76 +1,148 @@
-<div class="mainstage-page" style="max-width: 900px; margin: 0 auto; padding: 24px;">
-  <%# Header %>
-  <div style="text-align: center; margin-bottom: 32px;">
-    <h1 style="color: #E936AD; font-size: 2.5rem; margin: 0 0 8px 0; display: flex; align-items: center; justify-content: center; gap: 12px;">
-      <i class="fa-solid fa-users"></i> BAND MAINSTAGE
-    </h1>
-    <p style="color: #888; font-size: 1rem; margin: 0 0 16px 0;">
-      Weekly contest to find the most engaging bands
-    </p>
-    <div style="display: inline-flex; align-items: center; gap: 8px; padding: 8px 16px; background: #2a2a2a; border-radius: 20px;">
-      <i class="fa-solid fa-calendar" style="color: #E936AD;"></i>
-      <span style="color: #fff; font-size: 0.9rem;">
-        <%= @contest.start_date.strftime('%b %d') %> - <%= @contest.end_date.strftime('%b %d, %Y') %>
-      </span>
+<div class="mainstage-poster">
+  <%# Festival Poster Header %>
+  <div class="mainstage-poster-header band-header">
+    <h1 class="mainstage-poster-title">BAND MAINSTAGE</h1>
+    <p class="mainstage-poster-subtitle">Weekly Engagement Championship</p>
+    <div class="mainstage-poster-dates">
+      <%= @contest.start_date.strftime('%b %d').upcase %> — <%= @contest.end_date.strftime('%b %d, %Y').upcase %>
     </div>
   </div>
 
-  <%# Contest type switcher %>
-  <div style="display: flex; justify-content: center; gap: 12px; margin-bottom: 24px;">
-    <%= link_to mainstage_path, style: "padding: 10px 20px; background: #2a2a2a; color: #888; border-radius: 8px; text-decoration: none; font-size: 0.9rem;" do %>
+  <%# Contest Type Switcher %>
+  <div class="mainstage-switcher">
+    <%= link_to mainstage_path, class: "mainstage-switch-btn" do %>
       <i class="fa-solid fa-user"></i> Musicians
     <% end %>
-    <div style="padding: 10px 20px; background: #E936AD; color: #fff; border-radius: 8px; font-size: 0.9rem; font-weight: 600;">
+    <div class="mainstage-switch-btn active-band">
       <i class="fa-solid fa-users"></i> Bands
     </div>
   </div>
 
-  <%# Voting info %>
+  <%# Voting Status Banner %>
   <% if current_user %>
     <% if @user_vote %>
-      <div style="background: #1e3a1e; border: 1px solid #2d5a2d; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
-        <i class="fa-solid fa-check-circle" style="color: #4ade80; margin-right: 8px;"></i>
-        <span style="color: #4ade80;">You voted for <strong><%= @user_vote.name %></strong> this week!</span>
+      <div class="mainstage-vote-banner voted">
+        <i class="fa-solid fa-check-circle"></i>
+        You voted for <strong><%= @user_vote.name %></strong> this week!
       </div>
     <% else %>
-      <div style="background: #2a2a2a; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
-        <i class="fa-solid fa-hand-pointer" style="color: #E936AD; margin-right: 8px;"></i>
-        <span style="color: #fff;">Cast your vote for your favorite band this week!</span>
+      <div class="mainstage-vote-banner">
+        <i class="fa-solid fa-hand-pointer" style="color: #E936AD;"></i>
+        <span style="color: #fff;">Cast your vote for your favorite band!</span>
       </div>
     <% end %>
   <% else %>
-    <div style="background: #2a2a2a; border-radius: 12px; padding: 16px; margin-bottom: 24px; text-align: center;">
-      <span style="color: #888;"><%= link_to "Sign in", new_user_session_path, style: "color: #E936AD;" %> to vote for your favorite band!</span>
+    <div class="mainstage-vote-banner">
+      <%= link_to "Sign in", new_user_session_path, style: "color: #E936AD;" %> to vote for your favorite band!
     </div>
   <% end %>
 
-  <%# Leaderboard %>
-  <%= render "band_mainstage/leaderboard", contest: @contest, leaderboard: @leaderboard, user_vote: @user_vote %>
+  <%# Festival Lineup %>
+  <div class="mainstage-lineup band-lineup">
+    <% if @leaderboard.any? %>
+      <%# Headliner - 1st Place %>
+      <% headliner = @leaderboard[0] %>
+      <div class="mainstage-headliner">
+        <h2 class="mainstage-headliner-name">
+          <%= link_to headliner[:band].name, band_path(headliner[:band]) %>
+        </h2>
+        <div class="mainstage-headliner-score"><%= headliner[:total_score] %> PTS</div>
+        <div class="mainstage-headliner-stats">
+          <span class="engagement"><i class="fa-solid fa-bolt"></i> <%= headliner[:engagement_score] %> engagement</span>
+          <span class="votes"><i class="fa-solid fa-hand-pointer"></i> <%= headliner[:vote_score] / 10 %> votes</span>
+        </div>
+        <% user_is_member = current_user && headliner[:band].musicians.any? { |m| m.user == current_user } %>
+        <% if current_user && !@user_vote && !user_is_member %>
+          <%= button_to band_mainstage_vote_path(band_id: headliner[:band].id), method: :post, class: "mainstage-vote-btn" do %>
+            <i class="fa-solid fa-star"></i> VOTE
+          <% end %>
+        <% elsif @user_vote == headliner[:band] %>
+          <div class="mainstage-vote-btn voted">
+            <i class="fa-solid fa-check"></i> VOTED
+          </div>
+        <% end %>
+      </div>
 
-  <%# How it works %>
-  <div style="margin-top: 32px; padding: 24px; background: #1e1e1e; border-radius: 12px;">
-    <h3 style="color: #fff; font-size: 1.1rem; margin: 0 0 16px 0;">
-      <i class="fa-solid fa-circle-info" style="color: #E936AD;"></i> How Band MAINSTAGE Works
-    </h3>
-    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px;">
-      <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
-        <div style="color: #E936AD; font-weight: 600; margin-bottom: 8px;">Engagement Score</div>
-        <p style="color: #888; font-size: 0.85rem; margin: 0;">Earn points from new followers, profile saves, gig bookings, and member short likes during the week.</p>
+      <%# Main Acts - 2nd & 3rd Place %>
+      <% if @leaderboard.length > 1 %>
+        <div class="mainstage-main-acts">
+          <% @leaderboard[1..2].each_with_index do |entry, idx| %>
+            <div class="mainstage-main-act">
+              <div class="mainstage-main-act-rank <%= idx == 0 ? 'silver' : 'bronze' %>">
+                <%= idx == 0 ? '★ 2ND ★' : '★ 3RD ★' %>
+              </div>
+              <h3 class="mainstage-main-act-name">
+                <%= link_to entry[:band].name, band_path(entry[:band]) %>
+              </h3>
+              <div class="mainstage-main-act-score"><%= entry[:total_score] %> pts</div>
+              <div class="mainstage-main-act-stats">
+                <i class="fa-solid fa-bolt" style="color: #E936AD;"></i> <%= entry[:engagement_score] %> ·
+                <i class="fa-solid fa-hand-pointer" style="color: #C8E938;"></i> <%= entry[:vote_score] / 10 %>
+              </div>
+              <% user_is_member = current_user && entry[:band].musicians.any? { |m| m.user == current_user } %>
+              <% if current_user && !@user_vote && !user_is_member %>
+                <div class="mainstage-main-act-vote">
+                  <%= button_to band_mainstage_vote_path(band_id: entry[:band].id), method: :post do %>
+                    Vote
+                  <% end %>
+                </div>
+              <% elsif @user_vote == entry[:band] %>
+                <div class="mainstage-main-act-vote">
+                  <span style="color: #4ade80; font-size: 0.8rem;"><i class="fa-solid fa-check"></i> Voted</span>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      <% end %>
+
+      <%# Supporting Acts - 4th+ %>
+      <% if @leaderboard.length > 3 %>
+        <div class="mainstage-supporting">
+          <div class="mainstage-supporting-title">— ALSO PERFORMING —</div>
+          <div class="mainstage-supporting-acts">
+            <% @leaderboard[3..].each do |entry| %>
+              <div class="mainstage-supporting-act">
+                <div class="mainstage-supporting-act-name">
+                  <%= link_to entry[:band].name, band_path(entry[:band]) %>
+                </div>
+                <div class="mainstage-supporting-act-score"><%= entry[:total_score] %> pts</div>
+              </div>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+
+    <% else %>
+      <div class="mainstage-empty">
+        <i class="fa-solid fa-guitar"></i>
+        <p>No bands yet this week.<br>Be the first to engage!</p>
       </div>
-      <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
-        <div style="color: #C8E938; font-weight: 600; margin-bottom: 8px;">Community Votes</div>
-        <p style="color: #888; font-size: 0.85rem; margin: 0;">Each vote from the community adds 10 bonus points. One vote per user per week.</p>
+    <% end %>
+  </div>
+
+  <%# How It Works %>
+  <div class="mainstage-info">
+    <h3><i class="fa-solid fa-circle-info" style="color: #E936AD;"></i> How Band MAINSTAGE Works</h3>
+    <div class="mainstage-info-grid">
+      <div class="mainstage-info-card">
+        <div class="title pink">Engagement Score</div>
+        <p>Earn points from followers (+5), profile saves (+3), gig bookings (+10), and member short likes (+2).</p>
       </div>
-      <div style="padding: 16px; background: #2a2a2a; border-radius: 8px;">
-        <div style="color: #3b82f6; font-weight: 600; margin-bottom: 8px;">Weekly Winners</div>
-        <p style="color: #888; font-size: 0.85rem; margin: 0;">Top band each week gets featured and earns a MAINSTAGE winner badge!</p>
+      <div class="mainstage-info-card">
+        <div class="title yellow">Community Votes</div>
+        <p>Each vote adds 10 bonus points. One vote per user per week.</p>
+      </div>
+      <div class="mainstage-info-card">
+        <div class="title blue">Weekly Winners</div>
+        <p>Top band gets featured and earns a MAINSTAGE winner badge!</p>
       </div>
     </div>
   </div>
 
-  <%# Past winners link %>
-  <div style="text-align: center; margin-top: 24px;">
-    <%= link_to band_mainstage_winners_path, style: "color: #E936AD; text-decoration: none; font-size: 0.9rem;" do %>
+  <%# Past Winners Link %>
+  <div class="mainstage-past-link band">
+    <%= link_to band_mainstage_winners_path do %>
       <i class="fa-solid fa-crown"></i> View Past Winners
     <% end %>
   </div>

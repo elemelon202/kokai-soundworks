@@ -1,0 +1,504 @@
+// MAINSTAGE Festival Lineup Poster Style
+$kokai-yellow: #C8E938;
+$kokai-pink: #E936AD;
+
+.mainstage-poster {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+  min-height: 100vh;
+}
+
+// Festival Poster Header
+.mainstage-poster-header {
+  text-align: center;
+  padding: 40px 20px 30px;
+  background: linear-gradient(180deg, rgba(200, 233, 56, 0.15) 0%, transparent 100%);
+  border: 3px solid $kokai-yellow;
+  border-bottom: none;
+  border-radius: 20px 20px 0 0;
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    top: -3px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 60%;
+    height: 6px;
+    background: $kokai-yellow;
+    border-radius: 0 0 10px 10px;
+  }
+
+  &.band-header {
+    background: linear-gradient(180deg, rgba(233, 54, 173, 0.15) 0%, transparent 100%);
+    border-color: $kokai-pink;
+
+    &::before {
+      background: $kokai-pink;
+    }
+  }
+}
+
+.mainstage-poster-title {
+  font-size: 3.5rem;
+  font-weight: 900;
+  letter-spacing: 8px;
+  text-transform: uppercase;
+  margin: 0 0 8px 0;
+  background: linear-gradient(135deg, $kokai-yellow 0%, #fff 50%, $kokai-yellow 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  text-shadow: 0 0 60px rgba($kokai-yellow, 0.5);
+
+  .band-header & {
+    background: linear-gradient(135deg, $kokai-pink 0%, #fff 50%, $kokai-pink 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    text-shadow: 0 0 60px rgba($kokai-pink, 0.5);
+  }
+}
+
+.mainstage-poster-subtitle {
+  font-size: 1rem;
+  color: #888;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  margin: 0 0 20px 0;
+}
+
+.mainstage-poster-dates {
+  display: inline-block;
+  padding: 10px 24px;
+  background: #000;
+  border: 2px solid $kokai-yellow;
+  color: $kokai-yellow;
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+
+  .band-header & {
+    border-color: $kokai-pink;
+    color: $kokai-pink;
+  }
+}
+
+// Contest Type Switcher
+.mainstage-switcher {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  margin: -3px 0 0 0;
+  position: relative;
+  z-index: 10;
+}
+
+.mainstage-switch-btn {
+  padding: 12px 32px;
+  background: #1a1a1a;
+  color: #666;
+  font-size: 0.9rem;
+  font-weight: 600;
+  text-decoration: none;
+  border: 3px solid #333;
+  transition: all 0.2s ease;
+
+  &:first-child {
+    border-radius: 0 0 0 12px;
+    border-right: none;
+  }
+
+  &:last-child {
+    border-radius: 0 0 12px 0;
+    border-left: none;
+  }
+
+  &.active {
+    background: $kokai-yellow;
+    color: #000;
+    border-color: $kokai-yellow;
+  }
+
+  &.active-band {
+    background: $kokai-pink;
+    color: #fff;
+    border-color: $kokai-pink;
+  }
+
+  &:hover:not(.active):not(.active-band) {
+    background: #252525;
+    color: #fff;
+  }
+}
+
+// Voting Banner
+.mainstage-vote-banner {
+  text-align: center;
+  padding: 16px;
+  margin: 24px 0;
+  background: #1e1e1e;
+  border-radius: 12px;
+  border: 1px solid #333;
+
+  &.voted {
+    background: #1e3a1e;
+    border-color: #2d5a2d;
+    color: #4ade80;
+  }
+}
+
+// Festival Lineup Container
+.mainstage-lineup {
+  background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
+  border: 3px solid $kokai-yellow;
+  border-top: none;
+  border-radius: 0 0 20px 20px;
+  padding: 30px 20px 40px;
+  position: relative;
+
+  &.band-lineup {
+    border-color: $kokai-pink;
+  }
+
+  &::after {
+    content: '★ LIVE RANKINGS ★';
+    position: absolute;
+    bottom: 10px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.7rem;
+    letter-spacing: 3px;
+    color: #444;
+  }
+}
+
+// Headliner (1st Place)
+.mainstage-headliner {
+  text-align: center;
+  padding: 30px 20px;
+  margin-bottom: 20px;
+  position: relative;
+
+  &::before {
+    content: '★ HEADLINER ★';
+    display: block;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: #fbbf24;
+    margin-bottom: 12px;
+  }
+}
+
+.mainstage-headliner-name {
+  font-size: 2.8rem;
+  font-weight: 900;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  margin: 0 0 8px 0;
+  text-shadow: 0 0 30px rgba($kokai-yellow, 0.5);
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: $kokai-yellow;
+    }
+  }
+}
+
+.mainstage-headliner-score {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $kokai-yellow;
+  margin-bottom: 8px;
+
+  .band-lineup & {
+    color: $kokai-pink;
+  }
+}
+
+.mainstage-headliner-stats {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 16px;
+
+  i {
+    margin-right: 4px;
+  }
+
+  .engagement {
+    color: $kokai-yellow;
+
+    .band-lineup & {
+      color: $kokai-pink;
+    }
+  }
+
+  .votes {
+    color: $kokai-pink;
+
+    .band-lineup & {
+      color: $kokai-yellow;
+    }
+  }
+}
+
+.mainstage-vote-btn {
+  display: inline-block;
+  padding: 12px 32px;
+  background: $kokai-pink;
+  color: #fff;
+  border: none;
+  border-radius: 30px;
+  font-size: 1rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 0 30px rgba($kokai-pink, 0.5);
+  }
+
+  &.voted {
+    background: #2d5a2d;
+    color: #4ade80;
+  }
+}
+
+// Main Acts (2nd-3rd Place)
+.mainstage-main-acts {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  padding: 20px 0;
+  margin-bottom: 16px;
+  border-top: 1px solid #333;
+  border-bottom: 1px solid #333;
+}
+
+.mainstage-main-act {
+  text-align: center;
+  flex: 1;
+  max-width: 280px;
+}
+
+.mainstage-main-act-rank {
+  font-size: 0.7rem;
+  letter-spacing: 2px;
+  color: #666;
+  margin-bottom: 8px;
+
+  &.silver {
+    color: #9ca3af;
+  }
+
+  &.bronze {
+    color: #cd7f32;
+  }
+}
+
+.mainstage-main-act-name {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  margin: 0 0 6px 0;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: $kokai-yellow;
+    }
+  }
+}
+
+.mainstage-main-act-score {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 4px;
+}
+
+.mainstage-main-act-stats {
+  font-size: 0.75rem;
+  color: #555;
+}
+
+.mainstage-main-act-vote {
+  margin-top: 10px;
+
+  button {
+    padding: 6px 16px;
+    background: transparent;
+    border: 1px solid $kokai-pink;
+    color: $kokai-pink;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: $kokai-pink;
+      color: #fff;
+    }
+  }
+}
+
+// Supporting Acts (4th+)
+.mainstage-supporting {
+  padding-top: 16px;
+}
+
+.mainstage-supporting-title {
+  text-align: center;
+  font-size: 0.7rem;
+  letter-spacing: 3px;
+  color: #555;
+  margin-bottom: 16px;
+}
+
+.mainstage-supporting-acts {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 24px;
+}
+
+.mainstage-supporting-act {
+  text-align: center;
+  padding: 8px 0;
+}
+
+.mainstage-supporting-act-name {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #aaa;
+  letter-spacing: 1px;
+
+  a {
+    color: inherit;
+    text-decoration: none;
+
+    &:hover {
+      color: $kokai-yellow;
+    }
+  }
+}
+
+.mainstage-supporting-act-score {
+  font-size: 0.75rem;
+  color: #555;
+}
+
+// Empty State
+.mainstage-empty {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.3;
+  }
+}
+
+// How It Works Section
+.mainstage-info {
+  margin-top: 32px;
+  padding: 24px;
+  background: #1e1e1e;
+  border-radius: 12px;
+
+  h3 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin: 0 0 16px 0;
+  }
+}
+
+.mainstage-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+}
+
+.mainstage-info-card {
+  padding: 16px;
+  background: #2a2a2a;
+  border-radius: 8px;
+
+  .title {
+    font-weight: 600;
+    margin-bottom: 8px;
+
+    &.yellow { color: $kokai-yellow; }
+    &.pink { color: $kokai-pink; }
+    &.blue { color: #3b82f6; }
+  }
+
+  p {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 0;
+  }
+}
+
+// Past Winners Link
+.mainstage-past-link {
+  text-align: center;
+  margin-top: 24px;
+
+  a {
+    color: $kokai-yellow;
+    text-decoration: none;
+    font-size: 0.9rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  &.band a {
+    color: $kokai-pink;
+  }
+}
+
+// Mobile Responsive
+@media (max-width: 640px) {
+  .mainstage-poster-title {
+    font-size: 2.2rem;
+    letter-spacing: 4px;
+  }
+
+  .mainstage-headliner-name {
+    font-size: 1.8rem;
+  }
+
+  .mainstage-main-acts {
+    flex-direction: column;
+    gap: 20px;
+  }
+
+  .mainstage-main-act {
+    max-width: 100%;
+  }
+
+  .mainstage-headliner-stats {
+    flex-direction: column;
+    gap: 8px;
+  }
+}

@@ -150,9 +150,11 @@ class MainstageContest < ApplicationRecord
   end
 
   # Check if user account is old enough to count
+  # TEMPORARILY DISABLED FOR PITCH DEMO
   def eligible_user?(user, account_cutoff)
     return false unless user
-    user.created_at <= account_cutoff
+    # user.created_at <= account_cutoff
+    true
   end
 
   # Add points but cap at MAX_POINTS_PER_USER per user
