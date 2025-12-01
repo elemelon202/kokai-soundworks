@@ -1,0 +1,77 @@
+<%# Pass gig as local variable %>
+<% attendance = current_user&.gig_attendances&.find_by(gig: gig) %>
+<% is_today = gig.date == Date.current %>
+<% is_past = gig.date < Date.current %>
+<% is_future = gig.date > Date.current %>
+
+<div id="gig-attendance-<%= gig.id %>" style="display: flex; gap: 8px; flex-wrap: wrap;">
+  <% if current_user %>
+    <% if is_past %>
+      <%# Past gig - show attended status %>
+      <% if attendance&.attended? %>
+        <span style="background: #C8E938; color: #171717; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-check-circle"></i> Attended
+        </span>
+      <% else %>
+        <span style="background: #333; color: #888; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem;">
+          <i class="fa-solid fa-calendar-xmark"></i> Missed
+        </span>
+      <% end %>
+
+    <% elsif is_today %>
+      <%# Today - show check-in button %>
+      <% if attendance&.attended? %>
+        <span style="background: #C8E938; color: #171717; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-check-circle"></i> Checked In
+        </span>
+      <% else %>
+        <%= button_to check_in_gig_path(gig), method: :post, style: "background: linear-gradient(135deg, #C8E938 0%, #a8c92e 100%); color: #171717; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
+          <i class="fa-solid fa-location-dot"></i> Check In Now
+        <% end %>
+      <% end %>
+
+    <% else %>
+      <%# Future gig - show RSVP buttons %>
+      <% if attendance&.going? %>
+        <span style="background: #C8E938; color: #171717; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-check"></i> Going
+        </span>
+        <%= button_to rsvp_gig_path(gig, status: :interested), method: :post, style: "background: #333; color: #888; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; cursor: pointer;" do %>
+          <i class="fa-solid fa-xmark"></i> Cancel
+        <% end %>
+      <% elsif attendance&.interested? %>
+        <span style="background: #fbbf24; color: #171717; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+          <i class="fa-solid fa-star"></i> Interested
+        </span>
+        <%= button_to rsvp_gig_path(gig, status: :going), method: :post, style: "background: #C8E938; color: #171717; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
+          <i class="fa-solid fa-check"></i> Going
+        <% end %>
+      <% else %>
+        <%= button_to rsvp_gig_path(gig, status: :interested), method: :post, style: "background: #333; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
+          <i class="fa-solid fa-star"></i> Interested
+        <% end %>
+        <%= button_to rsvp_gig_path(gig, status: :going), method: :post, style: "background: #C8E938; color: #171717; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
+          <i class="fa-solid fa-check"></i> Going
+        <% end %>
+      <% end %>
+    <% end %>
+
+    <%# Show attendee count %>
+    <% going_count = gig.gig_attendances.going.count %>
+    <% interested_count = gig.gig_attendances.interested.count %>
+    <% if going_count > 0 || interested_count > 0 %>
+      <span style="color: #888; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 8px; margin-left: 8px;">
+        <% if going_count > 0 %>
+          <span><i class="fa-solid fa-user-check"></i> <%= going_count %> going</span>
+        <% end %>
+        <% if interested_count > 0 %>
+          <span><i class="fa-solid fa-star"></i> <%= interested_count %> interested</span>
+        <% end %>
+      </span>
+    <% end %>
+  <% else %>
+    <%= link_to new_user_session_path, style: "background: #333; color: #fff; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; text-decoration: none;" do %>
+      <i class="fa-solid fa-right-to-bracket"></i> Sign in to RSVP
+    <% end %>
+  <% end %>
+</div>

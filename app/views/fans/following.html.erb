@@ -1,0 +1,59 @@
+<div style="max-width: 800px; margin: 0 auto; padding: 24px;">
+    <h1 style="color: #fff; margin-bottom: 24px;">
+      <i class="fa-solid fa-heart" style="color: #E936AD;"></i> Following
+    </h1>
+
+    <% if @musicians.any? %>
+      <h2 style="color: #C8E938; font-size: 1.1rem; margin-bottom: 16px;">Musicians (<%= @musicians.count %>)</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px; margin-bottom: 32px;">
+        <% @musicians.each do |musician| %>
+          <%= link_to musician_path(musician), style: "text-decoration: none;" do %>
+            <div style="background: #1e1e1e; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; transition: background 0.2s;"
+  onmouseover="this.style.background='#252525'" onmouseout="this.style.background='#1e1e1e'">
+              <div style="width: 50px; height: 50px; border-radius: 50%; background: #C8E938; display: flex; align-items: center; justify-content: center; color: #171717; font-weight:
+  600; overflow: hidden;">
+                <% if musician.avatar.attached? %>
+                  <%= cl_image_tag(musician.avatar.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+                <% else %>
+                  <%= musician.name.split.map(&:first).join.upcase[0..1] %>
+                <% end %>
+              </div>
+              <div>
+                <h3 style="color: #fff; margin: 0 0 2px 0; font-size: 0.95rem;"><%= musician.name %></h3>
+                <p style="color: #888; margin: 0; font-size: 0.8rem;"><%= musician.instrument %></p>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @bands.any? %>
+      <h2 style="color: #E936AD; font-size: 1.1rem; margin-bottom: 16px;">Bands (<%= @bands.count %>)</h2>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px;">
+        <% @bands.each do |band| %>
+          <%= link_to band_path(band), style: "text-decoration: none;" do %>
+            <div style="background: #1e1e1e; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px; transition: background 0.2s;"
+  onmouseover="this.style.background='#252525'" onmouseout="this.style.background='#1e1e1e'">
+              <div style="width: 50px; height: 50px; border-radius: 50%; background: #E936AD; display: flex; align-items: center; justify-content: center; color: #fff; font-weight:
+  600;">
+                <%= band.name.split.map(&:first).join.upcase[0..1] %>
+              </div>
+              <div>
+                <h3 style="color: #fff; margin: 0 0 2px 0; font-size: 0.95rem;"><%= band.name %></h3>
+                <p style="color: #888; margin: 0; font-size: 0.8rem;"><%= band.location %></p>
+              </div>
+            </div>
+          <% end %>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @musicians.empty? && @bands.empty? %>
+      <p style="color: #666; text-align: center; padding: 40px;">Not following anyone yet.</p>
+    <% end %>
+
+    <%= link_to fan_path(@fan), style: "display: inline-block; margin-top: 24px; color: #C8E938;" do %>
+      <i class="fa-solid fa-arrow-left"></i> Back to profile
+    <% end %>
+  </div>

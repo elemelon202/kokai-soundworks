@@ -1,0 +1,39 @@
+<div style="max-width: 800px; margin: 0 auto; padding: 24px;">
+    <h1 style="color: #fff; margin-bottom: 24px;">
+      <i class="fa-solid fa-user-group" style="color: #C8E938;"></i> Friends (<%= @friends.count %>)
+    </h1>
+
+    <% if @friends.any? %>
+      <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 16px;">
+        <% @friends.each do |friend| %>
+          <div style="background: #1e1e1e; padding: 16px; border-radius: 12px; display: flex; align-items: center; gap: 12px;">
+            <div style="width: 50px; height: 50px; border-radius: 50%; background: #333; display: flex; align-items: center; justify-content: center; color: #fff; font-weight: 600;">
+              <%= friend.username&.slice(0, 2)&.upcase || "??" %>
+            </div>
+            <div style="flex: 1;">
+              <h3 style="color: #fff; margin: 0 0 2px 0; font-size: 0.95rem;"><%= friend.username %></h3>
+              <p style="color: #888; margin: 0; font-size: 0.8rem;">
+                <% if friend.fan %>
+                  Fan
+                <% elsif friend.musician %>
+                  Musician
+                <% else %>
+                  Member
+                <% end %>
+              </p>
+            </div>
+            <%= button_to create_or_show_direct_messages_path(recipient_id: friend.id), method: :post, style: "background: #333; border: none; padding: 8px 12px; border-radius: 6px;
+  color: #fff; cursor: pointer;" do %>
+              <i class="fa-solid fa-envelope"></i>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="color: #666; text-align: center; padding: 40px;">No friends yet. Start connecting!</p>
+    <% end %>
+
+    <%= link_to fan_path(@fan), style: "display: inline-block; margin-top: 24px; color: #C8E938;" do %>
+      <i class="fa-solid fa-arrow-left"></i> Back to profile
+    <% end %>
+  </div>

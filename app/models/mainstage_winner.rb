@@ -15,7 +15,7 @@ class MainstageWinner < ApplicationRecord
   def week_label
     start_date = mainstage_contest.start_date
     end_date = mainstage_contest.end_date
-    "#{start_date.strftime('%b %d')} - #{end_date.strftime('%b %d, %Y')}" #LOOOL REMEBER THIS FROM THE START OF THE BOOTCAMP? I DIDNT! -Sam
+    "#{start_date.strftime('%b %d')} - #{end_date.strftime('%b %d, %Y')}" #LOOOL REMEMBER THIS FROM THE START OF THE BOOTCAMP? I DIDNT! -Sam
   end
 
   # Check if this is the most recent winner (for homepage spotlight)

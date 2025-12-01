@@ -1,0 +1,233 @@
+<div class="fan-show-page" data-controller="tabs">
+
+
+    <%# ----- PROFILE HEADER ----- %>
+    <div class="profile-header">
+      <div class="profile-header-left">
+        <div class="profile-avatar">
+          <% if @fan.avatar.attached? %>
+            <%= cl_image_tag(@fan.avatar.key, class: "profile-avatar-image") %>
+          <% else %>
+            <%= @fan.display_name&.split&.map(&:first)&.join&.upcase&.slice(0, 2) || "FN" %>
+          <% end %>
+        </div>
+        <div class="profile-info">
+          <h1 class="profile-name"><%= @fan.display_name || @fan.user.username %></h1>
+          <div class="profile-meta">
+            <span class="profile-badge">Fan</span>
+            <% if @fan.location.present? %>
+              <span class="profile-location"><i class="fa-solid fa-location-dot"></i> <%= @fan.location %></span>
+            <% end %>
+          </div>
+          <div class="profile-stats-inline">
+            <span>Following: <strong><%= @fan.user.followed_musicians.count + @fan.user.followed_bands.count %></strong></span>
+            <span>Friends: <strong><%= @fan.user.friends.count %></strong></span>
+            <span>Gigs Attended: <strong><%= @past_gigs.count %></strong></span>
+          </div>
+          <%# Social Links %>
+          <% if @fan.social_instagram.present? || @fan.social_twitter.present? || @fan.social_spotify.present? %>
+            <div style="display: flex; gap: 12px; margin-top: 8px;">
+              <% if @fan.social_instagram.present? %>
+                <%= link_to "https://instagram.com/#{@fan.social_instagram}", target: "_blank", style: "color: #888; font-size: 1.2rem;", title: "Instagram" do %>
+                  <i class="fa-brands fa-instagram"></i>
+                <% end %>
+              <% end %>
+              <% if @fan.social_twitter.present? %>
+                <%= link_to "https://twitter.com/#{@fan.social_twitter}", target: "_blank", style: "color: #888; font-size: 1.2rem;", title: "X / Twitter" do %>
+                  <i class="fa-brands fa-x-twitter"></i>
+                <% end %>
+              <% end %>
+              <% if @fan.social_spotify.present? %>
+                <%= link_to @fan.social_spotify.start_with?('http') ? @fan.social_spotify : "https://open.spotify.com/user/#{@fan.social_spotify}", target: "_blank", style: "color: #888; font-size: 1.2rem;", title: "Spotify" do %>
+                  <i class="fa-brands fa-spotify"></i>
+                <% end %>
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+      <div class="profile-header-right">
+        <button class="btn-icon"><i class="fa-solid fa-share-nodes"></i></button>
+        <% if current_user && current_user.id == @fan.user_id %>
+          <%= link_to edit_fan_path(@fan), class: "btn-edit-profile" do %>
+            <i class="fa-solid fa-pen"></i> Edit Profile
+          <% end %>
+        <% elsif current_user && current_user.id != @fan.user_id %>
+          <%= button_to create_or_show_direct_messages_path(recipient_id: @fan.user_id), method: :post, class: "btn-message-profile" do %>
+            <i class="fa-solid fa-envelope"></i> Message
+          <% end %>
+          <%= render "friendships/friend_button", user: @fan.user %>
+        <% end %>
+      </div>
+    </div>
+  <%# ----- BANNER ----- %>
+    <div class="fan-banner" style="width: 100%; height: 200px; background: #1e1e1e; border-radius: 12px; overflow: hidden; margin-bottom: 20px;">
+      <% if @fan.banner.attached? %>
+        <%= cl_image_tag(@fan.banner.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+      <% else %>
+        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;">
+          <i class="fa-solid fa-image" style="color: #333; font-size: 3rem;"></i>
+        </div>
+      <% end %>
+    </div>
+    <%# ----- BOTTOM PROFILE CONTENT ----- %>
+    <div class="bottom-profile-content">
+      <%# ----- LEFT COLUMN: ABOUT & ACTIVITY ------ %>
+      <div class="about-card">
+        <h3 class="section-title">About</h3>
+        <p class="about-text"><%= @fan.bio.present? ? @fan.bio : "No bio yet." %></p>
+
+        <%# Favorite Genres %>
+        <% if @fan.favorite_genres.present? %>
+          <h4 class="subsection-title" style="margin-top: 16px;">Favorite Genres</h4>
+          <div class="tag-list">
+            <% @fan.favorite_genres.split(',').each do |genre| %>
+              <span class="tag"><%= genre.strip %></span>
+            <% end %>
+          </div>
+        <% end %>
+
+        <%# Upcoming Gigs %>
+        <% if @upcoming_gigs.any? %>
+          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+            <h3 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-calendar" style="color: #C8E938;"></i> Upcoming Gigs
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+              <% @upcoming_gigs.limit(5).each do |gig| %>
+                <div style="background: #252525; padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+                  <div>
+                    <h4 style="color: #fff; margin: 0 0 4px 0; font-size: 0.95rem;"><%= gig.name %></h4>
+                    <p style="color: #888; margin: 0; font-size: 0.8rem;">
+                      <%= gig.venue.name %> &bull; <%= gig.date.strftime("%b %d, %Y") %>
+                    </p>
+                  </div>
+                  <%= render "gig_attendances/buttons", gig: gig %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <%# Following %>
+        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+          <h3 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+            <i class="fa-solid fa-heart" style="color: #E936AD;"></i> Following
+          </h3>
+          <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-top: 16px;">
+            <% @following_musicians.limit(6).each do |musician| %>
+              <%= link_to musician_path(musician), style: "text-decoration: none;" do %>
+                <div style="background: #252525; padding: 10px 14px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: #C8E938; display: flex; align-items: center; justify-content: center; color: #171717;
+  font-weight: 600; font-size: 0.8rem;">
+                    <% if musician.avatar.attached? %>
+                      <%= cl_image_tag(musician.avatar.key, style: "width: 100%; height: 100%; border-radius: 50%; object-fit: cover;") %>
+                    <% else %>
+                      <%= musician.name.split.map(&:first).join.upcase[0..1] %>
+                    <% end %>
+                  </div>
+                  <span style="color: #fff; font-size: 0.85rem;"><%= musician.name %></span>
+                </div>
+              <% end %>
+            <% end %>
+            <% @following_bands.limit(6).each do |band| %>
+              <%= link_to band_path(band), style: "text-decoration: none;" do %>
+                <div style="background: #252525; padding: 10px 14px; border-radius: 8px; display: flex; align-items: center; gap: 10px;">
+                  <div style="width: 36px; height: 36px; border-radius: 50%; background: #E936AD; display: flex; align-items: center; justify-content: center; color: #fff; font-weight:
+   600; font-size: 0.8rem;">
+                    <%= band.name.split.map(&:first).join.upcase[0..1] %>
+                  </div>
+                  <span style="color: #fff; font-size: 0.85rem;"><%= band.name %></span>
+                </div>
+              <% end %>
+            <% end %>
+          </div>
+          <% if @following_musicians.count + @following_bands.count > 12 %>
+            <%= link_to following_fan_path(@fan), style: "display: block; margin-top: 12px; color: #C8E938; font-size: 0.85rem;" do %>
+              View all <%= @following_musicians.count + @following_bands.count %> following <i class="fa-solid fa-arrow-right"></i>
+            <% end %>
+          <% end %>
+        </div>
+
+        <%# Posts %>
+        <% fan_posts = @fan.user.posts.where(band_id: nil).includes(:post_likes, :post_comments, images_attachments: :blob, videos_attachments: :blob).recent.limit(5) %>
+        <% if fan_posts.any? %>
+          <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+            <h3 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-newspaper" style="color: #C8E938;"></i> Posts
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+              <% fan_posts.each do |post| %>
+                <%= render "posts/post", post: post %>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+
+      <%# ----- RIGHT COLUMN: STATS & GIGS ------ %>
+      <div class="right-column">
+        <div class="stats-card">
+          <h3 class="section-title">Stats</h3>
+          <div class="stat-row">
+            <span class="stat-label">Musicians Following</span>
+            <span class="stat-value"><%= @following_musicians.count %></span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Bands Following</span>
+            <span class="stat-value"><%= @following_bands.count %></span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Friends</span>
+            <span class="stat-value"><%= @fan.user.friends.count %></span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Gigs Attended</span>
+            <span class="stat-value"><%= @past_gigs.count %></span>
+          </div>
+          <div class="stat-row">
+            <span class="stat-label">Upcoming Gigs</span>
+            <span class="stat-value"><%= @upcoming_gigs.count %></span>
+          </div>
+        </div>
+
+        <%# Past Gigs %>
+        <% if @past_gigs.any? %>
+          <div style="margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 12px;">
+            <h3 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-ticket" style="color: #C8E938;"></i> Gig History
+            </h3>
+            <div style="display: flex; flex-direction: column; gap: 10px; margin-top: 12px;">
+              <% @past_gigs.limit(5).each do |gig| %>
+                <div style="background: #252525; padding: 10px 12px; border-radius: 6px;">
+                  <p style="color: #fff; margin: 0 0 2px 0; font-size: 0.85rem;"><%= gig.name %></p>
+                  <p style="color: #666; margin: 0; font-size: 0.75rem;"><%= gig.date.strftime("%b %d, %Y") %></p>
+                </div>
+              <% end %>
+            </div>
+            <% if @past_gigs.count > 5 %>
+              <%= link_to gigs_fan_path(@fan), style: "display: block; margin-top: 12px; color: #C8E938; font-size: 0.8rem;" do %>
+                View all <i class="fa-solid fa-arrow-right"></i>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+
+        <%# Saved Profiles %>
+        <% saved_count = @fan.user.saved_musicians.count + @fan.user.saved_bands.count %>
+        <% if saved_count > 0 %>
+          <div style="margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 12px;">
+            <h3 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+              <i class="fa-solid fa-bookmark" style="color: #C8E938;"></i> Saved
+            </h3>
+            <p style="color: #888; font-size: 0.85rem; margin: 8px 0 0 0;">
+              <%= saved_count %> saved profiles
+            </p>
+            <%= link_to saved_fan_path(@fan), style: "display: block; margin-top: 8px; color: #C8E938; font-size: 0.8rem;" do %>
+              View saved <i class="fa-solid fa-arrow-right"></i>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
