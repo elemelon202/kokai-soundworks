@@ -8,6 +8,7 @@ class VenuesController < ApplicationController
 
   def show
     authorize @venue
+    @gigs = @venue.gigs
   end
 
   def new
