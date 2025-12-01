@@ -52,6 +52,10 @@ class User < ApplicationRecord
     user_type == "band_leader"
   end
 
+  def band_member?
+    bands.exists?
+  end
+
   def direct_message_chats
     chats.direct_messages.includes(:messages, :users)
   end

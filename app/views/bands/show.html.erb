@@ -9,13 +9,13 @@
     <div class="banner-overlay">
       <div class="banner-content">
         <h1><%= @band.name %><% if @band.mainstage_winner? %><%= render "band_mainstage/winner_badge", band: @band %><% end %></h1>
-         <div style="margin: 12px 0;">
-    <%= render "bands/follow_button", band: @band %>
-    <span style="color: #888; font-size: 0.9rem; margin-left: 8px;">
-      <%= pluralize(@band.followers.count, "follower") %>
-    </span>
-    <%= render "bands/save_button", band: @band %>
-  </div>
+        <div style="margin: 12px 0;">
+          <%= render "bands/follow_button", band: @band %>
+          <span style="color: #888; font-size: 0.9rem; margin-left: 8px;">
+            <%= pluralize(@band.followers.count, "follower") %>
+          </span>
+          <%= render "bands/save_button", band: @band %>
+        </div>
         <% if @band.location.present? %>
           <p class="band-location"><i class="fa-solid fa-location-dot"></i> <%= @band.location %></p>
         <% end %>
@@ -78,7 +78,6 @@
         </div>
       </div>
     </div>
-
     <!-- Upcoming Gigs Section -->
     <% upcoming_gigs = @band.gigs.where('date >= ?', Date.current).order(:date).limit(5) %>
     <% if upcoming_gigs.any? %>
@@ -100,14 +99,15 @@
                     <% end %>
                   </p>
                 </div>
-                <%= render "gig_attendances/buttons", gig: gig %>
+                <% unless @band.musicians.any? { |m| m.user_id == current_user.id } %>
+                  <%= render "gig_attendances/buttons", gig: gig %>
+                <% end %>
               </div>
             </div>
           <% end %>
         </div>
       </div>
     <% end %>
-
     <!-- Band Activity/Feed Section -->
     <% band_posts = @band.posts.includes(:user, :post_likes, :post_comments, images_attachments: :blob, videos_attachments: :blob).recent.limit(10) %>
     <% if band_posts.any? %>
@@ -120,7 +120,6 @@
         </div>
       </div>
     <% end %>
-
     <!-- Photos Section -->
     <% if @band.images.attached? %>
       <div class="band-media-section">
