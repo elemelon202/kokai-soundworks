@@ -4,6 +4,8 @@ class Gig < ApplicationRecord
   has_many :bands, through: :bookings
   has_many :gig_attendances, dependent: :destroy
   has_many :attendees, through: :gig_attendances, source: :user
+  has_many :gig_applications, dependent: :destroy
+
 
   ATTENDANCE_RATE = 0.05 #5% of followers
 

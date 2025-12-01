@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_01_023639) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_01_054509) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -227,6 +227,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_023639) do
     t.index ["requester_id", "addressee_id"], name: "index_friendships_on_requester_id_and_addressee_id", unique: true
     t.index ["requester_id"], name: "index_friendships_on_requester_id"
     t.index ["status"], name: "index_friendships_on_status"
+  end
+
+  create_table "gig_applications", force: :cascade do |t|
+    t.bigint "band_id", null: false
+    t.integer "status", default: 0
+    t.text "message"
+    t.text "response_message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "gig_id", null: false
+    t.index ["band_id"], name: "index_gig_applications_on_band_id"
+    t.index ["gig_id", "band_id"], name: "index_gig_applications_on_gig_id_and_band_id", unique: true
+    t.index ["gig_id"], name: "index_gig_applications_on_gig_id"
   end
 
   create_table "gig_attendances", force: :cascade do |t|
@@ -578,6 +591,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_023639) do
   add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "friendships", "users", column: "addressee_id"
   add_foreign_key "friendships", "users", column: "requester_id"
+  add_foreign_key "gig_applications", "bands"
+  add_foreign_key "gig_applications", "gigs"
   add_foreign_key "gig_attendances", "gigs"
   add_foreign_key "gig_attendances", "users"
   add_foreign_key "gigs", "venues"

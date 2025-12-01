@@ -1,0 +1,118 @@
+<div style="max-width: 1000px; margin: 0 auto; padding: 24px;">
+  <div style="margin-bottom: 24px;">
+    <h1 style="color: #fff; margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
+      <i class="fa-solid fa-compass" style="color: #C8E938;"></i> Discover Gigs
+    </h1>
+    <p style="color: #888; margin: 0;">Find upcoming shows based on your interests</p>
+  </div>
+
+  <%# Filters %>
+  <div style="background: #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
+    <%= form_with url: discover_gigs_path, method: :get, local: true, style: "display: flex; flex-wrap: wrap; gap: 16px; align-items: flex-end;" do %>
+      <%# City Filter %>
+      <div style="flex: 1; min-width: 150px;">
+        <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 6px;">
+          <i class="fa-solid fa-location-dot"></i> City
+        </label>
+        <%= select_tag :city,
+            options_for_select([["All Cities", ""]] + @cities.map { |c| [c, c] }, params[:city]),
+            style: "width: 100%; background: #252525; border: 1px solid #333; border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 0.9rem;" %>
+      </div>
+
+      <%# Genre Filter %>
+      <div style="flex: 1; min-width: 150px;">
+        <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 6px;">
+          <i class="fa-solid fa-music"></i> Genre
+        </label>
+        <%= text_field_tag :genre, params[:genre],
+            placeholder: "e.g. Rock, Jazz, Electronic",
+            style: "width: 100%; background: #252525; border: 1px solid #333; border-radius: 8px; padding: 10px 12px; color: #fff; font-size: 0.9rem; box-sizing: border-box;" %>
+      </div>
+
+      <%# Following Filter %>
+      <% if current_user && current_user.followed_bands.any? %>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <%= check_box_tag :following, "1", params[:following].present?,
+              style: "width: 18px; height: 18px; accent-color: #C8E938;" %>
+          <label for="following" style="color: #fff; font-size: 0.9rem;">
+            <i class="fa-solid fa-heart" style="color: #E936AD;"></i> Bands I follow
+          </label>
+        </div>
+      <% end %>
+
+      <div style="display: flex; gap: 8px;">
+        <%= submit_tag "Search", style: "background: #C8E938; color: #171717; border: none; padding: 10px 20px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; cursor: pointer;" %>
+        <%= link_to "Clear", discover_gigs_path, style: "background: #333; color: #fff; padding: 10px 16px; border-radius: 8px; font-size: 0.9rem; text-decoration: none;" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Results %>
+  <% if @gigs.any? %>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <% @gigs.each do |gig| %>
+        <div style="background: #1e1e1e; border-radius: 12px; padding: 20px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+            <div style="flex: 1;">
+              <h3 style="color: #fff; margin: 0 0 8px 0; font-size: 1.2rem;"><%= gig.name %></h3>
+
+              <p style="color: #888; margin: 0 0 6px 0; font-size: 0.9rem;">
+                <i class="fa-solid fa-location-dot" style="color: #C8E938; margin-right: 6px;"></i>
+                <%= link_to gig.venue.name, venue_path(gig.venue), style: "color: #C8E938; text-decoration: none;" %>
+                <% if gig.venue.city.present? %>
+                  <span style="color: #666;">&bull; <%= gig.venue.city %></span>
+                <% end %>
+              </p>
+
+              <p style="color: #888; margin: 0 0 6px 0; font-size: 0.9rem;">
+                <i class="fa-solid fa-calendar" style="color: #C8E938; margin-right: 6px;"></i>
+                <%= gig.date.strftime("%A, %B %d, %Y") %>
+                <% if gig.start_time.present? %>
+                  at <%= gig.start_time.strftime("%l:%M %p") %>
+                <% end %>
+              </p>
+
+              <% if gig.bands.any? %>
+                <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
+                  <% gig.bands.each do |band| %>
+                    <%= link_to band_path(band), style: "text-decoration: none;" do %>
+                      <span style="background: #252525; color: #fff; padding: 6px 12px; border-radius: 16px; font-size: 0.8rem; display: inline-flex; align-items: center; gap: 6px;">
+                        <i class="fa-solid fa-users" style="color: #E936AD;"></i>
+                        <%= band.name %>
+                        <% if current_user&.followed_bands&.include?(band) %>
+                          <i class="fa-solid fa-heart" style="color: #E936AD; font-size: 0.7rem;"></i>
+                        <% end %>
+                      </span>
+                    <% end %>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <% if gig.ticket_price.present? && gig.ticket_price > 0 %>
+                <p style="color: #C8E938; margin: 12px 0 0 0; font-size: 0.95rem; font-weight: 600;">
+                  <i class="fa-solid fa-ticket"></i> $<%= number_with_precision(gig.ticket_price, precision: 2) %>
+                </p>
+              <% end %>
+            </div>
+
+            <div style="display: flex; flex-direction: column; align-items: flex-end; gap: 8px;">
+              <%= render "gig_attendances/buttons", gig: gig %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  <% else %>
+    <div style="background: #1e1e1e; border-radius: 12px; padding: 60px 40px; text-align: center;">
+      <i class="fa-solid fa-calendar-xmark" style="font-size: 3rem; color: #333; margin-bottom: 16px;"></i>
+      <h3 style="color: #fff; margin: 0 0 8px 0;">No gigs found</h3>
+      <p style="color: #888; margin: 0;">
+        <% if params[:city].present? || params[:genre].present? || params[:following].present? %>
+          Try adjusting your filters to find more shows.
+        <% else %>
+          No upcoming gigs at the moment. Check back soon!
+        <% end %>
+      </p>
+    </div>
+  <% end %>
+</div>
