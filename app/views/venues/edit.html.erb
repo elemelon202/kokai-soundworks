@@ -75,19 +75,134 @@
                   <% gig.bands.each_with_index do |band, index| %>
                     <%= link_to band.name, band_path(band), style: "color: #C8E938; text-decoration: none;" %><%= ", " unless index == gig.bands.count - 1 %>
                   <% end %>
-                </p>
-              <% end %>
-              <% if gig.ticket_price.present? && gig.ticket_price > 0 %>
-                <p style="color: #C8E938; margin: 8px 0 0 0; font-size: 0.9rem; font-weight: 600;">
-                  <i class="fa-solid fa-ticket" style="margin-right: 4px;"></i>
-                  $<%= number_with_precision(gig.ticket_price, precision: 2) %>
-                </p>
-              <% end %>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                  <% pending_count = gig.gig_applications.pending.count %>
+                  <% if pending_count > 0 %>
+                    <span style="background: #fbbf24; color: #171717; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+                      <%= pending_count %> pending
+                    </span>
+                  <% end %>
+                  <%= link_to edit_gig_path(gig), style: "background: #333; color: #fff; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 0.8rem;" do %>
+                    <i class="fa-solid fa-pen"></i> Edit
+                  <% end %>
+                </div>
+              </div>
             </div>
-            <%= link_to "Edit", edit_gig_path(gig), class: "btn btn-sm btn-secondary ms-2" %>
-          </div>
+          <% end %>
+        </div>
+      <% else %>
+        <div style="text-align: center; padding: 30px;">
+          <i class="fa-solid fa-calendar-xmark" style="font-size: 2.5rem; color: #333; margin-bottom: 12px;"></i>
+          <p style="color: #888; margin: 0;">No upcoming gigs scheduled.</p>
+          <p style="color: #666; margin: 4px 0 0 0; font-size: 0.85rem;">Create a gig above to get started!</p>
         </div>
       <% end %>
     </div>
   </div>
-<% end %>
+
+  <%# Edit Venue Details %>
+  <div class="musician-dashboard-content">
+    <div class="musician-dashboard-card full-width">
+      <div class="musician-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-building"></i>
+        </div>
+        <h3>Edit Venue Details</h3>
+      </div>
+
+      <%= simple_form_for @venue, html: { class: "musician-edit-form" } do |f| %>
+        <% if @venue.errors.any? %>
+          <div style="background: #ff4444; padding: 12px 16px; border-radius: 8px; color: #fff; margin-bottom: 20px;">
+            <ul style="margin: 0; padding-left: 20px;">
+              <% @venue.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="form-grid">
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-signature"></i> Venue Name
+            </label>
+            <%= f.text_field :name, class: "form-input", placeholder: "Venue name" %>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-city"></i> City
+            </label>
+            <%= f.text_field :city, class: "form-input", placeholder: "City" %>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-location-dot"></i> Address
+            </label>
+            <%= f.text_field :address, class: "form-input", placeholder: "Full address" %>
+          </div>
+
+          <div class="form-field">
+            <label class="form-label">
+              <i class="fa-solid fa-users"></i> Capacity
+            </label>
+            <%= f.number_field :capacity, class: "form-input", placeholder: "Venue capacity" %>
+          </div>
+
+          <div class="form-field full-width">
+            <label class="form-label">
+              <i class="fa-solid fa-pen"></i> Description
+            </label>
+            <%= f.text_area :description, class: "form-input", placeholder: "Tell bands about your venue...", rows: 4 %>
+          </div>
+        </div>
+
+        <%# Media Upload Section %>
+        <div class="media-upload-section">
+          <div class="media-section-header">
+            <i class="fa-solid fa-cloud-upload-alt"></i>
+            <div>
+              <h4>Venue Photos</h4>
+              <p>Add photos of your venue</p>
+            </div>
+          </div>
+
+          <div class="upload-fields-grid">
+            <div class="upload-field" data-controller="file-preview">
+              <label class="upload-field-label">Photos</label>
+              <div class="upload-input-wrapper">
+                <%= f.file_field :photos, multiple: true, accept: "image/*", class: "media-file-input", id: "venue-photos-input",
+                    data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
+                <label for="venue-photos-input" class="upload-label compact" data-file-preview-target="placeholder">
+                  <i class="fa-solid fa-images"></i>
+                  <span><%= @venue.photos.attached? ? "Add more photos" : "Choose photos" %></span>
+                </label>
+              </div>
+              <div class="file-preview-container" data-file-preview-target="preview"></div>
+            </div>
+          </div>
+        </div>
+
+        <%# Current Photos %>
+        <% if @venue.photos.attached? %>
+          <div style="margin-top: 20px;">
+            <h4 style="color: #888; font-size: 0.9rem; margin-bottom: 12px;">Current Photos</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+              <% @venue.photos.each do |photo| %>
+                <div style="position: relative;">
+                  <%= cl_image_tag photo.key, style: "width: 120px; height: 80px; object-fit: cover; border-radius: 8px;" %>
+                </div>
+              <% end %>
+            </div>
+          </div>
+        <% end %>
+
+        <div class="form-submit-wrapper">
+          <%= f.submit "Save Changes", class: "btn-save-profile" %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

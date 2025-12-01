@@ -6,6 +6,8 @@ class Gig < ApplicationRecord
   has_many :attendees, through: :gig_attendances, source: :user
   has_many :gig_applications, dependent: :destroy
 
+  has_one_attached :poster
+
 
   GENRES = ['Rock', 'Pop', 'Jazz', 'Classical', 'Hip Hop', 'Country', 'Electronic', 'Reggae', 'Blues', 'Folk'].freeze
   ATTENDANCE_RATE = 0.05 #5% of followers
@@ -16,16 +18,16 @@ class Gig < ApplicationRecord
   # - gig.projected_revenue - estimated ticket sales
 
   def projected_attendance
-    band_ids = bookings.approved.pluck(:band_id)
+    band_ids = bookings.pluck(:band_id)
     follower_count = Follow.where(followable_type: "Band", followable_id: band_ids)
                            .distinct
                            .count(:follower_id)
 
-    [(follower_count * ATTENDANCE_RATE).ceil, venue.capacity].min
+    [(follower_count * ATTENDANCE_RATE).ceil, venue.capacity || 100].min
   end
 
   def projected_attendance_by_band
-    bookings.approved.includes(:band).map do |booking|
+    bookings.includes(:band).map do |booking|
       band = booking.band
       follower_count = band.follows.count
       {
