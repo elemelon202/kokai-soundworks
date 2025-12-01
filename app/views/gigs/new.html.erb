@@ -1,0 +1,10 @@
+<div class="container">
+  <h1>New gig</h1>
+  <%= simple_form_for [@venue, @gig] do |f| %>
+    <%= f.input :name %>
+    <%= f.input :date %>
+    <%= f.input :start_time %>
+    <%= f.input :end_time %>
+    <%= f.submit class: 'btn btn-primary' %>
+  <% end %>
+</div>

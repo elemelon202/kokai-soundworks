@@ -9,4 +9,15 @@
     <i class="fa-solid fa-delete-left"></i>
   <% end %>
   <%= link_to "Back to list", venues_path %>
+  <%= link_to "Create a gig",  new_venue_gig_path(@venue) %>
+  <div id="gigs">
+    <h2>Gigs:</h2>
+    <% @gigs.each do |gig| %>
+      <p>
+        <%= link_to "#{gig.name}", gig_path(gig) %>
+        <li><%= "Date: #{gig.date}" %></li>
+        <li><%= "Time: #{gig.start_time} - #{gig.end_time}" %></li>
+      </p>
+    <% end %>
+  </div>
 </div>
