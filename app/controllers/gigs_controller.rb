@@ -88,6 +88,33 @@ class GigsController < ApplicationController
     @cities = Venue.where.not(city:[nil, '']).distinct.pluck(:city).sort
   end
 
+  def swipe
+    skip_authorization
+
+    # Get gigs user hasn't already RSVPed to
+    excluded_gig_ids = current_user&.gig_attendances&.pluck(:gig_id) || []
+
+    @gigs = Gig.includes(:venue, :bands, :gig_attendances)
+               .where('date >= ?', Date.current)
+               .where.not(id: excluded_gig_ids)
+
+    # Personalized sorting: prioritize gigs with followed bands
+    if current_user
+      followed_band_ids = current_user.followed_bands.pluck(:id)
+
+      # Get gigs with followed bands first
+      @gigs_with_followed = @gigs.joins(:bands).where(bands: { id: followed_band_ids }).distinct.to_a
+
+      # Then get other gigs
+      @gigs_other = @gigs.where.not(id: @gigs_with_followed.map(&:id)).order(:date).to_a
+
+      # Combine: followed bands first, then by date
+      @gigs = (@gigs_with_followed.sort_by(&:date) + @gigs_other).first(30)
+    else
+      @gigs = @gigs.order(:date).limit(30).to_a
+    end
+  end
+
   def edit
     @gig = Gig.find(params[:id])
     @booking = Booking.new

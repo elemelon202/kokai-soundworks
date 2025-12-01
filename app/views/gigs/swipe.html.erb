@@ -1,0 +1,169 @@
+<%= content_for :body_class, "swipe-gigs-page" %>
+
+<div class="swipe-gigs-container" data-controller="gig-swipe">
+  <%# Header %>
+  <div class="swipe-header">
+    <h1><i class="fa-solid fa-fire"></i> Find Your Next Show</h1>
+    <p>Swipe right if you're interested, left to skip</p>
+  </div>
+
+  <% if @gigs.any? %>
+    <%# Card Stack %>
+    <div class="swipe-card-stack" data-gig-swipe-target="stack">
+      <% @gigs.each_with_index do |gig, index| %>
+        <div class="swipe-card <%= 'active' if index == 0 %>"
+             data-gig-swipe-target="card"
+             data-gig-id="<%= gig.id %>"
+             data-index="<%= index %>"
+             style="z-index: <%= @gigs.length - index %>; <%= 'display: none;' if index > 2 %>">
+
+          <%# Card Background/Poster %>
+          <div class="swipe-card-bg">
+            <% if gig.poster.attached? %>
+              <%= cl_image_tag gig.poster.key, class: "swipe-card-poster" %>
+            <% elsif gig.venue.photos.attached? %>
+              <%= cl_image_tag gig.venue.photos.first.key, class: "swipe-card-poster" %>
+            <% else %>
+              <div class="swipe-card-placeholder">
+                <i class="fa-solid fa-music"></i>
+              </div>
+            <% end %>
+            <div class="swipe-card-gradient"></div>
+          </div>
+
+          <%# Swipe Indicators %>
+          <div class="swipe-indicator swipe-indicator-interested" data-gig-swipe-target="indicatorRight">
+            <i class="fa-solid fa-heart"></i> Interested
+          </div>
+          <div class="swipe-indicator swipe-indicator-skip" data-gig-swipe-target="indicatorLeft">
+            <i class="fa-solid fa-xmark"></i> Skip
+          </div>
+
+          <%# Date Badge - Top Left %>
+          <div class="swipe-date-badge">
+            <span class="swipe-date-day"><%= gig.date.strftime("%d") %></span>
+            <span class="swipe-date-month"><%= gig.date.strftime("%b") %></span>
+          </div>
+
+          <%# Followed Band Indicator - Top Right %>
+          <% has_followed_band = current_user && gig.bands.any? { |b| current_user.followed_bands.include?(b) } %>
+          <% if has_followed_band %>
+            <div class="swipe-followed-badge">
+              <i class="fa-solid fa-heart"></i> Band you follow
+            </div>
+          <% end %>
+
+          <%# Card Content %>
+          <div class="swipe-card-content">
+            <%# Gig Info %>
+            <div class="swipe-card-info">
+              <h2 class="swipe-gig-name"><%= gig.name %></h2>
+
+              <div class="swipe-venue-info">
+                <i class="fa-solid fa-location-dot"></i>
+                <span><%= gig.venue.name %></span>
+                <% if gig.venue.city.present? %>
+                  <span class="swipe-venue-city">&bull; <%= gig.venue.city %></span>
+                <% end %>
+              </div>
+
+              <div class="swipe-time-info">
+                <i class="fa-solid fa-clock"></i>
+                <span><%= gig.date.strftime("%A, %b %d") %></span>
+                <% if gig.start_time.present? %>
+                  <span>at <%= gig.start_time.strftime("%l:%M %p").strip %></span>
+                <% end %>
+              </div>
+
+              <%# Band Lineup %>
+              <% if gig.bands.any? %>
+                <div class="swipe-bands">
+                  <% gig.bands.first(3).each do |band| %>
+                    <div class="swipe-band-chip <%= 'followed' if current_user&.followed_bands&.include?(band) %>">
+                      <i class="fa-solid fa-users"></i>
+                      <%= band.name %>
+                    </div>
+                  <% end %>
+                  <% if gig.bands.count > 3 %>
+                    <div class="swipe-band-chip more">+<%= gig.bands.count - 3 %> more</div>
+                  <% end %>
+                </div>
+              <% end %>
+
+              <%# Stats %>
+              <div class="swipe-stats">
+                <% going_count = gig.gig_attendances.going.count %>
+                <% interested_count = gig.gig_attendances.interested.count %>
+                <% if going_count > 0 || interested_count > 0 %>
+                  <span class="swipe-stat">
+                    <i class="fa-solid fa-users"></i>
+                    <%= going_count + interested_count %> interested
+                  </span>
+                <% end %>
+                <% if gig.ticket_price.present? && gig.ticket_price > 0 %>
+                  <span class="swipe-stat price">
+                    <i class="fa-solid fa-ticket"></i>
+                    $<%= gig.ticket_price.to_i %>
+                  </span>
+                <% else %>
+                  <span class="swipe-stat free">
+                    <i class="fa-solid fa-gift"></i>
+                    Free
+                  </span>
+                <% end %>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      <% end %>
+    </div>
+
+    <%# Action Buttons %>
+    <div class="swipe-buttons">
+      <button class="swipe-btn swipe-btn-skip" data-action="click->gig-swipe#swipeLeft">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+      <button class="swipe-btn swipe-btn-info" data-action="click->gig-swipe#showDetails">
+        <i class="fa-solid fa-info"></i>
+      </button>
+      <button class="swipe-btn swipe-btn-interested" data-action="click->gig-swipe#swipeRight">
+        <i class="fa-solid fa-heart"></i>
+      </button>
+    </div>
+
+    <%# Progress %>
+    <div class="swipe-progress" data-gig-swipe-target="progress">
+      <span data-gig-swipe-target="progressText">1 / <%= @gigs.length %></span>
+    </div>
+
+  <% else %>
+    <%# Empty State %>
+    <div class="swipe-empty">
+      <div class="swipe-empty-icon">
+        <i class="fa-solid fa-calendar-check"></i>
+      </div>
+      <h2>You're all caught up!</h2>
+      <p>No more gigs to discover right now. Check back later for new shows!</p>
+      <%= link_to discover_gigs_path, class: "swipe-browse-btn" do %>
+        <i class="fa-solid fa-list"></i> Browse All Gigs
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Hidden RSVP Form %>
+  <% if current_user %>
+    <div data-gig-swipe-target="rsvpForm" style="display: none;">
+      <%= form_with url: rsvp_gig_path(0), method: :post, data: { gig_swipe_target: "form" } do %>
+        <input type="hidden" name="status" value="interested" data-gig-swipe-target="statusInput">
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Link to list view %>
+  <div class="swipe-footer">
+    <%= link_to discover_gigs_path, class: "swipe-list-link" do %>
+      <i class="fa-solid fa-list"></i> Switch to list view
+    <% end %>
+  </div>
+</div>
