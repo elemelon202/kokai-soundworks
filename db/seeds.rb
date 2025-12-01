@@ -11,6 +11,7 @@ Message.destroy_all
 Participation.destroy_all
 Chat.destroy_all
 KanbanTask.destroy_all
+GigAttendance.destroy_all
 Booking.destroy_all
 Gig.destroy_all
 Involvement.destroy_all

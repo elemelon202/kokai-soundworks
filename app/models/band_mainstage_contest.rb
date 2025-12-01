@@ -139,9 +139,11 @@ class BandMainstageContest < ApplicationRecord
     total
   end
 
+  # TEMPORARILY DISABLED FOR PITCH DEMO
   def eligible_user?(user, account_cutoff)
     return false unless user
-    user.created_at <= account_cutoff
+    # user.created_at <= account_cutoff
+    true
   end
 
   def add_capped_points(user_points, user_id, points)
