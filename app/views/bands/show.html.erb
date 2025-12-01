@@ -79,6 +79,35 @@
       </div>
     </div>
 
+    <!-- Upcoming Gigs Section -->
+    <% upcoming_gigs = @band.gigs.where('date >= ?', Date.current).order(:date).limit(5) %>
+    <% if upcoming_gigs.any? %>
+      <div class="band-media-section">
+        <h3><i class="fa-solid fa-calendar" style="color: #C8E938;"></i> Upcoming Gigs</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+          <% upcoming_gigs.each do |gig| %>
+            <div style="background: #252525; padding: 16px; border-radius: 12px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+                <div>
+                  <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1rem;"><%= gig.name %></h4>
+                  <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-location-dot" style="margin-right: 4px;"></i> <%= gig.venue.name %>
+                  </p>
+                  <p style="color: #888; margin: 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-clock" style="margin-right: 4px;"></i> <%= gig.date.strftime("%b %d, %Y") %>
+                    <% if gig.start_time.present? %>
+                      at <%= gig.start_time.strftime("%l:%M %p") %>
+                    <% end %>
+                  </p>
+                </div>
+                <%= render "gig_attendances/buttons", gig: gig %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <!-- Band Activity/Feed Section -->
     <% band_posts = @band.posts.includes(:user, :post_likes, :post_comments, images_attachments: :blob, videos_attachments: :blob).recent.limit(10) %>
     <% if band_posts.any? %>

@@ -141,6 +141,26 @@
                   <i class="fa-solid fa-plus me-1"></i> Create a band
                 <% end %>
                 <div class="dropdown-divider"></div>
+              <% elsif current_user&.fan.present? %>
+                <%= link_to edit_fan_path(current_user.fan), class: "dropdown-item" do %>
+                  <i class="fa-solid fa-gauge-high me-1"></i> Dashboard
+                <% end %>
+                <%= link_to fan_path(current_user.fan), class: "dropdown-item" do %>
+                  <i class="fa-solid fa-user me-1"></i> Profile
+                <% end %>
+                <%= link_to direct_messages_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-envelope me-1"></i> Messages
+                <% end %>
+                <%= link_to friendships_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-user-group me-1"></i> Friends
+                <% end %>
+                <%= link_to saved_fan_path(current_user.fan), class: "dropdown-item" do %>
+                  <i class="fa-solid fa-bookmark me-1"></i> Saved
+                <% end %>
+                <%= link_to gigs_fan_path(current_user.fan), class: "dropdown-item" do %>
+                  <i class="fa-solid fa-ticket me-1"></i> My Gigs
+                <% end %>
+                <div class="dropdown-divider"></div>
               <% else %>
                 <%= link_to new_musician_path, class: "dropdown-item" do %>
                   <i class="fa-solid fa-plus me-1"></i> Create Musician Profile

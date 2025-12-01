@@ -1,0 +1,49 @@
+ <div style="max-width: 800px; margin: 0 auto; padding: 24px;">
+    <h1 style="color: #fff; margin-bottom: 24px;">
+      <i class="fa-solid fa-ticket" style="color: #C8E938;"></i> Gig History
+    </h1>
+
+    <% if @upcoming.any? %>
+      <h2 style="color: #C8E938; font-size: 1.1rem; margin-bottom: 16px;">Upcoming</h2>
+      <div style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px;">
+        <% @upcoming.includes(:gig).each do |attendance| %>
+          <div style="background: #1e1e1e; padding: 16px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="color: #fff; margin: 0 0 4px 0;"><%= attendance.gig.name %></h3>
+              <p style="color: #888; margin: 0; font-size: 0.85rem;">
+                <%= attendance.gig.venue.name %> &bull; <%= attendance.gig.date.strftime("%b %d, %Y") %>
+              </p>
+            </div>
+            <span style="background: <%= attendance.going? ? '#C8E938' : '#666' %>; color: #171717; padding: 6px 14px; border-radius: 16px; font-size: 0.8rem; font-weight: 600;">
+              <%= attendance.status.titleize %>
+            </span>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <% if @past.any? %>
+      <h2 style="color: #888; font-size: 1.1rem; margin-bottom: 16px;">Past Gigs</h2>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <% @past.includes(:gig).each do |attendance| %>
+          <div style="background: #1e1e1e; padding: 16px 20px; border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h3 style="color: #fff; margin: 0 0 4px 0;"><%= attendance.gig.name %></h3>
+              <p style="color: #888; margin: 0; font-size: 0.85rem;">
+                <%= attendance.gig.venue.name %> &bull; <%= attendance.gig.date.strftime("%b %d, %Y") %>
+              </p>
+            </div>
+            <span style="background: #333; color: #fff; padding: 6px 14px; border-radius: 16px; font-size: 0.8rem;">
+              Attended
+            </span>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <p style="color: #666; text-align: center; padding: 40px;">No past gigs yet.</p>
+    <% end %>
+
+    <%= link_to fan_path(@fan), style: "display: inline-block; margin-top: 24px; color: #C8E938;" do %>
+      <i class="fa-solid fa-arrow-left"></i> Back to profile
+    <% end %>
+  </div>

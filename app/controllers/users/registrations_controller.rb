@@ -37,27 +37,24 @@ class Users::RegistrationsController < Devise::RegistrationsController
   def after_sign_up_path_for(resource)
     case resource.user_type
     when 'band_leader'
-      # Band leader redirects to create their first band
       new_band_path
     when 'venue'
-      # Venue owner redirects to create their first venue
       venues_path
     when 'musician'
-      # Musician redirects to edit their profile (which was just created below)
       edit_musician_path(resource.musician)
     else
-      root_path
+      edit_fan_path(resource.fan)
     end
   end
 
   private
 
   def create_profile_for(user)
-    # The 'musician' role needs an associated Musician profile immediately after user creation.
     if user.user_type == 'musician'
-      # The `user.username` is used as a default name for the new musician profile
       Musician.create!(user: user, name: user.username || "New Musician")
+    elsif user.user_type.blank? || user.user_type == 'fan'
+      user.update(user_type: 'fan')
+      Fan.create!(user: user, display_name: user.username)
     end
-    # Note: 'band' and 'venue_owner' create their associated records later via their respective `new` actions.
   end
 end

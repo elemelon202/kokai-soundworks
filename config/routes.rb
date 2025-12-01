@@ -163,4 +163,20 @@ Rails.application.routes.draw do
   end
   post 'challenges/vote/:response_id', to: 'challenges#vote', as: :challenge_vote
   delete 'challenges/unvote/:response_id', to: 'challenges#unvote', as: :challenge_unvote
+
+  resources :fans, only: [:show, :edit, :update] do
+    member do
+      get :gigs
+      get :following
+      get :saved
+      get :friends
+    end
+  end
+
+  resources :gigs do
+    member do
+      post :check_in
+      post :rsvp
+    end
+  end
 end
