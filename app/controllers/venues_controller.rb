@@ -76,6 +76,8 @@ class VenuesController < ApplicationController
 
   def edit
     authorize @venue
+    @gig = Gig.new
+    @booking = Booking.new
   end
 
   def update

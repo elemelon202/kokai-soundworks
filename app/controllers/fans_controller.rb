@@ -3,14 +3,25 @@ class FansController < ApplicationController
 
   def show
     authorize @fan
-    @upcoming_gigs = @fan.user.attending_gigs.where('date >= ?', Date.current)
-    @past_gigs = @fan.user.attending_gigs.where('date < ?', Date.current)
+    # Only show gigs the user is interested in or going to
+    @upcoming_gigs = Gig.joins(:gig_attendances)
+                        .where(gig_attendances: { user_id: @fan.user_id, status: [:interested, :going] })
+                        .where('gigs.date >= ?', Date.current)
+                        .includes(:venue)
+                        .order(:date)
+    @past_gigs = @fan.user.gig_attendances.attended.joins(:gig).where('gigs.date < ?', Date.current).map(&:gig)
     @following_musicians = @fan.user.followed_musicians
     @following_bands = @fan.user.followed_bands
   end
 
   def edit
     authorize @fan
+    # Upcoming shows in the area (based on fan's location)
+    @area_gigs = Gig.includes(:venue, :bands).where('date >= ?', Date.current).order(:date)
+    if @fan.location.present?
+      @area_gigs = @area_gigs.joins(:venue).where("venues.city ILIKE ?", "%#{@fan.location.split(',').first.strip}%")
+    end
+    @area_gigs = @area_gigs.limit(5)
   end
 
   def update
@@ -24,8 +35,8 @@ class FansController < ApplicationController
 
   def gigs
     authorize @fan
-    @upcoming = @fan.user.gig_attendances.joins(:gig).where('gigs.date >= ?', Date.current)
-    @past = @fan.user.gig_attendances.joins(:gig).where('gigs.date < ?', Date.current)
+    @upcoming = @fan.user.gig_attendances.where(status: [:interested, :going]).joins(:gig).where('gigs.date >= ?', Date.current)
+    @past = @fan.user.gig_attendances.attended.joins(:gig).where('gigs.date < ?', Date.current)
   end
 
   def following

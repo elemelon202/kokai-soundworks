@@ -1,6 +1,6 @@
 <div class="musician-dashboard-container">
   <div class="musician-dashboard-header">
-    <h1>Fan Dashboard</h1>
+    <h1>Dashboard</h1>
     <h2>Manage your profile and discover music</h2>
     <%= link_to fan_path(@fan), class: "btn-view-profile" do %>
       <i class="fa-solid fa-eye"></i> View Profile
@@ -139,6 +139,76 @@
           </div>
         <% end %>
       </div>
+    </div>
+  </div>
+
+  <%# Upcoming Shows in the Area %>
+  <div class="musician-dashboard-card" style="margin-bottom: 24px;">
+    <div class="musician-card-header">
+      <div class="card-icon">
+        <i class="fa-solid fa-calendar-days"></i>
+      </div>
+      <h3>Upcoming Shows <%= @fan.location.present? ? "in #{@fan.location.split(',').first.strip}" : "Near You" %></h3>
+    </div>
+    <div style="padding: 20px;">
+      <% if @area_gigs.any? %>
+        <div style="display: flex; flex-direction: column; gap: 12px;">
+          <% @area_gigs.each do |gig| %>
+            <div style="background: #252525; padding: 16px; border-radius: 10px;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+                <div style="flex: 1;">
+                  <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1rem;"><%= gig.name %></h4>
+                  <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-location-dot" style="color: #C8E938; margin-right: 4px;"></i>
+                    <%= link_to gig.venue.name, venue_path(gig.venue), style: "color: #C8E938; text-decoration: none;" %>
+                    <% if gig.venue.city.present? %>
+                      <span style="color: #666;"> &bull; <%= gig.venue.city %></span>
+                    <% end %>
+                  </p>
+                  <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-clock" style="color: #C8E938; margin-right: 4px;"></i>
+                    <%= gig.date.strftime("%A, %B %d") %>
+                    <% if gig.start_time.present? %>
+                      at <%= gig.start_time.strftime("%l:%M %p") %>
+                    <% end %>
+                  </p>
+                  <% if gig.bands.any? %>
+                    <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;">
+                      <% gig.bands.limit(3).each do |band| %>
+                        <%= link_to band_path(band), style: "text-decoration: none;" do %>
+                          <span style="background: #333; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;">
+                            <i class="fa-solid fa-users" style="color: #E936AD; font-size: 0.65rem;"></i>
+                            <%= band.name %>
+                          </span>
+                        <% end %>
+                      <% end %>
+                    </div>
+                  <% end %>
+                </div>
+                <div style="display: flex; align-items: center;">
+                  <%= render "gig_attendances/buttons", gig: gig %>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+        <div style="text-align: center; margin-top: 16px;">
+          <%= link_to discover_gigs_path, class: "link-view-all" do %>
+            Discover more gigs <i class="fa-solid fa-arrow-right"></i>
+          <% end %>
+        </div>
+      <% else %>
+        <div style="text-align: center; padding: 30px;">
+          <i class="fa-solid fa-calendar-xmark" style="font-size: 2.5rem; color: #333; margin-bottom: 12px;"></i>
+          <p style="color: #888; margin: 0 0 8px 0;">No upcoming shows found<%= @fan.location.present? ? " in your area" : "" %>.</p>
+          <p style="color: #666; margin: 0; font-size: 0.85rem;">
+            <% unless @fan.location.present? %>
+              Add your location above to see local shows, or
+            <% end %>
+            <%= link_to "browse all upcoming gigs", discover_gigs_path, style: "color: #C8E938;" %>.
+          </p>
+        </div>
+      <% end %>
     </div>
   </div>
 

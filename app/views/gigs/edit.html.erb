@@ -1,0 +1,27 @@
+<%= simple_form_for @gig do |f| %>
+  <%= f.input :name %>
+  <%= f.input :date %>
+  <%= f.input :start_time %>
+  <%= f.input :end_time %>
+  <%= f.submit "Update Gig", class: "btn btn-primary" %>
+<% end %>
+<hr>
+<h2>Invite a Band</h2>
+<%= simple_form_for [@gig, @booking] do |f| %>
+  <%= f.association :band, collection: Band.all, prompt: "Select a band" %>
+  <%= f.submit "Invite a band", class: "btn btn-secondary" %>
+<% end %>
+<h3>Already Invited Bands</h3>
+<% if @gig.bookings.any? %>
+  <ul>
+    <% @gig.bookings.each do |booking| %>
+      <li>
+        <%= booking.band.name %>
+        <%= link_to "Remove", gig_booking_path(@gig, booking),
+              method: :delete, data: { confirm: "Are you sure?" }, class: "btn btn-danger btn-sm" %>
+      </li>
+    <% end %>
+  </ul>
+<% else %>
+  <p>No bands invited yet.</p>
+<% end %>

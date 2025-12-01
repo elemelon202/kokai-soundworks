@@ -40,3 +40,54 @@
   <% end %>
   <%= link_to "Back to list", venues_path %>
 </div>
+<div class="container">
+  <h1>New gig</h1>
+  <%= simple_form_for [@venue, @gig] do |f| %>
+    <%= f.input :name %>
+    <%= f.input :date %>
+    <%= f.input :start_time %>
+    <%= f.input :end_time %>
+    <%= f.submit class: 'btn btn-primary' %>
+  <% end %>
+</div>
+<% upcoming_gigs = @venue.gigs.where('date >= ?', Date.current).order(:date) %>
+<% if upcoming_gigs.any? %>
+  <div style="background: #1e1e1e; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+    <h2 style="color: #fff; margin: 0 0 20px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+      <i class="fa-solid fa-calendar" style="color: #C8E938;"></i> Upcoming Gigs
+    </h2>
+    <div style="display: flex; flex-direction: column; gap: 16px;">
+      <% upcoming_gigs.each do |gig| %>
+        <div style="background: #252525; padding: 16px; border-radius: 12px;">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+            <div>
+              <h3 style="color: #fff; margin: 0 0 8px 0; font-size: 1.1rem;"><%= link_to gig.name, gig_path(gig), style: "text-decoration: none;" %></h3>
+              <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
+                <i class="fa-solid fa-clock" style="margin-right: 4px;"></i>
+                <%= gig.date.strftime("%A, %B %d, %Y") %>
+                <% if gig.start_time.present? %>
+                  at <%= gig.start_time.strftime("%l:%M %p") %>
+                <% end %>
+              </p>
+              <% if gig.bands.any? %>
+                <p style="color: #888; margin: 0; font-size: 0.85rem;">
+                  <i class="fa-solid fa-users" style="margin-right: 4px;"></i>
+                  <% gig.bands.each_with_index do |band, index| %>
+                    <%= link_to band.name, band_path(band), style: "color: #C8E938; text-decoration: none;" %><%= ", " unless index == gig.bands.count - 1 %>
+                  <% end %>
+                </p>
+              <% end %>
+              <% if gig.ticket_price.present? && gig.ticket_price > 0 %>
+                <p style="color: #C8E938; margin: 8px 0 0 0; font-size: 0.9rem; font-weight: 600;">
+                  <i class="fa-solid fa-ticket" style="margin-right: 4px;"></i>
+                  $<%= number_with_precision(gig.ticket_price, precision: 2) %>
+                </p>
+              <% end %>
+            </div>
+            <%= link_to "Edit", edit_gig_path(gig), class: "btn btn-sm btn-secondary ms-2" %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+<% end %>
