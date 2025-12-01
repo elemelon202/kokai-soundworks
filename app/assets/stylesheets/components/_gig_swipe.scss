@@ -1,0 +1,545 @@
+// Gig Swipe Discovery Page
+$kokai-yellow: #C8E938;
+$kokai-pink: #E936AD;
+
+.swipe-gigs-page {
+  background: #0a0a0a;
+  min-height: 100vh;
+  overflow: hidden;
+}
+
+.swipe-gigs-container {
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+  min-height: calc(100vh - 60px);
+  display: flex;
+  flex-direction: column;
+}
+
+// Header
+.swipe-header {
+  text-align: center;
+  margin-bottom: 20px;
+
+  h1 {
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin: 0 0 8px 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+
+    i {
+      color: $kokai-pink;
+    }
+  }
+
+  p {
+    color: #888;
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+// Card Stack
+.swipe-card-stack {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 500px;
+  max-height: 550px;
+  perspective: 1000px;
+  margin-bottom: 20px;
+}
+
+// Individual Card
+.swipe-card {
+  position: absolute;
+  width: 100%;
+  max-width: 340px;
+  height: 480px;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #1a1a1a;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+  cursor: grab;
+  user-select: none;
+  transform-origin: center bottom;
+
+  &.active {
+    cursor: grab;
+
+    &:active {
+      cursor: grabbing;
+    }
+  }
+
+  &:not(.active) {
+    transform: scale(0.95) translateY(10px);
+    opacity: 0.7;
+  }
+}
+
+// Card Background
+.swipe-card-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}
+
+.swipe-card-poster {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swipe-card-placeholder {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 5rem;
+    color: #333;
+  }
+}
+
+.swipe-card-gradient {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 70%;
+  background: linear-gradient(
+    to top,
+    rgba(0, 0, 0, 0.95) 0%,
+    rgba(0, 0, 0, 0.7) 40%,
+    transparent 100%
+  );
+}
+
+// Swipe Indicators
+.swipe-indicator {
+  position: absolute;
+  top: 30px;
+  padding: 12px 24px;
+  border-radius: 12px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  opacity: 0;
+  transition: opacity 0.1s ease;
+  pointer-events: none;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i {
+    font-size: 1.4rem;
+  }
+}
+
+.swipe-indicator-interested {
+  right: 20px;
+  background: $kokai-yellow;
+  color: #171717;
+  transform: rotate(15deg);
+  border: 3px solid darken($kokai-yellow, 10%);
+}
+
+.swipe-indicator-skip {
+  left: 20px;
+  background: #ff4444;
+  color: #fff;
+  transform: rotate(-15deg);
+  border: 3px solid darken(#ff4444, 10%);
+}
+
+// Date Badge
+.swipe-date-badge {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  padding: 10px 14px;
+  text-align: center;
+  z-index: 5;
+}
+
+.swipe-date-day {
+  display: block;
+  font-size: 1.8rem;
+  font-weight: 800;
+  color: $kokai-yellow;
+  line-height: 1;
+}
+
+.swipe-date-month {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+// Followed Badge
+.swipe-followed-badge {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  background: $kokai-pink;
+  color: #fff;
+  padding: 8px 14px;
+  border-radius: 20px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  z-index: 5;
+
+  i {
+    font-size: 0.7rem;
+  }
+}
+
+// Card Content
+.swipe-card-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 20px;
+  z-index: 5;
+}
+
+.swipe-card-info {
+  margin-bottom: 0;
+}
+
+.swipe-gig-name {
+  color: #fff;
+  font-size: 1.3rem;
+  font-weight: 800;
+  margin: 0 0 8px 0;
+  line-height: 1.2;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+.swipe-venue-info,
+.swipe-time-info {
+  color: #ccc;
+  font-size: 0.85rem;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    color: $kokai-yellow;
+    width: 16px;
+    text-align: center;
+  }
+}
+
+.swipe-venue-city {
+  color: #888;
+}
+
+// Band Chips
+.swipe-bands {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.swipe-band-chip {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(10px);
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    color: $kokai-pink;
+    font-size: 0.7rem;
+  }
+
+  &.followed {
+    background: rgba($kokai-pink, 0.3);
+    border: 1px solid rgba($kokai-pink, 0.5);
+  }
+
+  &.more {
+    background: rgba(255, 255, 255, 0.1);
+    color: #888;
+  }
+}
+
+// Stats
+.swipe-stats {
+  display: flex;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.swipe-stat {
+  color: #888;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  i {
+    color: #666;
+  }
+
+  &.price {
+    color: $kokai-yellow;
+
+    i {
+      color: $kokai-yellow;
+    }
+  }
+
+  &.free {
+    color: #22c55e;
+
+    i {
+      color: #22c55e;
+    }
+  }
+}
+
+// Action Buttons
+.swipe-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  padding: 20px 0;
+}
+
+.swipe-btn {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+
+  i {
+    font-size: 1.5rem;
+  }
+
+  &:hover {
+    transform: scale(1.1);
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+}
+
+.swipe-btn-skip {
+  background: linear-gradient(135deg, #333 0%, #222 100%);
+  color: #ff4444;
+
+  &:hover {
+    box-shadow: 0 4px 30px rgba(255, 68, 68, 0.3);
+  }
+}
+
+.swipe-btn-info {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #252525 0%, #1a1a1a 100%);
+  color: #888;
+
+  i {
+    font-size: 1.2rem;
+  }
+
+  &:hover {
+    color: #fff;
+  }
+}
+
+.swipe-btn-interested {
+  background: linear-gradient(135deg, $kokai-yellow 0%, darken($kokai-yellow, 10%) 100%);
+  color: #171717;
+
+  &:hover {
+    box-shadow: 0 4px 30px rgba($kokai-yellow, 0.4);
+  }
+}
+
+// Progress
+.swipe-progress {
+  text-align: center;
+  padding: 10px;
+
+  span {
+    color: #666;
+    font-size: 0.85rem;
+  }
+}
+
+// Empty State
+.swipe-empty {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.swipe-empty-icon {
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 24px;
+  background: linear-gradient(135deg, rgba($kokai-yellow, 0.2) 0%, rgba($kokai-pink, 0.2) 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 3rem;
+    color: $kokai-yellow;
+  }
+}
+
+.swipe-empty h2 {
+  color: #fff;
+  font-size: 1.5rem;
+  margin: 0 0 12px 0;
+}
+
+.swipe-empty p {
+  color: #888;
+  font-size: 1rem;
+  margin: 0 0 24px 0;
+}
+
+.swipe-browse-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: linear-gradient(135deg, $kokai-yellow 0%, darken($kokai-yellow, 10%) 100%);
+  color: #171717;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba($kokai-yellow, 0.3);
+    color: #171717;
+  }
+}
+
+// Footer
+.swipe-footer {
+  text-align: center;
+  padding: 20px;
+}
+
+.swipe-list-link {
+  color: #666;
+  font-size: 0.9rem;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    color: $kokai-yellow;
+  }
+}
+
+// Toast
+.swipe-toast {
+  position: fixed;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  background: $kokai-yellow;
+  color: #171717;
+  padding: 12px 24px;
+  border-radius: 30px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: 0;
+  transition: all 0.3s ease;
+  z-index: 1000;
+  box-shadow: 0 4px 20px rgba($kokai-yellow, 0.4);
+
+  &.show {
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+  }
+
+  i {
+    color: $kokai-pink;
+  }
+}
+
+// Mobile Responsiveness
+@media (max-width: 480px) {
+  .swipe-gigs-container {
+    padding: 16px;
+  }
+
+  .swipe-card {
+    height: 450px;
+    max-width: 100%;
+  }
+
+  .swipe-gig-name {
+    font-size: 1.4rem;
+  }
+
+  .swipe-buttons {
+    gap: 16px;
+  }
+
+  .swipe-btn {
+    width: 56px;
+    height: 56px;
+
+    i {
+      font-size: 1.3rem;
+    }
+  }
+
+  .swipe-btn-info {
+    width: 44px;
+    height: 44px;
+  }
+}

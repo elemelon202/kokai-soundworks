@@ -16,7 +16,8 @@ class BandMainstageVote < ApplicationRecord
   validate :cannot_vote_for_own_band
 
   # Account must be old enough
-  validate :account_age_requirement
+  # TEMPORARILY DISABLED FOR PITCH DEMO
+  # validate :account_age_requirement
 
   private
 

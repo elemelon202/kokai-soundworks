@@ -1,9 +1,14 @@
 <div style="max-width: 1000px; margin: 0 auto; padding: 24px;">
-  <div style="margin-bottom: 24px;">
-    <h1 style="color: #fff; margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
-      <i class="fa-solid fa-compass" style="color: #C8E938;"></i> Discover Gigs
-    </h1>
-    <p style="color: #888; margin: 0;">Find upcoming shows based on your interests</p>
+  <div style="margin-bottom: 24px; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+    <div>
+      <h1 style="color: #fff; margin: 0 0 8px 0; display: flex; align-items: center; gap: 12px;">
+        <i class="fa-solid fa-compass" style="color: #C8E938;"></i> Discover Gigs
+      </h1>
+      <p style="color: #888; margin: 0;">Find upcoming shows based on your interests</p>
+    </div>
+    <%= link_to swipe_gigs_path, style: "background: linear-gradient(135deg, #E936AD 0%, #c42d91 100%); color: #fff; padding: 12px 20px; border-radius: 12px; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 8px; white-space: nowrap;" do %>
+      <i class="fa-solid fa-fire"></i> Swipe Mode
+    <% end %>
   </div>
 
   <%# Filters %>

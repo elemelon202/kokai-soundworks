@@ -17,7 +17,8 @@ class MainstageVote < ApplicationRecord
   validate :cannot_vote_for_self
 
   # Account must be old enough (same rule as engagement)
-  validate :account_age_requirement
+  # TEMPORARILY DISABLED FOR PITCH DEMO
+  # validate :account_age_requirement
 
   private
 

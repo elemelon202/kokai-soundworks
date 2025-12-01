@@ -1575,6 +1575,107 @@ Message.create!(chat: dm3, user: band_leaders[0], content: "Synth pads and some 
 
 puts "Created #{Chat.direct_messages.count} direct message conversations"
 
+# ===========================================
+# MAINSTAGE WINNERS (for pitch demo)
+# ===========================================
+puts "Creating MAINSTAGE winners..."
+
+# Clear any existing contest data
+MainstageWinner.destroy_all
+MainstageVote.destroy_all
+MainstageContest.destroy_all
+BandMainstageWinner.destroy_all
+BandMainstageVote.destroy_all
+BandMainstageContest.destroy_all
+
+# Create a past completed musician contest (last week)
+last_week_start = Date.current.beginning_of_week(:sunday) - 7.days
+last_week_end = last_week_start + 6.days
+
+musician_contest = MainstageContest.create!(
+  start_date: last_week_start,
+  end_date: last_week_end,
+  status: 'completed'
+)
+
+# Pick an impressive musician to be the winner (Yuki - the first musician)
+winning_musician = musicians[0]
+
+# Create the winner record with impressive scores
+MainstageWinner.create!(
+  mainstage_contest: musician_contest,
+  musician: winning_musician,
+  final_score: 847,       # Total: very impressive!
+  engagement_score: 527,  # High engagement from follows, endorsements, shoutouts, short likes
+  vote_score: 320         # 32 votes x 10 points each
+)
+
+puts "  Created Musician MAINSTAGE Winner: #{winning_musician.name} with score 847"
+
+# Create a past completed band contest (last week)
+band_contest = BandMainstageContest.create!(
+  start_date: last_week_start,
+  end_date: last_week_end,
+  status: 'completed'
+)
+
+# Pick an impressive band to be the winner (Midnight Jazz Collective)
+winning_band = bands[1]
+
+# Create the band winner record with impressive scores
+BandMainstageWinner.create!(
+  band_mainstage_contest: band_contest,
+  band: winning_band,
+  final_score: 1024,      # Even more impressive!
+  engagement_score: 684,  # High engagement from follows, saves, bookings, member short likes
+  vote_score: 340         # 34 votes x 10 points each
+)
+
+puts "  Created Band MAINSTAGE Winner: #{winning_band.name} with score 1024"
+
+# Also create another past winner from 2 weeks ago for history
+two_weeks_start = last_week_start - 7.days
+two_weeks_end = two_weeks_start + 6.days
+
+old_musician_contest = MainstageContest.create!(
+  start_date: two_weeks_start,
+  end_date: two_weeks_end,
+  status: 'completed'
+)
+
+old_winning_musician = musicians[2] # Sakura Kimura
+
+MainstageWinner.create!(
+  mainstage_contest: old_musician_contest,
+  musician: old_winning_musician,
+  final_score: 612,
+  engagement_score: 412,
+  vote_score: 200
+)
+
+puts "  Created previous Musician MAINSTAGE Winner: #{old_winning_musician.name} with score 612"
+
+old_band_contest = BandMainstageContest.create!(
+  start_date: two_weeks_start,
+  end_date: two_weeks_end,
+  status: 'completed'
+)
+
+old_winning_band = bands[0] # Neon Pulse
+
+BandMainstageWinner.create!(
+  band_mainstage_contest: old_band_contest,
+  band: old_winning_band,
+  final_score: 756,
+  engagement_score: 506,
+  vote_score: 250
+)
+
+puts "  Created previous Band MAINSTAGE Winner: #{old_winning_band.name} with score 756"
+
+puts "Created #{MainstageWinner.count} Musician MAINSTAGE winners"
+puts "Created #{BandMainstageWinner.count} Band MAINSTAGE winners"
+
 puts ""
 puts "=" * 50
 puts "SEED COMPLETE!"
@@ -1600,6 +1701,8 @@ puts "  Band Invitations: #{BandInvitation.count}"
 puts "  Notifications: #{Notification.count}"
 puts "  Gig Attendances: #{GigAttendance.count}"
 puts "  Fans: #{User.where(user_type: 'fan').count}"
+puts "  MAINSTAGE Winners (Musicians): #{MainstageWinner.count}"
+puts "  MAINSTAGE Winners (Bands): #{BandMainstageWinner.count}"
 puts ""
 puts "Test accounts (all passwords: 'password123'):"
 puts "  Venue Owner: bluenote@venue.com"

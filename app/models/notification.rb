@@ -23,7 +23,8 @@ class Notification < ApplicationRecord
     shoutout: 'shoutout',
     new_follower: 'new_follower',
     challenge_response: 'challenge_response',
-    challenge_win: 'challenge_win'
+    challenge_win: 'challenge_win',
+    band_gig_announcement: 'band_gig_announcement'
   }.freeze
 
   validates :notification_type, presence: true, inclusion: { in: TYPES.values }
@@ -182,6 +183,25 @@ class Notification < ApplicationRecord
     )
   end
 
+  def self.create_for_band_gig_announcement(booking)
+    band = booking.band
+    gig = booking.gig
+    venue = gig.venue
+
+    # Notify all followers of the band
+    band.followers.find_each do |follower|
+      # Don't notify band members
+      next if band.musicians.exists?(user_id: follower.id)
+
+      create!(
+        user: follower,
+        notifiable: booking,
+        notification_type: TYPES[:band_gig_announcement],
+        message: "#{band.name} is playing at #{venue.name} on #{gig.date.strftime('%b %d, %Y')}!"
+      )
+    end
+  end
+
   def icon_class
     case notification_type
     when TYPES[:band_invitation]
@@ -216,6 +236,8 @@ class Notification < ApplicationRecord
       'fa-solid fa-guitar'
     when TYPES[:challenge_win]
       'fa-solid fa-trophy'
+    when TYPES[:band_gig_announcement]
+      'fa-solid fa-calendar-star'
     else
       'fa-solid fa-bell'
     end
@@ -250,6 +272,12 @@ class Notification < ApplicationRecord
         Rails.application.routes.url_helpers.challenge_path(notifiable)
       else
         Rails.application.routes.url_helpers.challenges_path
+      end
+    when TYPES[:band_gig_announcement]
+      if notifiable.respond_to?(:gig) && notifiable.gig
+        Rails.application.routes.url_helpers.gig_path(notifiable.gig)
+      else
+        '#'
       end
     else
       '#'
