@@ -1,23 +1,112 @@
-<div class="container">
-  <p><%= @venue.name %></p>
-  <li><%= "Address: #{@venue.address}" %></li>
-  <li><%= "City: #{@venue.city}" %></li>
-  <li><%= "Capacity: #{@venue.capacity}" %></li>
-  <li><%= "Description: #{@venue.description}" %></li>
-  <%= link_to "Edit this venue", edit_venue_path  %>
-  <%= link_to venue_path(@venue), data: { turbo_method: :delete, turbo_confirm: "Delete #{@venue.name}?" } do %>
-    <i class="fa-solid fa-delete-left"></i>
+<div class="venue-show-container" style="max-width: 900px; margin: 0 auto; padding: 24px;">
+  <%# Venue Header %>
+  <div style="background: #1e1e1e; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 16px;">
+      <div>
+        <h1 style="color: #fff; margin: 0 0 8px 0; font-size: 1.8rem;"><%= @venue.name %></h1>
+        <p style="color: #888; margin: 0 0 4px 0; font-size: 0.95rem;">
+          <i class="fa-solid fa-location-dot" style="color: #C8E938; margin-right: 6px;"></i>
+          <%= @venue.address %><% if @venue.city.present? %>, <%= @venue.city %><% end %>
+        </p>
+        <% if @venue.capacity.present? %>
+          <p style="color: #888; margin: 0; font-size: 0.9rem;">
+            <i class="fa-solid fa-users" style="color: #C8E938; margin-right: 6px;"></i>
+            Capacity: <%= @venue.capacity %>
+          </p>
+        <% end %>
+      </div>
+      <% if current_user && @venue.user_id == current_user.id %>
+        <div style="display: flex; gap: 8px;">
+          <%= link_to edit_venue_path(@venue), style: "background: #C8E938; color: #171717; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600;" do %>
+            <i class="fa-solid fa-pen"></i> Edit
+          <% end %>
+        </div>
+      <% end %>
+    </div>
+
+    <% if @venue.description.present? %>
+      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #333;">
+        <p style="color: #ccc; margin: 0; line-height: 1.6;"><%= @venue.description %></p>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Upcoming Gigs %>
+  <% upcoming_gigs = @venue.gigs.where('date >= ?', Date.current).order(:date) %>
+  <% if upcoming_gigs.any? %>
+    <div style="background: #1e1e1e; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
+      <h2 style="color: #fff; margin: 0 0 20px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-calendar" style="color: #C8E938;"></i> Upcoming Gigs
+      </h2>
+      <div style="display: flex; flex-direction: column; gap: 16px;">
+        <% upcoming_gigs.each do |gig| %>
+          <div style="background: #252525; padding: 16px; border-radius: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+              <div>
+                <h3 style="color: #fff; margin: 0 0 8px 0; font-size: 1.1rem;"><%= gig.name %></h3>
+                <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
+                  <i class="fa-solid fa-clock" style="margin-right: 4px;"></i>
+                  <%= gig.date.strftime("%A, %B %d, %Y") %>
+                  <% if gig.start_time.present? %>
+                    at <%= gig.start_time.strftime("%l:%M %p") %>
+                  <% end %>
+                </p>
+                <% if gig.bands.any? %>
+                  <p style="color: #888; margin: 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-users" style="margin-right: 4px;"></i>
+                    <% gig.bands.each_with_index do |band, index| %>
+                      <%= link_to band.name, band_path(band), style: "color: #C8E938; text-decoration: none;" %><%= ", " unless index == gig.bands.count - 1 %>
+                    <% end %>
+                  </p>
+                <% end %>
+                <% if gig.ticket_price.present? && gig.ticket_price > 0 %>
+                  <p style="color: #C8E938; margin: 8px 0 0 0; font-size: 0.9rem; font-weight: 600;">
+                    <i class="fa-solid fa-ticket" style="margin-right: 4px;"></i>
+                    $<%= number_with_precision(gig.ticket_price, precision: 2) %>
+                  </p>
+                <% end %>
+              </div>
+              <%= render "gig_attendances/buttons", gig: gig %>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    </div>
   <% end %>
-  <%= link_to "Back to list", venues_path %>
-  <%= link_to "Create a gig",  new_venue_gig_path(@venue) %>
-  <div id="gigs">
-    <h2>Gigs:</h2>
-    <% @gigs.each do |gig| %>
-      <p>
-        <%= link_to "#{gig.name}", gig_path(gig) %>
-        <li><%= "Date: #{gig.date}" %></li>
-        <li><%= "Time: #{gig.start_time} - #{gig.end_time}" %></li>
-      </p>
+
+
+  <%# Past Gigs %>
+  <% past_gigs = @venue.gigs.where('date < ?', Date.current).order(date: :desc).limit(5) %>
+  <% if past_gigs.any? %>
+    <div style="background: #1e1e1e; border-radius: 16px; padding: 24px;">
+      <h2 style="color: #888; margin: 0 0 20px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+        <i class="fa-solid fa-clock-rotate-left"></i> Past Gigs
+      </h2>
+      <div style="display: flex; flex-direction: column; gap: 12px;">
+        <% past_gigs.each do |gig| %>
+          <div style="background: #252525; padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+            <div>
+              <h4 style="color: #fff; margin: 0 0 4px 0; font-size: 0.95rem;"><%= gig.name %></h4>
+              <p style="color: #666; margin: 0; font-size: 0.8rem;">
+                <%= gig.date.strftime("%b %d, %Y") %>
+                <% if gig.bands.any? %>
+                  &bull; <%= gig.bands.map(&:name).join(", ") %>
+                <% end %>
+              </p>
+            </div>
+            <span style="color: #666; font-size: 0.8rem;">
+              <i class="fa-solid fa-users"></i> <%= gig.gig_attendances.attended.count %> attended
+            </span>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
+  <div style="margin-top: 24px;">
+    <%= link_to venues_path, style: "color: #C8E938; text-decoration: none; font-size: 0.9rem;" do %>
+      <i class="fa-solid fa-arrow-left"></i> Back to venues
+
     <% end %>
   </div>
 </div>
