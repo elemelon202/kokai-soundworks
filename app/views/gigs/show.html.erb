@@ -96,5 +96,8 @@
   <% else %>
     <p>No bands booked yet.</p>
   <% end %>
+  <% if policy(@gig).edit? %>
+    <%= link_to "Edit Gig", edit_gig_path(@gig), class: "btn btn-primary" %>
+  <% end %>
   <%= link_to "Back to venue", request.referer || root_path, class: "btn btn-secondary" %>
 </div>

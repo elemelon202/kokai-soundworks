@@ -105,6 +105,7 @@ Rails.application.routes.draw do
   end
   get 'discover-gigs', to: 'gigs#discover', as: :discover_gigs
   resources :gigs, only: [:show, :index] do
+  resources :gigs, only: [:show, :index, :edit, :update] do
     resources :bookings, only: [:new, :create, :destroy]
     resources :gig_applications, only: [:create]
     member do
