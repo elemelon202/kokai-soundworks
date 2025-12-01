@@ -74,6 +74,7 @@
     </div>
   <% end %>
 
+
   <%# Past Gigs %>
   <% past_gigs = @venue.gigs.where('date < ?', Date.current).order(date: :desc).limit(5) %>
   <% if past_gigs.any? %>
@@ -105,6 +106,7 @@
   <div style="margin-top: 24px;">
     <%= link_to venues_path, style: "color: #C8E938; text-decoration: none; font-size: 0.9rem;" do %>
       <i class="fa-solid fa-arrow-left"></i> Back to venues
+
     <% end %>
   </div>
 </div>

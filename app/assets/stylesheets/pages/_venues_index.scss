@@ -1,0 +1,440 @@
+// ============================================================================
+// VENUE MAP STYLES
+// ============================================================================
+// Styles for the collapsible Mapbox map on the venues index page.
+// The map starts collapsed and expands when the user clicks "Show Map".
+// When expanded, venue cards switch from horizontal carousel to vertical list.
+// ============================================================================
+
+// Wrapper for the map toggle button and map container
+.venue-map-wrapper {
+  margin-bottom: 24px;
+}
+
+// Toggle button to show/hide the map
+.venue-map-toggle {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
+  background: linear-gradient(135deg, #FBBF24 0%, #D97706 100%);
+  color: #000;
+  border: none;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(251, 191, 36, 0.4);
+  }
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+// The map container - hidden by default
+.venue-map-container {
+  height: 0 !important;      // Force zero height when collapsed
+  max-height: 0;
+  width: 100%;
+  overflow: hidden;
+  border-radius: 12px;
+  transition: height 0.4s ease, max-height 0.4s ease, margin 0.4s ease;
+  margin-top: 0;
+
+  // When expanded, show the map at full width with good height
+  &.venue-map--expanded {
+    height: 450px !important;   // Override the collapsed height
+    max-height: 450px;
+    min-height: 450px;
+    margin-top: 16px;
+  }
+}
+
+// Ensure the Mapbox canvas fills the container
+.venue-map-container .mapboxgl-map {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+.venue-map-container .mapboxgl-canvas {
+  width: 100% !important;
+  height: 100% !important;
+}
+
+// ============================================================================
+// MAP MARKER STYLES
+// ============================================================================
+// Custom pin markers for venues on the map.
+// Green pins = venues you've played at
+// Muted red pins = venues you haven't played at
+// ============================================================================
+
+// Base marker styles
+.venue-marker {
+  width: 24px;
+  height: 32px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+
+  // Pin shape using CSS
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 24px;
+    height: 24px;
+    border-radius: 50% 50% 50% 0;
+    transform: rotate(-45deg);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  // Inner circle
+  &::after {
+    content: "";
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    width: 12px;
+    height: 12px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 50%;
+  }
+
+  &:hover {
+    transform: scale(1.2);
+    z-index: 10;
+  }
+}
+
+// Green marker for played venues
+.venue-marker--played {
+  &::before {
+    background: linear-gradient(135deg, #22C55E 0%, #16A34A 100%);
+  }
+}
+
+// Muted red marker for unplayed venues (not too bright/distracting)
+.venue-marker--unplayed {
+  &::before {
+    background: linear-gradient(135deg, #B45555 0%, #8B3A3A 100%);
+  }
+}
+
+// ============================================================================
+// MAP POPUP STYLES
+// ============================================================================
+// Popup that appears when clicking on a venue marker.
+// ============================================================================
+
+.venue-popup {
+  padding: 4px;
+  min-width: 200px;
+}
+
+.venue-popup-name {
+  margin: 0 0 8px 0;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+.venue-popup-badge {
+  display: inline-block;
+  padding: 4px 8px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin-bottom: 8px;
+
+  &--played {
+    background: #dcfce7;
+    color: #166534;
+
+    i {
+      margin-right: 4px;
+    }
+  }
+}
+
+.venue-popup-address,
+.venue-popup-capacity {
+  margin: 4px 0;
+  font-size: 0.85rem;
+  color: #555;
+
+  i {
+    width: 16px;
+    margin-right: 6px;
+    color: #888;
+  }
+}
+
+.venue-popup-link {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  background: #FBBF24;
+  color: #000;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #F59E0B;
+  }
+}
+
+// Override Mapbox popup styles to match our theme
+.mapboxgl-popup-content {
+  border-radius: 12px;
+  padding: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.mapboxgl-popup-close-button {
+  font-size: 1.2rem;
+  padding: 4px 8px;
+  color: #666;
+
+  &:hover {
+    background: #f0f0f0;
+    border-radius: 4px;
+  }
+}
+
+// Section titles
+.venues-section-title {
+  font-family: 'Montserrat', sans-serif;
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #fff;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  i {
+    color: #FBBF24;
+  }
+}
+
+// Empty state for played venues
+.no-played-venues {
+  background: rgba(40, 40, 40, 0.6);
+  border: 1px dashed rgba(251, 191, 36, 0.4);
+  border-radius: 12px;
+  padding: 24px 32px;
+  text-align: center;
+
+  p {
+    margin: 0;
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 1rem;
+
+    i {
+      margin-right: 8px;
+      color: #FBBF24;
+    }
+  }
+}
+
+// Played venue card highlight
+.venue-card.played-venue::before {
+  background: linear-gradient(to bottom left, #000000, #22C55E);
+}
+
+.venues-index-container {
+  position: relative;
+
+  &::after {
+    content: "";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 800px;
+    height: 500px;
+    background: radial-gradient(ellipse at top left, rgba(251, 191, 36, 0.25) 0%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+  }
+
+  .record-shelf {
+    // Custom scrollbar styling - yellow/amber theme
+    &::-webkit-scrollbar {
+      height: 8px;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: #2a2a2a;
+      border-radius: 4px;
+      margin: 0 60px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: linear-gradient(90deg, #FBBF24, #D97706);
+      border-radius: 4px;
+
+      &:hover {
+        background: linear-gradient(90deg, #FCD34D, #F59E0B);
+      }
+    }
+
+    // Firefox scrollbar
+    scrollbar-width: thin;
+    scrollbar-color: #FBBF24 #2a2a2a;
+  }
+}
+
+// Hide mobile-only name on desktop
+.venue-mobile-name {
+  display: none;
+}
+
+// ===== MOBILE: Convert horizontal scroll to vertical list =====
+@media (max-width: 768px) {
+  .venues-index-container {
+    .record-shelf-container {
+      width: 100%;
+      margin-left: 0;
+      padding: 0 12px;
+    }
+
+    .record-shelf {
+      flex-direction: column;
+      gap: 12px;
+      overflow-x: visible;
+      padding: 10px 0;
+
+      &::-webkit-scrollbar {
+        display: none;
+      }
+      scrollbar-width: none;
+    }
+
+    .record-item {
+      width: 100%;
+      min-width: 100%;
+    }
+  }
+
+  .venue-card {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    padding: 12px;
+    gap: 12px;
+    background: rgba(40, 40, 40, 0.9);
+    border-radius: 12px;
+
+    .stretched-link {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+  }
+
+  .venue-card-header {
+    flex-shrink: 0;
+    margin-bottom: 0;
+  }
+
+  .venue-image {
+    width: 60px !important;
+    height: 60px !important;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .venue-card-name-wrapper {
+    display: none;
+  }
+
+  .venue-card-details {
+    flex: 1;
+    min-width: 0;
+
+    p {
+      margin: 0 0 2px 0;
+      font-size: 0.8rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: rgba(255, 255, 255, 0.8);
+    }
+
+    .venue-mobile-name {
+      display: block;
+      font-weight: 700;
+      font-size: 0.95rem;
+      margin-bottom: 4px;
+      color: #fff;
+    }
+
+    .venue-description-line {
+      display: none;
+    }
+
+    i {
+      width: 14px;
+      margin-right: 5px;
+      opacity: 0.7;
+      font-size: 0.7rem;
+    }
+  }
+
+  .venue-card .btn {
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+}
+
+@media (max-width: 480px) {
+  .venues-index-container {
+    .record-shelf-container {
+      padding: 0 8px;
+    }
+
+    .record-shelf {
+      gap: 8px;
+    }
+  }
+
+  .venue-card {
+    padding: 10px;
+    gap: 8px;
+  }
+
+  .venue-image {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .venue-card-details {
+    p {
+      font-size: 0.75rem;
+    }
+
+    .venue-mobile-name {
+      font-size: 0.9rem;
+    }
+  }
+
+  .venue-card .btn {
+    padding: 4px 8px;
+    font-size: 0.65rem;
+  }
+}

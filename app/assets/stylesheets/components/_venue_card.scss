@@ -1,0 +1,266 @@
+.venue-card {
+  background-color: #171717;
+  box-shadow: 0 4px 8px 0 rgba(0,0,0,0.3);
+  transition: 0.3s;
+  width: 100%;
+  margin: 0 auto;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
+  position: relative;
+  border: none;
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+
+  a {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    position: relative;
+    z-index: 3;
+  }
+
+  form {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    z-index: 4;
+  }
+
+  .btn {
+    position: relative;
+    opacity: 0;
+    transition: opacity 0.7s ease-in-out;
+    pointer-events: none;
+    z-index: 4;
+  }
+}
+
+.venue-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+
+  .btn {
+    opacity: 1;
+    pointer-events: auto;
+  }
+}
+
+.venue-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: 20px;
+  background: linear-gradient(to bottom left, #000000, #FBBF24);
+  z-index: 0;
+}
+
+.venue-card::after {
+  content: "";
+  position: absolute;
+  top: 0.5px;
+  left: 0.5px;
+  right: 0.5px;
+  bottom: 0.5px;
+  border-radius: 20px;
+  background-color: #171717;
+  z-index: 1;
+}
+
+.venue-card-header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 8px;
+  z-index: 2;
+  width: 100%;
+}
+
+.venue-image {
+  width: 100%;
+  height: 120px;
+  border-radius: 10px;
+  object-fit: cover;
+  margin-bottom: 8px;
+  z-index: 2;
+}
+
+.venue-card-name-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  line-height: 1.1;
+  z-index: 2;
+  width: 100%;
+}
+
+.venue-card-name {
+  padding-left: 0;
+  margin: 0;
+  font-size: 1.5em;
+  color: white;
+  text-align: center;
+  z-index: 2;
+}
+
+.venue-card-details {
+  z-index: 2;
+
+  p {
+    margin: 5px 0;
+    color: #ccc;
+    font-size: 1em;
+    line-height: 1.4;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i {
+      font-size: 12px;
+      width: 16px;
+      color: #888;
+    }
+  }
+}
+
+.venue-card-details span {
+  margin: 5px 0;
+  color: #ccc;
+  font-size: 1.1em;
+  display: flex;
+  flex-direction: column;
+  z-index: 2;
+
+  i {
+    font-size: 10px;
+    z-index: 2;
+  }
+}
+
+// Hide mobile-only name on desktop
+.venue-mobile-name {
+  display: none !important;
+}
+
+// ===== MOBILE: Compact horizontal card layout =====
+@media (max-width: 768px) {
+  .venue-card {
+    flex-direction: row !important;
+    align-items: center !important;
+    padding: 12px !important;
+    gap: 12px;
+    border-radius: 12px;
+
+    a {
+      flex-direction: row !important;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+      min-width: 0;
+    }
+
+    // Always show button on mobile
+    .btn {
+      opacity: 1 !important;
+      pointer-events: auto !important;
+      padding: 6px 12px !important;
+      font-size: 0.75rem !important;
+      flex-shrink: 0;
+    }
+
+    form {
+      width: auto;
+      flex-shrink: 0;
+    }
+  }
+
+  .venue-card:hover {
+    transform: none;
+  }
+
+  .venue-card-header {
+    flex-direction: row;
+    flex-shrink: 0;
+    margin-bottom: 0;
+    width: auto;
+  }
+
+  .venue-image {
+    width: 56px !important;
+    height: 56px !important;
+    border-radius: 50% !important;
+    margin-bottom: 0;
+  }
+
+  // Hide the name from header on mobile
+  .venue-card-name-wrapper {
+    display: none !important;
+  }
+
+  .venue-card-details {
+    flex: 1;
+    min-width: 0;
+
+    p {
+      margin: 0 0 2px 0 !important;
+      font-size: 0.8rem !important;
+      line-height: 1.3 !important;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      gap: 6px;
+
+      i {
+        font-size: 0.7rem;
+        width: 14px;
+        flex-shrink: 0;
+      }
+    }
+
+    // Show mobile name - prominent
+    .venue-mobile-name {
+      display: block !important;
+      font-weight: 700 !important;
+      font-size: 0.95rem !important;
+      margin-bottom: 4px !important;
+      color: #fff !important;
+    }
+
+    // Hide description on mobile
+    .venue-description-line {
+      display: none !important;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .venue-card {
+    padding: 10px !important;
+    gap: 10px;
+
+    .btn {
+      padding: 5px 10px !important;
+      font-size: 0.7rem !important;
+    }
+  }
+
+  .venue-image {
+    width: 48px !important;
+    height: 48px !important;
+  }
+
+  .venue-card-details p {
+    font-size: 0.75rem !important;
+
+    &.venue-mobile-name {
+      font-size: 0.9rem !important;
+    }
+  }
+}

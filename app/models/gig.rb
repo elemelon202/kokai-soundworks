@@ -40,4 +40,6 @@ class Gig < ApplicationRecord
   def actual_revenue
     ticket_price.to_d * gig_attendances.attended.count
   end
+  has_many :gig_attendances
+  has_many :attendees, through: :gig_attendances
 end
