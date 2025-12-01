@@ -27,10 +27,11 @@ venue_owners << User.create!(email: "underground@venue.com", password: "password
 venue_owners << User.create!(email: "osaka.hall@venue.com", password: "password123", username: "osaka_hall", user_type: "venue")
 venue_owners << User.create!(email: "kyoto.jazz@venue.com", password: "password123", username: "kyoto_jazz_spot", user_type: "venue")
 
-# ===========================================
-# MUSICIANS (standalone, not band leaders)
-# ===========================================
+
 #
+## ===========================================
+# BAND LEADERS
+# ===========================================
 band_leaders = []
 band_leaders << User.create!(email: "neon@band.com", password: "password123", username: "neon_pulse_band", user_type: "band")
 band_leaders << User.create!(email: "midnight@band.com", password: "password123", username: "midnight_jazz", user_type: "band")
@@ -39,6 +40,10 @@ band_leaders << User.create!(email: "sakura.ensemble@band.com", password: "passw
 band_leaders << User.create!(email: "electric.dreams@band.com", password: "password123", username: "electric_dreams", user_type: "band")
 band_leaders << User.create!(email: "acoustic.soul@band.com", password: "password123", username: "acoustic_soul", user_type: "band")
 
+# ===========================================
+# MUSICIANS (standalone, not band leaders)
+# ===========================================
+#
 musician_users = []
 musician_users << User.create!(email: "yuki.drums@musician.com", password: "password123", username: "yuki_beats", user_type: "musician")
 musician_users << User.create!(email: "kenji.bass@musician.com", password: "password123", username: "kenji_groove", user_type: "musician")
@@ -105,9 +110,17 @@ musician_users << User.create!(email: "keita.sax@musician.com", password: "passw
 musician_users << User.create!(email: "hinata.french_horn@musician.com", password: "password123", username: "hinata_horn", user_type: "musician")
 musician_users << User.create!(email: "sora.drums@musician.com", password: "password123", username: "sora_sky", user_type: "musician")
 
+
 # ===========================================
-# BAND LEADERS
-# ===========================================
+  # FANS
+  # ===========================================
+  fan_users = []
+  fan_users << User.create!(email: "akira.fan@email.com", password: "password123", username: "akira_music_lover", user_type: "fan")
+  fan_users << User.create!(email: "mei.fan@email.com", password: "password123", username: "mei_concert_goer", user_type: "fan")
+  fan_users << User.create!(email: "taku.fan@email.com", password: "password123", username: "taku_groupie", user_type: "fan")
+  fan_users << User.create!(email: "yui.fan@email.com", password: "password123", username: "yui_jazz_fan", user_type: "fan")
+  fan_users << User.create!(email: "kota.fan@email.com", password: "password123", username: "kota_rock_fan", user_type: "fan")
+
 
 puts "Created #{User.count} users"
 
@@ -1088,6 +1101,38 @@ Booking.create!(band: bands[3], gig: gigs[11], message: "Sakura Ensemble New Yea
 
 puts "Created #{Booking.count} bookings"
 
+ # ===========================================
+  # GIG ATTENDANCES
+  # ===========================================
+  puts "Creating gig attendances..."
+
+  # Fans attending upcoming gigs
+  # Jazz Night Sessions (gigs[3])
+  GigAttendance.create!(gig: gigs[3], user: fan_users[0], status: :going)
+  GigAttendance.create!(gig: gigs[3], user: fan_users[3], status: :going)
+  GigAttendance.create!(gig: gigs[3], user: fan_users[1], status: :interested)
+
+  # Rock Festival (gigs[4])
+  GigAttendance.create!(gig: gigs[4], user: fan_users[0], status: :going)
+  GigAttendance.create!(gig: gigs[4], user: fan_users[1], status: :going)
+  GigAttendance.create!(gig: gigs[4], user: fan_users[2], status: :going)
+  GigAttendance.create!(gig: gigs[4], user: fan_users[4], status: :interested)
+
+  # Electronic Underground (gigs[5])
+  GigAttendance.create!(gig: gigs[5], user: fan_users[2], status: :interested)
+  GigAttendance.create!(gig: gigs[5], user: fan_users[0], status: :interested)
+
+  # Musicians attending gigs as fans
+  GigAttendance.create!(gig: gigs[3], user: musician_users[5], status: :going)
+  GigAttendance.create!(gig: gigs[4], user: musician_users[2], status: :interested)
+
+  # Past gigs - mark as attended
+  GigAttendance.create!(gig: gigs[0], user: fan_users[3], status: :attended)
+  GigAttendance.create!(gig: gigs[0], user: fan_users[0], status: :attended)
+  GigAttendance.create!(gig: gigs[1], user: fan_users[4], status: :attended)
+  GigAttendance.create!(gig: gigs[1], user: fan_users[2], status: :attended)
+
+   puts "Created #{GigAttendance.count} gig attendances"
 # ===========================================
 # KANBAN TASKS
 # ===========================================
@@ -1549,9 +1594,12 @@ puts "    - Direct Messages: #{Chat.direct_messages.count}"
 puts "  Messages: #{Message.count}"
 puts "  Band Invitations: #{BandInvitation.count}"
 puts "  Notifications: #{Notification.count}"
+puts "  Gig Attendances: #{GigAttendance.count}"
+puts "  Fans: #{User.where(user_type: 'fan').count}"
 puts ""
 puts "Test accounts (all passwords: 'password123'):"
 puts "  Venue Owner: bluenote@venue.com"
 puts "  Musician: yuki.drums@musician.com"
 puts "  Band Leader: neon@band.com"
+puts "  Fan: akira.fan@email.com"
 puts ""

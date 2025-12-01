@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_11_30_101758) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_01_015134) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -192,6 +192,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_30_101758) do
     t.index ["user_id"], name: "index_endorsements_on_user_id"
   end
 
+  create_table "fans", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "display_name"
+    t.text "bio"
+    t.string "location"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_fans_on_user_id"
+  end
+
   create_table "follows", force: :cascade do |t|
     t.bigint "follower_id", null: false
     t.string "followable_type", null: false
@@ -215,6 +225,17 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_30_101758) do
     t.index ["status"], name: "index_friendships_on_status"
   end
 
+  create_table "gig_attendances", force: :cascade do |t|
+    t.bigint "gig_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "status", default: 0
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["gig_id", "user_id"], name: "index_gig_attendances_on_gig_id_and_user_id", unique: true
+    t.index ["gig_id"], name: "index_gig_attendances_on_gig_id"
+    t.index ["user_id"], name: "index_gig_attendances_on_user_id"
+  end
+
   create_table "gigs", force: :cascade do |t|
     t.string "name"
     t.date "date"
@@ -224,6 +245,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_30_101758) do
     t.bigint "venue_id", null: false
     t.time "start_time"
     t.time "end_time"
+    t.decimal "ticket_price"
     t.index ["venue_id"], name: "index_gigs_on_venue_id"
   end
 
@@ -546,9 +568,12 @@ ActiveRecord::Schema[7.1].define(version: 2025_11_30_101758) do
   add_foreign_key "chats", "bands"
   add_foreign_key "endorsements", "musicians"
   add_foreign_key "endorsements", "users"
+  add_foreign_key "fans", "users"
   add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "friendships", "users", column: "addressee_id"
   add_foreign_key "friendships", "users", column: "requester_id"
+  add_foreign_key "gig_attendances", "gigs"
+  add_foreign_key "gig_attendances", "users"
   add_foreign_key "gigs", "venues"
   add_foreign_key "involvements", "bands"
   add_foreign_key "involvements", "musicians"
