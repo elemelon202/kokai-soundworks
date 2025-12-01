@@ -33,6 +33,12 @@ class GigsController < ApplicationController
     authorize @gig
   end
 
+  def edit
+    @gig = Gig.find(params[:id])
+    @booking = Booking.new
+    authorize @gig
+  end
+
   private
 
   def gig_params

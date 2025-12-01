@@ -103,7 +103,7 @@ Rails.application.routes.draw do
   resources :venues do
     resources :gigs, only: [:new, :create, :index]
   end
-  resources :gigs, only: [:show, :index] do
+  resources :gigs, only: [:show, :index, :edit, :update] do
     resources :bookings, only: [:new, :create, :destroy]
   end
   resources :bookings, only: [:edit, :update]

@@ -16,6 +16,14 @@ class GigPolicy < ApplicationPolicy
     true
   end
 
+  def edit
+    user.present? && record.venue.user == user
+  end
+
+  def update
+    edit?
+  end
+
   class Scope < ApplicationPolicy::Scope
     # NOTE: Be explicit about which records you allow access to!
     # def resolve

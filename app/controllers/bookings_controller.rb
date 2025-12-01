@@ -11,9 +11,9 @@ class BookingsController < ApplicationController
     @booking.gig = @gig
     authorize @booking
     if @booking.save
-      redirect_to gig_path(@gig), notice: "Band booked!"
+      redirect_to edit_gig_path(@gig), notice: "Band invited!"
     else
-      render :new, status: :unprocessable_entity
+      redirect_to edit_gig_path(@gig), alert: "Could not invite band."
     end
   end
 
