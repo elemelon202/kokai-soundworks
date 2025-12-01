@@ -99,7 +99,7 @@
                     <% end %>
                   </p>
                 </div>
-                <% unless @band.musicians.any? { |m| m.user_id == current_user.id } %>
+                <% unless @band.musicians.include?(current_user.musician) %>
                   <%= render "gig_attendances/buttons", gig: gig %>
                 <% end %>
               </div>

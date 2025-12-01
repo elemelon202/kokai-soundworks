@@ -1,3 +1,7 @@
+# Disable geocoding during seeding to avoid SSL issues
+Geocoder.configure(lookup: :test, ip_lookup: :test)
+Geocoder::Lookup::Test.set_default_stub([{ 'latitude' => 35.6762, 'longitude' => 139.6503 }])
+
 puts "Cleaning database..."
 Notification.destroy_all
 BandInvitation.destroy_all

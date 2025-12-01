@@ -5,7 +5,6 @@ class Musician < ApplicationRecord
   has_many :involvements, dependent: :destroy
   has_many :bands, through: :involvements
   belongs_to :user
-  belongs_to :band
   has_one_attached :avatar
   has_one_attached :banner
   has_many_attached :images
