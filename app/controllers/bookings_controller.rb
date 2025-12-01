@@ -18,13 +18,20 @@ class BookingsController < ApplicationController
   end
 
   def destroy
-
+    @booking = Booking.find(params[:id])
+    authorize @booking
+    @booking.destroy
+    redirect_to gig_path(@booking.gig), notice: "Band removed."
   end
 
   private
 
   def set_gig
     @gig = Gig.find(params[:gig_id])
+  end
+
+  def set_booking
+    @booking = Booking.find(params[:id])
   end
 
   def booking_params
