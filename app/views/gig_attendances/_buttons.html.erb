@@ -32,26 +32,25 @@
 
     <% else %>
       <%# Future gig - show RSVP buttons %>
-      <% if attendance&.going? %>
-        <span style="background: #C8E938; color: #171717; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
-          <i class="fa-solid fa-check"></i> Going
-        </span>
-        <%= button_to rsvp_gig_path(gig, status: :interested), method: :post, style: "background: #333; color: #888; border: none; padding: 8px 12px; border-radius: 8px; font-size: 0.8rem; cursor: pointer;" do %>
-          <i class="fa-solid fa-xmark"></i> Cancel
-        <% end %>
-      <% elsif attendance&.interested? %>
-        <span style="background: #fbbf24; color: #171717; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; display: inline-flex; align-items: center; gap: 6px;">
+      <%# Interested toggle button %>
+      <% if attendance&.interested? %>
+        <%= button_to rsvp_gig_path(gig, status: nil), method: :post, style: "background: #fbbf24; color: #171717; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
           <i class="fa-solid fa-star"></i> Interested
-        </span>
-        <%= button_to rsvp_gig_path(gig, status: :going), method: :post, style: "background: #C8E938; color: #171717; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
-          <i class="fa-solid fa-check"></i> Going
         <% end %>
       <% else %>
         <%= button_to rsvp_gig_path(gig, status: :interested), method: :post, style: "background: #333; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
-          <i class="fa-solid fa-star"></i> Interested
+          <i class="fa-regular fa-star"></i> Interested
         <% end %>
-        <%= button_to rsvp_gig_path(gig, status: :going), method: :post, style: "background: #C8E938; color: #171717; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
+      <% end %>
+
+      <%# RSVP/Going toggle button %>
+      <% if attendance&.going? %>
+        <%= button_to rsvp_gig_path(gig, status: nil), method: :post, style: "background: #C8E938; color: #171717; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
           <i class="fa-solid fa-check"></i> Going
+        <% end %>
+      <% else %>
+        <%= button_to rsvp_gig_path(gig, status: :going), method: :post, style: "background: #333; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; cursor: pointer; display: inline-flex; align-items: center; gap: 6px;" do %>
+          <i class="fa-solid fa-calendar-plus"></i> RSVP
         <% end %>
       <% end %>
     <% end %>
