@@ -3,7 +3,7 @@
     <%# LOGO %>
     <div class="d-flex align-items-center me-auto">
       <%= link_to root_path, class: "navbar-brand" do %>
-        <%= image_tag "kokai1.png" %>
+        <%= image_tag "Logo.png", class: "logo-to-spin" %>
       <% end %>
       <%# USER STATUS %>
       <% if user_signed_in? %>
@@ -106,96 +106,97 @@
               <%= render 'shared/notifications' %>
             </li>
             <li class="nav-item dropdown">
-            <a href="#" class="navbar-avatar-link" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              <% if current_user.musician&.avatar&.attached? %>
-                <%= cl_image_tag(current_user.musician.avatar.key, class: "avatar", alt: "dropdown menu") %>
-              <% elsif current_user.musician.present? %>
-                <div class="navbar-avatar-initials">
-                  <%= current_user.musician.name.split.map(&:first).join.upcase[0..1] %>
-                </div>
-              <% else %>
-                <div class="navbar-avatar-initials">
-                  <%= current_user.username[0..1].upcase %>
-                </div>
-              <% end %>
-            </a>
-            <!-- Avatar drop down -->
-            <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-              <% if current_user&.musician.present? %>
-                <%= link_to musician_path(current_user.musician), class: "dropdown-item" do %>
-                  <i class="fa-solid fa-user me-1"></i> Profile
+              <a href="#" class="navbar-avatar-link" id="navbarDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                <% if current_user.musician&.avatar&.attached? %>
+                  <%= cl_image_tag(current_user.musician.avatar.key, class: "avatar", alt: "dropdown menu") %>
+                <% elsif current_user.musician.present? %>
+                  <div class="navbar-avatar-initials">
+                    <%= current_user.musician.name.split.map(&:first).join.upcase[0..1] %>
+                  </div>
+                <% else %>
+                  <div class="navbar-avatar-initials">
+                    <%= current_user.username[0..1].upcase %>
+                  </div>
                 <% end %>
-                <%= link_to direct_messages_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-envelope me-1"></i> Messages
-                <% end %>
-                <%= link_to friendships_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-user-group me-1"></i> Friends
-                <% end %>
-                <%= link_to saved_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-bookmark me-1"></i> Saved
-                <% end %>
-                <h6 class="dropdown-header">Bands</h6>
-                <% if current_user.musician.bands.any? %>
-                  <% current_user.musician.bands.each do |band| %>
-                    <%= link_to band_path(band), class: "dropdown-item" do %>
-                      <i class="fa-solid fa-users me-1"></i> <%= band.name %>
+              </a>
+              <!-- Avatar drop down -->
+              <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
+                <% if current_user&.musician.present? %>
+                  <%= link_to musician_path(current_user.musician), class: "dropdown-item" do %>
+                    <i class="fa-solid fa-user me-1"></i> Profile
+                  <% end %>
+                  <%= link_to direct_messages_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-envelope me-1"></i> Messages
+                  <% end %>
+                  <%= link_to friendships_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-user-group me-1"></i> Friends
+                  <% end %>
+                  <%= link_to saved_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-bookmark me-1"></i> Saved
+                  <% end %>
+                  <h6 class="dropdown-header">Bands</h6>
+                  <% if current_user.musician.bands.any? %>
+                    <% current_user.musician.bands.each do |band| %>
+                      <%= link_to band_path(band), class: "dropdown-item" do %>
+                        <i class="fa-solid fa-users me-1"></i> <%= band.name %>
+                      <% end %>
                     <% end %>
                   <% end %>
-                <% end %>
-                <%= link_to new_band_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-plus me-1"></i> Create a band
-                <% end %>
-                <div class="dropdown-divider"></div>
-              <% elsif current_user.user_type == 'venue' %>
-                <h6 class="dropdown-header">My Venues</h6>
-                <% current_user.venues.each do |venue| %>
-                  <%= link_to edit_venue_path(venue), class: "dropdown-item" do %>
-                    <i class="fa-solid fa-location-dot me-1"></i> <%= venue.name %>
+                  <%= link_to new_band_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-plus me-1"></i> Create a band
                   <% end %>
+                  <div class="dropdown-divider"></div>
+                <% elsif current_user.user_type == 'venue' %>
+                  <h6 class="dropdown-header">My Venues</h6>
+                  <% current_user.venues.each do |venue| %>
+                    <%= link_to edit_venue_path(venue), class: "dropdown-item" do %>
+                      <i class="fa-solid fa-location-dot me-1"></i> <%= venue.name %>
+                    <% end %>
+                  <% end %>
+                  <%= link_to new_venue_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-plus me-1"></i> Add Venue
+                  <% end %>
+                  <div class="dropdown-divider"></div>
+                  <%= link_to gig_applications_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-clipboard-list me-1"></i> Gig Applications
+                  <% end %>
+                  <%= link_to direct_messages_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-envelope me-1"></i> Messages
+                  <% end %>
+                  <div class="dropdown-divider"></div>
+                <% elsif current_user&.fan.present? %>
+                  <%= link_to edit_fan_path(current_user.fan), class: "dropdown-item" do %>
+                    <i class="fa-solid fa-gauge-high me-1"></i> Dashboard
+                  <% end %>
+                  <%= link_to fan_path(current_user.fan), class: "dropdown-item" do %>
+                    <i class="fa-solid fa-user me-1"></i> Profile
+                  <% end %>
+                  <%= link_to direct_messages_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-envelope me-1"></i> Messages
+                  <% end %>
+                  <%= link_to friendships_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-user-group me-1"></i> Friends
+                  <% end %>
+                  <%= link_to saved_fan_path(current_user.fan), class: "dropdown-item" do %>
+                    <i class="fa-solid fa-bookmark me-1"></i> Saved
+                  <% end %>
+                  <%= link_to gigs_fan_path(current_user.fan), class: "dropdown-item" do %>
+                    <i class="fa-solid fa-ticket me-1"></i> My Gigs
+                  <% end %>
+                  <div class="dropdown-divider"></div>
+                <% else %>
+                  <%= link_to new_musician_path, class: "dropdown-item" do %>
+                    <i class="fa-solid fa-plus me-1"></i> Create Musician Profile
+                  <% end %>
+                  <div class="dropdown-divider"></div>
                 <% end %>
-                <%= link_to new_venue_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-plus me-1"></i> Add Venue
+                <%= link_to destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-right-from-bracket me-1"></i> Log out
                 <% end %>
-                <div class="dropdown-divider"></div>
-                <%= link_to gig_applications_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-clipboard-list me-1"></i> Gig Applications
-                <% end %>
-                <%= link_to direct_messages_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-envelope me-1"></i> Messages
-                <% end %>
-                <div class="dropdown-divider"></div>
-              <% elsif current_user&.fan.present? %>
-                <%= link_to edit_fan_path(current_user.fan), class: "dropdown-item" do %>
-                  <i class="fa-solid fa-gauge-high me-1"></i> Dashboard
-                <% end %>
-                <%= link_to fan_path(current_user.fan), class: "dropdown-item" do %>
-                  <i class="fa-solid fa-user me-1"></i> Profile
-                <% end %>
-                <%= link_to direct_messages_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-envelope me-1"></i> Messages
-                <% end %>
-                <%= link_to friendships_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-user-group me-1"></i> Friends
-                <% end %>
-                <%= link_to saved_fan_path(current_user.fan), class: "dropdown-item" do %>
-                  <i class="fa-solid fa-bookmark me-1"></i> Saved
-                <% end %>
-                <%= link_to gigs_fan_path(current_user.fan), class: "dropdown-item" do %>
-                  <i class="fa-solid fa-ticket me-1"></i> My Gigs
-                <% end %>
-                <div class="dropdown-divider"></div>
-              <% else %>
-                <%= link_to new_musician_path, class: "dropdown-item" do %>
-                  <i class="fa-solid fa-plus me-1"></i> Create Musician Profile
-                <% end %>
-                <div class="dropdown-divider"></div>
-              <% end %>
-              <%= link_to destroy_user_session_path, data: {turbo_method: :delete}, class: "dropdown-item" do %>
-                <i class="fa-solid fa-right-from-bracket me-1"></i> Log out
-              <% end %>
-            </div>
-          </li>
-          </div><%# End navbar-mobile-icons-row %>
+              </div>
+            </li>
+          </div>
+          <%# End navbar-mobile-icons-row %>
         <% else %>
           <li class="nav-item">
             <%= link_to new_user_session_path, class: "btn btn-primary text-dark" do %>
