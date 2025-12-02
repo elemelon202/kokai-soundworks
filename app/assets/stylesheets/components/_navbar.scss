@@ -121,6 +121,7 @@
 @media (max-width: 767px) {
   .navbar-lewagon {
     padding: 8px 12px;
+    position: relative;
 
     .navbar-brand img {
       width: 36px;
@@ -135,7 +136,7 @@
       padding: 12px;
       border-top: 1px solid rgba(255, 255, 255, 0.1);
       box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-      z-index: 1050;
+      z-index: 9999 !important;
       max-height: 80vh;
       overflow-y: auto;
     }
@@ -143,6 +144,7 @@
     .navbar-nav {
       flex-direction: column;
       gap: 6px;
+      align-items: stretch !important;
     }
 
     .nav-item {
@@ -156,11 +158,22 @@
         font-size: 0.9rem;
       }
 
+      &.dropdown {
+        position: relative;
+      }
+
       .dropdown-menu {
         position: static !important;
         width: 100%;
         margin-top: 5px;
-        background: rgba(30, 30, 30, 0.95);
+        background: #2a2a2a !important;
+        border: 1px solid #444;
+        z-index: 10000 !important;
+        display: none;
+
+        &.show {
+          display: block;
+        }
       }
     }
 
