@@ -29,6 +29,19 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
+          <li class="nav-item dropdown">
+            <a href="#" class="nav-link btn text-white dropdown-toggle" id="mainstageDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">
+              <i class="fa-solid fa-trophy"></i> MAINSTAGE
+            </a>
+            <div class="dropdown-menu" aria-labelledby="mainstageDropdown">
+              <%= link_to mainstage_path, class: "dropdown-item" do %>
+                <i class="fa-solid fa-user me-2" style="color: #fbbf24;"></i> Musicians
+              <% end %>
+              <%= link_to band_mainstage_path, class: "dropdown-item" do %>
+                <i class="fa-solid fa-users me-2" style="color: #E936AD;"></i> Bands
+              <% end %>
+            </div>
+          </li>
           <li class="nav-item active">
             <%= link_to musicians_path, class: "nav-link btn btn-primary text-white" do %>
               <i class="fa-solid fa-guitar"></i> Musicians
@@ -58,19 +71,6 @@
             <%= link_to challenges_path, class: "nav-link btn btn-primary text-white" do %>
               <i class="fa-solid fa-bolt"></i> Challenges
             <% end %>
-          </li>
-          <li class="nav-item dropdown">
-            <a href="#" class="nav-link btn text-white dropdown-toggle" id="mainstageDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">
-              <i class="fa-solid fa-trophy"></i> MAINSTAGE
-            </a>
-            <div class="dropdown-menu" aria-labelledby="mainstageDropdown">
-              <%= link_to mainstage_path, class: "dropdown-item" do %>
-                <i class="fa-solid fa-user me-2" style="color: #fbbf24;"></i> Musicians
-              <% end %>
-              <%= link_to band_mainstage_path, class: "dropdown-item" do %>
-                <i class="fa-solid fa-users me-2" style="color: #E936AD;"></i> Bands
-              <% end %>
-            </div>
           </li>
           <% if current_user.musician.present? %>
             <li class="nav-item dropdown">

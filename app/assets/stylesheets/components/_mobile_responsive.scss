@@ -303,6 +303,119 @@
       #1b1b1b 70%
     );
   }
+
+  // Hero section mobile
+  .hero-section {
+    min-height: auto !important;
+    padding: 60px 16px 40px !important;
+  }
+
+  // KOKAI SOUNDWORKS title
+  .hero-content h1 {
+    font-size: clamp(2.5rem, 12vw, 4rem) !important;
+    letter-spacing: 1px !important;
+  }
+
+  // Tagline features row
+  .hero-content [style*="display: flex"][style*="gap: 32px"] {
+    gap: 16px !important;
+    flex-direction: column !important;
+  }
+
+  // CTA buttons
+  .hero-content [style*="display: flex"][style*="gap: 16px"][style*="flex-wrap: wrap"] {
+    flex-direction: column !important;
+    width: 100%;
+    padding: 0 20px;
+
+    a {
+      width: 100% !important;
+      justify-content: center !important;
+    }
+  }
+
+  // Stats row
+  .hero-content [style*="display: flex"][style*="gap: 48px"] {
+    gap: 24px !important;
+  }
+
+  // MAINSTAGE Spotlight mobile
+  .mainstage-spotlight {
+    padding: 0 12px !important;
+
+    // Winner cards stack vertically
+    > div:last-child {
+      flex-direction: column !important;
+    }
+
+    // Each winner card
+    [style*="min-width: 280px"] {
+      min-width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    // Winner card inner layout
+    [style*="display: flex"][style*="gap: 16px"][style*="flex-wrap: wrap"] {
+      flex-direction: column !important;
+      align-items: center !important;
+      text-align: center !important;
+
+      // Winner info section
+      [style*="text-align: left"] {
+        text-align: center !important;
+      }
+    }
+
+    // Buttons row
+    [style*="display: flex"][style*="gap: 10px"]:last-child {
+      flex-direction: column !important;
+      width: 100%;
+
+      a {
+        width: 100% !important;
+      }
+    }
+  }
+
+  // Signup cards section
+  .hero-cards {
+    padding: 0 12px !important;
+
+    h2 {
+      font-size: 1.5rem !important;
+    }
+
+    .row {
+      gap: 16px !important;
+    }
+
+    // Make cards full width
+    .col-10, .col-md-3 {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 0 0 100% !important;
+      margin: 0 !important;
+    }
+
+    .signup-card {
+      padding: 24px 20px !important;
+    }
+  }
+
+  // New faces/places carousels
+  .carousels {
+    padding: 0 12px !important;
+
+    h2 {
+      font-size: 1.4rem !important;
+    }
+
+    .col-8, .col-md-3 {
+      width: 100% !important;
+      max-width: 100% !important;
+      flex: 0 0 100% !important;
+    }
+  }
 }
 
 @media (max-width: 576px) {
@@ -314,6 +427,42 @@
     p {
       font-size: 14px;
     }
+  }
+
+  // Even smaller hero title on small phones
+  .hero-content h1 {
+    font-size: clamp(2rem, 10vw, 3rem) !important;
+  }
+
+  // Stats row even tighter
+  .hero-content [style*="display: flex"][style*="gap: 48px"] {
+    gap: 16px !important;
+
+    > div {
+      > div:first-child {
+        font-size: 1.5rem !important;
+      }
+    }
+  }
+
+  // Signup card icon smaller
+  .signup-card [style*="width: 80px"] {
+    width: 60px !important;
+    height: 60px !important;
+
+    i {
+      font-size: 1.5rem !important;
+    }
+  }
+
+  // Signup card title smaller
+  .signup-card h3 {
+    font-size: 1.2rem !important;
+  }
+
+  // Signup card list smaller
+  .signup-card ul {
+    font-size: 0.8rem !important;
   }
 }
 
@@ -610,115 +759,9 @@
 }
 
 // ===== SHORTS FEED (DISCOVER) MOBILE =====
-// The TikTok-style vertical scrolling feed needs special handling for mobile
-@media (max-width: 992px) {
-  .discover-container {
-    // Stack layout vertically on tablets and below
-    .discover-short {
-      flex-direction: column !important;
-      gap: 16px !important;
-      padding: 16px !important;
-      height: auto !important;
-      min-height: 100vh;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .discover-container {
-    .discover-short {
-      padding: 12px !important;
-      gap: 12px !important;
-    }
-
-    // Musician card becomes full width on mobile
-    .discover-short > div:first-child {
-      flex: none !important;
-      width: 100% !important;
-      max-width: 100% !important;
-    }
-
-    // Video container adjusts
-    .discover-short > div:nth-child(2) {
-      width: 100%;
-      justify-content: center;
-    }
-  }
-}
-
+// Styles moved to inline in musician_shorts/index.html.erb for better control
+// Comments sidebar becomes full screen modal
 @media (max-width: 576px) {
-  // Back button positioning on mobile
-  [href*="musicians"] {
-    &[style*="position: fixed"][style*="top: 80px"] {
-      top: 70px !important;
-      left: 10px !important;
-      padding: 8px 12px !important;
-      font-size: 0.8rem !important;
-    }
-  }
-
-  .discover-container {
-    .discover-short {
-      padding: 8px !important;
-      gap: 8px !important;
-
-      // Musician card becomes compact
-      > div:first-child {
-        border-radius: 12px !important;
-
-        // Banner height
-        > div:first-child {
-          height: 80px !important;
-        }
-
-        // Avatar
-        > div:nth-child(2) {
-          margin-top: -30px !important;
-
-          > div {
-            width: 60px !important;
-            height: 60px !important;
-          }
-        }
-
-        // Info section
-        > div:last-child {
-          padding: 8px 12px 12px !important;
-
-          h2 {
-            font-size: 1rem !important;
-          }
-
-          p {
-            font-size: 0.75rem !important;
-          }
-        }
-      }
-
-      // Video becomes smaller aspect ratio but still fills width
-      > div:nth-child(2) {
-        flex-direction: column !important;
-        align-items: center !important;
-
-        > div:first-child {
-          height: 60vh !important;
-          max-height: 60vh !important;
-          width: 100% !important;
-          max-width: 100% !important;
-          aspect-ratio: 9/16;
-        }
-
-        // Action buttons move below video
-        > div:last-child {
-          flex-direction: row !important;
-          gap: 24px !important;
-          margin-top: 12px !important;
-        }
-      }
-    }
-  }
-
-  // Comments sidebar becomes full screen modal
   [id^="comments-sidebar-"] {
     position: fixed !important;
     top: 0 !important;
