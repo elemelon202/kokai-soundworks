@@ -9,32 +9,74 @@
 
 <style>
   @media (max-width: 768px) {
+    .mainstage-spotlight {
+      padding: 0 12px !important;
+      margin-bottom: 24px !important;
+    }
+
+    .mainstage-spotlight .mainstage-header {
+      margin-bottom: 16px !important;
+    }
+
+    .mainstage-spotlight .mainstage-header i {
+      font-size: 1.2rem !important;
+    }
+
+    .mainstage-spotlight .mainstage-header span {
+      font-size: 1rem !important;
+    }
+
     .mainstage-spotlight .winner-cards-row {
       flex-direction: column !important;
+      gap: 12px !important;
     }
 
     .mainstage-spotlight .winner-card {
       min-width: 100% !important;
       max-width: 100% !important;
+      padding: 16px !important;
     }
 
     .mainstage-spotlight .winner-card-inner {
-      flex-direction: column !important;
-      text-align: center !important;
+      flex-direction: row !important;
+      text-align: left !important;
+      gap: 12px !important;
     }
 
-    .mainstage-spotlight .winner-card-inner > div {
-      text-align: center !important;
+    .mainstage-spotlight .winner-card-inner > div:first-child {
+      width: 50px !important;
+      height: 50px !important;
+    }
+
+    .mainstage-spotlight .winner-card-inner > div:nth-child(2) {
+      text-align: left !important;
+      flex: 1 !important;
+    }
+
+    .mainstage-spotlight .winner-card-inner > div:nth-child(2) a {
+      font-size: 1rem !important;
+    }
+
+    .mainstage-spotlight .winner-card-inner > div:last-child {
+      padding: 8px 12px !important;
+    }
+
+    .mainstage-spotlight .winner-card-inner > div:last-child > div:first-child {
+      font-size: 1.1rem !important;
     }
 
     .mainstage-spotlight .winner-buttons {
-      flex-direction: column !important;
+      flex-direction: row !important;
       width: 100%;
+      gap: 8px !important;
+      margin-top: 12px !important;
     }
 
     .mainstage-spotlight .winner-buttons a {
-      width: 100% !important;
+      flex: 1 !important;
       text-align: center;
+      padding: 8px 12px !important;
+      font-size: 0.75rem !important;
     }
   }
 </style>
@@ -42,7 +84,7 @@
 <div class="mainstage-spotlight" style="max-width: 900px; margin: 0 auto 32px auto; padding: 0 16px;">
   <%# Show winners if we have any %>
   <% if has_musician_winner || has_band_winner %>
-    <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
+    <div class="mainstage-header" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
       <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.5rem;"></i>
       <span style="color: #fbbf24; font-size: 1.3rem; font-weight: 700;">MAINSTAGE WINNERS</span>
       <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.5rem;"></i>
