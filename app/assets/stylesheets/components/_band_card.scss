@@ -27,6 +27,13 @@
     z-index: 3;
   }
 
+  form {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    z-index: 4;
+  }
+
   .btn {
     position: relative;
     opacity: 0;
@@ -60,7 +67,7 @@
   bottom: 0;
 
   border-radius: 20px;
-  background: linear-gradient(to bottom left, #000000, #a7e936);
+  background: linear-gradient(to bottom left, #000000, #fbbf24);
   z-index: 0;
 }
 
