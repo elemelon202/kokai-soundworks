@@ -7,6 +7,38 @@
 <% has_musician_winner = musician_winner && musician_winner.created_at > 1.week.ago %>
 <% has_band_winner = band_winner && band_winner.created_at > 1.week.ago %>
 
+<style>
+  @media (max-width: 768px) {
+    .mainstage-spotlight .winner-cards-row {
+      flex-direction: column !important;
+    }
+
+    .mainstage-spotlight .winner-card {
+      min-width: 100% !important;
+      max-width: 100% !important;
+    }
+
+    .mainstage-spotlight .winner-card-inner {
+      flex-direction: column !important;
+      text-align: center !important;
+    }
+
+    .mainstage-spotlight .winner-card-inner > div {
+      text-align: center !important;
+    }
+
+    .mainstage-spotlight .winner-buttons {
+      flex-direction: column !important;
+      width: 100%;
+    }
+
+    .mainstage-spotlight .winner-buttons a {
+      width: 100% !important;
+      text-align: center;
+    }
+  }
+</style>
+
 <div class="mainstage-spotlight" style="max-width: 900px; margin: 0 auto 32px auto; padding: 0 16px;">
   <%# Show winners if we have any %>
   <% if has_musician_winner || has_band_winner %>
@@ -16,16 +48,16 @@
       <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.5rem;"></i>
     </div>
 
-    <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+    <div class="winner-cards-row" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
       <%# Musician Winner Card %>
       <% if has_musician_winner %>
-        <div style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
+        <div class="winner-card" style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
           <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 14px;">
             <i class="fa-solid fa-user" style="color: #C8E938; font-size: 1rem;"></i>
             <span style="color: #C8E938; font-size: 0.95rem; font-weight: 600;">MUSICIAN</span>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <div class="winner-card-inner" style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
             <%# Winner avatar %>
             <div style="width: 70px; height: 70px; border-radius: 50%; background: #333; overflow: hidden; border: 3px solid #fbbf24; flex-shrink: 0;">
               <% if musician_winner.musician.avatar.attached? %>
@@ -62,7 +94,7 @@
             </div>
           </div>
 
-          <div style="margin-top: 14px; display: flex; justify-content: center; gap: 10px;">
+          <div class="winner-buttons" style="margin-top: 14px; display: flex; justify-content: center; gap: 10px;">
             <%= link_to musician_path(musician_winner.musician), style: "padding: 8px 18px; background: #C8E938; color: #000; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.8rem;" do %>
               View Profile
             <% end %>
@@ -75,13 +107,13 @@
 
       <%# Band Winner Card %>
       <% if has_band_winner %>
-        <div style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
+        <div class="winner-card" style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
           <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 14px;">
             <i class="fa-solid fa-users" style="color: #E936AD; font-size: 1rem;"></i>
             <span style="color: #E936AD; font-size: 0.95rem; font-weight: 600;">BAND</span>
           </div>
 
-          <div style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <div class="winner-card-inner" style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
             <%# Winner avatar %>
             <div style="width: 70px; height: 70px; border-radius: 12px; background: #333; overflow: hidden; border: 3px solid #fbbf24; flex-shrink: 0;">
               <% if band_winner.band.banner.attached? %>
@@ -120,7 +152,7 @@
             </div>
           </div>
 
-          <div style="margin-top: 14px; display: flex; justify-content: center; gap: 10px;">
+          <div class="winner-buttons" style="margin-top: 14px; display: flex; justify-content: center; gap: 10px;">
             <%= link_to band_path(band_winner.band), style: "padding: 8px 18px; background: #E936AD; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.8rem;" do %>
               View Profile
             <% end %>
@@ -133,9 +165,9 @@
     </div>
   <% else %>
     <%# Show current contests in progress %>
-    <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+    <div class="winner-cards-row" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
       <%# Musician Contest Card %>
-      <div style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
+      <div class="winner-card" style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
         <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px;">
           <i class="fa-solid fa-fire" style="color: #C8E938; font-size: 1.1rem;"></i>
           <span style="color: #C8E938; font-size: 1rem; font-weight: 700;">MUSICIAN MAINSTAGE</span>
@@ -153,7 +185,7 @@
       </div>
 
       <%# Band Contest Card %>
-      <div style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
+      <div class="winner-card" style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
         <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px;">
           <i class="fa-solid fa-fire" style="color: #E936AD; font-size: 1.1rem;"></i>
           <span style="color: #E936AD; font-size: 1rem; font-weight: 700;">BAND MAINSTAGE</span>

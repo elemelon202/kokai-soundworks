@@ -48,7 +48,7 @@
         </p>
 
         <%# Subtext with animated typing effect look %>
-        <div style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin: 24px 0 40px 0;">
+        <div class="hero-tagline-row" style="display: flex; justify-content: center; gap: 32px; flex-wrap: wrap; margin: 24px 0 40px 0;">
           <div style="display: flex; align-items: center; gap: 8px;">
             <i class="fa-solid fa-users" style="color: #C8E938;"></i>
             <span style="color: #aaa; font-size: 1rem;">Build Bands</span>
@@ -64,7 +64,7 @@
         </div>
 
         <%# CTA Buttons %>
-        <div style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 48px;">
+        <div class="hero-cta-row" style="display: flex; justify-content: center; gap: 16px; flex-wrap: wrap; margin-bottom: 48px;">
           <%= link_to new_user_registration_path, style: "display: inline-flex; align-items: center; gap: 10px; background: linear-gradient(135deg, #C8E938 0%, #9cbd2e 100%); color: #171717; font-weight: 700; padding: 16px 36px; border-radius: 50px; text-decoration: none; font-size: 1.1rem; transition: all 0.3s ease; box-shadow: 0 4px 20px rgba(200, 233, 56, 0.3);" do %>
             <i class="fa-solid fa-rocket"></i> Get Started Free
           <% end %>
@@ -74,7 +74,7 @@
         </div>
 
         <%# Stats/Social proof %>
-        <div style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;">
+        <div class="hero-stats-row" style="display: flex; justify-content: center; gap: 48px; flex-wrap: wrap;">
           <div style="text-align: center;">
             <div style="font-size: 2rem; font-weight: 700; color: #C8E938;"><%= Musician.count %>+</div>
             <div style="font-size: 0.85rem; color: #666; text-transform: uppercase; letter-spacing: 1px;">Musicians</div>
@@ -132,8 +132,8 @@
 
       @media (max-width: 768px) {
         .hero-section {
-          min-height: 90vh !important;
-          padding: 40px 16px !important;
+          min-height: auto !important;
+          padding: 40px 16px 30px !important;
         }
 
         .hero-bg-elements .floating-note {
@@ -143,6 +143,80 @@
         .hero-section a {
           width: 100%;
           justify-content: center;
+        }
+
+        .hero-content h1 {
+          font-size: 3rem !important;
+          letter-spacing: 1px !important;
+        }
+
+        .hero-content h1 span {
+          font-size: 3rem !important;
+        }
+
+        .hero-tagline-row {
+          flex-direction: column !important;
+          gap: 12px !important;
+        }
+
+        .hero-cta-row {
+          flex-direction: column !important;
+          width: 100% !important;
+        }
+
+        .hero-cta-row a {
+          width: 100% !important;
+        }
+
+        .hero-stats-row {
+          gap: 20px !important;
+        }
+
+        .hero-stats-row > div > div:first-child {
+          font-size: 1.5rem !important;
+        }
+      }
+
+      @media (max-width: 480px) {
+        .hero-content h1,
+        .hero-content h1 span {
+          font-size: 2.2rem !important;
+        }
+
+        .hero-stats-row {
+          gap: 12px !important;
+        }
+      }
+
+      /* Signup cards mobile */
+      @media (max-width: 768px) {
+        .hero-cards .row {
+          flex-direction: column !important;
+          gap: 16px !important;
+        }
+
+        .hero-cards .col-10,
+        .hero-cards .col-md-3 {
+          width: 100% !important;
+          max-width: 100% !important;
+          flex: 0 0 100% !important;
+          padding: 0 !important;
+          margin: 0 !important;
+        }
+
+        .signup-card {
+          margin: 0 !important;
+        }
+
+        .carousels .row {
+          flex-direction: column !important;
+        }
+
+        .carousels .col-8,
+        .carousels .col-md-3 {
+          width: 100% !important;
+          max-width: 100% !important;
+          flex: 0 0 100% !important;
         }
       }
     </style>
