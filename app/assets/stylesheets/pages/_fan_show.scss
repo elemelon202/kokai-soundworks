@@ -1,0 +1,265 @@
+// Fan Show Page Styles
+
+$kokai-yellow: #C8E938;
+$kokai-pink: #E936AD;
+
+.fan-show-page {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+// ===== FAN BANNER =====
+.fan-banner {
+  width: 100%;
+  height: 200px;
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+  margin-bottom: 20px;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.fan-banner-empty {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    color: #333;
+    font-size: 3rem;
+  }
+}
+
+// ===== SOCIAL LINKS =====
+.fan-social-links {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+
+  a {
+    color: #888;
+    font-size: 1.2rem;
+    transition: color 0.2s;
+
+    &:hover {
+      color: $kokai-yellow;
+    }
+  }
+}
+
+// ===== SUBSECTIONS =====
+.fan-subsection-genres {
+  margin-top: 16px;
+}
+
+// ===== SECTIONS =====
+.fan-section {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.fan-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i {
+    &.lime {
+      color: $kokai-yellow;
+    }
+
+    &.pink {
+      color: $kokai-pink;
+    }
+  }
+}
+
+// ===== UPCOMING GIGS =====
+.fan-gigs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.fan-gig-item {
+  background: #252525;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h4 {
+    color: #fff;
+    margin: 0 0 4px 0;
+    font-size: 0.95rem;
+  }
+
+  .gig-meta {
+    color: #888;
+    margin: 0;
+    font-size: 0.8rem;
+  }
+}
+
+// ===== FOLLOWING GRID =====
+.fan-following-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-top: 16px;
+}
+
+.fan-following-item {
+  background: #252525;
+  padding: 10px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #2a2a2a;
+  }
+
+  .name {
+    color: #fff;
+    font-size: 0.85rem;
+  }
+}
+
+.fan-following-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 0.8rem;
+
+  &.musician {
+    background: $kokai-yellow;
+    color: #171717;
+  }
+
+  &.band {
+    background: $kokai-pink;
+    color: #fff;
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+}
+
+// ===== POSTS SECTION =====
+.fan-posts-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+// ===== VIEW ALL LINK =====
+.fan-view-all-link {
+  display: block;
+  margin-top: 12px;
+  color: $kokai-yellow;
+  font-size: 0.85rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: $kokai-yellow;
+  }
+}
+
+// ===== RIGHT COLUMN =====
+.fan-past-gigs-card {
+  margin-top: 20px;
+  padding: 20px;
+  background: #1e1e1e;
+  border-radius: 12px;
+}
+
+.fan-past-gigs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.fan-past-gig-item {
+  background: #252525;
+  padding: 10px 12px;
+  border-radius: 6px;
+
+  .gig-name {
+    color: #fff;
+    margin: 0 0 2px 0;
+    font-size: 0.85rem;
+  }
+
+  .gig-date {
+    color: #666;
+    margin: 0;
+    font-size: 0.75rem;
+  }
+}
+
+.fan-saved-card {
+  margin-top: 20px;
+  padding: 20px;
+  background: #1e1e1e;
+  border-radius: 12px;
+
+  .saved-count {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 8px 0 0 0;
+  }
+}
+
+.fan-view-link {
+  display: block;
+  margin-top: 8px;
+  color: $kokai-yellow;
+  font-size: 0.8rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: $kokai-yellow;
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 768px) {
+  .fan-show-page {
+    padding: 16px;
+  }
+
+  .fan-banner {
+    height: 150px;
+  }
+
+  .fan-following-grid {
+    flex-direction: column;
+  }
+}

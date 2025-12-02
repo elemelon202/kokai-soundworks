@@ -1,41 +1,41 @@
-<div style="max-width: 900px; margin: 0 auto; padding: 24px;">
-  <h1 style="color: #fff; margin-bottom: 24px;">
-    <i class="fa-solid fa-clipboard-list" style="color: #C8E938;"></i> Gig Applications
+<div class="gig-applications-page">
+  <h1 class="gig-applications-title">
+    <i class="fa-solid fa-clipboard-list"></i> Gig Applications
   </h1>
 
   <%# Pending Applications %>
-  <div style="background: #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-    <h2 style="color: #C8E938; font-size: 1.1rem; margin: 0 0 16px 0;">
+  <div class="gig-applications-section">
+    <h2 class="gig-applications-section-title pending">
       <i class="fa-solid fa-clock"></i> Pending (<%= @pending.count %>)
     </h2>
     <% if @pending.any? %>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div class="gig-applications-list">
         <% @pending.each do |application| %>
-          <div style="background: #252525; padding: 16px; border-radius: 10px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
-              <div style="flex: 1;">
-                <h3 style="color: #fff; margin: 0 0 6px 0;">
-                  <%= link_to application.band.name, band_path(application.band), style: "color: #fff; text-decoration: none;" %>
+          <div class="gig-application-card">
+            <div class="gig-application-content">
+              <div class="gig-application-details">
+                <h3 class="gig-application-band">
+                  <%= link_to application.band.name, band_path(application.band) %>
                 </h3>
-                <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
-                  <i class="fa-solid fa-calendar" style="color: #C8E938;"></i>
+                <p class="gig-application-info">
+                  <i class="fa-solid fa-calendar"></i>
                   <%= application.gig.name %> &bull; <%= application.gig.date.strftime("%b %d, %Y") %>
                 </p>
-                <p style="color: #888; margin: 0; font-size: 0.85rem;">
-                  <i class="fa-solid fa-location-dot" style="color: #C8E938;"></i>
+                <p class="gig-application-info">
+                  <i class="fa-solid fa-location-dot"></i>
                   <%= application.gig.venue.name %>
                 </p>
                 <% if application.message.present? %>
-                  <p style="color: #aaa; margin: 10px 0 0 0; font-size: 0.9rem; font-style: italic;">
+                  <p class="gig-application-message">
                     "<%= application.message %>"
                   </p>
                 <% end %>
               </div>
-              <div style="display: flex; gap: 8px;">
-                <%= button_to approve_gig_application_path(application), method: :patch, style: "background: #C8E938; color: #171717; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; cursor: pointer;" do %>
+              <div class="gig-application-actions">
+                <%= button_to approve_gig_application_path(application), method: :patch, class: "btn-approve" do %>
                   <i class="fa-solid fa-check"></i> Approve
                 <% end %>
-                <%= button_to reject_gig_application_path(application), method: :patch, style: "background: #ff4444; color: #fff; border: none; padding: 8px 16px; border-radius: 8px; font-size: 0.85rem; cursor: pointer;" do %>
+                <%= button_to reject_gig_application_path(application), method: :patch, class: "btn-reject" do %>
                   <i class="fa-solid fa-xmark"></i> Reject
                 <% end %>
               </div>
@@ -44,24 +44,24 @@
         <% end %>
       </div>
     <% else %>
-      <p style="color: #666; text-align: center; padding: 20px;">No pending applications.</p>
+      <p class="gig-applications-empty">No pending applications.</p>
     <% end %>
   </div>
 
   <%# Processed Applications %>
   <% if @processed.any? %>
-    <div style="background: #1e1e1e; border-radius: 12px; padding: 20px;">
-      <h2 style="color: #888; font-size: 1.1rem; margin: 0 0 16px 0;">
+    <div class="gig-applications-section">
+      <h2 class="gig-applications-section-title processed">
         <i class="fa-solid fa-clock-rotate-left"></i> Recent Decisions
       </h2>
-      <div style="display: flex; flex-direction: column; gap: 10px;">
+      <div class="processed-applications-list">
         <% @processed.each do |application| %>
-          <div style="background: #252525; padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
-            <div>
-              <span style="color: #fff;"><%= application.band.name %></span>
-              <span style="color: #666;"> &bull; <%= application.gig.name %></span>
+          <div class="processed-application-row">
+            <div class="processed-application-info">
+              <span class="band-name"><%= application.band.name %></span>
+              <span class="gig-name"> &bull; <%= application.gig.name %></span>
             </div>
-            <span style="background: <%= application.approved? ? '#C8E938' : '#ff4444' %>; color: <%= application.approved? ? '#171717' : '#fff' %>; padding: 4px 12px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
+            <span class="application-status-badge <%= application.approved? ? 'approved' : 'rejected' %>">
               <%= application.status.titleize %>
             </span>
           </div>
@@ -70,7 +70,7 @@
     </div>
   <% end %>
 
-  <%= link_to venues_path, style: "display: inline-block; margin-top: 24px; color: #C8E938;" do %>
+  <%= link_to venues_path, class: "gig-applications-back" do %>
     <i class="fa-solid fa-arrow-left"></i> Back to venues
   <% end %>
 </div>

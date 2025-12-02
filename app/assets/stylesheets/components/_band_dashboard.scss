@@ -1790,6 +1790,262 @@ $kokai-yellow-dark: #b8e020;
   }
 }
 
+// ===== BAND ANALYTICS SECTION =====
+.band-analytics-section {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+}
+
+.analytics-private-note {
+  color: #666;
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+.analytics-stat-positive {
+  color: $kokai-yellow;
+}
+
+.stat-icon-trophy {
+  background: rgba(251, 191, 36, 0.15) !important;
+  color: #fbbf24 !important;
+}
+
+.stat-value-trophy {
+  color: #fbbf24 !important;
+}
+
+// ===== MAINSTAGE STATS =====
+.band-mainstage-stats {
+  border-top: 1px solid #333;
+  margin: 0 20px;
+  padding-top: 16px;
+  padding-bottom: 20px;
+}
+
+.band-mainstage-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+
+  i {
+    color: #fbbf24;
+  }
+
+  span {
+    font-weight: 600;
+    color: #fff;
+  }
+}
+
+.mainstage-rank-badge {
+  margin-left: auto;
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
+.band-mainstage-scores {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+
+.band-mainstage-score-card {
+  background: #252525;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+
+  .score-value {
+    font-size: 1.2rem;
+    font-weight: 700;
+
+    &.engagement {
+      color: $kokai-yellow;
+    }
+
+    &.votes {
+      color: #E936AD;
+    }
+
+    &.total {
+      color: #fbbf24;
+    }
+  }
+
+  .score-label {
+    color: #888;
+    font-size: 0.7rem;
+  }
+}
+
+.band-mainstage-link {
+  display: block;
+  text-align: center;
+  margin-top: 12px;
+  color: #fbbf24;
+  font-size: 0.8rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: #fbbf24;
+  }
+}
+
+// ===== BAND FEED SECTION =====
+.band-feed-section {
+  padding: 20px;
+}
+
+.card-icon-feed {
+  background: rgba(200, 233, 56, 0.15) !important;
+  color: $kokai-yellow !important;
+}
+
+.band-feed-note {
+  color: #666;
+  font-size: 0.8rem;
+  margin-left: auto;
+}
+
+.band-post-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.band-post-textarea {
+  width: 100%;
+  padding: 12px;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 1rem;
+  resize: none;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: $kokai-yellow;
+  }
+}
+
+.band-post-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.band-post-upload {
+  cursor: pointer;
+  color: #888;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: $kokai-yellow;
+  }
+
+  span {
+    font-size: 0.85rem;
+  }
+
+  input[type="file"] {
+    display: none;
+  }
+}
+
+.band-post-spacer {
+  flex: 1;
+}
+
+.btn-post {
+  background: linear-gradient(135deg, $kokai-yellow, $kokai-yellow-dark);
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #171717;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(213, 255, 64, 0.3);
+  }
+}
+
+.band-leader-notice {
+  color: #666;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+
+  i {
+    margin-right: 6px;
+  }
+}
+
+.band-posts-feed {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.band-empty-feed {
+  text-align: center;
+  padding: 20px;
+
+  i {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #666;
+    margin: 0;
+  }
+
+  .sub {
+    color: #555;
+    margin: 4px 0 0 0;
+    font-size: 0.85rem;
+  }
+}
+
+.no-gig-apps-notice {
+  color: rgba(255, 255, 255, 0.5);
+  text-align: center;
+  padding: 30px;
+}
+
+// Empty state for analytics
+.band-analytics-empty {
+  padding: 40px;
+  text-align: center;
+
+  i {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 8px;
+  }
+
+  p {
+    color: #666;
+    margin: 0;
+  }
+}
+
 // Spotify Tracks Section
 .spotify-tracks-section {
   .spotify-description {

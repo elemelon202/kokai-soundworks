@@ -85,7 +85,7 @@
         <h3><i class="fa-solid fa-calendar" style="color: #C8E938;"></i> Upcoming Gigs</h3>
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
           <% upcoming_gigs.each do |gig| %>
-            <div style="background: #252525; padding: 16px; border-radius: 12px;">
+            <%= link_to gig_path(gig), style: "background: #252525; padding: 16px; border-radius: 12px; display: block; text-decoration: none; transition: background 0.2s;", class: "band-gig-card" do %>
               <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
                 <div>
                   <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1rem;"><%= gig.name %></h4>
@@ -99,11 +99,11 @@
                     <% end %>
                   </p>
                 </div>
-                <% unless @band.musicians.include?(current_user.musician) %>
+                <% unless @band.musicians.include?(current_user&.musician) %>
                   <%= render "gig_attendances/buttons", gig: gig %>
                 <% end %>
               </div>
-            </div>
+            <% end %>
           <% end %>
         </div>
       </div>
