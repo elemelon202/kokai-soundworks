@@ -1,0 +1,298 @@
+// Posts Component Styles
+
+$kokai-yellow: #C8E938;
+$kokai-pink: #E936AD;
+
+.post-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+// ===== POST HEADER =====
+.post-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.post-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  &.band {
+    background: linear-gradient(135deg, $kokai-yellow 0%, darken($kokai-yellow, 15%) 100%);
+
+    i {
+      color: #171717;
+      font-size: 1.2rem;
+    }
+  }
+
+  &.user {
+    background: #444;
+
+    span {
+      color: #888;
+      font-size: 1.2rem;
+    }
+  }
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.post-header-info {
+  flex: 1;
+}
+
+.post-author-link {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  &:hover {
+    color: $kokai-yellow;
+  }
+}
+
+.post-author-name {
+  color: #fff;
+  font-weight: 500;
+}
+
+.post-badge-band {
+  background: linear-gradient(135deg, $kokai-yellow, darken($kokai-yellow, 15%));
+  color: #171717;
+  font-size: 0.65rem;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.post-timestamp {
+  color: #666;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.btn-post-delete {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 8px;
+
+  &:hover {
+    color: $kokai-pink;
+  }
+}
+
+// ===== POST CONTENT =====
+.post-content {
+  color: #fff;
+  margin: 0 0 12px 0;
+  white-space: pre-wrap;
+}
+
+// ===== POST MEDIA =====
+.post-images {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 8px;
+  margin-bottom: 12px;
+
+  img {
+    width: 100%;
+    border-radius: 8px;
+    object-fit: cover;
+    max-height: 300px;
+  }
+}
+
+.post-videos {
+  margin-bottom: 12px;
+
+  video {
+    width: 100%;
+    border-radius: 8px;
+    max-height: 400px;
+  }
+}
+
+// ===== POST ACTIONS =====
+.post-actions {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  padding-top: 12px;
+  border-top: 1px solid #333;
+}
+
+.btn-post-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: none;
+  border: none;
+  color: #888;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 0.9rem;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #fff;
+  }
+
+  &.btn-post-action-active {
+    color: $kokai-pink;
+  }
+
+  &.btn-post-action-reposted {
+    color: $kokai-yellow;
+  }
+}
+
+.post-action-disabled {
+  cursor: default;
+}
+
+// ===== COMMENTS SECTION =====
+.post-comments-section {
+  margin-top: 20px;
+  padding-top: 20px;
+  border-top: 1px solid #333;
+
+  &.hidden {
+    display: none;
+  }
+}
+
+.post-comment-form-wrapper {
+  margin-bottom: 32px;
+}
+
+.post-comment-form {
+  display: flex;
+  gap: 12px;
+}
+
+.post-comment-input {
+  flex: 1;
+  padding: 12px 16px;
+  background: #2a2a2a;
+  border: 1px solid #333;
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+
+  &:focus {
+    outline: none;
+    border-color: $kokai-yellow;
+  }
+
+  &::placeholder {
+    color: #666;
+  }
+}
+
+.btn-post-comment {
+  padding: 10px 16px;
+  font-size: 0.85rem;
+}
+
+// ===== COMMENTS LIST =====
+.post-comments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-comment {
+  display: flex;
+  gap: 14px;
+  align-items: flex-start;
+}
+
+.comment-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  span {
+    color: #888;
+    font-size: 0.8rem;
+  }
+}
+
+.comment-body {
+  flex: 1;
+  background: #2a2a2a;
+  border-radius: 12px;
+  padding: 14px 18px;
+}
+
+.comment-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.comment-author {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.comment-timestamp {
+  color: #666;
+  font-size: 0.75rem;
+}
+
+.comment-content {
+  color: #ddd;
+  margin: 0;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+.btn-comment-delete {
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  padding: 8px;
+  font-size: 0.8rem;
+  align-self: center;
+
+  &:hover {
+    color: $kokai-pink;
+  }
+}

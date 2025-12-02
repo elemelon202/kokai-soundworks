@@ -46,87 +46,87 @@
   </div>
 
   <%# Create New Gig and Pending Applications Row %>
-  <div class="dashboard-feed-analytics-row" style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 24px;">
+  <div class="dashboard-feed-analytics-row">
     <%# New Gig Form - Left %>
-    <div class="musician-dashboard-card" style="height: fit-content;">
+    <div class="musician-dashboard-card">
       <div class="musician-card-header">
         <div class="card-icon">
           <i class="fa-solid fa-plus"></i>
         </div>
         <h3>Create New Gig</h3>
       </div>
-      <div style="padding: 20px;">
-        <%= simple_form_for [@venue, @gig], html: { style: "display: flex; flex-direction: column; gap: 16px;" } do |f| %>
+      <div class="dashboard-card-padding">
+        <%= simple_form_for [@venue, @gig], html: { class: "venue-gig-form" } do |f| %>
           <div class="form-field">
-            <%= f.input :name, label: false, placeholder: "Gig name", input_html: { class: "form-input", style: "width: 100%; background: #252525; border: 1px solid #333; border-radius: 8px; padding: 12px; color: #fff;" } %>
+            <%= f.input :name, label: false, placeholder: "Gig name", input_html: { class: "form-input venue-form-input" } %>
           </div>
 
           <%# Interactive Calendar %>
-          <div style="display: flex; gap: 20px; flex-wrap: wrap;">
-            <div style="flex: 1; min-width: 280px;" data-controller="datepicker">
-              <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 8px;">
+          <div class="venue-gig-form-row">
+            <div class="venue-gig-form-col" data-controller="datepicker">
+              <label class="venue-form-label">
                 <i class="fa-solid fa-calendar"></i> Select Date
               </label>
               <input type="hidden" name="gig[date]" data-datepicker-target="input">
               <div class="calendar-wrapper"></div>
             </div>
-            <div style="flex: 1; min-width: 200px; display: flex; flex-direction: column; gap: 12px;">
+            <div class="venue-gig-form-col-sm">
               <div>
-                <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 8px;">
+                <label class="venue-form-label">
                   <i class="fa-solid fa-clock"></i> Start Time
                 </label>
-                <%= f.input :start_time, as: :time, label: false, input_html: { type: "time", class: "form-input", style: "width: 100%; background: #252525; border: 1px solid #333; border-radius: 8px; padding: 12px; color: #fff; color-scheme: dark;" } %>
+                <%= f.input :start_time, as: :time, label: false, input_html: { type: "time", class: "form-input venue-form-input" } %>
               </div>
               <div>
-                <label style="color: #888; font-size: 0.85rem; display: block; margin-bottom: 8px;">
+                <label class="venue-form-label">
                   <i class="fa-solid fa-clock"></i> End Time
                 </label>
-                <%= f.input :end_time, as: :time, label: false, input_html: { type: "time", class: "form-input", style: "width: 100%; background: #252525; border: 1px solid #333; border-radius: 8px; padding: 12px; color: #fff; color-scheme: dark;" } %>
+                <%= f.input :end_time, as: :time, label: false, input_html: { type: "time", class: "form-input venue-form-input" } %>
               </div>
             </div>
           </div>
 
-          <%= f.submit "Create Gig", class: "btn-save-profile", style: "width: fit-content;" %>
+          <%= f.submit "Create Gig", class: "btn-save-profile" %>
         <% end %>
       </div>
     </div>
 
     <%# Pending Applications - Right %>
-    <div class="musician-dashboard-card" style="height: fit-content;">
+    <div class="musician-dashboard-card">
       <div class="musician-card-header">
         <div class="card-icon">
           <i class="fa-solid fa-inbox"></i>
         </div>
         <h3>Pending Applications</h3>
       </div>
-      <div style="padding: 20px;">
+      <div class="dashboard-card-padding">
         <% pending_apps = GigApplication.joins(gig: :venue).where(venues: { id: @venue.id }, status: :pending).includes(:band, :gig).limit(5) %>
         <% if pending_apps.any? %>
-          <div style="display: flex; flex-direction: column; gap: 10px;">
+          <div class="pending-apps-list">
             <% pending_apps.each do |app| %>
-              <div style="background: #252525; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+              <div class="pending-app-card">
                 <div>
-                  <p style="color: #fff; margin: 0; font-weight: 600;"><%= app.band.name %></p>
-                  <p style="color: #888; margin: 2px 0 0 0; font-size: 0.8rem;"><%= app.gig.name %> &bull; <%= app.gig.date.strftime("%b %d") %></p>
+                  <p class="app-band-name"><%= app.band.name %></p>
+                  <p class="app-gig-info"><%= app.gig.name %> &bull; <%= app.gig.date.strftime("%b %d") %></p>
                 </div>
-                <div style="display: flex; gap: 6px;">
-                  <%= button_to approve_gig_application_path(app), method: :patch, style: "background: #C8E938; color: #171717; border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; font-weight: 600; cursor: pointer;" do %>
+                <div class="pending-app-actions">
+                  <%= button_to approve_gig_application_path(app), method: :patch, class: "btn-app-approve" do %>
                     <i class="fa-solid fa-check"></i>
                   <% end %>
-                  <%= button_to reject_gig_application_path(app), method: :patch, style: "background: #ff4444; color: #fff; border: none; padding: 6px 10px; border-radius: 6px; font-size: 0.75rem; cursor: pointer;" do %>
+                  <%= button_to reject_gig_application_path(app), method: :patch, class: "btn-app-reject" do %>
                     <i class="fa-solid fa-xmark"></i>
                   <% end %>
                 </div>
               </div>
             <% end %>
           </div>
-          <%= link_to gig_applications_path, style: "display: block; margin-top: 12px; color: #C8E938; font-size: 0.85rem;" do %>
+          <%= link_to gig_applications_path, class: "link-view-apps" do %>
             View all applications <i class="fa-solid fa-arrow-right"></i>
           <% end %>
         <% else %>
-          <div style="text-align: center; padding: 20px;">
-            <i class="fa-solid fa-inbox" style="font-size: 2rem; color: #333; margin-bottom: 8px;"></i>
-            <p style="color: #666; margin: 0;">No pending applications</p>
+          <div class="empty-state">
+            <i class="fa-solid fa-inbox"></i>
+            <p>No pending applications</p>
           </div>
         <% end %>
       </div>
@@ -135,55 +135,51 @@
 
   <%# Upcoming Gigs Section %>
   <% upcoming_gigs = @venue.gigs.where('date >= ?', Date.current).order(:date) %>
-  <div class="musician-dashboard-card" style="margin-bottom: 24px;">
+  <div class="musician-dashboard-card">
     <div class="musician-card-header">
       <div class="card-icon">
         <i class="fa-solid fa-calendar-days"></i>
       </div>
       <h3>Upcoming Gigs</h3>
     </div>
-    <div style="padding: 20px;">
+    <div class="dashboard-card-padding">
       <% if upcoming_gigs.any? %>
-        <div style="display: flex; flex-direction: column; gap: 12px;">
+        <div class="gigs-list">
           <% upcoming_gigs.each do |gig| %>
-            <div style="background: #252525; padding: 16px; border-radius: 10px;">
-              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
-                <div style="flex: 1;">
-                  <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1rem;">
-                    <%= link_to gig.name, gig_path(gig), style: "color: #fff; text-decoration: none;" %>
+            <div class="venue-edit-gig-card">
+              <div class="venue-edit-gig-content">
+                <div class="venue-edit-gig-info">
+                  <h4>
+                    <%= link_to gig.name, gig_path(gig) %>
                   </h4>
-                  <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
-                    <i class="fa-solid fa-clock" style="color: #C8E938; margin-right: 4px;"></i>
+                  <p class="gig-datetime">
+                    <i class="fa-solid fa-clock"></i>
                     <%= gig.date.strftime("%A, %B %d, %Y") %>
                     <% if gig.start_time.present? %>
                       at <%= gig.start_time.strftime("%l:%M %p") %>
                     <% end %>
                   </p>
                   <% if gig.bands.any? %>
-                    <div style="margin-top: 8px; display: flex; flex-wrap: wrap; gap: 6px;">
+                    <div class="gig-bands-list">
                       <% gig.bands.each do |band| %>
-                        <%= link_to band_path(band), style: "text-decoration: none;" do %>
-                          <span style="background: #333; color: #fff; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 4px;">
-                            <i class="fa-solid fa-users" style="color: #E936AD; font-size: 0.65rem;"></i>
-                            <%= band.name %>
-                          </span>
+                        <%= link_to band_path(band), class: "band-tag" do %>
+                          <i class="fa-solid fa-users"></i>
+                          <%= band.name %>
                         <% end %>
                       <% end %>
                     </div>
                   <% else %>
-                    <p style="color: #666; margin: 8px 0 0 0; font-size: 0.8rem;">
+                    <p class="no-bands-notice">
                       <i class="fa-solid fa-info-circle"></i> No bands booked yet
                     </p>
                   <% end %>
                 </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
+                <div class="venue-edit-gig-actions">
                   <% pending_count = gig.gig_applications.pending.count %>
                   <% if pending_count > 0 %>
-                    <span style="background: #fbbf24; color: #171717; padding: 4px 10px; border-radius: 12px; font-size: 0.75rem; font-weight: 600;">
-                      <%= pending_count %> pending
-                    </span>
+                    <span class="pending-badge"><%= pending_count %> pending</span>
                   <% end %>
-                  <%= link_to edit_gig_path(gig), style: "background: #333; color: #fff; padding: 8px 12px; border-radius: 8px; text-decoration: none; font-size: 0.8rem;" do %>
+                  <%= link_to edit_gig_path(gig), class: "btn-gig-edit" do %>
                     <i class="fa-solid fa-pen"></i> Edit
                   <% end %>
                 </div>
@@ -192,10 +188,10 @@
           <% end %>
         </div>
       <% else %>
-        <div style="text-align: center; padding: 30px;">
-          <i class="fa-solid fa-calendar-xmark" style="font-size: 2.5rem; color: #333; margin-bottom: 12px;"></i>
-          <p style="color: #888; margin: 0;">No upcoming gigs scheduled.</p>
-          <p style="color: #666; margin: 4px 0 0 0; font-size: 0.85rem;">Create a gig above to get started!</p>
+        <div class="empty-state large">
+          <i class="fa-solid fa-calendar-xmark"></i>
+          <p>No upcoming gigs scheduled.</p>
+          <p class="sub">Create a gig above to get started!</p>
         </div>
       <% end %>
     </div>
@@ -213,8 +209,8 @@
 
       <%= simple_form_for @venue, html: { class: "musician-edit-form" } do |f| %>
         <% if @venue.errors.any? %>
-          <div style="background: #ff4444; padding: 12px 16px; border-radius: 8px; color: #fff; margin-bottom: 20px;">
-            <ul style="margin: 0; padding-left: 20px;">
+          <div class="error-box">
+            <ul>
               <% @venue.errors.full_messages.each do |msg| %>
                 <li><%= msg %></li>
               <% end %>
@@ -287,12 +283,12 @@
 
         <%# Current Photos %>
         <% if @venue.photos.attached? %>
-          <div style="margin-top: 20px;">
-            <h4 style="color: #888; font-size: 0.9rem; margin-bottom: 12px;">Current Photos</h4>
-            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+          <div class="venue-current-photos">
+            <h4>Current Photos</h4>
+            <div class="venue-photos-grid">
               <% @venue.photos.each do |photo| %>
-                <div style="position: relative;">
-                  <%= cl_image_tag photo.key, style: "width: 120px; height: 80px; object-fit: cover; border-radius: 8px;" %>
+                <div class="venue-photo-thumb">
+                  <%= cl_image_tag photo.key %>
                 </div>
               <% end %>
             </div>

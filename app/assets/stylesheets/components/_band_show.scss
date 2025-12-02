@@ -363,3 +363,37 @@ $kokai-yellow-dark: #b8e020;
     border-radius: 12px;
   }
 }
+
+// Gig Card Link
+.band-gig-card {
+  position: relative;
+  border: 1px solid transparent;
+
+  &:hover {
+    background: #2a2a2a !important;
+    border-color: $kokai-yellow;
+    transform: translateX(4px);
+
+    h4 {
+      color: $kokai-yellow !important;
+    }
+  }
+
+  &::after {
+    content: '\f061';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: $kokai-yellow;
+    opacity: 0;
+    transition: opacity 0.2s, transform 0.2s;
+  }
+
+  &:hover::after {
+    opacity: 1;
+    transform: translateY(-50%) translateX(4px);
+  }
+}

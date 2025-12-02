@@ -1,0 +1,845 @@
+// Venue Show Page Styles
+
+$kokai-yellow: #C8E938;
+
+.venue-show-container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+// ===== VENUE BANNER =====
+.venue-banner {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  border-radius: 16px;
+  overflow: hidden;
+  margin-bottom: 24px;
+
+  img,
+  .venue-banner-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.venue-banner-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 24px;
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.8));
+
+  h1 {
+    color: #fff;
+    margin: 0 0 8px 0;
+    font-size: 2rem;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+  }
+
+  p {
+    color: #ddd;
+    margin: 0;
+    font-size: 1rem;
+
+    i {
+      color: $kokai-yellow;
+      margin-right: 6px;
+    }
+  }
+}
+
+.venue-banner-edit {
+  position: absolute;
+  top: 16px;
+  right: 16px;
+}
+
+.btn-venue-edit {
+  background: $kokai-yellow;
+  color: #171717;
+  padding: 8px 16px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 600;
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(1.1);
+    color: #171717;
+  }
+}
+
+// ===== VENUE SECTIONS =====
+.venue-section {
+  background: #1e1e1e;
+  border-radius: 16px;
+  padding: 24px;
+  margin-bottom: 24px;
+}
+
+.venue-section-title {
+  color: #fff;
+  margin: 0 0 16px 0;
+  font-size: 1.2rem;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  i {
+    color: $kokai-yellow;
+  }
+
+  &.muted {
+    color: #888;
+
+    i {
+      color: #888;
+    }
+  }
+}
+
+.venue-section-title-lg {
+  margin-bottom: 20px;
+}
+
+// ===== PHOTO CAROUSEL =====
+.venue-photos-carousel {
+  .carousel-inner {
+    border-radius: 12px;
+    overflow: hidden;
+  }
+
+  .carousel-item img {
+    width: 100%;
+    height: 400px;
+    object-fit: cover;
+  }
+}
+
+.venue-carousel-indicators {
+  position: relative;
+  margin-top: 12px;
+
+  button {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #555;
+    border: none;
+    transition: background 0.2s;
+
+    &.active {
+      background: $kokai-yellow;
+    }
+  }
+}
+
+// ===== VENUE INFO =====
+.venue-info-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+.venue-info-item {
+  .info-label {
+    color: #888;
+    margin: 0 0 4px 0;
+    font-size: 0.85rem;
+  }
+
+  .info-value {
+    color: #fff;
+    margin: 0;
+    font-size: 1.1rem;
+    font-weight: 600;
+
+    i {
+      color: $kokai-yellow;
+      margin-right: 6px;
+    }
+  }
+}
+
+.venue-description {
+  margin-top: 16px;
+  padding-top: 16px;
+  border-top: 1px solid #333;
+
+  p {
+    color: #ccc;
+    margin: 0;
+    line-height: 1.6;
+  }
+}
+
+// ===== GIG CARDS =====
+.venue-gigs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.venue-gig-card {
+  background: #252525;
+  padding: 16px;
+  border-radius: 12px;
+}
+
+.venue-gig-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.venue-gig-info {
+  h3 {
+    color: #fff;
+    margin: 0 0 8px 0;
+    font-size: 1.1rem;
+
+    a {
+      color: #fff;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .gig-time,
+  .gig-bands-line {
+    color: #888;
+    margin: 0 0 4px 0;
+    font-size: 0.85rem;
+
+    i {
+      margin-right: 4px;
+    }
+
+    a {
+      color: $kokai-yellow;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .gig-price {
+    color: $kokai-yellow;
+    margin: 8px 0 0 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+
+    i {
+      margin-right: 4px;
+    }
+  }
+}
+
+// ===== PAST GIGS =====
+.venue-past-gigs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.venue-past-gig {
+  background: #252525;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  h4 {
+    color: #fff;
+    margin: 0 0 4px 0;
+    font-size: 0.95rem;
+
+    a {
+      color: #fff;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .past-gig-meta {
+    color: #666;
+    margin: 0;
+    font-size: 0.8rem;
+  }
+
+  .past-gig-attendance {
+    color: #666;
+    font-size: 0.8rem;
+  }
+}
+
+// ===== CALENDAR =====
+.venue-calendar-section {
+  margin-top: 24px;
+}
+
+// ===== BACK LINK =====
+.venue-back-link {
+  margin-top: 24px;
+
+  a {
+    color: $kokai-yellow;
+    text-decoration: none;
+    font-size: 0.9rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+}
+
+// ===== VENUE EDIT PAGE (shared with dashboard) =====
+.venue-gig-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.venue-gig-form-row {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+.venue-gig-form-col {
+  flex: 1;
+  min-width: 280px;
+}
+
+.venue-gig-form-col-sm {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.venue-form-label {
+  color: #888;
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 8px;
+
+  i {
+    margin-right: 4px;
+  }
+}
+
+.venue-form-input {
+  width: 100%;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 12px;
+  color: #fff;
+  color-scheme: dark;
+
+  &:focus {
+    outline: none;
+    border-color: $kokai-yellow;
+  }
+}
+
+// ===== PENDING APPLICATIONS =====
+.pending-apps-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pending-app-card {
+  background: #252525;
+  padding: 12px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+
+  .app-band-name {
+    color: #fff;
+    margin: 0;
+    font-weight: 600;
+  }
+
+  .app-gig-info {
+    color: #888;
+    margin: 2px 0 0 0;
+    font-size: 0.8rem;
+  }
+}
+
+.pending-app-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.btn-app-approve {
+  background: $kokai-yellow;
+  color: #171717;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(1.1);
+  }
+}
+
+.btn-app-reject {
+  background: #ff4444;
+  color: #fff;
+  border: none;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: filter 0.2s;
+
+  &:hover {
+    filter: brightness(1.2);
+  }
+}
+
+.link-view-apps {
+  display: block;
+  margin-top: 12px;
+  color: $kokai-yellow;
+  font-size: 0.85rem;
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: underline;
+    color: $kokai-yellow;
+  }
+}
+
+// ===== VENUE UPCOMING GIGS (Edit Page) =====
+.venue-edit-gig-card {
+  background: #252525;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.venue-edit-gig-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.venue-edit-gig-info {
+  flex: 1;
+
+  h4 {
+    color: #fff;
+    margin: 0 0 6px 0;
+    font-size: 1rem;
+
+    a {
+      color: #fff;
+      text-decoration: none;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+  }
+
+  .gig-datetime {
+    color: #888;
+    margin: 0 0 4px 0;
+    font-size: 0.85rem;
+
+    i {
+      color: $kokai-yellow;
+      margin-right: 4px;
+    }
+  }
+
+  .no-bands-notice {
+    color: #666;
+    margin: 8px 0 0 0;
+    font-size: 0.8rem;
+  }
+}
+
+.gig-bands-list {
+  margin-top: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.venue-edit-gig-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.pending-badge {
+  background: #fbbf24;
+  color: #171717;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+}
+
+.btn-gig-edit {
+  background: #333;
+  color: #fff;
+  padding: 8px 12px;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #444;
+    color: #fff;
+  }
+}
+
+// ===== CURRENT PHOTOS =====
+.venue-current-photos {
+  margin-top: 20px;
+
+  h4 {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+}
+
+.venue-photos-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.venue-photo-thumb {
+  position: relative;
+
+  img {
+    width: 120px;
+    height: 80px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+}
+
+// ===== GIG EDIT PAGE =====
+.stat-icon-going {
+  background: linear-gradient(135deg, $kokai-yellow, #a8c92e) !important;
+}
+
+.stat-icon-interested {
+  background: linear-gradient(135deg, #fbbf24, #d97706) !important;
+}
+
+.stat-icon-pending {
+  background: linear-gradient(135deg, #E936AD, #c42d91) !important;
+}
+
+.stat-icon-ticket {
+  background: linear-gradient(135deg, #60a5fa, #3b82f6) !important;
+}
+
+.booking-form {
+  display: flex;
+  gap: 12px;
+  align-items: flex-end;
+  flex-wrap: wrap;
+
+  .booking-select-wrapper {
+    flex: 1;
+    min-width: 200px;
+  }
+}
+
+.booked-bands-section {
+  padding: 0 20px 20px;
+}
+
+.booked-bands-title {
+  color: #888;
+  font-size: 0.85rem;
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+
+  i {
+    margin-right: 4px;
+  }
+}
+
+.booked-bands-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.booked-band-item {
+  background: #252525;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  .band-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .band-avatar {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .band-avatar-placeholder {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: #333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    i {
+      font-size: 0.7rem;
+      color: #666;
+    }
+  }
+
+  .btn-remove-band {
+    color: #888;
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 68, 68, 0.2);
+      color: #ff4444;
+    }
+  }
+}
+
+// ===== APPLICATION CARD WITH MESSAGE =====
+.app-card-with-message {
+  background: #252525;
+  padding: 12px;
+  border-radius: 8px;
+}
+
+.app-card-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.app-card-info {
+  flex: 1;
+
+  .app-band-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .app-message {
+    color: #888;
+    margin: 4px 0 0 0;
+    font-size: 0.8rem;
+    font-style: italic;
+  }
+}
+
+// ===== ATTENDANCE BY BAND =====
+.attendance-band-card {
+  background: #252525;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.attendance-band-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+
+  .band-name-link {
+    color: #fff;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .projected-count {
+    color: $kokai-yellow;
+    font-weight: 600;
+  }
+}
+
+.attendance-bar-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.attendance-bar {
+  flex: 1;
+  height: 8px;
+  background: #333;
+  border-radius: 4px;
+  overflow: hidden;
+
+  .attendance-bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, $kokai-yellow, #E936AD);
+    border-radius: 4px;
+  }
+}
+
+.follower-count {
+  color: #888;
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+// ===== GIG CURRENT POSTER =====
+.gig-current-poster {
+  margin: 20px 20px 0;
+
+  h4 {
+    color: #888;
+    font-size: 0.9rem;
+    margin-bottom: 12px;
+  }
+
+  .poster-wrapper {
+    max-width: 200px;
+
+    img {
+      width: 100%;
+      border-radius: 8px;
+    }
+  }
+}
+
+// ===== BACK LINK (shared) =====
+.back-link {
+  margin-top: 24px;
+
+  a {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: #888;
+    text-decoration: none;
+    font-size: 0.95rem;
+
+    &:hover {
+      color: $kokai-yellow;
+    }
+  }
+}
+
+// ===== BTN CANCEL =====
+.btn-cancel {
+  background: #333;
+  color: #fff;
+  padding: 12px 24px;
+  border-radius: 10px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: background 0.2s;
+
+  &:hover {
+    background: #444;
+    color: #fff;
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 768px) {
+  .venue-show-container {
+    padding: 16px;
+  }
+
+  .venue-banner {
+    height: 200px;
+  }
+
+  .venue-banner-overlay {
+    padding: 16px;
+
+    h1 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .venue-section {
+    padding: 16px;
+  }
+
+  .venue-photos-carousel .carousel-item img {
+    height: 250px;
+  }
+
+  .venue-gig-content {
+    flex-direction: column;
+  }
+}

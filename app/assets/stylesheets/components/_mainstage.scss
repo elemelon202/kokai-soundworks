@@ -153,7 +153,6 @@ $kokai-pink: #E936AD;
 .mainstage-lineup {
   background: linear-gradient(180deg, #0d0d0d 0%, #1a1a1a 100%);
   border: 3px solid $kokai-yellow;
-  border-top: none;
   border-radius: 0 0 20px 20px;
   padding: 30px 20px 40px;
   position: relative;
@@ -474,6 +473,566 @@ $kokai-pink: #E936AD;
 
   &.band a {
     color: $kokai-pink;
+  }
+}
+
+// ===== HOMEPAGE SPOTLIGHT =====
+.mainstage-spotlight {
+  max-width: 900px;
+  margin: 0 auto 32px auto;
+  padding: 0 16px;
+
+  .mainstage-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-bottom: 20px;
+
+    i {
+      color: #fbbf24;
+      font-size: 1.5rem;
+    }
+
+    span {
+      color: #fbbf24;
+      font-size: 1.3rem;
+      font-weight: 700;
+    }
+  }
+
+  .winner-cards-row {
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .winner-card {
+    flex: 1;
+    min-width: 280px;
+    max-width: 420px;
+    background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
+    border: 1px solid #3a3a3a;
+    border-radius: 16px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .winner-card-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 14px;
+
+    i {
+      font-size: 1rem;
+
+      &.musician { color: $kokai-yellow; }
+      &.band { color: $kokai-pink; }
+    }
+
+    span {
+      font-size: 0.95rem;
+      font-weight: 600;
+
+      &.musician { color: $kokai-yellow; }
+      &.band { color: $kokai-pink; }
+    }
+  }
+
+  .winner-card-inner {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+  }
+
+  .winner-avatar {
+    width: 70px;
+    height: 70px;
+    background: #333;
+    overflow: hidden;
+    border: 3px solid #fbbf24;
+    flex-shrink: 0;
+
+    &.musician { border-radius: 50%; }
+    &.band { border-radius: 12px; }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    .initials {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #888;
+      font-weight: 600;
+      font-size: 1.3rem;
+    }
+  }
+
+  .winner-info {
+    text-align: left;
+    flex: 1;
+    min-width: 120px;
+
+    .winner-name {
+      color: #fff;
+      text-decoration: none;
+      font-size: 1.2rem;
+      font-weight: 700;
+
+      &:hover {
+        color: $kokai-yellow;
+      }
+    }
+
+    .winner-week {
+      color: #888;
+      font-size: 0.8rem;
+      margin-top: 2px;
+    }
+
+    .winner-stats {
+      display: flex;
+      gap: 12px;
+      margin-top: 6px;
+      flex-wrap: wrap;
+
+      span {
+        font-size: 0.75rem;
+
+        &.engagement { color: $kokai-yellow; }
+        &.votes { color: $kokai-pink; }
+      }
+    }
+  }
+
+  .winner-score-badge {
+    padding: 10px 16px;
+    background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+    border-radius: 10px;
+
+    .score-value {
+      color: #000;
+      font-size: 1.4rem;
+      font-weight: 800;
+    }
+
+    .score-label {
+      color: #000;
+      font-size: 0.65rem;
+      opacity: 0.8;
+    }
+  }
+
+  .winner-buttons {
+    margin-top: 14px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+
+    .btn-profile {
+      padding: 8px 18px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.8rem;
+
+      &.musician {
+        background: $kokai-yellow;
+        color: #000;
+      }
+
+      &.band {
+        background: $kokai-pink;
+        color: #fff;
+      }
+    }
+
+    .btn-leaderboard {
+      padding: 8px 18px;
+      background: #2a2a2a;
+      color: #fff;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.8rem;
+      border: 1px solid #3a3a3a;
+    }
+  }
+
+  // Contest card (when no winner)
+  .contest-label {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    margin-bottom: 10px;
+
+    i {
+      font-size: 1.1rem;
+
+      &.musician { color: $kokai-yellow; }
+      &.band { color: $kokai-pink; }
+    }
+
+    span {
+      font-size: 1rem;
+      font-weight: 700;
+
+      &.musician { color: $kokai-yellow; }
+      &.band { color: $kokai-pink; }
+    }
+  }
+
+  .contest-dates {
+    color: #888;
+    font-size: 0.85rem;
+    margin: 0 0 12px 0;
+
+    .days-left {
+      color: #fff;
+    }
+  }
+
+  .btn-vote {
+    display: inline-block;
+    padding: 10px 24px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+
+    &.musician {
+      background: linear-gradient(135deg, $kokai-yellow 0%, #a8c92e 100%);
+      color: #000;
+    }
+
+    &.band {
+      background: linear-gradient(135deg, $kokai-pink 0%, #c72990 100%);
+      color: #fff;
+    }
+  }
+}
+
+// ===== HOMEPAGE SPOTLIGHT MOBILE =====
+@media (max-width: 768px) {
+  .mainstage-spotlight {
+    padding: 0 8px !important;
+    margin-bottom: 24px !important;
+    max-width: 100vw !important;
+    overflow-x: hidden !important;
+    box-sizing: border-box !important;
+
+    .mainstage-header {
+      margin-bottom: 16px !important;
+
+      i {
+        font-size: 1.2rem !important;
+      }
+
+      span {
+        font-size: 1rem !important;
+      }
+    }
+
+    .winner-cards-row {
+      flex-direction: column !important;
+      gap: 12px !important;
+      width: 100% !important;
+    }
+
+    .winner-card {
+      min-width: unset !important;
+      max-width: 100% !important;
+      width: 100% !important;
+      padding: 14px !important;
+      box-sizing: border-box !important;
+    }
+
+    .winner-card-inner {
+      flex-direction: row !important;
+      text-align: left !important;
+      gap: 10px !important;
+      flex-wrap: nowrap !important;
+    }
+
+    .winner-avatar {
+      width: 45px !important;
+      height: 45px !important;
+      flex-shrink: 0 !important;
+    }
+
+    .winner-info {
+      text-align: left !important;
+      flex: 1 !important;
+      min-width: 0 !important;
+      overflow: hidden !important;
+
+      .winner-name {
+        font-size: 0.95rem !important;
+        display: block !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        white-space: nowrap !important;
+      }
+    }
+
+    .winner-score-badge {
+      padding: 6px 10px !important;
+      flex-shrink: 0 !important;
+
+      .score-value {
+        font-size: 1rem !important;
+      }
+    }
+
+    .winner-buttons {
+      flex-direction: row !important;
+      width: 100%;
+      gap: 8px !important;
+      margin-top: 12px !important;
+
+      a {
+        flex: 1 !important;
+        text-align: center;
+        padding: 8px 10px !important;
+        font-size: 0.7rem !important;
+      }
+    }
+  }
+}
+
+// ===== LEADERBOARD =====
+.mainstage-leaderboard-container {
+  background: #1e1e1e;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.mainstage-leaderboard-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.mainstage-leaderboard-title {
+  color: #fff;
+  font-size: 1.2rem;
+  margin: 0;
+
+  i {
+    color: $kokai-yellow;
+  }
+}
+
+.mainstage-leaderboard-update {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.mainstage-leaderboard-content {
+  padding: 8px;
+}
+
+.leaderboard-row {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px;
+  border-radius: 8px;
+  margin-bottom: 4px;
+
+  &.top-3 {
+    background: #2a2a2a;
+  }
+}
+
+.leaderboard-rank {
+  width: 40px;
+  text-align: center;
+
+  .rank-gold {
+    color: #fbbf24;
+    font-size: 1.5rem;
+  }
+
+  .rank-silver {
+    color: #9ca3af;
+    font-size: 1.3rem;
+  }
+
+  .rank-bronze {
+    color: #cd7f32;
+    font-size: 1.3rem;
+  }
+
+  .rank-number {
+    color: #666;
+    font-size: 1.1rem;
+    font-weight: 600;
+  }
+}
+
+.leaderboard-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #333;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .initials {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+    font-weight: 600;
+  }
+}
+
+.leaderboard-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.leaderboard-name {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  font-size: 1rem;
+
+  &:hover {
+    color: $kokai-yellow;
+  }
+}
+
+.leaderboard-stats {
+  display: flex;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.leaderboard-stat {
+  color: #888;
+  font-size: 0.8rem;
+
+  i {
+    margin-right: 4px;
+
+    &.engagement {
+      color: $kokai-yellow;
+    }
+
+    &.votes {
+      color: $kokai-pink;
+    }
+  }
+}
+
+.leaderboard-score {
+  text-align: right;
+  padding-right: 8px;
+}
+
+.leaderboard-score-value {
+  color: $kokai-yellow;
+  font-size: 1.3rem;
+  font-weight: 700;
+}
+
+.leaderboard-score-label {
+  color: #666;
+  font-size: 0.75rem;
+}
+
+.btn-vote-mainstage {
+  padding: 8px 16px;
+  background: $kokai-pink;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+
+  &:hover {
+    background: darken($kokai-pink, 10%);
+  }
+}
+
+.leaderboard-voted-badge {
+  padding: 8px 16px;
+  background: #2d5a2d;
+  color: #4ade80;
+  border-radius: 6px;
+  font-size: 0.85rem;
+}
+
+.mainstage-leaderboard-empty {
+  padding: 40px;
+  text-align: center;
+  color: #666;
+
+  i {
+    font-size: 2rem;
+    margin-bottom: 12px;
+    opacity: 0.3;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// ===== BAND LEADERBOARD VARIANTS =====
+.band-leaderboard {
+  .mainstage-leaderboard-title i {
+    color: $kokai-pink;
+  }
+
+  .leaderboard-avatar {
+    border-radius: 8px;
+  }
+
+  .leaderboard-stat i.engagement {
+    color: $kokai-pink;
+  }
+
+  .leaderboard-stat i.votes {
+    color: $kokai-yellow;
+  }
+
+  .leaderboard-score-value {
+    color: $kokai-pink;
+  }
+
+  .btn-vote-mainstage {
+    background: $kokai-yellow;
+    color: #000;
+
+    &:hover {
+      background: darken($kokai-yellow, 10%);
+    }
   }
 }
 

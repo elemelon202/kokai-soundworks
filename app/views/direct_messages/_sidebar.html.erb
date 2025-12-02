@@ -30,7 +30,7 @@
           </div>
         <% end %>
         <%= button_to direct_message_path(chat), method: :delete, class: "delete-chat-btn", data: { turbo_confirm: "Delete this conversation?" } do %>
-          <span>&times;</span>
+          <i class="fa-solid fa-trash"></i>
         <% end %>
       </div>
     <% end %>
