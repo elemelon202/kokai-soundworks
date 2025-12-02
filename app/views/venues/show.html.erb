@@ -1,23 +1,23 @@
-<div class="venue-show-container" style="max-width: 900px; margin: 0 auto; padding: 24px;">
+<div class="venue-show-container">
   <%# Banner %>
-  <div style="position: relative; width: 100%; height: 300px; border-radius: 16px; overflow: hidden; margin-bottom: 24px;">
+  <div class="venue-banner">
     <% if @venue.banner.attached? %>
-      <%= cl_image_tag(@venue.banner.key, style: "width: 100%; height: 100%; object-fit: cover; object-position: center #{@venue.banner_position || 50}%;") %>
+      <%= cl_image_tag(@venue.banner.key, class: "venue-banner-img", style: "object-position: center #{@venue.banner_position || 50}%;") %>
     <% elsif @venue.photos.attached? %>
-      <%= cl_image_tag(@venue.photos.first.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+      <%= cl_image_tag(@venue.photos.first.key, class: "venue-banner-img") %>
     <% else %>
-      <%= image_tag "venue_placeholder.jpg", style: "width: 100%; height: 100%; object-fit: cover;" %>
+      <%= image_tag "venue_placeholder.jpg", class: "venue-banner-img" %>
     <% end %>
-    <div style="position: absolute; bottom: 0; left: 0; right: 0; padding: 24px; background: linear-gradient(transparent, rgba(0,0,0,0.8));">
-      <h1 style="color: #fff; margin: 0 0 8px 0; font-size: 2rem; text-shadow: 0 2px 4px rgba(0,0,0,0.5);"><%= @venue.name %></h1>
-      <p style="color: #ddd; margin: 0; font-size: 1rem;">
-        <i class="fa-solid fa-location-dot" style="color: #C8E938; margin-right: 6px;"></i>
+    <div class="venue-banner-overlay">
+      <h1><%= @venue.name %></h1>
+      <p>
+        <i class="fa-solid fa-location-dot"></i>
         <%= @venue.address %><% if @venue.city.present? %>, <%= @venue.city %><% end %>
       </p>
     </div>
     <% if current_user && @venue.user_id == current_user.id %>
-      <div style="position: absolute; top: 16px; right: 16px;">
-        <%= link_to edit_venue_path(@venue), style: "background: #C8E938; color: #171717; padding: 8px 16px; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 600;" do %>
+      <div class="venue-banner-edit">
+        <%= link_to edit_venue_path(@venue), class: "btn-venue-edit" do %>
           <i class="fa-solid fa-pen"></i> Edit
         <% end %>
       </div>
@@ -26,15 +26,15 @@
 
   <%# Photo Carousel %>
   <% if @venue.photos.attached? && @venue.photos.count > 0 %>
-    <div style="background: #1e1e1e; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
-      <h2 style="color: #fff; margin: 0 0 16px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-        <i class="fa-solid fa-images" style="color: #C8E938;"></i> Photos
+    <div class="venue-section">
+      <h2 class="venue-section-title">
+        <i class="fa-solid fa-images"></i> Photos
       </h2>
-      <div id="venuePhotosCarousel" class="carousel slide" data-bs-ride="carousel">
-        <div class="carousel-inner" style="border-radius: 12px; overflow: hidden;">
+      <div id="venuePhotosCarousel" class="carousel slide venue-photos-carousel" data-bs-ride="carousel">
+        <div class="carousel-inner">
           <% @venue.photos.each_with_index do |photo, index| %>
             <div class="carousel-item <%= 'active' if index == 0 %>">
-              <%= cl_image_tag(photo.key, style: "width: 100%; height: 400px; object-fit: cover;") %>
+              <%= cl_image_tag(photo.key) %>
             </div>
           <% end %>
         </div>
@@ -47,9 +47,9 @@
             <span class="carousel-control-next-icon" aria-hidden="true"></span>
             <span class="visually-hidden">Next</span>
           </button>
-          <div class="carousel-indicators" style="position: relative; margin-top: 12px;">
+          <div class="carousel-indicators venue-carousel-indicators">
             <% @venue.photos.each_with_index do |photo, index| %>
-              <button type="button" data-bs-target="#venuePhotosCarousel" data-bs-slide-to="<%= index %>" class="<%= 'active' if index == 0 %>" style="width: 10px; height: 10px; border-radius: 50%; background: <%= index == 0 ? '#C8E938' : '#555' %>; border: none;"></button>
+              <button type="button" data-bs-target="#venuePhotosCarousel" data-bs-slide-to="<%= index %>" class="<%= 'active' if index == 0 %>"></button>
             <% end %>
           </div>
         <% end %>
@@ -58,66 +58,67 @@
   <% end %>
 
   <%# Venue Info %>
-  <div style="background: #1e1e1e; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
-    <div style="display: flex; flex-wrap: wrap; gap: 24px;">
+  <div class="venue-section">
+    <div class="venue-info-grid">
       <% if @venue.capacity.present? %>
-        <div>
-          <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">Capacity</p>
-          <p style="color: #fff; margin: 0; font-size: 1.1rem; font-weight: 600;">
-            <i class="fa-solid fa-users" style="color: #C8E938; margin-right: 6px;"></i>
+        <div class="venue-info-item">
+          <p class="info-label">Capacity</p>
+          <p class="info-value">
+            <i class="fa-solid fa-users"></i>
             <%= @venue.capacity %>
           </p>
         </div>
       <% end %>
       <% if @venue.gigs.any? %>
-        <div>
-          <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">Total Gigs</p>
-          <p style="color: #fff; margin: 0; font-size: 1.1rem; font-weight: 600;">
-            <i class="fa-solid fa-calendar-check" style="color: #C8E938; margin-right: 6px;"></i>
+        <div class="venue-info-item">
+          <p class="info-label">Total Gigs</p>
+          <p class="info-value">
+            <i class="fa-solid fa-calendar-check"></i>
             <%= @venue.gigs.count %>
           </p>
         </div>
       <% end %>
     </div>
     <% if @venue.description.present? %>
-      <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid #333;">
-        <p style="color: #ccc; margin: 0; line-height: 1.6;"><%= @venue.description %></p>
+      <div class="venue-description">
+        <p><%= @venue.description %></p>
       </div>
     <% end %>
   </div>
+
   <%# Upcoming Gigs %>
   <% upcoming_gigs = @venue.gigs.where('date >= ?', Date.current).order(:date) %>
   <% if upcoming_gigs.any? %>
-    <div style="background: #1e1e1e; border-radius: 16px; padding: 24px; margin-bottom: 24px;">
-      <h2 style="color: #fff; margin: 0 0 20px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-        <i class="fa-solid fa-calendar" style="color: #C8E938;"></i> Upcoming Gigs
+    <div class="venue-section">
+      <h2 class="venue-section-title venue-section-title-lg">
+        <i class="fa-solid fa-calendar"></i> Upcoming Gigs
       </h2>
-      <div style="display: flex; flex-direction: column; gap: 16px;">
+      <div class="venue-gigs-list">
         <% upcoming_gigs.each do |gig| %>
-          <div style="background: #252525; padding: 16px; border-radius: 12px;">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
-              <div>
-                <h3 style="color: #fff; margin: 0 0 8px 0; font-size: 1.1rem;">
-                  <%= link_to gig.name, gig_path(gig), style: "color: #fff; text-decoration: none;" %>
+          <div class="venue-gig-card">
+            <div class="venue-gig-content">
+              <div class="venue-gig-info">
+                <h3>
+                  <%= link_to gig.name, gig_path(gig) %>
                 </h3>
-                <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
-                  <i class="fa-solid fa-clock" style="margin-right: 4px;"></i>
+                <p class="gig-time">
+                  <i class="fa-solid fa-clock"></i>
                   <%= gig.date.strftime("%A, %B %d, %Y") %>
                   <% if gig.start_time.present? %>
                     at <%= gig.start_time.strftime("%l:%M %p") %>
                   <% end %>
                 </p>
                 <% if gig.bands.any? %>
-                  <p style="color: #888; margin: 0; font-size: 0.85rem;">
-                    <i class="fa-solid fa-users" style="margin-right: 4px;"></i>
+                  <p class="gig-bands-line">
+                    <i class="fa-solid fa-users"></i>
                     <% gig.bands.each_with_index do |band, index| %>
-                      <%= link_to band.name, band_path(band), style: "color: #C8E938; text-decoration: none;" %><%= ", " unless index == gig.bands.count - 1 %>
+                      <%= link_to band.name, band_path(band) %><%= ", " unless index == gig.bands.count - 1 %>
                     <% end %>
                   </p>
                 <% end %>
                 <% if gig.ticket_price.present? && gig.ticket_price > 0 %>
-                  <p style="color: #C8E938; margin: 8px 0 0 0; font-size: 0.9rem; font-weight: 600;">
-                    <i class="fa-solid fa-ticket" style="margin-right: 4px;"></i>
+                  <p class="gig-price">
+                    <i class="fa-solid fa-ticket"></i>
                     $<%= number_with_precision(gig.ticket_price, precision: 2) %>
                   </p>
                 <% end %>
@@ -129,28 +130,29 @@
       </div>
     </div>
   <% end %>
+
   <%# Past Gigs %>
   <% past_gigs = @venue.gigs.where('date < ?', Date.current).order(date: :desc).limit(5) %>
   <% if past_gigs.any? %>
-    <div style="background: #1e1e1e; border-radius: 16px; padding: 24px;">
-      <h2 style="color: #888; margin: 0 0 20px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
+    <div class="venue-section">
+      <h2 class="venue-section-title muted venue-section-title-lg">
         <i class="fa-solid fa-clock-rotate-left"></i> Past Gigs
       </h2>
-      <div style="display: flex; flex-direction: column; gap: 12px;">
+      <div class="venue-past-gigs-list">
         <% past_gigs.each do |gig| %>
-          <div style="background: #252525; padding: 12px 16px; border-radius: 8px; display: flex; justify-content: space-between; align-items: center;">
+          <div class="venue-past-gig">
             <div>
-              <h4 style="color: #fff; margin: 0 0 4px 0; font-size: 0.95rem;">
-                <%= link_to gig.name, gig_path(gig), style: "color: #fff; text-decoration: none;" %>
+              <h4>
+                <%= link_to gig.name, gig_path(gig) %>
               </h4>
-              <p style="color: #666; margin: 0; font-size: 0.8rem;">
+              <p class="past-gig-meta">
                 <%= gig.date.strftime("%b %d, %Y") %>
                 <% if gig.bands.any? %>
                   &bull; <%= gig.bands.map(&:name).join(", ") %>
                 <% end %>
               </p>
             </div>
-            <span style="color: #666; font-size: 0.8rem;">
+            <span class="past-gig-attendance">
               <i class="fa-solid fa-users"></i> <%= gig.gig_attendances.attended.count %> attended
             </span>
           </div>
@@ -158,10 +160,11 @@
       </div>
     </div>
   <% end %>
+
   <%# Gig Calendar %>
-  <div style="background: #1e1e1e; border-radius: 16px; padding: 24px; margin-top: 24px;">
-    <h2 style="color: #fff; margin: 0 0 20px 0; font-size: 1.2rem; display: flex; align-items: center; gap: 8px;">
-      <i class="fa-solid fa-calendar-days" style="color: #C8E938;"></i> Gig Calendar
+  <div class="venue-section venue-calendar-section">
+    <h2 class="venue-section-title venue-section-title-lg">
+      <i class="fa-solid fa-calendar-days"></i> Gig Calendar
     </h2>
     <%
       calendar_events = @venue.gigs.map do |gig|
@@ -182,8 +185,9 @@
          data-calendar-events-value="<%= calendar_events.to_json %>">
     </div>
   </div>
-  <div style="margin-top: 24px;">
-    <%= link_to venues_path, style: "color: #C8E938; text-decoration: none; font-size: 0.9rem;" do %>
+
+  <div class="venue-back-link">
+    <%= link_to venues_path do %>
       <i class="fa-solid fa-arrow-left"></i> Back to venues
     <% end %>
   </div>

@@ -1,6 +1,9 @@
 <%= turbo_stream_from "chat_#{@chat.id}_user_#{current_user.id}" %>
 <div class="chat-area">
   <div class="chat-header">
+    <%= link_to direct_messages_path, class: "mobile-back-btn" do %>
+      <i class="fa-solid fa-arrow-left"></i>
+    <% end %>
     <% other_user = @chat.other_participant(current_user) %>
     <div class="chat-header-info">
       <h4 class="chat-participant-name">

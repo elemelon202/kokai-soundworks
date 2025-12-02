@@ -582,6 +582,353 @@
   }
 }
 
+// ===== MESSAGE BUTTON =====
+.btn-message-profile {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  border-radius: 8px;
+  background-color: #2a2a2a;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: #3a3a3a;
+  }
+}
+
+// ===== FOLLOWER COUNT =====
+.follower-count {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+// ===== SECTION DIVIDER =====
+.section-divider {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid #2a2a2a;
+}
+
+// ===== POSTS SECTION =====
+.posts-section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+// ===== ACTIVITY FEED CARD =====
+.activity-feed-card {
+  margin-top: 20px;
+  padding: 20px;
+  background: #1e1e1e;
+  border-radius: 12px;
+}
+
+// ===== MEDIA & SHORTS SPLIT SECTION =====
+.media-shorts-container {
+  display: flex;
+  gap: 24px;
+  margin-top: 24px;
+  height: 50vh;
+  min-height: 400px;
+}
+
+.media-panel,
+.shorts-panel {
+  flex: 1;
+  background: #1e1e1e;
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.panel-header {
+  padding: 16px 20px;
+  border-bottom: 1px solid #2a2a2a;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  h3 {
+    color: #fff;
+    font-size: 1.1rem;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    i.media-icon { color: #C8E938; }
+    i.shorts-icon { color: #E936AD; }
+  }
+
+  .item-count {
+    color: #666;
+    font-size: 0.8rem;
+  }
+
+  .panel-actions {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+}
+
+.panel-content {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+}
+
+.panel-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  color: #666;
+
+  i {
+    font-size: 3rem;
+    margin-bottom: 12px;
+    opacity: 0.3;
+  }
+
+  p {
+    margin: 0;
+  }
+}
+
+// Shorts empty state
+.shorts-empty {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+
+  i {
+    font-size: 3rem;
+    color: rgba(255,255,255,0.15);
+    margin-bottom: 16px;
+  }
+
+  h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: #666;
+    font-size: 0.85rem;
+    margin: 0 0 16px 0;
+    text-align: center;
+  }
+}
+
+// ===== SHORTS REEL STYLES =====
+.shorts-reel-container {
+  height: 100%;
+  overflow-y: scroll;
+  scroll-snap-type: y mandatory;
+  scroll-snap-stop: always;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+.short-item {
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #171717;
+
+  video {
+    height: 100%;
+    max-width: 100%;
+    object-fit: contain;
+    cursor: pointer;
+  }
+}
+
+.short-play-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 60px;
+  height: 60px;
+  background: rgba(255,255,255,0.95);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+
+  i {
+    color: #171717;
+    font-size: 1.5rem;
+    margin-left: 4px;
+  }
+}
+
+.short-mute-button {
+  position: absolute;
+  bottom: 60px;
+  right: 12px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.6);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 3;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+
+  i {
+    color: #fff;
+    font-size: 0.9rem;
+  }
+}
+
+.short-gradient-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 30%);
+  pointer-events: none;
+}
+
+.short-info {
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+  right: 50px;
+  z-index: 2;
+
+  h4 {
+    color: #fff;
+    font-size: 0.95rem;
+    margin: 0 0 4px 0;
+    font-weight: 600;
+  }
+
+  p {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.8rem;
+    margin: 0;
+  }
+}
+
+.short-scroll-hint {
+  position: absolute;
+  bottom: 80px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: rgba(255,255,255,0.5);
+  font-size: 0.7rem;
+  text-align: center;
+  animation: bounce 2s infinite;
+
+  p {
+    margin: 4px 0 0 0;
+  }
+}
+
+.shorts-nav-dots {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 3;
+
+  .dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.3);
+    transition: background 0.2s;
+
+    &.active {
+      background: #C8E938;
+    }
+  }
+}
+
+// ===== BUTTONS =====
+.btn-discover-shorts {
+  color: #888;
+  font-size: 1rem;
+  transition: color 0.2s;
+  text-decoration: none;
+
+  &:hover {
+    color: #C8E938;
+  }
+}
+
+.btn-add-short {
+  padding: 6px 12px;
+  background: #C8E938;
+  color: #171717;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    filter: brightness(1.1);
+    transform: translateY(-1px);
+  }
+}
+
+.btn-upload-short {
+  padding: 10px 20px;
+  background: #C8E938;
+  color: #171717;
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.9rem;
+  font-weight: 500;
+  transition: all 0.2s;
+
+  &:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+  }
+}
+
+// ===== ANIMATIONS =====
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
+  40% { transform: translateX(-50%) translateY(-8px); }
+  60% { transform: translateX(-50%) translateY(-4px); }
+}
+
 // ===== RESPONSIVE =====
 @media (max-width: 992px) {
   .bottom-profile-content {

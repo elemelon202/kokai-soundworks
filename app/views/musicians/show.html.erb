@@ -25,10 +25,8 @@
           <span>Active Bands: <strong><%= @musician.bands.count %></strong></span>
         </div>
           <%= render "musicians/follow_button", musician: @musician %>
-          <span style="color: #888; font-size: 0.9rem;">
-    <%= pluralize(@musician.followers.count, "follower") %>
-  </span>
-   <%= render "musicians/save_button", musician: @musician %>
+          <span class="follower-count"><%= pluralize(@musician.followers.count, "follower") %></span>
+          <%= render "musicians/save_button", musician: @musician %>
       </div>
     </div>
     <div class="profile-header-right">
@@ -81,23 +79,23 @@
       </div>
 
       <%# Endorsements Section %>
-      <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+      <div class="section-divider">
         <%= render "endorsements/endorsements_section", musician: @musician %>
       </div>
 
       <%# Shoutouts Section %>
-      <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
+      <div class="section-divider">
         <%= render "shoutouts/shoutouts_section", musician: @musician %>
       </div>
 
       <%# Posts/Activity Section %>
       <% musician_posts = @musician.user.posts.where(band_id: nil).includes(:post_likes, :post_comments, images_attachments: :blob, videos_attachments: :blob).recent.limit(5) %>
       <% if musician_posts.any? %>
-        <div style="margin-top: 24px; padding-top: 24px; border-top: 1px solid #2a2a2a;">
-          <h3 class="section-title" style="display: flex; align-items: center; gap: 8px;">
+        <div class="section-divider">
+          <h3 class="section-title">
             <i class="fa-solid fa-newspaper" style="color: #C8E938;"></i> Posts
           </h3>
-          <div style="display: flex; flex-direction: column; gap: 16px; margin-top: 16px;">
+          <div class="posts-section">
             <% musician_posts.each do |post| %>
               <%= render "posts/post", post: post %>
             <% end %>
@@ -134,7 +132,7 @@
       </div>
 
       <%# Activity Feed %>
-      <div style="margin-top: 20px; padding: 20px; background: #1e1e1e; border-radius: 12px;">
+      <div class="activity-feed-card">
         <%= render "activities/activity_feed", musician: @musician %>
       </div>
     </div>
@@ -159,21 +157,19 @@
   <% has_shorts = @musician.musician_shorts.any? %>
 
   <% if has_media || has_shorts %>
-    <div style="display: flex; gap: 24px; margin-top: 24px; height: 50vh; min-height: 400px;">
+    <div class="media-shorts-container">
 
       <%# ----- LEFT: MEDIA CAROUSEL (50%) ----- %>
-      <div style="flex: 1; background: #1e1e1e; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="padding: 16px 20px; border-bottom: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: space-between;">
-          <h3 style="color: #fff; font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-photo-film" style="color: #C8E938;"></i> Media
-          </h3>
+      <div class="media-panel">
+        <div class="panel-header">
+          <h3><i class="fa-solid fa-photo-film media-icon"></i> Media</h3>
           <% if has_media %>
-            <span style="color: #666; font-size: 0.8rem;"><%= all_images.count + all_videos.count %> items</span>
+            <span class="item-count"><%= all_images.count + all_videos.count %> items</span>
           <% end %>
         </div>
 
         <% if has_media %>
-          <div style="flex: 1; position: relative; overflow: hidden;">
+          <div class="panel-content">
             <%# Combined carousel for photos and videos %>
             <% all_media = all_images + all_videos %>
             <div id="mediaCarousel" class="carousel slide h-100" data-bs-ride="carousel" style="height: 100%;">
@@ -207,31 +203,26 @@
             </div>
           </div>
         <% else %>
-          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; color: #666;">
-            <i class="fa-solid fa-image" style="font-size: 3rem; margin-bottom: 12px; opacity: 0.3;"></i>
-            <p style="margin: 0;">No media uploaded yet</p>
+          <div class="panel-empty">
+            <i class="fa-solid fa-image"></i>
+            <p>No media uploaded yet</p>
           </div>
         <% end %>
       </div>
 
       <%# ----- RIGHT: SHORTS REEL (50%) ----- %>
-      <div data-controller="shorts-reel" style="flex: 1; background: #1e1e1e; border-radius: 16px; overflow: hidden; display: flex; flex-direction: column;">
-        <div style="padding: 16px 20px; border-bottom: 1px solid #2a2a2a; display: flex; align-items: center; justify-content: space-between;">
-          <h3 style="color: #fff; font-size: 1.1rem; margin: 0; display: flex; align-items: center; gap: 8px;">
-            <i class="fa-solid fa-clapperboard" style="color: #E936AD;"></i> Shorts
-          </h3>
-          <div style="display: flex; align-items: center; gap: 12px;">
+      <div data-controller="shorts-reel" class="shorts-panel">
+        <div class="panel-header">
+          <h3><i class="fa-solid fa-clapperboard shorts-icon"></i> Shorts</h3>
+          <div class="panel-actions">
             <% if has_shorts %>
-              <span style="color: #666; font-size: 0.8rem;" data-shorts-reel-target="counter">1 / <%= @musician.musician_shorts.count %></span>
+              <span class="item-count" data-shorts-reel-target="counter">1 / <%= @musician.musician_shorts.count %></span>
             <% end %>
-            <%= link_to discover_shorts_path, style: "color: #888; font-size: 1rem; transition: color 0.2s;", title: "Discover Shorts",
-                onmouseover: "this.style.color='#C8E938'", onmouseout: "this.style.color='#888'" do %>
+            <%= link_to discover_shorts_path, class: "btn-discover-shorts", title: "Discover Shorts" do %>
               <i class="fa-solid fa-compass"></i>
             <% end %>
             <% if current_user && current_user.id == @musician.user_id %>
-              <%= link_to new_musician_short_path(@musician), style: "padding: 6px 12px; background: #C8E938; color: #171717; border-radius: 6px; text-decoration: none; font-size: 0.8rem; font-weight: 500; transition: all 0.2s;",
-                  onmouseover: "this.style.filter='brightness(1.1)'; this.style.transform='translateY(-1px)';",
-                  onmouseout: "this.style.filter=''; this.style.transform='';" do %>
+              <%= link_to new_musician_short_path(@musician), class: "btn-add-short" do %>
                 <i class="fa-solid fa-plus"></i> Add
               <% end %>
             <% end %>
@@ -239,55 +230,54 @@
         </div>
 
         <% if has_shorts %>
-          <div style="flex: 1; overflow: hidden; position: relative;">
-            <div data-shorts-reel-target="container" style="height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; scroll-snap-stop: always; scrollbar-width: none; -ms-overflow-style: none;">
+          <div class="panel-content">
+            <div data-shorts-reel-target="container" class="shorts-reel-container">
               <% @musician.musician_shorts.each_with_index do |short, index| %>
                 <div data-shorts-reel-target="short"
                      data-controller="video-player"
                      data-action="mouseenter->video-player#showMute mouseleave->video-player#hideMute"
                      data-index="<%= index %>"
-                     style="height: 100%; scroll-snap-align: start; scroll-snap-stop: always; position: relative; display: flex; align-items: center; justify-content: center; background: #171717;">
+                     class="short-item">
                   <% if short.video.attached? %>
                     <video preload="metadata"
                            loop
                            playsinline
                            muted
                            data-video-player-target="video"
-                           data-action="click->video-player#toggle"
-                           style="height: 100%; max-width: 100%; object-fit: contain; cursor: pointer;">
+                           data-action="click->video-player#toggle">
                       <source src="<%= url_for(short.video) %>" type="<%= short.video.content_type %>">
                     </video>
 
                     <%# Play button overlay %>
                     <div data-video-player-target="playButton"
                          data-action="click->video-player#toggle"
-                         style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 60px; height: 60px; background: rgba(255,255,255,0.95); border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: opacity 0.3s ease;">
-                      <i class="fa-solid fa-play" style="color: #171717; font-size: 1.5rem; margin-left: 4px;"></i>
+                         class="short-play-button">
+                      <i class="fa-solid fa-play"></i>
                     </div>
 
-                    <%# Mute/Unmute button - bottom right, visible on hover %>
+                    <%# Mute/Unmute button %>
                     <button data-video-player-target="muteButton"
                             data-action="click->video-player#toggleMute"
-                            style="position: absolute; bottom: 60px; right: 12px; width: 36px; height: 36px; border-radius: 50%; background: rgba(0,0,0,0.6); border: none; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 3; opacity: 0; transition: opacity 0.2s ease;">
-                      <i class="fa-solid fa-volume-xmark" data-video-player-target="muteIcon" style="color: #fff; font-size: 0.9rem;"></i>
+                            class="short-mute-button">
+                      <i class="fa-solid fa-volume-xmark" data-video-player-target="muteIcon"></i>
                     </button>
 
                     <%# Gradient overlay %>
-                    <div style="position: absolute; inset: 0; background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 30%); pointer-events: none;"></div>
+                    <div class="short-gradient-overlay"></div>
 
                     <%# Short info %>
-                    <div style="position: absolute; bottom: 16px; left: 16px; right: 50px; z-index: 2;">
-                      <h4 style="color: #fff; font-size: 0.95rem; margin: 0 0 4px 0; font-weight: 600;"><%= short.title %></h4>
+                    <div class="short-info">
+                      <h4><%= short.title %></h4>
                       <% if short.description.present? %>
-                        <p style="color: rgba(255,255,255,0.7); font-size: 0.8rem; margin: 0;"><%= truncate(short.description, length: 60) %></p>
+                        <p><%= truncate(short.description, length: 60) %></p>
                       <% end %>
                     </div>
 
                     <%# Scroll hint %>
                     <% if index == 0 && @musician.musician_shorts.count > 1 %>
-                      <div style="position: absolute; bottom: 80px; left: 50%; transform: translateX(-50%); color: rgba(255,255,255,0.5); font-size: 0.7rem; text-align: center; animation: bounce 2s infinite;">
+                      <div class="short-scroll-hint">
                         <i class="fa-solid fa-chevron-down"></i>
-                        <p style="margin: 4px 0 0 0;">Scroll for more</p>
+                        <p>Scroll for more</p>
                       </div>
                     <% end %>
                   <% end %>
@@ -297,18 +287,18 @@
 
             <%# Navigation dots %>
             <% if @musician.musician_shorts.count > 1 %>
-              <div style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 8px; z-index: 3;">
+              <div class="shorts-nav-dots">
                 <% @musician.musician_shorts.each_with_index do |short, index| %>
-                  <div data-dot style="width: 8px; height: 8px; border-radius: 50%; background: <%= index == 0 ? '#C8E938' : 'rgba(255,255,255,0.3)' %>; transition: background 0.2s;"></div>
+                  <div data-dot class="dot <%= 'active' if index == 0 %>"></div>
                 <% end %>
               </div>
             <% end %>
           </div>
         <% else %>
-          <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px;">
-            <i class="fa-solid fa-film" style="font-size: 3rem; color: rgba(255,255,255,0.15); margin-bottom: 16px;"></i>
-            <h4 style="color: #fff; font-size: 1rem; margin: 0 0 8px 0;">No shorts yet</h4>
-            <p style="color: #666; font-size: 0.85rem; margin: 0 0 16px 0; text-align: center;">
+          <div class="shorts-empty">
+            <i class="fa-solid fa-film"></i>
+            <h4>No shorts yet</h4>
+            <p>
               <% if current_user && current_user.id == @musician.user_id %>
                 Share your music moments with short videos
               <% else %>
@@ -316,9 +306,7 @@
               <% end %>
             </p>
             <% if current_user && current_user.id == @musician.user_id %>
-              <%= link_to new_musician_short_path(@musician), style: "padding: 10px 20px; background: #C8E938; color: #171717; border-radius: 8px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: all 0.2s;",
-                  onmouseover: "this.style.filter='brightness(1.1)'; this.style.transform='translateY(-2px)';",
-                  onmouseout: "this.style.filter=''; this.style.transform='';" do %>
+              <%= link_to new_musician_short_path(@musician), class: "btn-upload-short" do %>
                 <i class="fa-solid fa-plus"></i> Upload Your First Short
               <% end %>
             <% end %>
@@ -326,16 +314,5 @@
         <% end %>
       </div>
     </div>
-
-    <style>
-      [data-shorts-reel-target="container"]::-webkit-scrollbar {
-        display: none;
-      }
-      @keyframes bounce {
-        0%, 20%, 50%, 80%, 100% { transform: translateX(-50%) translateY(0); }
-        40% { transform: translateX(-50%) translateY(-8px); }
-        60% { transform: translateX(-50%) translateY(-4px); }
-      }
-    </style>
   <% end %>
 </div>

@@ -1,0 +1,198 @@
+// Friendships Page Styles
+
+$kokai-yellow: #C8E938;
+$kokai-pink: #E936AD;
+
+.friendships-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.friendships-title {
+  color: #fff;
+  font-size: 1.75rem;
+  margin-bottom: 24px;
+}
+
+// ===== CARDS =====
+.friendships-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.friendships-card-title {
+  color: #fff;
+  font-size: 1.1rem;
+  margin: 0 0 16px 0;
+
+  i {
+    &.pink {
+      color: $kokai-pink;
+    }
+
+    &.lime {
+      color: $kokai-yellow;
+    }
+
+    &.gray {
+      color: #888;
+    }
+  }
+}
+
+// ===== FRIEND LIST =====
+.friendships-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.friendships-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.friendship-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #2a2a2a;
+  border-radius: 8px;
+}
+
+.friendship-avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: #444;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  span {
+    color: #888;
+    font-size: 1.2rem;
+  }
+}
+
+.friendship-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.friendship-name {
+  color: #fff;
+  margin: 0;
+  font-weight: 500;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.friendship-meta {
+  color: #666;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.friendship-pending {
+  color: #888;
+  margin: 0;
+  font-size: 0.8rem;
+}
+
+.friendship-profile-link {
+  color: #888;
+  font-size: 0.8rem;
+  text-decoration: none;
+
+  &:hover {
+    color: $kokai-yellow;
+  }
+}
+
+// ===== BUTTONS =====
+.friendship-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-friend-accept {
+  padding: 8px 16px;
+  background: $kokai-yellow;
+  color: #000;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover {
+    background: darken($kokai-yellow, 5%);
+  }
+}
+
+.btn-friend-decline,
+.btn-friend-cancel {
+  padding: 8px 16px;
+  background: #444;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover {
+    background: #555;
+  }
+}
+
+// ===== EMPTY STATE =====
+.friendships-empty {
+  text-align: center;
+  padding: 40px;
+
+  i {
+    font-size: 2.5rem;
+    color: #333;
+    margin-bottom: 12px;
+  }
+
+  p {
+    color: #666;
+    margin: 0;
+
+    &.sub {
+      color: #555;
+      margin: 8px 0 0 0;
+      font-size: 0.9rem;
+    }
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 768px) {
+  .friendships-page {
+    padding: 16px;
+  }
+
+  .friendships-grid {
+    grid-template-columns: 1fr;
+  }
+}

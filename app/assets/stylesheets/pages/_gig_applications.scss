@@ -1,0 +1,191 @@
+// Gig Applications Page Styles
+
+$kokai-yellow: #C8E938;
+
+.gig-applications-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.gig-applications-title {
+  color: #fff;
+  margin-bottom: 24px;
+
+  i {
+    color: $kokai-yellow;
+  }
+}
+
+// ===== SECTION CARDS =====
+.gig-applications-section {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.gig-applications-section-title {
+  font-size: 1.1rem;
+  margin: 0 0 16px 0;
+
+  &.pending {
+    color: $kokai-yellow;
+  }
+
+  &.processed {
+    color: #888;
+  }
+}
+
+// ===== APPLICATION LIST =====
+.gig-applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gig-application-card {
+  background: #252525;
+  padding: 16px;
+  border-radius: 10px;
+}
+
+.gig-application-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.gig-application-details {
+  flex: 1;
+}
+
+.gig-application-band {
+  color: #fff;
+  margin: 0 0 6px 0;
+
+  a {
+    color: #fff;
+    text-decoration: none;
+
+    &:hover {
+      color: $kokai-yellow;
+    }
+  }
+}
+
+.gig-application-info {
+  color: #888;
+  margin: 0 0 4px 0;
+  font-size: 0.85rem;
+
+  i {
+    color: $kokai-yellow;
+  }
+}
+
+.gig-application-message {
+  color: #aaa;
+  margin: 10px 0 0 0;
+  font-size: 0.9rem;
+  font-style: italic;
+}
+
+// ===== ACTION BUTTONS =====
+.gig-application-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-approve {
+  background: $kokai-yellow;
+  color: #171717;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: darken($kokai-yellow, 10%);
+  }
+}
+
+.btn-reject {
+  background: #ff4444;
+  color: #fff;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-size: 0.85rem;
+  cursor: pointer;
+
+  &:hover {
+    background: darken(#ff4444, 10%);
+  }
+}
+
+// ===== EMPTY STATE =====
+.gig-applications-empty {
+  color: #666;
+  text-align: center;
+  padding: 20px;
+}
+
+// ===== PROCESSED APPLICATIONS =====
+.processed-applications-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.processed-application-row {
+  background: #252525;
+  padding: 12px 16px;
+  border-radius: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.processed-application-info {
+  .band-name {
+    color: #fff;
+  }
+
+  .gig-name {
+    color: #666;
+  }
+}
+
+.application-status-badge {
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  &.approved {
+    background: $kokai-yellow;
+    color: #171717;
+  }
+
+  &.rejected {
+    background: #ff4444;
+    color: #fff;
+  }
+}
+
+// ===== BACK LINK =====
+.gig-applications-back {
+  display: inline-block;
+  margin-top: 24px;
+  color: $kokai-yellow;
+
+  &:hover {
+    color: darken($kokai-yellow, 10%);
+  }
+}

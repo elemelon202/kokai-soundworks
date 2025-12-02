@@ -1,49 +1,49 @@
-<div class="card h-100" style="background: <%= winner ? '#1e1e1e' : '#1e1e1e' %>; border: 1px solid <%= winner ? '#fbbf24' : '#2a2a2a' %>; border-radius: 12px; overflow: hidden;">
+<div class="response-card <%= 'winner' if winner %>">
   <%# Video thumbnail %>
-  <div style="position: relative; aspect-ratio: 9/16; max-height: 300px; background: #000;">
+  <div class="response-card-video">
     <% if response.musician_short.video.attached? %>
-      <video controls loop playsinline muted style="width: 100%; height: 100%; object-fit: cover;">
+      <video controls loop playsinline muted>
         <source src="<%= url_for(response.musician_short.video) %>" type="<%= response.musician_short.video.content_type %>">
       </video>
     <% end %>
     <% if winner %>
-      <div style="position: absolute; top: 10px; left: 10px;">
-        <span class="badge" style="background: #fbbf24; color: #000; font-weight: 600;">
-          <i class="fa-solid fa-crown me-1"></i> WINNER
-        </span>
-      </div>
+      <span class="winner-trophy-badge">
+        <i class="fa-solid fa-crown me-1"></i> WINNER
+      </span>
     <% end %>
   </div>
 
-  <div class="card-body" style="padding: 12px;">
+  <div class="response-card-body">
     <%# Musician info %>
     <div class="d-flex align-items-center mb-2">
-      <%= link_to musician_path(response.musician), class: "d-flex align-items-center text-decoration-none" do %>
+      <%= link_to musician_path(response.musician), class: "response-card-musician" do %>
         <% if response.musician.avatar.attached? %>
-          <%= cl_image_tag(response.musician.avatar.key, style: "width: 32px; height: 32px; border-radius: 50%; object-fit: cover; margin-right: 10px;") %>
+          <div class="response-card-avatar">
+            <%= cl_image_tag(response.musician.avatar.key) %>
+          </div>
         <% else %>
-          <div style="width: 32px; height: 32px; border-radius: 50%; background: #2a2a2a; display: flex; align-items: center; justify-content: center; margin-right: 10px;">
-            <span style="color: #fff; font-size: 0.7rem; font-weight: 600;"><%= response.musician.name[0].upcase %></span>
+          <div class="response-card-avatar placeholder">
+            <span><%= response.musician.name[0].upcase %></span>
           </div>
         <% end %>
         <div>
-          <span style="color: #fff; font-weight: 500; font-size: 0.9rem;"><%= response.musician.name %></span>
-          <p style="color: #888; font-size: 0.75rem; margin: 0;"><%= response.musician.instrument %></p>
+          <span class="response-card-name"><%= response.musician.name %></span>
+          <p class="response-card-time"><%= response.musician.instrument %></p>
         </div>
       <% end %>
     </div>
 
     <%# Vote section %>
-    <div class="d-flex justify-content-between align-items-center mt-2 pt-2" style="border-top: 1px solid #2a2a2a;">
-      <div style="color: #fff; font-size: 0.9rem;">
-        <i class="fa-solid fa-fire" style="color: #E936AD;"></i>
+    <div class="response-card-footer">
+      <span class="response-vote-count">
+        <i class="fa-solid fa-fire"></i>
         <strong><%= response.votes_count %></strong> votes
-      </div>
+      </span>
 
       <% challenge = response.challenge %>
       <% if challenge.open? || challenge.voting? %>
         <% if response.voted_by?(current_user) %>
-          <%= button_to challenge_unvote_path(response_id: response.id), method: :delete, class: "btn btn-sm", style: "background: #E936AD; color: #fff;" do %>
+          <%= button_to challenge_unvote_path(response_id: response.id), method: :delete, class: "btn-vote-response voted" do %>
             <i class="fa-solid fa-check me-1"></i> Voted
           <% end %>
         <% elsif current_user.musician != response.musician %>
@@ -54,7 +54,7 @@
 
         <%# Creator can pick winner %>
         <% if challenge.creator == current_user.musician && (challenge.open? || challenge.voting?) %>
-          <%= button_to pick_winner_challenge_path(challenge, response_id: response.id), method: :post, class: "btn btn-sm", style: "background: #fbbf24; color: #000;", data: { confirm: "Select this as the winner?" } do %>
+          <%= button_to pick_winner_challenge_path(challenge, response_id: response.id), method: :post, class: "btn btn-sm btn-pick-winner", data: { confirm: "Select this as the winner?" } do %>
             <i class="fa-solid fa-trophy me-1"></i> Pick
           <% end %>
         <% end %>

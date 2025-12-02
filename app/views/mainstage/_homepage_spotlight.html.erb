@@ -7,155 +7,62 @@
 <% has_musician_winner = musician_winner && musician_winner.created_at > 1.week.ago %>
 <% has_band_winner = band_winner && band_winner.created_at > 1.week.ago %>
 
-<style>
-  @media (max-width: 768px) {
-    .mainstage-spotlight {
-      padding: 0 8px !important;
-      margin-bottom: 24px !important;
-      max-width: 100vw !important;
-      overflow-x: hidden !important;
-      box-sizing: border-box !important;
-    }
-
-    .mainstage-spotlight .mainstage-header {
-      margin-bottom: 16px !important;
-    }
-
-    .mainstage-spotlight .mainstage-header i {
-      font-size: 1.2rem !important;
-    }
-
-    .mainstage-spotlight .mainstage-header span {
-      font-size: 1rem !important;
-    }
-
-    .mainstage-spotlight .winner-cards-row {
-      flex-direction: column !important;
-      gap: 12px !important;
-      width: 100% !important;
-    }
-
-    .mainstage-spotlight .winner-card {
-      min-width: unset !important;
-      max-width: 100% !important;
-      width: 100% !important;
-      padding: 14px !important;
-      box-sizing: border-box !important;
-    }
-
-    .mainstage-spotlight .winner-card-inner {
-      flex-direction: row !important;
-      text-align: left !important;
-      gap: 10px !important;
-      flex-wrap: nowrap !important;
-    }
-
-    .mainstage-spotlight .winner-card-inner > div:first-child {
-      width: 45px !important;
-      height: 45px !important;
-      flex-shrink: 0 !important;
-    }
-
-    .mainstage-spotlight .winner-card-inner > div:nth-child(2) {
-      text-align: left !important;
-      flex: 1 !important;
-      min-width: 0 !important;
-      overflow: hidden !important;
-    }
-
-    .mainstage-spotlight .winner-card-inner > div:nth-child(2) a {
-      font-size: 0.95rem !important;
-      display: block !important;
-      overflow: hidden !important;
-      text-overflow: ellipsis !important;
-      white-space: nowrap !important;
-    }
-
-    .mainstage-spotlight .winner-card-inner > div:last-child {
-      padding: 6px 10px !important;
-      flex-shrink: 0 !important;
-    }
-
-    .mainstage-spotlight .winner-card-inner > div:last-child > div:first-child {
-      font-size: 1rem !important;
-    }
-
-    .mainstage-spotlight .winner-buttons {
-      flex-direction: row !important;
-      width: 100%;
-      gap: 8px !important;
-      margin-top: 12px !important;
-    }
-
-    .mainstage-spotlight .winner-buttons a {
-      flex: 1 !important;
-      text-align: center;
-      padding: 8px 10px !important;
-      font-size: 0.7rem !important;
-    }
-  }
-</style>
-
-<div class="mainstage-spotlight" style="max-width: 900px; margin: 0 auto 32px auto; padding: 0 16px;">
+<div class="mainstage-spotlight">
   <%# Show winners if we have any %>
   <% if has_musician_winner || has_band_winner %>
-    <div class="mainstage-header" style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 20px;">
-      <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.5rem;"></i>
-      <span style="color: #fbbf24; font-size: 1.3rem; font-weight: 700;">MAINSTAGE WINNERS</span>
-      <i class="fa-solid fa-trophy" style="color: #fbbf24; font-size: 1.5rem;"></i>
+    <div class="mainstage-header">
+      <i class="fa-solid fa-trophy"></i>
+      <span>MAINSTAGE WINNERS</span>
+      <i class="fa-solid fa-trophy"></i>
     </div>
 
-    <div class="winner-cards-row" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+    <div class="winner-cards-row">
       <%# Musician Winner Card %>
       <% if has_musician_winner %>
-        <div class="winner-card" style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 14px;">
-            <i class="fa-solid fa-user" style="color: #C8E938; font-size: 1rem;"></i>
-            <span style="color: #C8E938; font-size: 0.95rem; font-weight: 600;">MUSICIAN</span>
+        <div class="winner-card">
+          <div class="winner-card-label">
+            <i class="fa-solid fa-user musician"></i>
+            <span class="musician">MUSICIAN</span>
           </div>
 
-          <div class="winner-card-inner" style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <div class="winner-card-inner">
             <%# Winner avatar %>
-            <div style="width: 70px; height: 70px; border-radius: 50%; background: #333; overflow: hidden; border: 3px solid #fbbf24; flex-shrink: 0;">
+            <div class="winner-avatar musician">
               <% if musician_winner.musician.avatar.attached? %>
-                <%= cl_image_tag(musician_winner.musician.avatar.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+                <%= cl_image_tag(musician_winner.musician.avatar.key) %>
               <% else %>
-                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #888; font-weight: 600; font-size: 1.3rem;">
-                  <%= musician_winner.musician.name[0].upcase %>
-                </div>
+                <div class="initials"><%= musician_winner.musician.name[0].upcase %></div>
               <% end %>
             </div>
 
             <%# Winner info %>
-            <div style="text-align: left; flex: 1; min-width: 120px;">
-              <%= link_to musician_path(musician_winner.musician), style: "color: #fff; text-decoration: none; font-size: 1.2rem; font-weight: 700;" do %>
+            <div class="winner-info">
+              <%= link_to musician_path(musician_winner.musician), class: "winner-name" do %>
                 <%= musician_winner.musician.name %>
               <% end %>
-              <div style="color: #888; font-size: 0.8rem; margin-top: 2px;">
-                <%= musician_winner.week_label %>
-              </div>
-              <div style="display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap;">
-                <span style="color: #C8E938; font-size: 0.75rem;">
+              <div class="winner-week"><%= musician_winner.week_label %></div>
+              <div class="winner-stats">
+                <span class="engagement">
                   <i class="fa-solid fa-bolt"></i> <%= musician_winner.engagement_score %>
                 </span>
-                <span style="color: #E936AD; font-size: 0.75rem;">
+                <span class="votes">
                   <i class="fa-solid fa-hand-pointer"></i> <%= musician_winner.vote_score / 10 %> votes
                 </span>
               </div>
             </div>
 
             <%# Score badge %>
-            <div style="padding: 10px 16px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 10px;">
-              <div style="color: #000; font-size: 1.4rem; font-weight: 800;"><%= musician_winner.final_score %></div>
-              <div style="color: #000; font-size: 0.65rem; opacity: 0.8;">POINTS</div>
+            <div class="winner-score-badge">
+              <div class="score-value"><%= musician_winner.final_score %></div>
+              <div class="score-label">POINTS</div>
             </div>
           </div>
 
-          <div class="winner-buttons" style="margin-top: 14px; display: flex; justify-content: center; gap: 10px;">
-            <%= link_to musician_path(musician_winner.musician), style: "padding: 8px 18px; background: #C8E938; color: #000; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.8rem;" do %>
+          <div class="winner-buttons">
+            <%= link_to musician_path(musician_winner.musician), class: "btn-profile musician" do %>
               View Profile
             <% end %>
-            <%= link_to mainstage_path, style: "padding: 8px 18px; background: #2a2a2a; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 0.8rem; border: 1px solid #3a3a3a;" do %>
+            <%= link_to mainstage_path, class: "btn-leaderboard" do %>
               Leaderboard
             <% end %>
           </div>
@@ -164,56 +71,52 @@
 
       <%# Band Winner Card %>
       <% if has_band_winner %>
-        <div class="winner-card" style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
-          <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 14px;">
-            <i class="fa-solid fa-users" style="color: #E936AD; font-size: 1rem;"></i>
-            <span style="color: #E936AD; font-size: 0.95rem; font-weight: 600;">BAND</span>
+        <div class="winner-card">
+          <div class="winner-card-label">
+            <i class="fa-solid fa-users band"></i>
+            <span class="band">BAND</span>
           </div>
 
-          <div class="winner-card-inner" style="display: flex; align-items: center; justify-content: center; gap: 16px; flex-wrap: wrap;">
+          <div class="winner-card-inner">
             <%# Winner avatar %>
-            <div style="width: 70px; height: 70px; border-radius: 12px; background: #333; overflow: hidden; border: 3px solid #fbbf24; flex-shrink: 0;">
+            <div class="winner-avatar band">
               <% if band_winner.band.banner.attached? %>
-                <%= cl_image_tag(band_winner.band.banner.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+                <%= cl_image_tag(band_winner.band.banner.key) %>
               <% elsif band_winner.band.images.attached? %>
-                <%= cl_image_tag(band_winner.band.images.first.key, style: "width: 100%; height: 100%; object-fit: cover;") %>
+                <%= cl_image_tag(band_winner.band.images.first.key) %>
               <% else %>
-                <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: #888; font-weight: 600; font-size: 1.3rem;">
-                  <%= band_winner.band.name[0].upcase %>
-                </div>
+                <div class="initials"><%= band_winner.band.name[0].upcase %></div>
               <% end %>
             </div>
 
             <%# Winner info %>
-            <div style="text-align: left; flex: 1; min-width: 120px;">
-              <%= link_to band_path(band_winner.band), style: "color: #fff; text-decoration: none; font-size: 1.2rem; font-weight: 700;" do %>
+            <div class="winner-info">
+              <%= link_to band_path(band_winner.band), class: "winner-name" do %>
                 <%= band_winner.band.name %>
               <% end %>
-              <div style="color: #888; font-size: 0.8rem; margin-top: 2px;">
-                <%= band_winner.week_label %>
-              </div>
-              <div style="display: flex; gap: 12px; margin-top: 6px; flex-wrap: wrap;">
-                <span style="color: #C8E938; font-size: 0.75rem;">
+              <div class="winner-week"><%= band_winner.week_label %></div>
+              <div class="winner-stats">
+                <span class="engagement">
                   <i class="fa-solid fa-bolt"></i> <%= band_winner.engagement_score %>
                 </span>
-                <span style="color: #E936AD; font-size: 0.75rem;">
+                <span class="votes">
                   <i class="fa-solid fa-hand-pointer"></i> <%= band_winner.vote_score / 10 %> votes
                 </span>
               </div>
             </div>
 
             <%# Score badge %>
-            <div style="padding: 10px 16px; background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%); border-radius: 10px;">
-              <div style="color: #000; font-size: 1.4rem; font-weight: 800;"><%= band_winner.final_score %></div>
-              <div style="color: #000; font-size: 0.65rem; opacity: 0.8;">POINTS</div>
+            <div class="winner-score-badge">
+              <div class="score-value"><%= band_winner.final_score %></div>
+              <div class="score-label">POINTS</div>
             </div>
           </div>
 
-          <div class="winner-buttons" style="margin-top: 14px; display: flex; justify-content: center; gap: 10px;">
-            <%= link_to band_path(band_winner.band), style: "padding: 8px 18px; background: #E936AD; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 600; font-size: 0.8rem;" do %>
+          <div class="winner-buttons">
+            <%= link_to band_path(band_winner.band), class: "btn-profile band" do %>
               View Profile
             <% end %>
-            <%= link_to band_mainstage_path, style: "padding: 8px 18px; background: #2a2a2a; color: #fff; border-radius: 6px; text-decoration: none; font-weight: 500; font-size: 0.8rem; border: 1px solid #3a3a3a;" do %>
+            <%= link_to band_mainstage_path, class: "btn-leaderboard" do %>
               Leaderboard
             <% end %>
           </div>
@@ -222,39 +125,39 @@
     </div>
   <% else %>
     <%# Show current contests in progress %>
-    <div class="winner-cards-row" style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center;">
+    <div class="winner-cards-row">
       <%# Musician Contest Card %>
-      <div class="winner-card" style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px;">
-          <i class="fa-solid fa-fire" style="color: #C8E938; font-size: 1.1rem;"></i>
-          <span style="color: #C8E938; font-size: 1rem; font-weight: 700;">MUSICIAN MAINSTAGE</span>
+      <div class="winner-card">
+        <div class="contest-label">
+          <i class="fa-solid fa-fire musician"></i>
+          <span class="musician">MUSICIAN MAINSTAGE</span>
         </div>
 
-        <p style="color: #888; font-size: 0.85rem; margin: 0 0 12px 0;">
+        <p class="contest-dates">
           <%= musician_contest.start_date.strftime('%b %d') %> - <%= musician_contest.end_date.strftime('%b %d') %> &bull;
           <% days_left = (musician_contest.end_date - Date.current).to_i %>
-          <span style="color: #fff;"><%= days_left %> <%= 'day'.pluralize(days_left) %> left</span>
+          <span class="days-left"><%= days_left %> <%= 'day'.pluralize(days_left) %> left</span>
         </p>
 
-        <%= link_to mainstage_path, style: "display: inline-block; padding: 10px 24px; background: linear-gradient(135deg, #C8E938 0%, #a8c92e 100%); color: #000; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;" do %>
+        <%= link_to mainstage_path, class: "btn-vote musician" do %>
           <i class="fa-solid fa-trophy"></i> Vote Now
         <% end %>
       </div>
 
       <%# Band Contest Card %>
-      <div class="winner-card" style="flex: 1; min-width: 280px; max-width: 420px; background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%); border: 1px solid #3a3a3a; border-radius: 16px; padding: 20px; text-align: center;">
-        <div style="display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 10px;">
-          <i class="fa-solid fa-fire" style="color: #E936AD; font-size: 1.1rem;"></i>
-          <span style="color: #E936AD; font-size: 1rem; font-weight: 700;">BAND MAINSTAGE</span>
+      <div class="winner-card">
+        <div class="contest-label">
+          <i class="fa-solid fa-fire band"></i>
+          <span class="band">BAND MAINSTAGE</span>
         </div>
 
-        <p style="color: #888; font-size: 0.85rem; margin: 0 0 12px 0;">
+        <p class="contest-dates">
           <%= band_contest.start_date.strftime('%b %d') %> - <%= band_contest.end_date.strftime('%b %d') %> &bull;
           <% days_left = (band_contest.end_date - Date.current).to_i %>
-          <span style="color: #fff;"><%= days_left %> <%= 'day'.pluralize(days_left) %> left</span>
+          <span class="days-left"><%= days_left %> <%= 'day'.pluralize(days_left) %> left</span>
         </p>
 
-        <%= link_to band_mainstage_path, style: "display: inline-block; padding: 10px 24px; background: linear-gradient(135deg, #E936AD 0%, #c72990 100%); color: #fff; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 0.9rem;" do %>
+        <%= link_to band_mainstage_path, class: "btn-vote band" do %>
           <i class="fa-solid fa-trophy"></i> Vote Now
         <% end %>
       </div>

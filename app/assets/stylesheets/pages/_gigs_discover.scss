@@ -1,0 +1,312 @@
+// Gigs Discover Page Styles
+
+$kokai-yellow: #C8E938;
+$kokai-pink: #E936AD;
+
+.discover-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+// ===== HEADER =====
+.discover-header {
+  margin-bottom: 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.discover-title {
+  color: #fff;
+  margin: 0 0 8px 0;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  i {
+    color: $kokai-yellow;
+  }
+}
+
+.discover-subtitle {
+  color: #888;
+  margin: 0;
+}
+
+.btn-swipe-mode {
+  background: linear-gradient(135deg, $kokai-pink 0%, darken($kokai-pink, 10%) 100%);
+  color: #fff;
+  padding: 12px 20px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  white-space: nowrap;
+
+  &:hover {
+    background: linear-gradient(135deg, lighten($kokai-pink, 5%) 0%, $kokai-pink 100%);
+    color: #fff;
+  }
+}
+
+// ===== FILTERS =====
+.discover-filters {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px;
+}
+
+.discover-filter-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  align-items: flex-end;
+}
+
+.discover-filter-field {
+  flex: 1;
+  min-width: 150px;
+}
+
+.discover-filter-label {
+  color: #888;
+  font-size: 0.85rem;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.discover-filter-select,
+.discover-filter-input {
+  width: 100%;
+  background: #252525;
+  border: 1px solid #333;
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: #fff;
+  font-size: 0.9rem;
+  box-sizing: border-box;
+
+  &:focus {
+    outline: none;
+    border-color: $kokai-yellow;
+  }
+}
+
+.discover-filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: $kokai-yellow;
+  }
+
+  label {
+    color: #fff;
+    font-size: 0.9rem;
+
+    i {
+      color: $kokai-pink;
+    }
+  }
+}
+
+.discover-filter-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.btn-discover-search {
+  background: $kokai-yellow;
+  color: #171717;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+
+  &:hover {
+    background: darken($kokai-yellow, 5%);
+  }
+}
+
+.btn-discover-clear {
+  background: #333;
+  color: #fff;
+  padding: 10px 16px;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-decoration: none;
+
+  &:hover {
+    background: #444;
+  }
+}
+
+// ===== RESULTS =====
+.discover-results {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.discover-gig-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.discover-gig-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.discover-gig-info {
+  flex: 1;
+}
+
+.discover-gig-name {
+  color: #fff;
+  margin: 0 0 8px 0;
+  font-size: 1.2rem;
+}
+
+.discover-gig-meta {
+  color: #888;
+  margin: 0 0 6px 0;
+  font-size: 0.9rem;
+
+  i {
+    color: $kokai-yellow;
+    margin-right: 6px;
+  }
+
+  a {
+    color: $kokai-yellow;
+    text-decoration: none;
+
+    &:hover {
+      text-decoration: underline;
+    }
+  }
+
+  .city {
+    color: #666;
+  }
+}
+
+.discover-gig-bands {
+  margin-top: 12px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.discover-band-tag {
+  background: #252525;
+  color: #fff;
+  padding: 6px 12px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  text-decoration: none;
+
+  &:hover {
+    background: #2a2a2a;
+  }
+
+  i {
+    color: $kokai-pink;
+  }
+
+  .followed {
+    color: $kokai-pink;
+    font-size: 0.7rem;
+  }
+}
+
+.discover-gig-price {
+  color: $kokai-yellow;
+  margin: 12px 0 0 0;
+  font-size: 0.95rem;
+  font-weight: 600;
+}
+
+.discover-gig-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+
+// ===== EMPTY STATE =====
+.discover-empty {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 60px 40px;
+  text-align: center;
+
+  i {
+    font-size: 3rem;
+    color: #333;
+    margin-bottom: 16px;
+  }
+
+  h3 {
+    color: #fff;
+    margin: 0 0 8px 0;
+  }
+
+  p {
+    color: #888;
+    margin: 0;
+  }
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 768px) {
+  .discover-page {
+    padding: 16px;
+  }
+
+  .discover-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .btn-swipe-mode {
+    text-align: center;
+    justify-content: center;
+  }
+
+  .discover-filter-form {
+    flex-direction: column;
+  }
+
+  .discover-filter-field {
+    min-width: 100%;
+  }
+
+  .discover-gig-content {
+    flex-direction: column;
+  }
+
+  .discover-gig-actions {
+    align-items: stretch;
+    width: 100%;
+  }
+}

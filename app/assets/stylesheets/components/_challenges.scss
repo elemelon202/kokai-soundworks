@@ -1,0 +1,524 @@
+// Challenges Component Styles
+
+$kokai-yellow: #C8E938;
+$kokai-pink: #E936AD;
+
+// ===== CHALLENGE CARD =====
+.challenge-card {
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.challenge-card-header {
+  background: linear-gradient(135deg, $kokai-pink 0%, #7B2D8E 100%);
+  border: none;
+  padding: 16px;
+}
+
+.challenge-badge {
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+
+  &.badge-original {
+    background: rgba(255, 255, 255, 0.2);
+    color: #fff;
+  }
+
+  &.badge-open {
+    background: $kokai-yellow;
+    color: #000;
+  }
+
+  &.badge-voting {
+    background: #fff;
+    color: $kokai-pink;
+  }
+
+  &.badge-closed {
+    background: #666;
+    color: #fff;
+  }
+}
+
+.challenge-video-container {
+  position: relative;
+  aspect-ratio: 9/16;
+  max-height: 500px;
+  background: #000;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.challenge-title {
+  color: #fff;
+  font-size: 1.3rem;
+  margin-bottom: 8px;
+}
+
+.challenge-description {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-bottom: 16px;
+}
+
+.challenge-creator {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.challenge-creator-avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  margin-right: 12px;
+  overflow: hidden;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.placeholder {
+    background: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      color: #fff;
+      font-weight: 600;
+    }
+  }
+}
+
+.challenge-creator-name {
+  color: #fff;
+  font-weight: 500;
+}
+
+.challenge-creator-instrument {
+  color: #888;
+  font-size: 0.8rem;
+  margin: 0;
+}
+
+.challenge-stats {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.challenge-creator-actions {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid #2a2a2a;
+}
+
+.challenge-creator-actions-label {
+  color: #888;
+  font-size: 0.8rem;
+  margin-bottom: 12px;
+}
+
+.btn-start-voting {
+  background: $kokai-pink;
+  color: #fff;
+  border: none;
+
+  &:hover {
+    background: darken($kokai-pink, 10%);
+    color: #fff;
+  }
+}
+
+.btn-respond {
+  background: $kokai-yellow;
+  color: #000;
+  font-weight: 600;
+
+  &:hover {
+    background: darken($kokai-yellow, 10%);
+    color: #000;
+  }
+}
+
+.challenge-responded-alert {
+  background: #2a2a2a;
+  border: 1px solid $kokai-yellow;
+  color: $kokai-yellow;
+  padding: 12px 16px;
+  border-radius: 8px;
+  margin-top: 12px;
+}
+
+// ===== WINNER SECTION =====
+.challenge-winner-section {
+  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.challenge-winner-title {
+  color: #000;
+  margin-bottom: 16px;
+}
+
+// ===== RESPONSES SECTION =====
+.challenge-responses-title {
+  color: #fff;
+
+  i {
+    color: $kokai-pink;
+  }
+}
+
+.challenge-empty-state {
+  text-align: center;
+  padding: 40px;
+  background: #1e1e1e;
+  border-radius: 16px;
+
+  i {
+    font-size: 3rem;
+    color: rgba(255, 255, 255, 0.15);
+  }
+
+  h5 {
+    color: #fff;
+    margin-top: 12px;
+  }
+}
+
+// ===== RESPONSE CARD =====
+.response-card {
+  background: #1e1e1e;
+  border: 1px solid #2a2a2a;
+  border-radius: 12px;
+  overflow: hidden;
+
+  &.winner {
+    border-color: #fbbf24;
+    background: #1e1e1e;
+  }
+}
+
+.response-card-video {
+  position: relative;
+  aspect-ratio: 9/16;
+  max-height: 300px;
+  background: #000;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+}
+
+.response-card-body {
+  padding: 12px;
+}
+
+.response-card-musician {
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  margin-bottom: 8px;
+}
+
+.response-card-avatar {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #333;
+  overflow: hidden;
+  margin-right: 10px;
+  flex-shrink: 0;
+
+  img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  &.placeholder {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    span {
+      color: #fff;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+  }
+}
+
+.response-card-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.9rem;
+}
+
+.response-card-time {
+  color: #666;
+  font-size: 0.75rem;
+}
+
+.response-card-footer {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.response-vote-count {
+  color: #888;
+  font-size: 0.85rem;
+
+  i {
+    color: $kokai-pink;
+    margin-right: 4px;
+  }
+}
+
+.btn-vote-response {
+  padding: 6px 16px;
+  background: $kokai-pink;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  font-size: 0.8rem;
+  cursor: pointer;
+
+  &:hover {
+    background: darken($kokai-pink, 10%);
+  }
+
+  &.voted {
+    background: #2d5a2d;
+    color: #4ade80;
+  }
+}
+
+.winner-trophy-badge {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: #fbbf24;
+  color: #000;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  z-index: 10;
+}
+
+.btn-pick-winner {
+  background: #fbbf24;
+  color: #000;
+  border: none;
+
+  &:hover {
+    background: darken(#fbbf24, 10%);
+    color: #000;
+  }
+}
+
+// ===== RESPOND PAGE =====
+.respond-page {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.respond-header {
+  margin-bottom: 24px;
+}
+
+.respond-title {
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  i {
+    color: $kokai-pink;
+  }
+}
+
+.respond-subtitle {
+  color: #888;
+}
+
+.respond-original-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 16px;
+  margin-bottom: 24px;
+}
+
+.respond-original-title {
+  color: #888;
+  font-size: 0.85rem;
+  margin-bottom: 12px;
+}
+
+.respond-original-content {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.respond-original-video {
+  width: 180px;
+  aspect-ratio: 9/16;
+  background: #000;
+  border-radius: 8px;
+  overflow: hidden;
+
+  video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.respond-original-info {
+  flex: 1;
+  min-width: 200px;
+}
+
+.respond-original-name {
+  color: #fff;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.respond-original-desc {
+  color: #888;
+  font-size: 0.9rem;
+}
+
+.respond-form-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.respond-form-title {
+  color: #fff;
+  margin-bottom: 20px;
+}
+
+.btn-submit-response {
+  background: $kokai-yellow;
+  color: #000;
+  font-weight: 600;
+  padding: 12px 24px;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  cursor: pointer;
+
+  &:hover {
+    background: darken($kokai-yellow, 10%);
+  }
+}
+
+// ===== NEW CHALLENGE PAGE =====
+.new-challenge-page {
+  max-width: 700px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.new-challenge-title {
+  color: #fff;
+
+  i {
+    color: $kokai-pink;
+  }
+}
+
+.new-challenge-subtitle {
+  color: #888;
+}
+
+.new-challenge-card {
+  background: #1e1e1e;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+// ===== CHALLENGE LIST PAGE =====
+.challenges-page {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 24px;
+}
+
+.challenges-header {
+  margin-bottom: 24px;
+}
+
+.challenges-title {
+  color: #fff;
+
+  i {
+    color: $kokai-pink;
+  }
+}
+
+.challenges-filter {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.challenges-filter-btn {
+  padding: 8px 16px;
+  background: #2a2a2a;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  text-decoration: none;
+
+  &:hover {
+    background: #3a3a3a;
+  }
+
+  &.active {
+    background: $kokai-pink;
+    color: #fff;
+  }
+}
+
+.challenges-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+// ===== RESPONSIVE =====
+@media (max-width: 768px) {
+  .respond-original-content {
+    flex-direction: column;
+  }
+
+  .respond-original-video {
+    width: 100%;
+    max-width: 200px;
+  }
+}
