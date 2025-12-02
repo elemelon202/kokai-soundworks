@@ -85,6 +85,20 @@
   color: #171717;
 }
 
+
+  .logo-to-spin {
+      animation: spin 80s linear infinite; /* Name, duration, timing function, iteration count */
+    }
+
+        @keyframes spin {
+      0% {
+        transform: rotate(0deg);
+      }
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
 // Mobile navbar improvements
 @media (max-width: 575px) {
   .navbar-lewagon {
