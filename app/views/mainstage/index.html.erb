@@ -99,12 +99,25 @@
         <div class="mainstage-supporting">
           <div class="mainstage-supporting-title">— ALSO PERFORMING —</div>
           <div class="mainstage-supporting-acts">
-            <% @leaderboard[3..].each do |entry| %>
-              <div class="mainstage-supporting-act">
+            <% @leaderboard[3..].each_with_index do |entry, idx| %>
+              <% rank = idx + 4 %>
+              <div class="mainstage-supporting-act" style="<%= rank > 8 ? 'opacity: 0.6;' : '' %>">
                 <div class="mainstage-supporting-act-name">
                   <%= link_to entry[:musician].name, musician_path(entry[:musician]) %>
                 </div>
                 <div class="mainstage-supporting-act-score"><%= entry[:total_score] %> pts</div>
+                <%# Only show vote buttons for top 8 %>
+                <% if rank <= 8 %>
+                  <% if current_user && !@user_vote && current_user.musician != entry[:musician] %>
+                    <div style="margin-top: 6px;">
+                      <%= button_to mainstage_vote_path(musician_id: entry[:musician].id), method: :post, style: "padding: 4px 12px; background: transparent; border: 1px solid #E936AD; color: #E936AD; border-radius: 12px; font-size: 0.75rem; cursor: pointer;" do %>
+                        Vote
+                      <% end %>
+                    </div>
+                  <% elsif @user_vote == entry[:musician] %>
+                    <div style="margin-top: 6px; color: #4ade80; font-size: 0.75rem;"><i class="fa-solid fa-check"></i> Voted</div>
+                  <% end %>
+                <% end %>
               </div>
             <% end %>
           </div>
