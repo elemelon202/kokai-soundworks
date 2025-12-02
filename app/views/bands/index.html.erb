@@ -1,6 +1,6 @@
-<div class="container">
+<div class="container bands-index-container">
   <div class="index-heading m-3 mt-5">
-    <h1 style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 40px rgba(233, 54, 173, 0.5), 0 0 80px rgba(233, 54, 173, 0.3); margin-bottom: 8px;">Bands</h1>
+    <h1 style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 40px rgba(251, 191, 36, 0.6), 0 0 80px rgba(251, 191, 36, 0.4); margin-bottom: 8px;">Bands</h1>
     <p>Discover talented bands to connect with</p>
   </div>
   <div class="container">
@@ -40,40 +40,69 @@
     <% end %>
   </div>
   <!-- Display Bands -->
-  <div class="container">
-    <p><%= @bands.count > 1 ? "#{@bands.count} bands found" : "1 band found" %></p>
-    <%# BAND CARD START %>
-    <div class="row justify-content-center flex-wrap align-items-stretch">
-      <% if @bands.any? %>
-        <% @bands.each do |band| %>
-          <div class="col-8 col-md-3 m-2 h-100 d-flex">
-            <div class="band-card position-relative">
-              <%= link_to band_path(band), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
-                <div class="band-card-header">
-                  <% if band.banner.attached? %>
-                    <%= image_tag url_for(band.banner), alt: band.name, class: "img-fluid" %>
-                  <% else %>
-                    <%= image_tag "band_placeholder.jpg", alt: band.name, class: "img-fluid rounded-5" %>
-                  <% end %>
-                  <div class="band-card-name-wrapper">
-                  </div>
-                </div>
-                <div class="band-card-details">
-                  <p><i class="fa-solid fa-location-dot"></i> <%= band.location %></p>
-                  <p class="band-card-name"><%= band.name %></p>
-                  <% band.genre_list.each do |genre| %>
-                    <p class="badge"><% genre %></p>
-                  <% end %>
-                  <p><i class="fa-solid fa-pen-to-square"></i> <%= band.description %></p>
-                  <p><i class="fa-solid fa-user-group"></i> <%= band.musicians.count %></p>
-                </div>
-              <% end %>
-            </div>
+  <turbo-frame id="bands_list">
+    <div class="bands-section"
+         data-controller="horizontal-scroll"
+         data-horizontal-scroll-current-page-value="<%= @pagy.page %>"
+         data-horizontal-scroll-total-pages-value="<%= @pagy.pages %>"
+         data-horizontal-scroll-items-per-page-value="<%= @pagy.items %>"
+         data-horizontal-scroll-base-url-value="<%= bands_path %>"
+         data-horizontal-scroll-query-value="<%= params[:q] %>"
+         data-horizontal-scroll-genres-value="<%= (params[:genres] || []).to_json %>">
+      <%# Page Indicator %>
+      <% if @pagy.pages > 1 %>
+        <nav style="display: flex; justify-content: center; margin-bottom: 20px;" data-horizontal-scroll-target="pageIndicator">
+          <div style="display: flex; gap: 8px; align-items: center;">
+            <% (1..@pagy.pages).each do |page_num| %>
+              <button type="button"
+                      data-page-number="<%= page_num %>"
+                      data-action="click->horizontal-scroll#goToPage"
+                style="padding: 10px 16px; background: <%= page_num == @pagy.page ? '#fbbf24' : '#2a2a2a' %>; color: <%= page_num == @pagy.page ? '#000' : '#fff' %>; border-radius: 8px; border: none; cursor: pointer; transition: all 0.2s; font-weight: <%= page_num == @pagy.page ? '600' : 'normal' %>;">
+                <%= page_num %>
+              </button>
+            <% end %>
           </div>
-        <% end %>
-      <% else %>
-        <p>No bands found.</p>
+        </nav>
+        <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 20px;" data-horizontal-scroll-target="pageInfo">
+          Viewing page <%= @pagy.page %> of <%= @pagy.pages %>
+        </p>
       <% end %>
+      <div class="record-shelf-container">
+        <div class="record-shelf" data-horizontal-scroll-target="shelf">
+          <% if @bands.any? %>
+            <% @bands.each do |band| %>
+              <div class="record-item" data-page="<%= @pagy.page %>">
+                <%# BAND CARD START %>
+                <div class="band-card position-relative">
+                  <%= link_to band_path(band), class: "text-light text-decoration-none stretched-link", data: { turbo: false } do %>
+                    <div class="band-card-header">
+                      <% if band.banner.attached? %>
+                        <%= image_tag url_for(band.banner), alt: band.name, class: "img-fluid" %>
+                      <% else %>
+                        <%= image_tag "band_placeholder.jpg", alt: band.name, class: "img-fluid rounded-5" %>
+                      <% end %>
+                      <div class="band-card-name-wrapper">
+                      </div>
+                    </div>
+                    <div class="band-card-details">
+                      <p><i class="fa-solid fa-location-dot"></i> <%= band.location %></p>
+                      <p class="band-card-name"><%= band.name %></p>
+                      <% band.genre_list.each do |genre| %>
+                        <span class="badge"><%= genre %></span>
+                      <% end %>
+                      <p class="band-description"><i class="fa-solid fa-pen-to-square"></i> <%= band.description %></p>
+                      <p><i class="fa-solid fa-user-group"></i> <%= band.musicians.count %> members</p>
+                    </div>
+                  <% end %>
+                  <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: band.user_id), method: :post, class: "btn btn-primary band-message-btn", data: { turbo: false } %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <em>Sorry, no bands found.</em>
+          <% end %>
+        </div>
+      </div>
     </div>
-  </div>
+  </turbo-frame>
 </div>

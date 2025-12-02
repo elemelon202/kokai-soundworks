@@ -17,6 +17,9 @@ class BandsController < ApplicationController
       if params[:q].present?
     @bands = @bands.where("name ILIKE ?", "%#{params[:q]}%")
       end
+
+    # Paginate results - 10 per page
+    @pagy, @bands = pagy(@bands, items: 10)
   end
   def show
     authorize @band
