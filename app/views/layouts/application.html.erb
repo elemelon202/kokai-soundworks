@@ -2,11 +2,23 @@
 <html>
   <head>
     <title>Kokai Soundworks</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
+    <%# Google Font for consistent bold display font %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&display=swap" rel="stylesheet">
+
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <style>
+      html, body {
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+    </style>
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
     <%# ====================================================================== %>
     <%# MAPBOX GL JS - Interactive map library for displaying venue locations %>
