@@ -3,7 +3,7 @@
     <%# LOGO %>
     <div class="d-flex align-items-center me-auto">
       <%= link_to root_path, class: "navbar-brand" do %>
-        <%= image_tag "Kokai2.png", class: "logo-to-spin" %>
+        <%= image_tag "Kokai2.png", class: "logo-to-spin", data: { controller: "spinning-logo" } %>
       <% end %>
       <%# USER STATUS %>
       <% if user_signed_in? %>
