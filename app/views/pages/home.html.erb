@@ -33,11 +33,11 @@
         </div>
 
         <%# Main title with Impact font %>
-        <div style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
-          <div style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(4rem, 18vw, 12rem); font-weight: 900; line-height: 0.85; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 60px rgba(200, 233, 56, 0.5), 0 0 120px rgba(200, 233, 56, 0.3);">
+        <div class="hero-title-container" style="display: flex; flex-direction: column; align-items: center; margin-bottom: 20px;">
+          <div style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 14vw, 10rem); font-weight: 900; line-height: 0.85; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 60px rgba(200, 233, 56, 0.5), 0 0 120px rgba(200, 233, 56, 0.3);">
             KOKAI
           </div>
-          <div style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(4rem, 18vw, 12rem); font-weight: 900; line-height: 0.85; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 60px rgba(200, 233, 56, 0.5), 0 0 120px rgba(200, 233, 56, 0.3);">
+          <div style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 14vw, 10rem); font-weight: 900; line-height: 0.85; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 60px rgba(200, 233, 56, 0.5), 0 0 120px rgba(200, 233, 56, 0.3);">
             SOUNDWORKS
           </div>
         </div>
@@ -133,58 +133,106 @@
       @media (max-width: 768px) {
         .hero-section {
           min-height: auto !important;
-          padding: 40px 16px 30px !important;
+          padding: 20px 12px 24px !important;
+          align-items: center !important;
         }
 
         .hero-bg-elements .floating-note {
-          display: none;
+          display: none !important;
         }
 
-        .hero-section a {
-          width: 100%;
-          justify-content: center;
+        .hero-content {
+          text-align: center !important;
+          width: 100% !important;
+          padding: 0 !important;
         }
 
-        .hero-content h1 {
-          font-size: 3rem !important;
-          letter-spacing: 1px !important;
+        .hero-brand {
+          margin-bottom: 8px !important;
         }
 
-        .hero-content h1 span {
-          font-size: 3rem !important;
+        .hero-brand span {
+          font-size: 0.65rem !important;
+          letter-spacing: 2px !important;
+        }
+
+        .hero-title-container {
+          align-items: center !important;
+          margin-bottom: 12px !important;
+        }
+
+        .hero-title-container > div {
+          font-size: 2.8rem !important;
+          line-height: 1 !important;
+          letter-spacing: 2px !important;
+        }
+
+        .hero-content > p {
+          font-size: 0.95rem !important;
+          margin-bottom: 8px !important;
+          text-align: center !important;
         }
 
         .hero-tagline-row {
           flex-direction: column !important;
-          gap: 12px !important;
+          gap: 6px !important;
+          margin: 12px 0 20px 0 !important;
+          align-items: center !important;
+        }
+
+        .hero-tagline-row > div {
+          justify-content: center !important;
+        }
+
+        .hero-tagline-row span {
+          font-size: 0.85rem !important;
         }
 
         .hero-cta-row {
           flex-direction: column !important;
           width: 100% !important;
+          gap: 10px !important;
+          margin-bottom: 24px !important;
+          padding: 0 8px !important;
         }
 
         .hero-cta-row a {
           width: 100% !important;
+          padding: 12px 20px !important;
+          font-size: 0.9rem !important;
+          text-align: center !important;
+          justify-content: center !important;
         }
 
         .hero-stats-row {
           gap: 20px !important;
+          justify-content: center !important;
+        }
+
+        .hero-stats-row > div {
+          text-align: center !important;
         }
 
         .hero-stats-row > div > div:first-child {
-          font-size: 1.5rem !important;
+          font-size: 1.3rem !important;
+        }
+
+        .hero-stats-row > div > div:last-child {
+          font-size: 0.65rem !important;
         }
       }
 
-      @media (max-width: 480px) {
-        .hero-content h1,
-        .hero-content h1 span {
+      @media (max-width: 400px) {
+        .hero-title-container > div {
           font-size: 2.2rem !important;
         }
 
         .hero-stats-row {
           gap: 12px !important;
+        }
+
+        .hero-stats-row > div > div:first-child {
+          font-size: 1.1rem !important;
         }
       }
 

@@ -1,12 +1,98 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title>KokaiSoundworks</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Kokai Soundworks</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, shrink-to-fit=no">
     <%= csrf_meta_tags %>
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+
+    <style>
+      html, body {
+        max-width: 100vw;
+        overflow-x: hidden;
+      }
+
+      /* Hero title font */
+      .hero-title-container > div {
+        font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif !important;
+        font-weight: 900 !important;
+      }
+
+      @media (max-width: 768px) {
+        /* Mobile navbar fixes */
+        .navbar-lewagon {
+          padding: 4px 8px !important;
+        }
+
+        .navbar-lewagon .navbar-brand img {
+          width: 28px !important;
+          height: 28px !important;
+        }
+
+        .navbar-lewagon .navbar-collapse {
+          z-index: 9999 !important;
+        }
+
+        .navbar-lewagon .dropdown-menu {
+          position: static !important;
+          z-index: 10000 !important;
+          background: #2a2a2a !important;
+        }
+
+        /* Hero section mobile */
+        .hero-section {
+          padding: 20px 12px !important;
+          min-height: auto !important;
+        }
+
+        .hero-content {
+          text-align: center !important;
+        }
+
+        .hero-title-container > div {
+          font-size: 2.5rem !important;
+          line-height: 1 !important;
+        }
+
+        .hero-tagline-row {
+          flex-direction: column !important;
+          align-items: center !important;
+          gap: 6px !important;
+        }
+
+        .hero-cta-row {
+          flex-direction: column !important;
+          width: 100% !important;
+        }
+
+        .hero-cta-row a {
+          width: 100% !important;
+          text-align: center !important;
+          justify-content: center !important;
+        }
+
+        .hero-stats-row {
+          gap: 16px !important;
+        }
+
+        .hero-stats-row > div > div:first-child {
+          font-size: 1.2rem !important;
+        }
+
+        /* Winner cards */
+        .mainstage-spotlight {
+          padding: 0 8px !important;
+        }
+
+        .mainstage-spotlight .winner-card {
+          min-width: unset !important;
+          max-width: 100% !important;
+          width: 100% !important;
+        }
+      }
+    </style>
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/css/tom-select.bootstrap5.min.css" rel="stylesheet">
     <%# ====================================================================== %>
     <%# MAPBOX GL JS - Interactive map library for displaying venue locations %>
