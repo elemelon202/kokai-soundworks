@@ -46,6 +46,16 @@ class MusiciansController < ApplicationController
       @musicians = @musicians.where(location: params[:location])
     end
 
+    # Order by musicians with photos first (avatar or media), then by created_at
+    musicians_with_photos = Musician.joins(:avatar_attachment).pluck(:id) +
+                           Musician.joins(:media_attachments).pluck(:id)
+    musicians_with_photos = musicians_with_photos.uniq
+
+    @musicians = @musicians.order(
+      Arel.sql("CASE WHEN musicians.id IN (#{musicians_with_photos.join(',').presence || '0'}) THEN 0 ELSE 1 END"),
+      created_at: :desc
+    )
+
     # Paginate results - 10 per page
     @pagy, @musicians = pagy(@musicians, items: 10)
 
