@@ -8,7 +8,12 @@
 
   position: sticky;
   top: 0;
-  z-index: 1020;
+  z-index: 9999;
+
+  // Ensure dropdowns appear above all page content
+  .dropdown-menu {
+    z-index: 10000;
+  }
 
   li:hover {
     color: black;

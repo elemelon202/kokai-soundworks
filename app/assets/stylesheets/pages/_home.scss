@@ -5,11 +5,10 @@
 }
 
 .gradient {
-  position:absolute;
-  top: 0;
-  left: 0;
+  position: relative;
   min-width: 100vw;
   min-height: 100vh;
+  margin-left: calc(-50vw + 50%);
   background: radial-gradient(
     ellipse at 1% 1%,
     #a4c332 0%,
@@ -17,7 +16,6 @@
   );
   background-attachment: scroll;
   color: #f8f9fa;
-  z-index: -1;
 }
 
 .hero-text p {
