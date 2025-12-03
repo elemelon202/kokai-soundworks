@@ -66,7 +66,7 @@ def create
           )
         ]
       end
-      format.html { render :new, status: :unprocessable_entity }
+      format.html { redirect_to edit_band_path(@band), alert: @band_invitation.errors.full_messages.to_sentence }
     end
   end
 end

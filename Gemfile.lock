@@ -93,6 +93,8 @@ GEM
       zeitwerk (>= 2.4, < 3.0)
     addressable (2.8.7)
       public_suffix (>= 2.0.2, < 7.0)
+    anthropic (1.16.0)
+      connection_pool
     autoprefixer-rails (10.4.21.0)
       execjs (~> 2)
     base64 (0.3.0)
@@ -188,6 +190,9 @@ GEM
       actionview (>= 7.0.0)
       activesupport (>= 7.0.0)
     json (2.16.0)
+    line-bot-api (2.5.0)
+      base64 (~> 0.2)
+      multipart-post (~> 2.4)
     logger (1.7.0)
     loofah (2.24.1)
       crass (~> 1.0.2)
@@ -405,6 +410,7 @@ PLATFORMS
 
 DEPENDENCIES
   acts-as-taggable-on
+  anthropic
   autoprefixer-rails
   bootsnap
   bootstrap (~> 5.3)
@@ -418,6 +424,7 @@ DEPENDENCIES
   geocoder
   importmap-rails
   jbuilder
+  line-bot-api
   ostruct
   pagy (~> 6.0)
   pg (~> 1.1)

@@ -508,6 +508,57 @@
       <% end %>
     </div>
 
+    <%# LINE Account Connection %>
+    <div class="musician-dashboard-card full-width">
+      <div class="musician-card-header">
+        <div class="card-icon card-icon-line">
+          <i class="fa-brands fa-line"></i>
+        </div>
+        <h3>LINE Connection</h3>
+      </div>
+      <div class="line-user-section">
+        <% line_connection = current_user.line_user_connection %>
+
+        <% if line_connection&.linked? %>
+          <div class="line-user-status connected">
+            <i class="fa-solid fa-check-circle"></i>
+            <div class="line-user-info">
+              <span class="line-user-name"><%= line_connection.line_display_name || "LINE Account" %></span>
+              <span class="line-user-date">Connected <%= time_ago_in_words(line_connection.connected_at) %> ago</span>
+            </div>
+          </div>
+          <p class="line-user-hint">Your LINE account is linked. You can use /busy in LINE groups to mark your availability.</p>
+          <%= button_to line_user_connection_path, method: :delete, class: "btn-line-disconnect-small", data: { turbo_confirm: "Disconnect your LINE account?" } do %>
+            <i class="fa-solid fa-unlink"></i> Disconnect
+          <% end %>
+
+        <% elsif line_connection&.pending? %>
+          <div class="line-user-status pending">
+            <i class="fa-solid fa-link"></i>
+            <span>Waiting for LINE connection</span>
+          </div>
+          <div class="line-user-code">
+            <p>Send this in any LINE group with the Kokai bot:</p>
+            <div class="line-code-display">
+              <code>/link-me <%= line_connection.link_code %></code>
+              <button type="button" class="btn-copy-small" data-code="/link-me <%= line_connection.link_code %>" onclick="navigator.clipboard.writeText(this.dataset.code); this.innerHTML='Copied!';">
+                Copy
+              </button>
+            </div>
+          </div>
+          <%= button_to line_user_connection_path, method: :delete, class: "btn-line-cancel-small" do %>
+            Cancel
+          <% end %>
+
+        <% else %>
+          <p class="line-user-desc">Connect your LINE account to mark availability and track who suggests events in band groups.</p>
+          <%= button_to line_user_connection_path, method: :post, class: "btn-line-connect-small" do %>
+            <i class="fa-brands fa-line"></i> Connect LINE Account
+          <% end %>
+        <% end %>
+      </div>
+    </div>
+
     <% if @musician.bands.any? %>
       <div class="musician-dashboard-card full-width">
         <div class="musician-card-header">
