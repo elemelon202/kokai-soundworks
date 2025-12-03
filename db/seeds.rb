@@ -841,6 +841,12 @@ musicians << Musician.create!(
   bio: "Sora combines acoustic drums with electronic pads and triggers. His hybrid drum setup creates unique sounds for electronic music acts."
 )
 
+Musician.find_each do |musician|
+  musician.update!(
+    status: Musician.statuses.keys.sample
+  )
+end
+
 puts "Created #{Musician.count} musicians"
 
 # ===========================================
