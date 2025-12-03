@@ -1,0 +1,74 @@
+<div class="kanban-container" data-controller="kanban" data-kanban-band-id-value="<%= @band.id %>">
+  <div class="kanban-header">
+    <%= link_to edit_band_path(@band), class: "kanban-back-btn" do %>
+      <i class="fa-solid fa-arrow-left"></i>
+    <% end %>
+    <h1><%= @band.name %> Tasks</h1>
+  </div>
+
+  <%# New Task Form %>
+  <div class="kanban-new-task">
+    <%= form_with model: [@band, KanbanTask.new], local: true, class: "new-task-form" do |f| %>
+      <div class="new-task-row">
+        <%= f.text_field :name, placeholder: "Add a task...", class: "new-task-input", required: true %>
+        <%= f.select :task_type, KanbanTask::TASK_TYPES.map { |t| [t.titleize, t] }, {}, class: "new-task-select" %>
+        <%= f.select :assigned_to_id, @band.musicians.map { |m| [m.name, m.id] }, { include_blank: "Unassigned" }, class: "new-task-select" %>
+        <%= f.hidden_field :status, value: "to_do" %>
+        <%= f.submit "Add", class: "new-task-btn" %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Mobile: Tab View %>
+  <div class="kanban-mobile" data-controller="tabs">
+    <div class="kanban-tabs">
+      <% KanbanTask::STATUSES.each_with_index do |status, index| %>
+        <button type="button"
+                class="kanban-tab <%= 'active' if index == 0 %>"
+                data-action="click->tabs#switch"
+                data-tabs-target="tab"
+                data-tab="<%= status %>">
+          <%= status.titleize.gsub('_', ' ') %>
+          <span class="tab-count"><%= @tasks.by_status(status).count %></span>
+        </button>
+      <% end %>
+    </div>
+
+    <% KanbanTask::STATUSES.each_with_index do |status, index| %>
+      <div class="kanban-tab-content <%= 'active' if index == 0 %>"
+           data-tabs-target="content"
+           data-tab="<%= status %>">
+        <% if @tasks.by_status(status).any? %>
+          <% @tasks.by_status(status).each do |task| %>
+            <%= render 'kanban_tasks/task_card', task: task, band: @band %>
+          <% end %>
+        <% else %>
+          <div class="empty-tab">No tasks</div>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <%# Desktop: Column View %>
+  <div class="kanban-desktop">
+    <div class="kanban-board">
+      <% KanbanTask::STATUSES.each do |status| %>
+        <div class="kanban-column" data-status="<%= status %>">
+          <div class="column-header">
+            <h3><%= status.titleize.gsub('_', ' ') %></h3>
+            <span class="task-count"><%= @tasks.by_status(status).count %></span>
+          </div>
+
+          <div class="column-tasks"
+               data-kanban-target="column"
+               data-status="<%= status %>"
+               data-action="dragover->kanban#dragOver dragleave->kanban#dragLeave drop->kanban#drop">
+            <% @tasks.by_status(status).each do |task| %>
+              <%= render 'kanban_tasks/task_card', task: task, band: @band %>
+            <% end %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>

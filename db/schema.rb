@@ -135,6 +135,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
     t.datetime "updated_at", null: false
     t.string "location"
     t.integer "banner_position", default: 50
+    t.string "instagram_handle"
+    t.integer "instagram_followers", default: 0
+    t.string "tiktok_handle"
+    t.integer "tiktok_followers", default: 0
+    t.string "youtube_handle"
+    t.integer "youtube_subscribers", default: 0
+    t.string "twitter_handle"
+    t.integer "twitter_followers", default: 0
     t.index ["user_id"], name: "index_bands_on_user_id"
   end
 
@@ -302,6 +310,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
     t.integer "position", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "band_id"
+    t.bigint "assigned_to_id"
+    t.index ["assigned_to_id"], name: "index_kanban_tasks_on_assigned_to_id"
+    t.index ["band_id"], name: "index_kanban_tasks_on_band_id"
     t.index ["created_by_id"], name: "index_kanban_tasks_on_created_by_id"
     t.index ["deadline"], name: "index_kanban_tasks_on_deadline"
     t.index ["status"], name: "index_kanban_tasks_on_status"
@@ -397,6 +409,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
     t.datetime "updated_at", null: false
     t.text "bio"
     t.integer "banner_position"
+    t.string "status"
     t.index ["user_id"], name: "index_musicians_on_user_id"
   end
 
@@ -453,7 +466,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "band_id"
+    t.string "instrument"
+    t.string "location"
+    t.string "genre"
+    t.date "needed_by"
+    t.boolean "active", default: true
+    t.index ["active"], name: "index_posts_on_active"
     t.index ["band_id"], name: "index_posts_on_band_id"
+    t.index ["needed_by"], name: "index_posts_on_needed_by"
     t.index ["user_id"], name: "index_posts_on_user_id"
   end
 
@@ -629,6 +649,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
   add_foreign_key "gigs", "venues"
   add_foreign_key "involvements", "bands"
   add_foreign_key "involvements", "musicians"
+  add_foreign_key "kanban_tasks", "bands"
+  add_foreign_key "kanban_tasks", "musicians", column: "assigned_to_id"
   add_foreign_key "kanban_tasks", "users", column: "created_by_id"
   add_foreign_key "mainstage_votes", "mainstage_contests"
   add_foreign_key "mainstage_votes", "musicians"
