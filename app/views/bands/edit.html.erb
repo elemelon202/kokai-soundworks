@@ -381,7 +381,7 @@
             start_date: avail.start_date,
             end_date: avail.end_date,
             status: avail.status,
-            reason: avail.reason,
+            reason: avail.notes,
             musician_id: avail.musician_id,
             musician_name: avail.musician&.name
           }
@@ -469,7 +469,7 @@
               <%= f.select :status, MemberAvailability.statuses.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
             </div>
             <div class="form-group">
-              <%= f.text_field :reason, class: "form-control", placeholder: "Reason (optional)" %>
+              <%= f.text_field :notes, class: "form-control", placeholder: "Reason (optional)" %>
             </div>
             <%= f.submit "Mark Unavailable", class: "btn-unavailable" %>
           </div>
@@ -490,8 +490,8 @@
                     <% end %>
                   </span>
                   <span class="availability-status <%= avail.status %>"><%= avail.status.titleize %></span>
-                  <% if avail.reason.present? %>
-                    <span class="availability-reason"><%= avail.reason %></span>
+                  <% if avail.notes.present? %>
+                    <span class="availability-reason"><%= avail.notes %></span>
                   <% end %>
                 </div>
                 <%= button_to band_member_availability_path(@band, avail), method: :delete, class: "btn-delete-availability", data: { turbo_confirm: "Remove this availability?" } do %>

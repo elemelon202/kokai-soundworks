@@ -42,6 +42,6 @@ class MemberAvailabilitiesController < ApplicationController
   end
 
   def member_availability_params
-    params.require(:member_availability).permit(:start_date, :end_date, :status, :reason)
+    params.require(:member_availability).permit(:start_date, :end_date, :status, :notes)
   end
 end
