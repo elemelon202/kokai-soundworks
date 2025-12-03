@@ -2156,3 +2156,476 @@ $kokai-yellow-dark: #b8e020;
     }
   }
 }
+
+// ===== BAND CALENDAR SECTION =====
+.band-calendar-section {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+}
+
+.card-icon-calendar {
+  background: rgba(251, 191, 36, 0.15) !important;
+  color: #fbbf24 !important;
+}
+
+.btn-add-event {
+  margin-left: auto;
+  background: linear-gradient(135deg, $kokai-yellow, $kokai-yellow-dark);
+  border: none;
+  padding: 8px 16px;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: #171717;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 15px rgba(213, 255, 64, 0.3);
+  }
+
+  i {
+    margin-right: 6px;
+  }
+}
+
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.legend-color {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+}
+
+.band-calendar-wrapper {
+  position: relative;
+}
+
+.band-calendar {
+  background: rgba(255, 255, 255, 0.02);
+  border-radius: 12px;
+  padding: 16px;
+
+  // FullCalendar overrides
+  .fc {
+    font-family: inherit;
+  }
+
+  .fc-theme-standard td,
+  .fc-theme-standard th {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .fc-theme-standard .fc-scrollgrid {
+    border-color: rgba(255, 255, 255, 0.08);
+  }
+
+  .fc-col-header-cell-cushion {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+    text-decoration: none;
+  }
+
+  .fc-daygrid-day-number {
+    color: rgba(255, 255, 255, 0.8);
+    text-decoration: none;
+  }
+
+  .fc-day-today {
+    background: rgba(213, 255, 64, 0.1) !important;
+  }
+
+  .fc-button-primary {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: #fff;
+
+    &:hover {
+      background: rgba(213, 255, 64, 0.2);
+      border-color: rgba(213, 255, 64, 0.3);
+    }
+
+    &:not(:disabled).fc-button-active,
+    &:not(:disabled):active {
+      background: $kokai-yellow;
+      border-color: $kokai-yellow;
+      color: #171717;
+    }
+  }
+
+  .fc-toolbar-title {
+    color: #fff;
+    font-size: 1.2rem;
+  }
+
+  .fc-event {
+    border-radius: 4px;
+    font-size: 0.8rem;
+    padding: 2px 4px;
+    cursor: pointer;
+  }
+
+  .fc-more-link {
+    color: $kokai-yellow;
+  }
+}
+
+// Calendar Modal
+.calendar-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.calendar-modal-content {
+  background: linear-gradient(145deg, rgba(40, 40, 40, 0.98), rgba(25, 25, 25, 0.98));
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 400px;
+  width: 90%;
+  position: relative;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  h4 {
+    color: #fff;
+    margin: 0 0 16px 0;
+    font-size: 1.2rem;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.7);
+    margin: 8px 0;
+    font-size: 0.95rem;
+
+    strong {
+      color: rgba(255, 255, 255, 0.9);
+    }
+  }
+}
+
+.modal-close {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border: none;
+  color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba(255, 71, 87, 0.2);
+    color: #ff6b7a;
+  }
+}
+
+// Add Event Form
+.calendar-event-form {
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  padding: 20px;
+  margin-top: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+
+  h4 {
+    color: #fff;
+    margin: 0 0 16px 0;
+    font-size: 1.1rem;
+  }
+}
+
+.event-form {
+  .form-group {
+    margin-bottom: 16px;
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      font-weight: 500;
+    }
+
+    .form-control {
+      width: 100%;
+      padding: 10px 14px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 8px;
+      color: #fff;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+
+      &:focus {
+        outline: none;
+        border-color: $kokai-yellow;
+        box-shadow: 0 0 0 3px rgba(213, 255, 64, 0.15);
+      }
+
+      &::placeholder {
+        color: rgba(255, 255, 255, 0.3);
+      }
+    }
+
+    select.form-control {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23D5FF40' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 12px center;
+      padding-right: 36px;
+    }
+
+    textarea.form-control {
+      resize: vertical;
+      min-height: 80px;
+    }
+  }
+
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+
+    @media (max-width: 480px) {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .form-actions {
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+    margin-top: 20px;
+  }
+
+  .btn-cancel {
+    padding: 10px 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 8px;
+    color: rgba(255, 255, 255, 0.7);
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.15);
+      color: #fff;
+    }
+  }
+
+  .btn-submit {
+    padding: 10px 24px;
+    background: linear-gradient(135deg, $kokai-yellow, $kokai-yellow-dark);
+    border: none;
+    border-radius: 8px;
+    color: #171717;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 15px rgba(213, 255, 64, 0.3);
+    }
+  }
+}
+
+// Member Availability Section
+.member-availability-section {
+  margin-top: 24px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  h4 {
+    color: #fff;
+    font-size: 1rem;
+    margin: 0 0 8px 0;
+
+    i {
+      color: #ef4444;
+      margin-right: 8px;
+    }
+  }
+
+  .availability-hint {
+    color: rgba(255, 255, 255, 0.5);
+    font-size: 0.85rem;
+    margin: 0 0 16px 0;
+  }
+}
+
+.availability-form {
+  .availability-form-row {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+    flex-wrap: wrap;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: stretch;
+    }
+
+    .form-group {
+      margin-bottom: 0;
+
+      .form-control {
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.05);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        color: #fff;
+        font-size: 0.9rem;
+
+        &:focus {
+          outline: none;
+          border-color: #ef4444;
+          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
+        }
+      }
+
+      select.form-control {
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ef4444' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 12px center;
+        padding-right: 36px;
+      }
+    }
+  }
+
+  .btn-unavailable {
+    padding: 10px 20px;
+    background: rgba(239, 68, 68, 0.2);
+    border: 1px solid rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    color: #ef4444;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    &:hover {
+      background: rgba(239, 68, 68, 0.3);
+      border-color: rgba(239, 68, 68, 0.5);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+// List of user's marked availabilities with delete option
+.my-availabilities-list {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+
+  h5 {
+    color: rgba(255, 255, 255, 0.7);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin: 0 0 12px 0;
+  }
+
+  .availability-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 14px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    border-radius: 8px;
+    margin-bottom: 8px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+
+    .availability-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      .availability-dates {
+        color: #fff;
+        font-size: 0.9rem;
+        font-weight: 500;
+
+        i {
+          color: #ef4444;
+          margin-right: 6px;
+        }
+      }
+
+      .availability-status {
+        padding: 2px 8px;
+        border-radius: 4px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        text-transform: uppercase;
+
+        &.unavailable {
+          background: rgba(239, 68, 68, 0.3);
+          color: #fca5a5;
+        }
+
+        &.tentative {
+          background: rgba(251, 191, 36, 0.3);
+          color: #fcd34d;
+        }
+      }
+
+      .availability-reason {
+        color: rgba(255, 255, 255, 0.5);
+        font-size: 0.85rem;
+        font-style: italic;
+      }
+    }
+
+    .btn-delete-availability {
+      background: transparent;
+      border: none;
+      color: rgba(255, 255, 255, 0.4);
+      cursor: pointer;
+      padding: 6px 10px;
+      border-radius: 4px;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(239, 68, 68, 0.3);
+        color: #ef4444;
+      }
+
+      i {
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
