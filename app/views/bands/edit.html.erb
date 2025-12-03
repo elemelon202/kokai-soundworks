@@ -5,6 +5,9 @@
     <%= link_to band_path(@band), class: "btn-view-band" do %>
       <i class="fa-solid fa-eye"></i> View Band Page
     <% end %>
+    <%= link_to band_kanban_tasks_path(@band), class: "btn-view-band" do %>
+      <i class="fa-solid fa-list-check"></i> Tasks
+    <% end %>
   </div>
 
   <div id="flash_messages">

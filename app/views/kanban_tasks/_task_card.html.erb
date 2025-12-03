@@ -1,0 +1,42 @@
+<div class="task-card <%= 'overdue' if task.overdue? %>"
+     draggable="true"
+     data-kanban-target="card"
+     data-task-id="<%= task.id %>"
+     data-action="dragstart->kanban#dragStart dragend->kanban#dragEnd">
+  <div class="task-card-header">
+    <span class="task-type <%= task.task_type %>"><%= task.task_type.titleize %></span>
+    <%= form_with model: [band, task], method: :delete, local: true, class: "delete-task-form" do %>
+      <%= button_tag type: "submit", class: "task-delete-btn", data: { turbo_confirm: "Delete this task?" } do %>
+        <i class="fa-solid fa-trash"></i>
+      <% end %>
+    <% end %>
+  </div>
+
+  <p class="task-name"><%= task.name %></p>
+
+  <% if task.description.present? %>
+    <p class="task-description"><%= truncate(task.description, length: 60) %></p>
+  <% end %>
+
+  <div class="task-card-footer">
+    <div class="task-assignee-select">
+      <%= form_with model: [band, task], local: false, data: { controller: "auto-submit" } do |f| %>
+        <%= f.select :assigned_to_id,
+            band.musicians.map { |m| [m.name, m.id] },
+            { include_blank: "Unassigned" },
+            class: "assignee-select",
+            data: { action: "change->auto-submit#submit" } %>
+      <% end %>
+    </div>
+
+    <div class="task-status-select">
+      <%= form_with model: [band, task], local: false, data: { controller: "auto-submit" } do |f| %>
+        <%= f.select :status,
+            KanbanTask::STATUSES.map { |s| [s.titleize.gsub('_', ' '), s] },
+            {},
+            class: "status-select",
+            data: { action: "change->auto-submit#submit" } %>
+      <% end %>
+    </div>
+  </div>
+</div>

@@ -929,7 +929,7 @@
 
   .message-form {
     padding: 12px 16px;
-    padding-bottom: #{"max(12px, env(safe-area-inset-bottom))"};
+    padding-bottom: calc(12px + env(safe-area-inset-bottom, 0px));
     position: sticky;
     bottom: 0;
     background: rgba(30, 30, 30, 0.95);
