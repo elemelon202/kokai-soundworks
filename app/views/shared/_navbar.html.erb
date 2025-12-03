@@ -30,46 +30,31 @@
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
           <li class="nav-item dropdown">
-            <a href="#" class="nav-link btn text-white dropdown-toggle" id="mainstageDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);">
-              <i class="fa-solid fa-trophy"></i> MAINSTAGE
+            <a class="nav-link dropdown-toggle btn btn-primary text-white" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-magnifying-glass"></i> Search
             </a>
-            <div class="dropdown-menu" aria-labelledby="mainstageDropdown">
-              <%= link_to mainstage_path, class: "dropdown-item" do %>
-                <i class="fa-solid fa-user me-2" style="color: #fbbf24;"></i> Musicians
-              <% end %>
-              <%= link_to band_mainstage_path, class: "dropdown-item" do %>
-                <i class="fa-solid fa-users me-2" style="color: #E936AD;"></i> Bands
-              <% end %>
-            </div>
-          </li>
-          <li class="nav-item active">
-            <%= link_to musicians_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-guitar"></i> Musicians
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to bands_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-users"></i> Bands
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to venues_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-location-dot"></i> Venues
-            <% end %>
+            <ul class="dropdown-menu" aria-labelledby="searchDropdown">
+              <li>
+                <%= link_to musicians_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-guitar"></i> Musicians
+                <% end %>
+              </li>
+              <li>
+                <%= link_to bands_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-users"></i> Bands
+                <% end %>
+              </li>
+              <li>
+                <%= link_to venues_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-location-dot"></i> Venues
+                <% end %>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
-            <%= link_to swipe_gigs_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-fire"></i> Gigs
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to posts_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-newspaper"></i> Feed
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to challenges_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-bolt"></i> Challenges
+            <!-- Update the path to task board -->
+            <%= link_to '#', class: "nav-link btn btn-primary text-white" do %>
+              <i class="fa-solid fa-list-check"></i> Task
             <% end %>
           </li>
           <% if current_user.musician.present? %>
