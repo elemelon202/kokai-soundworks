@@ -66,6 +66,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
     t.index ["message_id"], name: "index_attachments_on_message_id"
   end
 
+  create_table "band_events", force: :cascade do |t|
+    t.bigint "band_id", null: false
+    t.string "title"
+    t.integer "event_type"
+    t.date "date"
+    t.time "start_time"
+    t.time "end_time"
+    t.string "location"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["band_id"], name: "index_band_events_on_band_id"
+  end
+
   create_table "band_gigs", force: :cascade do |t|
     t.bigint "band_id", null: false
     t.string "name"
@@ -355,14 +369,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
   create_table "member_availabilities", force: :cascade do |t|
     t.bigint "musician_id", null: false
     t.bigint "band_id", null: false
-    t.date "available_date", null: false
+    t.date "start_date", null: false
     t.integer "status", default: 0, null: false
     t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["band_id", "available_date"], name: "index_member_availabilities_on_band_id_and_available_date"
+    t.date "end_date"
+    t.index ["band_id", "start_date"], name: "index_member_availabilities_on_band_id_and_start_date"
     t.index ["band_id"], name: "index_member_availabilities_on_band_id"
-    t.index ["musician_id", "band_id", "available_date"], name: "index_member_availability_unique", unique: true
+    t.index ["musician_id", "band_id", "start_date"], name: "index_member_availability_unique", unique: true
     t.index ["musician_id"], name: "index_member_availabilities_on_musician_id"
   end
 
@@ -615,6 +630,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
   add_foreign_key "activities", "musicians"
   add_foreign_key "activities", "users"
   add_foreign_key "attachments", "messages"
+  add_foreign_key "band_events", "bands"
   add_foreign_key "band_gigs", "bands"
   add_foreign_key "band_invitations", "bands"
   add_foreign_key "band_invitations", "musicians"
