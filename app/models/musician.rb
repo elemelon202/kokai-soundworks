@@ -38,6 +38,11 @@ class Musician < ApplicationRecord
   using: {
     tsearch: { prefix: true }
   }
+  # for searching by musician status
+  enum status: {
+    looking_for_band: "looking_for_band",
+    set_musician: "set_musician"
+  }
 
   # Returns bands where this musician is the leader (band creator)
   def led_bands
