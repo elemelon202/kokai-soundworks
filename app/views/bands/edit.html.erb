@@ -1,16 +1,15 @@
 <div class="band-dashboard-container">
   <div class="band-dashboard-header">
-    <h1>Band Dashboard</h1>
+    <h1>Band Dashboard:</h1>
+    <h1> <%= @band.name %> </h1>
     <h2>Manage your band gig applications and members</h2>
     <%= link_to band_path(@band), class: "btn-view-band" do %>
       <i class="fa-solid fa-eye"></i> View Band Page
     <% end %>
   </div>
-
   <div id="flash_messages">
     <%= render partial: "shared/flash", locals: { notice: flash[:notice], alert: flash[:alert] } %>
   </div>
-
   <div class="band-stats-grid">
     <div class="band-stat-card">
       <div class="stat-icon">
@@ -20,15 +19,14 @@
       <div class="stat-label">Gig Applications</div>
       <div class="stat-sub">Pending: <%= @pending_bookings.count %></div>
     </div>
-
     <div class="band-stat-card">
       <div class="stat-icon">
         <i class="fa-solid fa-users"></i>
       </div>
       <div class="stat-value"><%= @band.musicians.count %></div>
       <div class="stat-label">Band Members</div>
+      <div class="stat-sub">Pending invitations: <%= @band.band_invitations.pending.count %></div>
     </div>
-
     <div class="band-stat-card">
       <div class="stat-icon">
         <i class="fa-solid fa-calendar-days"></i>
@@ -36,7 +34,6 @@
       <div class="stat-value"><%= @band.gigs.count %></div>
       <div class="stat-label">Upcoming Gigs</div>
     </div>
-
     <div class="band-stat-card">
       <div class="stat-icon">
         <i class="fa-solid fa-envelope"></i>
@@ -45,7 +42,6 @@
       <div class="stat-label">Unread Messages</div>
     </div>
   </div>
-
   <%# Analytics Section %>
   <div class="band-analytics-section">
     <div class="band-dashboard-card">
@@ -68,7 +64,6 @@
               <div class="stat-sub analytics-stat-positive">+<%= @stats[:new_followers_week] %> this week</div>
             <% end %>
           </div>
-
           <div class="band-stat-card">
             <div class="stat-icon">
               <i class="fa-solid fa-eye"></i>
@@ -77,7 +72,6 @@
             <div class="stat-label">Views This Week</div>
             <div class="stat-sub"><%= @stats[:profile_views_total] %> total</div>
           </div>
-
           <div class="band-stat-card">
             <div class="stat-icon">
               <i class="fa-solid fa-bookmark"></i>
@@ -85,7 +79,6 @@
             <div class="stat-value"><%= @stats[:profile_saves] %></div>
             <div class="stat-label">Profile Saves</div>
           </div>
-
           <% if @stats[:mainstage_wins] > 0 %>
             <div class="band-stat-card">
               <div class="stat-icon stat-icon-trophy">
@@ -96,7 +89,6 @@
             </div>
           <% end %>
         </div>
-
         <%# Current MAINSTAGE Stats %>
         <div class="band-mainstage-stats">
           <div class="band-mainstage-header">
@@ -132,7 +124,6 @@
       <% end %>
     </div>
   </div>
-
   <div class="band-dashboard-content">
     <div class="band-dashboard-card">
       <div class="band-card-header">
@@ -145,7 +136,6 @@
         <%= render 'chat', band: @band %>
       </div>
     </div>
-
     <%# Band Feed Section - Only leader can post %>
     <div class="band-dashboard-card">
       <div class="band-card-header">
@@ -182,7 +172,6 @@
             Only the band leader can create posts for the band feed.
           </p>
         <% end %>
-
         <%# Recent Band Posts %>
         <% band_posts = @band.posts.includes(:user, images_attachments: :blob, videos_attachments: :blob).recent.limit(5) %>
         <% if band_posts.any? %>
@@ -202,7 +191,6 @@
         <% end %>
       </div>
     </div>
-
     <div class="band-dashboard-card">
       <div class="band-card-header">
         <div class="card-icon">
@@ -214,13 +202,11 @@
         <turbo-frame id="band_invitation_form">
           <%= render partial: "bands/invite", locals: { band: @band, invitation: @band_invitation } %>
         </turbo-frame>
-
         <div class="mt-4">
           <%= render partial: "bands/pending_invitations", locals: { pending_invitations: @pending_invitations } %>
         </div>
       </div>
     </div>
-
     <div class="band-dashboard-card full-width">
       <div class="band-card-header">
         <div class="card-icon">
@@ -275,7 +261,6 @@
         <% end %>
       </div>
     </div>
-
     <div class="band-dashboard-card full-width">
       <div class="band-card-header">
         <div class="card-icon">
@@ -283,7 +268,6 @@
         </div>
         <h3>Gig Applications</h3>
       </div>
-
       <% if @pending_bookings.any? %>
         <% @pending_bookings.each do |booking| %>
           <div class="gig-application-card">
@@ -297,7 +281,6 @@
         <p class="no-gig-apps-notice">No pending gig applications</p>
       <% end %>
     </div>
-
     <!-- Band Media Section -->
     <div class="band-dashboard-card full-width">
       <div class="band-card-header">
@@ -306,12 +289,10 @@
         </div>
         <h3>Band Media</h3>
       </div>
-
       <!-- Current Media Display (only shows sections with content) -->
       <% if @band.banner.attached? || @band.images.attached? || @band.videos.attached? %>
         <div class="current-media-section">
           <h4 class="current-media-title"><i class="fa-solid fa-photo-film"></i> Current Media</h4>
-
           <% if @band.banner.attached? %>
             <div class="media-display-group">
               <label class="media-group-label">Banner</label>
@@ -325,7 +306,6 @@
                 <% end %>
               </div>
             </div>
-
             <!-- Banner Position Adjuster -->
             <div class="media-display-group" data-controller="banner-position">
               <label class="media-group-label">Banner Position</label>
@@ -352,7 +332,6 @@
               <% end %>
             </div>
           <% end %>
-
           <% if @band.images.attached? %>
             <div class="media-display-group">
               <label class="media-group-label">Photos (<%= @band.images.count %>)</label>
@@ -371,7 +350,6 @@
               </div>
             </div>
           <% end %>
-
           <% if @band.videos.attached? %>
             <div class="media-display-group">
               <label class="media-group-label">Videos (<%= @band.videos.count %>)</label>
@@ -394,7 +372,6 @@
           <% end %>
         </div>
       <% end %>
-
       <!-- Upload Form -->
       <%= form_with model: @band, local: true, class: "band-media-form", id: "band-media-form" do |f| %>
         <%# Hidden field for banner position - updated by Stimulus controller when position is adjusted %>
@@ -407,7 +384,6 @@
               <p>Add new banner, photos, or videos to your band profile</p>
             </div>
           </div>
-
           <div class="upload-fields-grid">
             <div class="upload-field" data-controller="file-preview">
               <label class="upload-field-label">Banner Image</label>
@@ -421,7 +397,6 @@
               </div>
               <div class="file-preview-container" data-file-preview-target="preview"></div>
             </div>
-
             <div class="upload-field" data-controller="file-preview">
               <label class="upload-field-label">Photos</label>
               <div class="upload-input-wrapper">
@@ -434,7 +409,6 @@
               </div>
               <div class="file-preview-container" data-file-preview-target="preview"></div>
             </div>
-
             <div class="upload-field" data-controller="file-preview">
               <label class="upload-field-label">Videos</label>
               <div class="upload-input-wrapper">
@@ -448,14 +422,12 @@
               <div class="file-preview-container" data-file-preview-target="preview"></div>
             </div>
           </div>
-
           <div class="media-submit-wrapper">
             <%= f.submit "Save Media", class: "btn-save-media" %>
           </div>
         </div>
       <% end %>
     </div>
-
     <!-- Spotify Tracks Section -->
     <div class="band-dashboard-card full-width">
       <div class="band-card-header">
@@ -466,15 +438,12 @@
       </div>
       <div class="spotify-tracks-section">
         <p class="spotify-description">Paste Spotify links to tracks, albums, or playlists to feature on your profile.</p>
-
         <div id="spotify-tracks">
           <%= render partial: 'spotify_tracks/editable_track', collection: @band.spotify_tracks, as: :track %>
         </div>
-
         <%= render 'spotify_tracks/form', band: @band %>
       </div>
     </div>
-
     <% if @band.user_id == current_user.id %>
       <% other_members = @band.musicians.where.not(user_id: current_user.id) %>
       <% if other_members.any? %>
@@ -506,7 +475,6 @@
           </div>
         </div>
       <% end %>
-
       <div class="band-dashboard-card full-width leave-band-card">
         <div class="band-card-header">
           <div class="card-icon danger">
