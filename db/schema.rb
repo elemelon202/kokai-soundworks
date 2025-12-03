@@ -264,13 +264,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
   end
 
   create_table "gig_applications", force: :cascade do |t|
+    t.bigint "gig_id", null: false
     t.bigint "band_id", null: false
     t.integer "status", default: 0
     t.text "message"
     t.text "response_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "gig_id", null: false
     t.index ["band_id"], name: "index_gig_applications_on_band_id"
     t.index ["gig_id", "band_id"], name: "index_gig_applications_on_gig_id_and_band_id", unique: true
     t.index ["gig_id"], name: "index_gig_applications_on_gig_id"
@@ -369,15 +369,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
   create_table "member_availabilities", force: :cascade do |t|
     t.bigint "musician_id", null: false
     t.bigint "band_id", null: false
-    t.date "start_date", null: false
-    t.integer "status", default: 0, null: false
-    t.text "notes"
+    t.date "start_date"
+    t.integer "status"
+    t.string "reason"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "end_date"
-    t.index ["band_id", "start_date"], name: "index_member_availabilities_on_band_id_and_start_date"
     t.index ["band_id"], name: "index_member_availabilities_on_band_id"
-    t.index ["musician_id", "band_id", "start_date"], name: "index_member_availability_unique", unique: true
     t.index ["musician_id"], name: "index_member_availabilities_on_musician_id"
   end
 
