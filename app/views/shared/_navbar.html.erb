@@ -29,20 +29,27 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto">
         <% if user_signed_in? %>
-          <li class="nav-item active">
-            <%= link_to musicians_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-guitar"></i> Musicians
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to bands_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-users"></i> Bands
-            <% end %>
-          </li>
-          <li class="nav-item">
-            <%= link_to venues_path, class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-location-dot"></i> Venues
-            <% end %>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle btn btn-primary text-white" href="#" id="searchDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="fa-solid fa-magnifying-glass"></i> Search
+            </a>
+            <ul class="dropdown-menu" aria-labelledby="searchDropdown">
+              <li>
+                <%= link_to musicians_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-guitar"></i> Musicians
+                <% end %>
+              </li>
+              <li>
+                <%= link_to bands_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-users"></i> Bands
+                <% end %>
+              </li>
+              <li>
+                <%= link_to venues_path, class: "dropdown-item" do %>
+                  <i class="fa-solid fa-location-dot"></i> Venues
+                <% end %>
+              </li>
+            </ul>
           </li>
           <li class="nav-item">
             <!-- Update the path to task board -->
