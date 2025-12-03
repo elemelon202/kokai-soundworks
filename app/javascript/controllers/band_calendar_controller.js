@@ -16,7 +16,10 @@ export default class extends Controller {
 
   async loadCalendar() {
     if (!window.FullCalendar) {
-      await this.loadScript("https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js")
+      // Load FullCalendar bundle (includes dayGrid, list, and other views)
+      await this.loadScript("https://cdn.jsdelivr.net/npm/@fullcalendar/core@6.1.10/index.global.min.js")
+      await this.loadScript("https://cdn.jsdelivr.net/npm/@fullcalendar/daygrid@6.1.10/index.global.min.js")
+      await this.loadScript("https://cdn.jsdelivr.net/npm/@fullcalendar/list@6.1.10/index.global.min.js")
     }
 
     const events = this.buildEvents()
@@ -26,7 +29,7 @@ export default class extends Controller {
       headerToolbar: {
         left: "prev,next today",
         center: "title",
-        right: "dayGridMonth,listWeek"
+        right: "dayGridMonth,listMonth"
       },
       events: events,
       eventClick: this.handleEventClick.bind(this),
