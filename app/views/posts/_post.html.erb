@@ -1,148 +1,86 @@
-<% comments_open = local_assigns[:comments_open] || false %>
-<div class="post-card" id="post-<%= post.id %>">
+<div class="mw-post-card" id="post-<%= post.id %>">
   <%# Post Header %>
-  <div class="post-header">
-    <% if post.band_post? %>
-      <%# Band Post Avatar %>
-      <div class="post-avatar band">
-        <% if post.band.banner.attached? %>
-          <%= image_tag post.band.banner %>
-        <% else %>
-          <i class="fa-solid fa-users"></i>
-        <% end %>
-      </div>
-    <% else %>
-      <%# User Avatar %>
-      <div class="post-avatar user">
-        <% if post.user.musician&.avatar&.attached? %>
-          <%= image_tag post.user.musician.avatar %>
-        <% else %>
-          <span><%= post.user.email[0].upcase %></span>
-        <% end %>
-      </div>
-    <% end %>
-    <div class="post-header-info">
-      <% if post.band_post? %>
-        <%# Band Post Name & Badge %>
-        <%= link_to band_path(post.band), class: "post-author-link" do %>
-          <%= post.band.name %>
-          <span class="post-badge-band">BAND</span>
-        <% end %>
-      <% elsif post.user.musician %>
-        <%= link_to musician_path(post.user.musician), class: "post-author-link" do %>
-          <%= post.user.musician.name %>
-        <% end %>
+  <div class="mw-post-header">
+    <div class="mw-post-avatar">
+      <% if post.band&.banner&.attached? %>
+        <%= image_tag post.band.banner %>
       <% else %>
-        <span class="post-author-name"><%= post.user.email.split('@').first %></span>
+        <i class="fa-solid fa-users"></i>
       <% end %>
-      <p class="post-timestamp"><%= time_ago_in_words(post.created_at) %> ago</p>
     </div>
-    <% if post.user == current_user %>
-      <%= button_to post_path(post), method: :delete, data: { confirm: "Delete this post?" }, class: "btn-post-delete" do %>
+    <div class="mw-post-info">
+      <%= link_to band_path(post.band), class: "mw-post-band-name" do %>
+        <%= post.band&.name || "Unknown Band" %>
+      <% end %>
+      <span class="mw-post-timestamp"><%= time_ago_in_words(post.created_at) %> ago</span>
+    </div>
+    <% if current_user.bands.include?(post.band) %>
+      <%= button_to post_path(post), method: :delete, data: { confirm: "Delete this post?" }, class: "mw-post-delete" do %>
         <i class="fa-solid fa-trash"></i>
       <% end %>
     <% end %>
   </div>
 
+  <%# Request Details %>
+  <div class="mw-post-details">
+    <div class="mw-detail">
+      <i class="fa-solid fa-guitar"></i>
+      <span class="mw-detail-label">Looking for:</span>
+      <span class="mw-detail-value"><%= post.instrument&.titleize || "Not specified" %></span>
+    </div>
+
+    <div class="mw-detail">
+      <i class="fa-solid fa-location-dot"></i>
+      <span class="mw-detail-label">Location:</span>
+      <span class="mw-detail-value"><%= post.location || "Not specified" %></span>
+    </div>
+
+    <% if post.genre.present? %>
+      <div class="mw-detail">
+        <i class="fa-solid fa-music"></i>
+        <span class="mw-detail-label">Genre:</span>
+        <span class="mw-detail-value"><%= post.genre %></span>
+      </div>
+    <% end %>
+
+    <div class="mw-detail <%= post.needed_by && post.needed_by < 3.days.from_now.to_date ? 'urgent' : '' %>">
+      <i class="fa-solid fa-calendar"></i>
+      <span class="mw-detail-label">Needed by:</span>
+      <span class="mw-detail-value">
+        <%= post.needed_by ? post.needed_by.strftime("%B %d, %Y") : "ASAP" %>
+        <% if post.needed_by && post.needed_by < 3.days.from_now.to_date %>
+          <span class="mw-urgent-badge">URGENT</span>
+        <% end %>
+      </span>
+    </div>
+  </div>
+
   <%# Post Content %>
   <% if post.content.present? %>
-    <p class="post-content"><%= post.content %></p>
+    <div class="mw-post-content">
+      <%= simple_format(post.content) %>
+    </div>
   <% end %>
 
   <%# Post Images %>
   <% if post.images.attached? %>
-    <div class="post-images">
+    <div class="mw-post-images">
       <% post.images.each do |image| %>
         <%= image_tag url_for(image) %>
       <% end %>
     </div>
   <% end %>
 
-  <%# Post Videos %>
-  <% if post.videos.attached? %>
-    <div class="post-videos">
-      <% post.videos.each do |video| %>
-        <video controls>
-          <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
-        </video>
-      <% end %>
-    </div>
-  <% end %>
-
-  <%# Post Actions %>
-  <div class="post-actions">
-    <%# Like Button %>
-    <% if post.liked_by?(current_user) %>
-      <%= button_to unlike_post_path(post), method: :delete, class: "btn-post-action btn-post-action-active" do %>
-        <i class="fa-solid fa-heart"></i>
-        <span><%= post.post_likes.count %></span>
-      <% end %>
-    <% else %>
-      <%= button_to like_post_path(post), method: :post, class: "btn-post-action" do %>
-        <i class="fa-regular fa-heart"></i>
-        <span><%= post.post_likes.count %></span>
-      <% end %>
-    <% end %>
-
-    <%# Comment Toggle %>
-    <button type="button" class="btn-post-action" onclick="this.closest('.post-card').querySelector('.post-comments-section').classList.toggle('hidden')">
-      <i class="fa-regular fa-comment"></i>
-      <span><%= post.post_comments.count %></span>
-    </button>
-
-    <%# Repost Button %>
-    <% if post.user != current_user %>
-      <%= button_to repost_post_path(post), method: :post, class: "btn-post-action #{post.reposted_by?(current_user) ? 'btn-post-action-reposted' : ''}" do %>
-        <i class="fa-solid fa-retweet"></i>
-        <span><%= post.reposts.count %></span>
-      <% end %>
-    <% else %>
-      <span class="btn-post-action post-action-disabled">
-        <i class="fa-solid fa-retweet"></i>
-        <span><%= post.reposts.count %></span>
-      </span>
-    <% end %>
-  </div>
-
-  <%# Comments Section %>
-  <div class="post-comments-section <%= comments_open ? '' : 'hidden' %>">
-    <%# Comment Form %>
-    <div class="post-comment-form-wrapper">
-      <%= form_with model: [post, PostComment.new], local: true, class: "post-comment-form" do |f| %>
-        <%= f.text_field :content, placeholder: "Write a comment...", class: "post-comment-input" %>
-        <%= f.submit "Post", class: "btn-post btn-post-comment" %>
-      <% end %>
-    </div>
-
-    <%# Comments List %>
-    <% if post.post_comments.any? %>
-      <div class="post-comments-list">
-        <% post.post_comments.recent.limit(5).each do |comment| %>
-          <div class="post-comment">
-            <div class="comment-avatar">
-              <% if comment.user.musician&.avatar&.attached? %>
-                <%= image_tag comment.user.musician.avatar %>
-              <% else %>
-                <span><%= comment.user.email[0].upcase %></span>
-              <% end %>
-            </div>
-            <div class="comment-body">
-              <div class="comment-header">
-                <span class="comment-author">
-                  <%= comment.user.musician&.name || comment.user.email.split('@').first %>
-                </span>
-                <span class="comment-timestamp"><%= time_ago_in_words(comment.created_at) %> ago</span>
-              </div>
-              <p class="comment-content"><%= comment.content %></p>
-            </div>
-            <% if comment.user == current_user || post.user == current_user %>
-              <%= button_to post_post_comment_path(post, comment), method: :delete, class: "btn-comment-delete" do %>
-                <i class="fa-solid fa-trash"></i>
-              <% end %>
-            <% end %>
-          </div>
+  <%# Action Button %>
+  <div class="mw-post-actions">
+    <% if post.band && post.user != current_user %>
+      <% band_leader = post.band.band_members.find_by(role: "leader")&.musician&.user %>
+      <% if band_leader %>
+        <%= link_to new_conversation_path(recipient_id: band_leader.id), class: "mw-dm-btn" do %>
+          <i class="fa-solid fa-envelope"></i>
+          Message Band
         <% end %>
-      </div>
+      <% end %>
     <% end %>
   </div>
 </div>

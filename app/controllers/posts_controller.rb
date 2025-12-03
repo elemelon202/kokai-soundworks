@@ -5,17 +5,25 @@ class PostsController < ApplicationController
   def index
     skip_authorization
     skip_policy_scope
-    @posts = current_user.feed.includes(:user, :reposts, images_attachments: :blob, videos_attachments: :blob)
+   # Only show active musician requests from bands
+    @posts = Post.band_posts.active_requests.recent
+                 .includes(:user, :band, images_attachments: :blob, videos_attachments: :blob)
+
+    # Apply filters if provided
+    @posts = @posts.by_instrument(params[:instrument]) if params[:instrument].present?
+    @posts = @posts.by_location(params[:location]) if params[:location].present?
+    @posts = @posts.by_genre(params[:genre]) if params[:genre].present?
+
     @post = Post.new
   end
 
   def create
     @post = current_user.posts.build(post_params)
 
-    # If band_id is provided, verify user is the band leader
+    # If band_id is provided, verify user is a band member
     if params[:post][:band_id].present?
       band = Band.find_by(id: params[:post][:band_id])
-      if band && band.user_id == current_user.id
+      if band && current_user.musician && band.musicians.include?(current_user.musician)
         @post.band = band
       end
     end
@@ -23,17 +31,13 @@ class PostsController < ApplicationController
     skip_authorization
 
     if @post.save
-      # Redirect back to band edit page if it was a band post
-      if @post.band.present?
-        redirect_to edit_band_path(@post.band), notice: "Band post created!"
-      else
-        redirect_to posts_path, notice: "Post created!"
-      end
+      redirect_to posts_path, notice: "Request posted!"
     else
-      @posts = current_user.feed.includes(:user, :reposts)
+      @posts = Post.band_posts.active_requests.recent
       render :index, status: :unprocessable_entity
     end
   end
+
 
   def destroy
     skip_authorization
@@ -96,6 +100,6 @@ class PostsController < ApplicationController
   end
 
   def post_params
-    params.require(:post).permit(:content, :band_id, images: [], videos: [])
+    params.require(:post).permit(:content, :band_id, :instrument, :location, :genre, :needed_by, images: [], videos: [])
   end
 end

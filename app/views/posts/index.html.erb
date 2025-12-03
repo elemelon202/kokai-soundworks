@@ -1,42 +1,105 @@
-<div style="max-width: 1200px; margin: 0 auto; padding: 24px;">
-  <h1 style="color: #fff; font-size: 1.75rem; margin-bottom: 24px;">
-    <i class="fa-solid fa-newspaper"></i> Feed
-  </h1>
+<div class="musicians-wanted-container">
+  <div class="mw-header">
+    <h1><i class="fa-solid fa-bullhorn"></i> Musicians Wanted</h1>
+    <p class="mw-subtitle">Bands looking for session musicians</p>
+  </div>
 
-  <%# New Post Form %>
-  <div style="background: #1e1e1e; border-radius: 12px; padding: 20px; margin-bottom: 24px;">
-    <%= form_with model: @post, local: true, style: "display: flex; flex-direction: column; gap: 12px;" do |f| %>
-      <%= f.text_area :content, placeholder: "What's on your mind?", rows: 3, style: "width: 100%; padding: 12px; background: #2a2a2a; border: 1px solid #333; border-radius: 8px; color: #fff; font-size: 1rem; resize: none; box-sizing: border-box;" %>
+  <%# Post Form - Only for Band Members %>
+  <% if current_user.bands.any? %>
+    <div class="mw-post-form">
+      <h3><i class="fa-solid fa-plus"></i> Post a Request</h3>
+      <%= form_with model: @post, local: true, class: "mw-form" do |f| %>
+        <div class="mw-form-row">
+          <div class="mw-form-group">
+            <label>Posting as Band</label>
+            <%= f.select :band_id, current_user.bands.map { |b| [b.name, b.id] }, {}, class: "mw-select" %>
+          </div>
+          <div class="mw-form-group">
+            <label>Instrument Needed</label>
+            <%= f.select :instrument, [
+              ["Guitar", "guitar"],
+              ["Bass", "bass"],
+              ["Drums", "drums"],
+              ["Vocals", "vocals"],
+              ["Keyboard/Piano", "keyboard"],
+              ["Saxophone", "saxophone"],
+              ["Trumpet", "trumpet"],
+              ["Violin", "violin"],
+              ["Other", "other"]
+            ], { include_blank: "Select instrument" }, class: "mw-select", required: true %>
+          </div>
+        </div>
 
-      <div style="display: flex; align-items: center; gap: 12px;">
-        <label style="cursor: pointer; color: #888; display: flex; align-items: center; gap: 6px;">
-          <i class="fa-solid fa-image"></i>
-          <span style="font-size: 0.85rem;">Photo</span>
-          <%= f.file_field :images, multiple: true, style: "display: none;", accept: "image/*" %>
-        </label>
-        <label style="cursor: pointer; color: #888; display: flex; align-items: center; gap: 6px;">
-          <i class="fa-solid fa-video"></i>
-          <span style="font-size: 0.85rem;">Video</span>
-          <%= f.file_field :videos, multiple: true, style: "display: none;", accept: "video/*" %>
-        </label>
-        <div style="flex: 1;"></div>
-        <%= f.submit "Post", class: "btn-post" %>
+        <div class="mw-form-row">
+          <div class="mw-form-group">
+            <label>Location</label>
+            <%= f.text_field :location, placeholder: "e.g. Los Angeles, CA", class: "mw-input", required: true %>
+          </div>
+          <div class="mw-form-group">
+            <label>Genre</label>
+            <%= f.text_field :genre, placeholder: "e.g. Rock, Jazz, Blues", class: "mw-input" %>
+          </div>
+        </div>
+
+        <div class="mw-form-row">
+          <div class="mw-form-group">
+            <label>Needed By</label>
+            <%= f.date_field :needed_by, class: "mw-input", min: Date.current, required: true %>
+          </div>
+          <div class="mw-form-group"></div>
+        </div>
+
+        <div class="mw-form-group full-width">
+          <label>Details</label>
+          <%= f.text_area :content, placeholder: "Describe what you're looking for: gig details, experience needed, pay, etc.", rows: 3, class: "mw-textarea", required: true %>
+        </div>
+
+        <%= f.submit "Post Request", class: "mw-submit-btn" %>
+      <% end %>
+    </div>
+  <% end %>
+
+  <%# Filters %>
+  <div class="mw-filters">
+    <%= form_with url: posts_path, method: :get, local: true, class: "mw-filter-form" do %>
+      <div class="mw-filter-row">
+        <%= select_tag :instrument, options_for_select([
+          ["All Instruments", ""],
+          ["Guitar", "guitar"],
+          ["Bass", "bass"],
+          ["Drums", "drums"],
+          ["Vocals", "vocals"],
+          ["Keyboard/Piano", "keyboard"],
+          ["Saxophone", "saxophone"],
+          ["Trumpet", "trumpet"],
+          ["Violin", "violin"],
+          ["Other", "other"]
+        ], params[:instrument]), class: "mw-filter-select" %>
+
+        <%= text_field_tag :location, params[:location], placeholder: "Location...", class: "mw-filter-input" %>
+
+        <%= text_field_tag :genre, params[:genre], placeholder: "Genre...", class: "mw-filter-input" %>
+
+        <%= submit_tag "Filter", class: "mw-filter-btn" %>
+        <% if params[:instrument].present? || params[:location].present? || params[:genre].present? %>
+          <%= link_to "Clear", posts_path, class: "mw-clear-btn" %>
+        <% end %>
       </div>
     <% end %>
   </div>
 
   <%# Posts Feed %>
   <% if @posts.any? %>
-    <div style="display: flex; flex-direction: column; gap: 16px;">
+    <div class="mw-posts">
       <% @posts.each do |post| %>
         <%= render "posts/post", post: post %>
       <% end %>
     </div>
   <% else %>
-    <div style="background: #1e1e1e; border-radius: 12px; padding: 40px; text-align: center;">
-      <i class="fa-solid fa-newspaper" style="font-size: 2.5rem; color: #333; margin-bottom: 12px;"></i>
-      <p style="color: #666; margin: 0;">Your feed is empty</p>
-      <p style="color: #555; margin: 8px 0 0 0; font-size: 0.9rem;">Follow musicians and add friends to see their posts!</p>
+    <div class="mw-empty">
+      <i class="fa-solid fa-guitar"></i>
+      <p>No musician requests right now</p>
+      <p class="mw-empty-sub">Check back later or adjust your filters</p>
     </div>
   <% end %>
 </div>
