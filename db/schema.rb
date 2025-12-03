@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -66,18 +66,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
     t.index ["message_id"], name: "index_attachments_on_message_id"
   end
 
-  create_table "band_events", force: :cascade do |t|
+  create_table "band_gigs", force: :cascade do |t|
     t.bigint "band_id", null: false
-    t.string "title"
-    t.integer "event_type"
+    t.string "name"
+    t.string "venue_name"
     t.date "date"
-    t.time "start_time"
-    t.time "end_time"
     t.string "location"
-    t.text "description"
+    t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.index ["band_id"], name: "index_band_events_on_band_id"
+    t.index ["band_id"], name: "index_band_gigs_on_band_id"
   end
 
   create_table "band_invitations", force: :cascade do |t|
@@ -252,13 +250,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
   end
 
   create_table "gig_applications", force: :cascade do |t|
-    t.bigint "gig_id", null: false
     t.bigint "band_id", null: false
     t.integer "status", default: 0
     t.text "message"
     t.text "response_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "gig_id", null: false
     t.index ["band_id"], name: "index_gig_applications_on_band_id"
     t.index ["gig_id", "band_id"], name: "index_gig_applications_on_gig_id_and_band_id", unique: true
     t.index ["gig_id"], name: "index_gig_applications_on_gig_id"
@@ -357,13 +355,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
   create_table "member_availabilities", force: :cascade do |t|
     t.bigint "musician_id", null: false
     t.bigint "band_id", null: false
-    t.date "start_date"
-    t.integer "status"
-    t.string "reason"
+    t.date "available_date", null: false
+    t.integer "status", default: 0, null: false
+    t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.date "end_date"
+    t.index ["band_id", "available_date"], name: "index_member_availabilities_on_band_id_and_available_date"
     t.index ["band_id"], name: "index_member_availabilities_on_band_id"
+    t.index ["musician_id", "band_id", "available_date"], name: "index_member_availability_unique", unique: true
     t.index ["musician_id"], name: "index_member_availabilities_on_musician_id"
   end
 
@@ -616,7 +615,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
   add_foreign_key "activities", "musicians"
   add_foreign_key "activities", "users"
   add_foreign_key "attachments", "messages"
-  add_foreign_key "band_events", "bands"
+  add_foreign_key "band_gigs", "bands"
   add_foreign_key "band_invitations", "bands"
   add_foreign_key "band_invitations", "musicians"
   add_foreign_key "band_invitations", "users", column: "inviter_id"

@@ -147,6 +147,263 @@ $kokai-yellow-dark: #b8e020;
     color: $kokai-yellow;
     margin-top: 8px;
   }
+
+  // Countdown card specific styles
+  &.countdown-card {
+    .countdown-icon {
+      background: linear-gradient(135deg, rgba($kokai-yellow, 0.2), rgba($kokai-yellow, 0.1));
+      animation: pulse-glow 2s ease-in-out infinite;
+    }
+
+    .countdown-display {
+      margin-bottom: 12px;
+    }
+
+    .countdown-numbers {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+    }
+
+    .countdown-unit {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-width: 45px;
+    }
+
+    .countdown-value {
+      font-size: 1.8rem;
+      font-weight: 800;
+      color: $kokai-yellow;
+      line-height: 1;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .countdown-label {
+      font-size: 0.65rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-top: 4px;
+    }
+
+    .countdown-gig-name {
+      font-size: 0.9rem;
+      font-weight: 600;
+      color: #fff;
+      text-align: center;
+      margin-bottom: 4px;
+    }
+
+    .countdown-venue {
+      font-size: 0.75rem;
+      color: rgba(255, 255, 255, 0.5);
+      text-align: center;
+    }
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba($kokai-yellow, 0.3);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba($kokai-yellow, 0.5);
+  }
+}
+
+// ===========================================
+// UPCOMING GIGS SECTION
+// ===========================================
+.band-gigs-section {
+  max-width: 1200px;
+  margin: 0 auto 25px;
+}
+
+.gigs-content {
+  padding: 10px 0;
+}
+
+.add-gig-form {
+  margin-bottom: 20px;
+}
+
+.gig-form {
+  width: 100%;
+}
+
+.gig-form-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  align-items: flex-end;
+}
+
+.gig-form-group {
+  flex: 1;
+  min-width: 150px;
+}
+
+.gig-input {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $kokai-yellow;
+  }
+}
+
+.btn-add-gig {
+  background: linear-gradient(135deg, $kokai-yellow, $kokai-yellow-dark);
+  color: #171717;
+  border: none;
+  padding: 12px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.2s;
+
+  &:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba($kokai-yellow, 0.3);
+  }
+}
+
+.gigs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.gig-item {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  transition: all 0.2s;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba($kokai-yellow, 0.2);
+  }
+}
+
+.gig-date {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+  background: linear-gradient(135deg, rgba($kokai-yellow, 0.15), rgba($kokai-yellow, 0.05));
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.gig-day {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: $kokai-yellow;
+  line-height: 1;
+}
+
+.gig-month {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.gig-details {
+  flex: 1;
+}
+
+.gig-name {
+  font-weight: 600;
+  color: #fff;
+  font-size: 1rem;
+  margin-bottom: 4px;
+}
+
+.gig-venue {
+  color: rgba(255, 255, 255, 0.5);
+  font-size: 0.85rem;
+
+  i {
+    color: $kokai-yellow;
+    margin-right: 4px;
+  }
+}
+
+.gig-location {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+.gig-countdown-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 50px;
+}
+
+.days-count {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: $kokai-yellow;
+}
+
+.days-label {
+  font-size: 0.65rem;
+  color: rgba(255, 255, 255, 0.5);
+  text-transform: uppercase;
+}
+
+.gig-delete {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.3);
+  cursor: pointer;
+  padding: 8px;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #ff4757;
+  }
+}
+
+.gigs-empty {
+  text-align: center;
+  padding: 40px 20px;
+
+  i {
+    font-size: 2.5rem;
+    color: rgba(255, 255, 255, 0.1);
+    margin-bottom: 16px;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.5);
+    margin: 0;
+
+    &.sub {
+      color: rgba(255, 255, 255, 0.3);
+      font-size: 0.9rem;
+      margin-top: 8px;
+    }
+  }
 }
 
 // Main Dashboard Content
@@ -239,7 +496,7 @@ $kokai-yellow-dark: #b8e020;
 
 // Band Chat Styling within Dashboard
 .band-chat-wrapper {
-  max-height: 400px;
+  max-height: 550px;
   overflow-y: auto;
   margin: -10px;
   padding: 10px;
@@ -271,7 +528,7 @@ $kokai-yellow-dark: #b8e020;
     }
 
     #band-messages {
-      max-height: 280px;
+      max-height: 420px;
       padding-right: 5px;
 
       &::-webkit-scrollbar {
@@ -2157,475 +2414,401 @@ $kokai-yellow-dark: #b8e020;
   }
 }
 
-// ===== BAND CALENDAR SECTION =====
-.band-calendar-section {
-  max-width: 1200px;
-  margin: 0 auto 30px;
+// ===========================================
+// SOCIAL MEDIA TRACKING SECTION
+// ===========================================
+.social-tracking-section {
+  padding: 10px 0;
 }
 
-.card-icon-calendar {
-  background: rgba(251, 191, 36, 0.15) !important;
-  color: #fbbf24 !important;
+.social-tracking-form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
 }
 
-.btn-add-event {
-  margin-left: auto;
-  background: linear-gradient(135deg, $kokai-yellow, $kokai-yellow-dark);
-  border: none;
-  padding: 8px 16px;
+.social-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+
+  @media (max-width: 768px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.social-stat-card {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 20px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(255, 255, 255, 0.12);
+  }
+
+  &.instagram {
+    .social-stat-header i {
+      background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  }
+
+  &.tiktok {
+    .social-stat-header i {
+      color: #00f2ea;
+    }
+  }
+
+  &.youtube {
+    .social-stat-header i {
+      color: #ff0000;
+    }
+  }
+
+  &.twitter {
+    .social-stat-header i {
+      color: #fff;
+    }
+  }
+}
+
+.social-stat-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+
+  i {
+    font-size: 1.5rem;
+  }
+
+  span {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #fff;
+  }
+}
+
+.social-stat-inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.social-handle-input {
+  width: 100%;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 8px;
-  font-weight: 600;
+  color: #fff;
+  font-size: 0.9rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $kokai-yellow;
+  }
+}
+
+.social-followers-input {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.social-count-input {
+  flex: 1;
+  padding: 10px 14px;
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+  }
+
+  &:focus {
+    outline: none;
+    border-color: $kokai-yellow;
+  }
+
+  // Hide spinner arrows
+  &::-webkit-outer-spin-button,
+  &::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+  -moz-appearance: textfield;
+}
+
+.social-count-label {
+  color: rgba(255, 255, 255, 0.5);
   font-size: 0.85rem;
+  white-space: nowrap;
+}
+
+.social-stat-display {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.social-stat-number {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: $kokai-yellow;
+}
+
+.social-tracking-total {
+  background: linear-gradient(135deg, rgba($kokai-yellow, 0.1), rgba($kokai-yellow, 0.05));
+  border: 1px solid rgba($kokai-yellow, 0.2);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+}
+
+.total-reach {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.total-label {
+  font-size: 0.9rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.total-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, $kokai-yellow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.social-tracking-submit {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.btn-save-social {
+  background: linear-gradient(135deg, $kokai-yellow, $kokai-yellow-dark);
   color: #171717;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 12px;
+  font-weight: 700;
   cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 15px rgba(213, 255, 64, 0.3);
+    box-shadow: 0 8px 20px rgba($kokai-yellow, 0.3);
   }
+
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+// Growth Trends Section
+.band-growth-trends {
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.growth-trends-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
 
   i {
-    margin-right: 6px;
-  }
-}
-
-.calendar-legend {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 16px;
-  margin-bottom: 20px;
-  padding: 12px 16px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 10px;
-}
-
-.legend-item {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 0.85rem;
-  color: rgba(255, 255, 255, 0.7);
-}
-
-.legend-color {
-  width: 14px;
-  height: 14px;
-  border-radius: 4px;
-}
-
-.band-calendar-wrapper {
-  position: relative;
-}
-
-.band-calendar {
-  background: rgba(255, 255, 255, 0.02);
-  border-radius: 12px;
-  padding: 16px;
-
-  // FullCalendar overrides
-  .fc {
-    font-family: inherit;
-  }
-
-  .fc-theme-standard td,
-  .fc-theme-standard th {
-    border-color: rgba(255, 255, 255, 0.08);
-  }
-
-  .fc-theme-standard .fc-scrollgrid {
-    border-color: rgba(255, 255, 255, 0.08);
-  }
-
-  .fc-col-header-cell-cushion {
-    color: rgba(255, 255, 255, 0.6);
-    font-weight: 600;
-    text-decoration: none;
-  }
-
-  .fc-daygrid-day-number {
-    color: rgba(255, 255, 255, 0.8);
-    text-decoration: none;
-  }
-
-  .fc-day-today {
-    background: rgba(213, 255, 64, 0.1) !important;
-  }
-
-  .fc-button-primary {
-    background: rgba(255, 255, 255, 0.1);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: #fff;
-
-    &:hover {
-      background: rgba(213, 255, 64, 0.2);
-      border-color: rgba(213, 255, 64, 0.3);
-    }
-
-    &:not(:disabled).fc-button-active,
-    &:not(:disabled):active {
-      background: $kokai-yellow;
-      border-color: $kokai-yellow;
-      color: #171717;
-    }
-  }
-
-  .fc-toolbar-title {
-    color: #fff;
-    font-size: 1.2rem;
-  }
-
-  .fc-event {
-    border-radius: 4px;
-    font-size: 0.8rem;
-    padding: 2px 4px;
-    cursor: pointer;
-  }
-
-  .fc-more-link {
     color: $kokai-yellow;
-  }
-}
-
-// Calendar Modal
-.calendar-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.8);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.calendar-modal-content {
-  background: linear-gradient(145deg, rgba(40, 40, 40, 0.98), rgba(25, 25, 25, 0.98));
-  border-radius: 16px;
-  padding: 24px;
-  max-width: 400px;
-  width: 90%;
-  position: relative;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-
-  h4 {
-    color: #fff;
-    margin: 0 0 16px 0;
-    font-size: 1.2rem;
-  }
-
-  p {
-    color: rgba(255, 255, 255, 0.7);
-    margin: 8px 0;
-    font-size: 0.95rem;
-
-    strong {
-      color: rgba(255, 255, 255, 0.9);
-    }
-  }
-}
-
-.modal-close {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
-  border: none;
-  color: rgba(255, 255, 255, 0.6);
-  cursor: pointer;
-  transition: all 0.2s ease;
-
-  &:hover {
-    background: rgba(255, 71, 87, 0.2);
-    color: #ff6b7a;
-  }
-}
-
-// Add Event Form
-.calendar-event-form {
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 12px;
-  padding: 20px;
-  margin-top: 20px;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-
-  h4 {
-    color: #fff;
-    margin: 0 0 16px 0;
     font-size: 1.1rem;
   }
 }
 
-.event-form {
-  .form-group {
-    margin-bottom: 16px;
+.growth-trends-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 12px;
+}
 
-    label {
-      display: block;
-      margin-bottom: 6px;
-      font-size: 0.9rem;
-      color: rgba(255, 255, 255, 0.7);
-      font-weight: 500;
-    }
+.growth-trend-item {
+  background: rgba(30, 30, 30, 0.6);
+  border-radius: 12px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.3s ease;
 
-    .form-control {
-      width: 100%;
-      padding: 10px 14px;
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      border-radius: 8px;
-      color: #fff;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
-
-      &:focus {
-        outline: none;
-        border-color: $kokai-yellow;
-        box-shadow: 0 0 0 3px rgba(213, 255, 64, 0.15);
-      }
-
-      &::placeholder {
-        color: rgba(255, 255, 255, 0.3);
-      }
-    }
-
-    select.form-control {
-      appearance: none;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23D5FF40' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-      background-repeat: no-repeat;
-      background-position: right 12px center;
-      padding-right: 36px;
-    }
-
-    textarea.form-control {
-      resize: vertical;
-      min-height: 80px;
-    }
-  }
-
-  .form-row {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-
-    @media (max-width: 480px) {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .form-actions {
-    display: flex;
-    gap: 12px;
-    justify-content: flex-end;
-    margin-top: 20px;
-  }
-
-  .btn-cancel {
-    padding: 10px 20px;
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.2);
-    border-radius: 8px;
-    color: rgba(255, 255, 255, 0.7);
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      background: rgba(255, 255, 255, 0.15);
-      color: #fff;
-    }
-  }
-
-  .btn-submit {
-    padding: 10px 24px;
-    background: linear-gradient(135deg, $kokai-yellow, $kokai-yellow-dark);
-    border: none;
-    border-radius: 8px;
-    color: #171717;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 6px 15px rgba(213, 255, 64, 0.3);
-    }
+  &:hover {
+    background: rgba(40, 40, 40, 0.8);
+    transform: translateY(-2px);
   }
 }
 
-// Member Availability Section
-.member-availability-section {
-  margin-top: 24px;
-  padding-top: 20px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+.growth-metric-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 10px;
 
-  h4 {
-    color: #fff;
-    font-size: 1rem;
-    margin: 0 0 8px 0;
+  i {
+    font-size: 0.9rem;
+    color: rgba(255, 255, 255, 0.5);
+  }
+}
+
+.growth-value {
+  font-size: 1.4rem;
+  font-weight: 700;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &.positive {
+    color: #4ade80;
 
     i {
-      color: #ef4444;
-      margin-right: 8px;
+      font-size: 0.9rem;
     }
   }
 
-  .availability-hint {
-    color: rgba(255, 255, 255, 0.5);
-    font-size: 0.85rem;
-    margin: 0 0 16px 0;
-  }
-}
+  &.negative {
+    color: #f87171;
 
-.availability-form {
-  .availability-form-row {
-    display: flex;
-    gap: 12px;
-    align-items: flex-end;
-    flex-wrap: wrap;
-
-    @media (max-width: 768px) {
-      flex-direction: column;
-      align-items: stretch;
-    }
-
-    .form-group {
-      margin-bottom: 0;
-
-      .form-control {
-        padding: 10px 14px;
-        background: rgba(255, 255, 255, 0.05);
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        color: #fff;
-        font-size: 0.9rem;
-
-        &:focus {
-          outline: none;
-          border-color: #ef4444;
-          box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15);
-        }
-      }
-
-      select.form-control {
-        appearance: none;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ef4444' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
-        background-repeat: no-repeat;
-        background-position: right 12px center;
-        padding-right: 36px;
-      }
+    i {
+      font-size: 0.9rem;
     }
   }
 
-  .btn-unavailable {
-    padding: 10px 20px;
-    background: rgba(239, 68, 68, 0.2);
-    border: 1px solid rgba(239, 68, 68, 0.3);
-    border-radius: 8px;
-    color: #ef4444;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    white-space: nowrap;
+  &.neutral {
+    color: rgba(255, 255, 255, 0.6);
 
-    &:hover {
-      background: rgba(239, 68, 68, 0.3);
-      border-color: rgba(239, 68, 68, 0.5);
-      transform: translateY(-2px);
+    i {
+      font-size: 0.8rem;
     }
   }
 }
 
-// List of user's marked availabilities with delete option
-.my-availabilities-list {
+.growth-detail {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.social-follower-count {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+}
+
+// Social platform specific colors
+.growth-trend-item.social-trend {
+  &.instagram .growth-metric-name i {
+    background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  &.tiktok .growth-metric-name i {
+    color: #00f2ea;
+  }
+
+  &.youtube .growth-metric-name i {
+    color: #ff0000;
+  }
+
+  &.x .growth-metric-name i {
+    color: #fff;
+  }
+}
+
+.growth-total-reach {
+  display: flex;
+  align-items: center;
+  gap: 16px;
   margin-top: 20px;
-  padding-top: 16px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 16px 20px;
+  background: linear-gradient(135deg, rgba($kokai-yellow, 0.1), rgba($kokai-yellow, 0.05));
+  border-radius: 12px;
+  border: 1px solid rgba($kokai-yellow, 0.2);
+}
 
-  h5 {
-    color: rgba(255, 255, 255, 0.7);
-    font-size: 0.9rem;
-    font-weight: 500;
-    margin: 0 0 12px 0;
+.reach-icon {
+  width: 44px;
+  height: 44px;
+  background: rgba($kokai-yellow, 0.2);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  i {
+    font-size: 1.2rem;
+    color: $kokai-yellow;
+  }
+}
+
+.reach-content {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.reach-label {
+  font-size: 0.8rem;
+  color: rgba(255, 255, 255, 0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.reach-number {
+  font-size: 1.6rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #fff, $kokai-yellow);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+// Responsive adjustments
+@media (max-width: 768px) {
+  .growth-trends-grid {
+    grid-template-columns: repeat(2, 1fr);
   }
 
-  .availability-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 12px 14px;
-    background: rgba(239, 68, 68, 0.1);
-    border: 1px solid rgba(239, 68, 68, 0.2);
-    border-radius: 8px;
-    margin-bottom: 8px;
+  .growth-trend-item {
+    padding: 12px;
+  }
 
-    &:last-child {
-      margin-bottom: 0;
-    }
+  .growth-value {
+    font-size: 1.2rem;
+  }
 
-    .availability-info {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      flex-wrap: wrap;
+  .growth-total-reach {
+    padding: 12px 16px;
+  }
 
-      .availability-dates {
-        color: #fff;
-        font-size: 0.9rem;
-        font-weight: 500;
-
-        i {
-          color: #ef4444;
-          margin-right: 6px;
-        }
-      }
-
-      .availability-status {
-        padding: 2px 8px;
-        border-radius: 4px;
-        font-size: 0.75rem;
-        font-weight: 600;
-        text-transform: uppercase;
-
-        &.unavailable {
-          background: rgba(239, 68, 68, 0.3);
-          color: #fca5a5;
-        }
-
-        &.tentative {
-          background: rgba(251, 191, 36, 0.3);
-          color: #fcd34d;
-        }
-      }
-
-      .availability-reason {
-        color: rgba(255, 255, 255, 0.5);
-        font-size: 0.85rem;
-        font-style: italic;
-      }
-    }
-
-    .btn-delete-availability {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.4);
-      cursor: pointer;
-      padding: 6px 10px;
-      border-radius: 4px;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: rgba(239, 68, 68, 0.3);
-        color: #ef4444;
-      }
-
-      i {
-        font-size: 0.9rem;
-      }
-    }
+  .reach-number {
+    font-size: 1.4rem;
   }
 }

@@ -74,6 +74,7 @@ Rails.application.routes.draw do
     resources :band_events, only: [:create, :update, :destroy]
     resources :member_availabilities, only: [:create, :destroy]
     resources :kanban_tasks, only: [:index, :create, :update, :destroy], path: 'tasks'
+    resources :band_gigs, only: [:create, :destroy], path: 'gigs'
     member do
       patch :transfer_leadership
       delete :purge_attachment

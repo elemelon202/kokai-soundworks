@@ -1149,180 +1149,122 @@ puts "Created #{Booking.count} bookings"
 # ===========================================
 puts "Creating kanban tasks..."
 
-# Neon Pulse tasks (created by band leader)
+# Neon Pulse tasks
 KanbanTask.create!(
+  band: bands[0],
   name: "Finalize setlist for Rock Festival",
   status: "in_progress",
   created_by: band_leaders[0],
-  task_type: "arrangement",
-  deadline: 5.days.from_now,
-  description: "Need to finalize the 45-minute setlist for the festival. Include 2 new songs.",
+  assigned_to: musicians[3],
+  task_type: "rehearsal",
   position: 1
 )
 
 KanbanTask.create!(
+  band: bands[0],
   name: "Book rehearsal space",
   status: "done",
   created_by: band_leaders[0],
   task_type: "booking",
-  deadline: 2.days.ago,
-  description: "Studio B at Sound Factory - confirmed for Thursday 7pm",
   position: 2
 )
 
 KanbanTask.create!(
+  band: bands[0],
   name: "Fix guitar amp feedback issue",
   status: "to_do",
   created_by: band_leaders[0],
-  task_type: "equipment",
-  deadline: 4.days.from_now,
-  description: "Takeshi's amp has feedback at high volumes. Need to troubleshoot.",
+  assigned_to: musicians[3],
+  task_type: "other",
   position: 3
 )
 
 KanbanTask.create!(
+  band: bands[0],
   name: "Design new merchandise",
   status: "to_do",
   created_by: band_leaders[0],
   task_type: "promotion",
-  deadline: 2.weeks.from_now,
-  description: "T-shirts and stickers for festival sales booth.",
   position: 4
 )
 
-# Midnight Jazz Collective tasks (created by band leader)
 KanbanTask.create!(
+  band: bands[0],
+  name: "Update social media",
+  status: "in_progress",
+  created_by: band_leaders[0],
+  assigned_to: musicians[11],
+  task_type: "promotion",
+  position: 5
+)
+
+# Midnight Jazz Collective tasks
+KanbanTask.create!(
+  band: bands[1],
   name: "Arrange 'Midnight in Tokyo'",
-  status: "review",
+  status: "in_progress",
   created_by: band_leaders[1],
-  task_type: "arrangement",
-  deadline: 2.days.from_now,
-  description: "New arrangement with extended sax solo section. Hiroshi reviewing piano parts.",
+  assigned_to: musicians[4],
+  task_type: "writing",
   position: 1
 )
 
 KanbanTask.create!(
+  band: bands[1],
   name: "Record demo for Blue Note",
   status: "in_progress",
   created_by: band_leaders[1],
   task_type: "recording",
-  deadline: 1.week.from_now,
-  description: "3-track demo for potential residency at Blue Note. Studio session booked.",
   position: 2
 )
 
 KanbanTask.create!(
+  band: bands[1],
   name: "Update press kit photos",
   status: "to_do",
   created_by: band_leaders[1],
   task_type: "promotion",
-  deadline: 3.weeks.from_now,
-  description: "Schedule photo shoot with all members. Need high-res images for venues.",
   position: 3
 )
 
 KanbanTask.create!(
+  band: bands[1],
   name: "Rehearse Coltrane medley",
   status: "done",
   created_by: band_leaders[1],
+  assigned_to: musicians[5],
   task_type: "rehearsal",
-  deadline: 1.day.ago,
-  description: "15-minute Coltrane tribute medley - all parts learned and rehearsed.",
   position: 4
 )
 
-# Tokyo Thunder tasks (created by band leader)
+# Tokyo Thunder tasks
 KanbanTask.create!(
+  band: bands[2],
   name: "Write lyrics for new single",
   status: "in_progress",
   created_by: band_leaders[2],
-  task_type: "lyrics",
-  deadline: 1.week.from_now,
-  description: "Working title: 'Storm Warning'. Need verse 2 and bridge.",
+  assigned_to: musicians[9],
+  task_type: "writing",
   position: 1
 )
 
 KanbanTask.create!(
+  band: bands[2],
   name: "Mix festival recording",
   status: "to_do",
   created_by: band_leaders[2],
-  task_type: "mixing",
-  deadline: 3.weeks.from_now,
-  description: "Live recording from last week's show. For YouTube release.",
+  task_type: "recording",
   position: 2
 )
 
 KanbanTask.create!(
+  band: bands[2],
   name: "Replace drum heads",
   status: "done",
   created_by: band_leaders[2],
-  task_type: "equipment",
-  deadline: 3.days.ago,
-  description: "New Remo heads installed. Sounds much better!",
+  assigned_to: musicians[8],
+  task_type: "other",
   position: 3
-)
-
-# Sakura Ensemble tasks (created by band leader)
-KanbanTask.create!(
-  name: "Compose original piece",
-  status: "in_progress",
-  created_by: band_leaders[3],
-  task_type: "composition",
-  deadline: 1.month.from_now,
-  description: "Chamber jazz piece featuring violin and trumpet dialogue. Working title: 'Cherry Blossom Waltz'",
-  position: 1
-)
-
-KanbanTask.create!(
-  name: "Contact Kyoto venue",
-  status: "done",
-  created_by: band_leaders[3],
-  task_type: "booking",
-  deadline: 1.week.ago,
-  description: "Yamatoya confirmed for our Kyoto debut!",
-  position: 2
-)
-
-# Electric Dreams tasks (created by band leader)
-KanbanTask.create!(
-  name: "Program new synth patches",
-  status: "in_progress",
-  created_by: band_leaders[4],
-  task_type: "composition",
-  deadline: 1.week.from_now,
-  description: "80s-inspired patches for the Metro show. Emi working on modular sequences.",
-  position: 1
-)
-
-KanbanTask.create!(
-  name: "Design visuals for live show",
-  status: "to_do",
-  created_by: band_leaders[4],
-  task_type: "promotion",
-  deadline: 3.weeks.from_now,
-  description: "Projection mapped visuals synced to our set. Need to find VJ.",
-  position: 2
-)
-
-# Acoustic Soul tasks (created by band leader)
-KanbanTask.create!(
-  name: "Learn new folk covers",
-  status: "in_progress",
-  created_by: band_leaders[5],
-  task_type: "rehearsal",
-  deadline: 10.days.from_now,
-  description: "Adding 3 classic folk songs to our repertoire for indie showcase.",
-  position: 1
-)
-
-KanbanTask.create!(
-  name: "Record acoustic EP",
-  status: "to_do",
-  created_by: band_leaders[5],
-  task_type: "recording",
-  deadline: 2.months.from_now,
-  description: "5-track EP recorded live in studio. Simple, warm production.",
-  position: 2
 )
 
 puts "Created #{KanbanTask.count} kanban tasks"
@@ -1583,6 +1525,73 @@ Message.create!(chat: dm3, user: band_leaders[0], content: "Synth pads and some 
 puts "Created #{Chat.direct_messages.count} direct message conversations"
 
 # ===========================================
+# MUSICIANS WANTED POSTS (for pitch demo)
+# ===========================================
+puts "Creating musicians wanted posts..."
+
+# Urgent drummer needed - Tokyo Thunder
+Post.create!(
+  user: band_leaders[2],
+  band: bands[2],
+  content: "URGENT! Our drummer broke his wrist last week. We have a major festival gig coming up and need a fill-in drummer who can learn our set fast. We play high-energy rock - think Led Zeppelin meets modern metal. Paid gig, great exposure. Must be available for 2 rehearsals before the show.",
+  instrument: "drums",
+  location: "Tokyo",
+  genre: "Rock",
+  needed_by: 5.days.from_now.to_date,
+  active: true
+)
+
+# Bassist for jazz residency - Midnight Jazz Collective
+Post.create!(
+  user: band_leaders[1],
+  band: bands[1],
+  content: "Looking for an upright bassist to join us for a potential monthly residency at Blue Note Tokyo. Must have strong jazz chops and be comfortable with standards as well as original compositions. This could become a regular paying gig!",
+  instrument: "bass",
+  location: "Tokyo",
+  genre: "Jazz",
+  needed_by: 2.weeks.from_now.to_date,
+  active: true
+)
+
+# Keyboardist for synth-heavy band - Electric Dreams
+Post.create!(
+  user: band_leaders[4],
+  band: bands[4],
+  content: "Seeking a synth wizard for our synthwave project. Must have your own gear (analog preferred but not required). We're playing Metro Kyoto next month and need someone who can handle Prophet-style pads and arpeggiated sequences. Retro 80s vibes essential!",
+  instrument: "keyboard",
+  location: "Tokyo",
+  genre: "Electronic",
+  needed_by: 3.weeks.from_now.to_date,
+  active: true
+)
+
+# Vocalist for acoustic set - Acoustic Soul
+Post.create!(
+  user: band_leaders[5],
+  band: bands[5],
+  content: "Looking for a harmony vocalist for upcoming indie showcase. We play intimate acoustic folk music - think Joni Mitchell meets Fleet Foxes. Must have good ear for harmonies and be comfortable with stripped-back arrangements.",
+  instrument: "vocals",
+  location: "Tokyo",
+  genre: "Folk",
+  needed_by: 10.days.from_now.to_date,
+  active: true
+)
+
+# Saxophone for special event - Neon Pulse
+Post.create!(
+  user: band_leaders[0],
+  band: bands[0],
+  content: "Our electronic rock band is looking for a saxophone player for a special one-off show. Think 80s power ballad sax solos meets modern electronic production. If you can channel your inner Clarence Clemons while playing over synth beats, we want to hear from you!",
+  instrument: "saxophone",
+  location: "Tokyo",
+  genre: "Rock",
+  needed_by: 2.weeks.from_now.to_date,
+  active: true
+)
+
+puts "Created #{Post.count} musicians wanted posts"
+
+# ===========================================
 # MAINSTAGE WINNERS (for pitch demo)
 # ===========================================
 puts "Creating MAINSTAGE winners..."
@@ -1710,10 +1719,18 @@ puts "  Gig Attendances: #{GigAttendance.count}"
 puts "  Fans: #{User.where(user_type: 'fan').count}"
 puts "  MAINSTAGE Winners (Musicians): #{MainstageWinner.count}"
 puts "  MAINSTAGE Winners (Bands): #{BandMainstageWinner.count}"
+puts "  Musicians Wanted Posts: #{Post.count}"
 puts ""
 puts "Test accounts (all passwords: 'password123'):"
 puts "  Venue Owner: bluenote@venue.com"
 puts "  Musician: yuki.drums@musician.com"
-puts "  Band Leader: neon@band.com"
+puts "  Band Leader: neon@band.com (Neon Pulse)"
+puts "  Band Leader: thunder@band.com (Tokyo Thunder - has URGENT drummer request)"
 puts "  Fan: akira.fan@email.com"
+puts ""
+puts "Demo highlights:"
+puts "  - Login as thunder@band.com to demo the band with the URGENT drummer request"
+puts "  - Check /feed to see all Musicians Wanted posts"
+puts "  - Kanban board has tasks spread across to_do, in_progress, and done"
+puts "  - Band chat has realistic conversation threads"
 puts ""
