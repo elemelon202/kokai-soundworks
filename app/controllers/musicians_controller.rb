@@ -46,6 +46,10 @@ class MusiciansController < ApplicationController
       @musicians = @musicians.where(location: params[:location])
     end
 
+    if params[:status].present?
+      @musicians = @musicians.where(status: params[:status])
+    end
+
     # Paginate results - 10 per page
     @pagy, @musicians = pagy(@musicians, items: 10)
 
