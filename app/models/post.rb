@@ -14,7 +14,24 @@ class Post < ApplicationRecord
   scope :recent, -> { order(created_at: :desc) }
   scope :band_posts, -> { where.not(band_id: nil) }
   scope :personal_posts, -> { where(band_id: nil) }
+  scope :active_requests, -> { where(active: true).where('needed_by >= ?', Date.current)}
+  scope :by_instrument, -> { where(instrument: instrument) if instrument.present? }
+  scope :by_location, ->(location) { where('location ILIKE ?', "%#{location}%") if location.present? }
+  scope :by_genre, ->(genre) { where('genre ILIKE ?', "%#{genre}%") if genre.present? }
 
+
+
+  def self.expire_old_posts
+    where('needed_by < ?', Date.current).update_all(active: false)
+  end
+
+   def matches_musician?(musician)
+    return false unless musician
+    matches = true
+    matches &&= (instrument.blank? || musician.instrument&.downcase == instrument&.downcase)
+    matches &&= (location.blank? || musician.location&.downcase&.include?(location&.downcase))
+    matches
+   end
   # Returns the display name for the post author
   def author_name
     if band.present?
