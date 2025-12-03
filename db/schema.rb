@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_03_030722) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -64,6 +64,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["message_id"], name: "index_attachments_on_message_id"
+  end
+
+  create_table "band_events", force: :cascade do |t|
+    t.bigint "band_id", null: false
+    t.string "title"
+    t.integer "event_type"
+    t.date "date"
+    t.time "start_time"
+    t.time "end_time"
+    t.string "location"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["band_id"], name: "index_band_events_on_band_id"
   end
 
   create_table "band_invitations", force: :cascade do |t|
@@ -328,6 +342,19 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
     t.index ["musician_id"], name: "index_mainstage_winners_on_musician_id"
   end
 
+  create_table "member_availabilities", force: :cascade do |t|
+    t.bigint "musician_id", null: false
+    t.bigint "band_id", null: false
+    t.date "start_date"
+    t.integer "status"
+    t.string "reason"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.date "end_date"
+    t.index ["band_id"], name: "index_member_availabilities_on_band_id"
+    t.index ["musician_id"], name: "index_member_availabilities_on_musician_id"
+  end
+
   create_table "message_reads", force: :cascade do |t|
     t.bigint "message_id", null: false
     t.bigint "user_id", null: false
@@ -569,6 +596,7 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
   add_foreign_key "activities", "musicians"
   add_foreign_key "activities", "users"
   add_foreign_key "attachments", "messages"
+  add_foreign_key "band_events", "bands"
   add_foreign_key "band_invitations", "bands"
   add_foreign_key "band_invitations", "musicians"
   add_foreign_key "band_invitations", "users", column: "inviter_id"
@@ -607,6 +635,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
   add_foreign_key "mainstage_votes", "users"
   add_foreign_key "mainstage_winners", "mainstage_contests"
   add_foreign_key "mainstage_winners", "musicians"
+  add_foreign_key "member_availabilities", "bands"
+  add_foreign_key "member_availabilities", "musicians"
   add_foreign_key "message_reads", "messages"
   add_foreign_key "message_reads", "users"
   add_foreign_key "messages", "chats"
