@@ -75,6 +75,11 @@ Rails.application.routes.draw do
     resources :member_availabilities, only: [:create, :destroy]
     resources :kanban_tasks, only: [:index, :create, :update, :destroy], path: 'tasks'
     resources :band_gigs, only: [:create, :destroy], path: 'gigs'
+    resources :line_band_connections, only: [:create, :destroy] do
+      member do
+        patch :toggle_auto_create
+      end
+    end
     member do
       patch :transfer_leadership
       delete :purge_attachment
@@ -193,4 +198,12 @@ Rails.application.routes.draw do
       patch :reject
     end
   end
+
+  # LINE Bot Webhook
+  namespace :webhooks do
+    post 'line', to: 'line#receive'
+  end
+
+  # LINE User Connection
+  resource :line_user_connection, only: [:create, :destroy]
 end

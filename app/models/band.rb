@@ -26,6 +26,7 @@ class Band < ApplicationRecord
   has_many :member_availabilities, dependent: :destroy
   has_many :kanban_tasks, dependent: :destroy
   has_many :band_gigs, dependent: :destroy
+  has_many :line_band_connections, dependent: :destroy
 
   has_one :chat, dependent: :destroy
   has_many :messages, through: :chat

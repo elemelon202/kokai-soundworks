@@ -15,6 +15,7 @@ class User < ApplicationRecord
   has_many :message_reads
   has_many :read_messages, through: :message_reads, source: :message
   has_one :musician, dependent: :destroy
+  has_one :line_user_connection, dependent: :destroy
   has_many :notifications, dependent: :destroy
   has_many :short_likes, dependent: :destroy
   has_many :liked_shorts, through: :short_likes, source: :musician_short

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -330,6 +330,72 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
     t.index ["deadline"], name: "index_kanban_tasks_on_deadline"
     t.index ["status"], name: "index_kanban_tasks_on_status"
     t.index ["task_type"], name: "index_kanban_tasks_on_task_type"
+  end
+
+  create_table "line_band_connections", force: :cascade do |t|
+    t.bigint "band_id", null: false
+    t.string "line_group_id"
+    t.string "line_group_name"
+    t.boolean "active", default: true
+    t.boolean "auto_create_events", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "link_code"
+    t.datetime "linked_at"
+    t.bigint "linked_by_id"
+    t.index ["band_id"], name: "index_line_band_connections_on_band_id"
+    t.index ["line_group_id"], name: "index_line_band_connections_on_line_group_id", unique: true
+    t.index ["link_code"], name: "index_line_band_connections_on_link_code", unique: true
+    t.index ["linked_by_id"], name: "index_line_band_connections_on_linked_by_id"
+  end
+
+  create_table "line_messages", force: :cascade do |t|
+    t.string "line_group_id", null: false
+    t.string "line_user_id"
+    t.string "display_name"
+    t.text "content", null: false
+    t.string "message_id"
+    t.datetime "sent_at", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.datetime "processed_at"
+    t.index ["line_group_id", "sent_at"], name: "index_line_messages_on_line_group_id_and_sent_at"
+    t.index ["line_group_id"], name: "index_line_messages_on_line_group_id"
+    t.index ["message_id"], name: "index_line_messages_on_message_id", unique: true
+  end
+
+  create_table "line_pending_events", force: :cascade do |t|
+    t.bigint "line_band_connection_id", null: false
+    t.bigint "suggested_by_id"
+    t.string "line_message_id"
+    t.string "event_type"
+    t.string "title"
+    t.date "date"
+    t.time "start_time"
+    t.time "end_time"
+    t.string "location"
+    t.text "raw_message"
+    t.json "ai_response"
+    t.string "status", default: "pending"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["line_band_connection_id"], name: "index_line_pending_events_on_line_band_connection_id"
+    t.index ["suggested_by_id"], name: "index_line_pending_events_on_suggested_by_id"
+  end
+
+  create_table "line_user_connections", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.string "line_user_id"
+    t.string "line_display_name"
+    t.string "connection_token"
+    t.datetime "connected_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "link_code"
+    t.index ["connection_token"], name: "index_line_user_connections_on_connection_token", unique: true
+    t.index ["line_user_id"], name: "index_line_user_connections_on_line_user_id", unique: true
+    t.index ["link_code"], name: "index_line_user_connections_on_link_code", unique: true
+    t.index ["user_id"], name: "index_line_user_connections_on_user_id"
   end
 
   create_table "mainstage_contests", force: :cascade do |t|
@@ -665,6 +731,11 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_044617) do
   add_foreign_key "kanban_tasks", "bands"
   add_foreign_key "kanban_tasks", "musicians", column: "assigned_to_id"
   add_foreign_key "kanban_tasks", "users", column: "created_by_id"
+  add_foreign_key "line_band_connections", "bands"
+  add_foreign_key "line_band_connections", "users", column: "linked_by_id"
+  add_foreign_key "line_pending_events", "line_band_connections"
+  add_foreign_key "line_pending_events", "users", column: "suggested_by_id"
+  add_foreign_key "line_user_connections", "users"
   add_foreign_key "mainstage_votes", "mainstage_contests"
   add_foreign_key "mainstage_votes", "musicians"
   add_foreign_key "mainstage_votes", "users"

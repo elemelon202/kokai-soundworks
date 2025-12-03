@@ -87,3 +87,7 @@ gem 'pg_search'
 gem "redis", "~> 5.0"
 gem 'pagy', '~> 6.0'
 gem 'geocoder'
+
+# LINE Bot Integration
+gem 'line-bot-api'
+gem 'anthropic'

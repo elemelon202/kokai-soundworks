@@ -892,6 +892,147 @@
       </div>
     </div>
 
+    <%# LINE Integration Section - Leader Only %>
+    <% if @band.user_id == current_user.id %>
+      <div class="band-dashboard-card full-width">
+        <div class="band-card-header">
+          <div class="card-icon card-icon-line">
+            <i class="fa-brands fa-line"></i>
+          </div>
+          <h3>LINE Integration</h3>
+          <span class="band-feed-note">Connect your LINE group to sync events</span>
+        </div>
+        <div class="line-integration-section">
+          <% line_connection = @band.line_band_connections.where(active: true).or(@band.line_band_connections.pending).first %>
+
+          <% if line_connection&.linked? %>
+            <%# Connected State %>
+            <div class="line-connection-status connected">
+              <div class="line-status-icon">
+                <i class="fa-solid fa-check-circle"></i>
+              </div>
+              <div class="line-status-info">
+                <span class="line-status-text">Connected to LINE Group</span>
+                <span class="line-status-date">Linked <%= time_ago_in_words(line_connection.linked_at) %> ago</span>
+              </div>
+            </div>
+
+            <div class="line-settings">
+              <div class="line-setting-item">
+                <div class="line-setting-info">
+                  <span class="line-setting-label">Auto-create events</span>
+                  <span class="line-setting-desc">Automatically add events to calendar when detected in LINE messages</span>
+                </div>
+                <%= button_to toggle_auto_create_band_line_band_connection_path(@band, line_connection),
+                    method: :patch,
+                    class: "line-toggle-btn #{line_connection.auto_create_events ? 'active' : ''}" do %>
+                  <span class="toggle-track">
+                    <span class="toggle-thumb"></span>
+                  </span>
+                  <span class="toggle-label"><%= line_connection.auto_create_events ? 'On' : 'Off' %></span>
+                <% end %>
+              </div>
+            </div>
+
+            <% pending_events = line_connection.line_pending_events.pending %>
+            <% if pending_events.any? %>
+              <div class="line-pending-events">
+                <h4><i class="fa-solid fa-clock"></i> Pending Events (<%= pending_events.count %>)</h4>
+                <p class="line-pending-hint">Events detected from LINE messages awaiting confirmation</p>
+                <div class="pending-events-list">
+                  <% pending_events.limit(5).each do |event| %>
+                    <div class="pending-event-item">
+                      <div class="pending-event-info">
+                        <span class="pending-event-type <%= event.event_type %>"><%= event.event_type.titleize %></span>
+                        <span class="pending-event-title"><%= event.title || "Untitled" %></span>
+                        <span class="pending-event-date"><%= event.date&.strftime("%b %d, %Y") %> <%= event.start_time&.strftime("%H:%M") %></span>
+                      </div>
+                      <div class="pending-event-actions">
+                        <%# TODO: Add confirm/reject actions %>
+                      </div>
+                    </div>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+
+            <div class="line-disconnect">
+              <%= button_to band_line_band_connection_path(@band, line_connection),
+                  method: :delete,
+                  class: "btn-line-disconnect",
+                  data: { turbo_confirm: "Disconnect this LINE group? You can reconnect later." } do %>
+                <i class="fa-solid fa-unlink"></i> Disconnect LINE Group
+              <% end %>
+            </div>
+
+          <% elsif line_connection&.pending? %>
+            <%# Pending Link Code State %>
+            <div class="line-connection-status pending">
+              <div class="line-status-icon">
+                <i class="fa-solid fa-link"></i>
+              </div>
+              <div class="line-status-info">
+                <span class="line-status-text">Waiting for LINE group connection</span>
+              </div>
+            </div>
+
+            <div class="line-link-code-section">
+              <p class="line-link-instructions">
+                Send this code in your LINE group to connect it:
+              </p>
+              <div class="line-link-code-display">
+                <code class="line-link-code"><%= line_connection.link_code %></code>
+                <button type="button" class="btn-copy-code" data-code="<%= line_connection.link_code %>" onclick="navigator.clipboard.writeText(this.dataset.code); this.innerHTML='<i class=\'fa-solid fa-check\'></i> Copied!';">
+                  <i class="fa-solid fa-copy"></i> Copy
+                </button>
+              </div>
+              <div class="line-link-help">
+                <p><strong>How to connect:</strong></p>
+                <ol>
+                  <li>Add the Kokai bot to your LINE group</li>
+                  <li>Send: <code>/link <%= line_connection.link_code %></code></li>
+                  <li>The bot will confirm when connected</li>
+                </ol>
+              </div>
+            </div>
+
+            <div class="line-disconnect">
+              <%= button_to band_line_band_connection_path(@band, line_connection),
+                  method: :delete,
+                  class: "btn-line-cancel" do %>
+                <i class="fa-solid fa-times"></i> Cancel
+              <% end %>
+            </div>
+
+          <% else %>
+            <%# Not Connected State %>
+            <div class="line-not-connected">
+              <div class="line-feature-list">
+                <div class="line-feature">
+                  <i class="fa-solid fa-comments"></i>
+                  <span>Chat naturally about plans - AI understands and creates events</span>
+                </div>
+                <div class="line-feature">
+                  <i class="fa-solid fa-calendar-plus"></i>
+                  <span>Events sync automatically to your Kokai calendar</span>
+                </div>
+                <div class="line-feature">
+                  <i class="fa-solid fa-user-clock"></i>
+                  <span>Members can mark availability directly from LINE</span>
+                </div>
+              </div>
+
+              <%= button_to band_line_band_connections_path(@band),
+                  method: :post,
+                  class: "btn-line-connect" do %>
+                <i class="fa-brands fa-line"></i> Connect LINE Group
+              <% end %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <% if @band.user_id == current_user.id %>
       <% other_members = @band.musicians.where.not(user_id: current_user.id) %>
       <% if other_members.any? %>
