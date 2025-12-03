@@ -124,6 +124,199 @@
       <% end %>
     </div>
   </div>
+  <%# Band Calendar Section %>
+  <div class="band-calendar-section">
+    <div class="band-dashboard-card">
+      <div class="band-card-header">
+        <div class="card-icon card-icon-calendar">
+          <i class="fa-solid fa-calendar-days"></i>
+        </div>
+        <h3>Band Calendar</h3>
+        <% if @band.user_id == current_user.id %>
+          <button type="button" class="btn-add-event" data-action="click->band-calendar#showAddEventForm">
+            <i class="fa-solid fa-plus"></i> Add Event
+          </button>
+        <% end %>
+      </div>
+      <%# Calendar Legend %>
+      <div class="calendar-legend">
+        <div class="legend-item">
+          <span class="legend-color" style="background: #fbbf24;"></span>
+          <span>Gigs</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #C8E938;"></span>
+          <span>Rehearsals</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #60a5fa;"></span>
+          <span>Meetings</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #E936AD;"></span>
+          <span>Recording</span>
+        </div>
+        <div class="legend-item">
+          <span class="legend-color" style="background: #ef4444;"></span>
+          <span>Unavailable</span>
+        </div>
+      </div>
+      <%# Build calendar data %>
+      <%
+        gigs_data = @band.gigs.map do |gig|
+          {
+            id: gig.id,
+            name: gig.name,
+            date: gig.date,
+            start_time: gig.start_time&.strftime("%H:%M"),
+            end_time: gig.end_time&.strftime("%H:%M"),
+            venue: gig.venue&.name,
+            url: gig_path(gig)
+          }
+        end
+
+        band_events_data = @band.band_events.map do |event|
+          {
+            id: event.id,
+            title: event.title,
+            date: event.date,
+            event_type: event.event_type,
+            start_time: event.start_time&.strftime("%H:%M"),
+            end_time: event.end_time&.strftime("%H:%M"),
+            location: event.location,
+            description: event.description
+          }
+        end
+
+        availabilities_data = @band.member_availabilities.includes(:musician).map do |avail|
+          {
+            id: avail.id,
+            start_date: avail.start_date,
+            end_date: avail.end_date,
+            status: avail.status,
+            reason: avail.reason,
+            musician_id: avail.musician_id,
+            musician_name: avail.musician&.name
+          }
+        end
+      %>
+      <div class="band-calendar-wrapper"
+           data-controller="band-calendar"
+           data-band-calendar-gigs-value="<%= gigs_data.to_json %>"
+           data-band-calendar-band-events-value="<%= band_events_data.to_json %>"
+           data-band-calendar-availabilities-value="<%= availabilities_data.to_json %>"
+           data-band-calendar-band-id-value="<%= @band.id %>"
+           data-band-calendar-is-leader-value="<%= @band.user_id == current_user.id %>">
+        <div data-band-calendar-target="calendar" class="band-calendar"></div>
+        <%# Event Details Modal %>
+        <div data-band-calendar-target="modal" class="calendar-modal" style="display: none;">
+          <div class="calendar-modal-content">
+            <button type="button" class="modal-close" data-action="click->band-calendar#closeModal">
+              <i class="fa-solid fa-times"></i>
+            </button>
+            <h4 data-band-calendar-target="modalTitle"></h4>
+            <div data-band-calendar-target="modalBody"></div>
+          </div>
+        </div>
+        <%# Add Event Form (Leader only) %>
+        <% if @band.user_id == current_user.id %>
+          <div data-band-calendar-target="eventForm" class="calendar-event-form" style="display: none;">
+            <h4>Add Band Event</h4>
+            <%= form_with model: BandEvent.new, url: band_band_events_path(@band), local: true, class: "event-form" do |f| %>
+              <div class="form-group">
+                <%= f.label :title %>
+                <%= f.text_field :title, class: "form-control", required: true %>
+              </div>
+              <div class="form-group">
+                <%= f.label :event_type %>
+                <%= f.select :event_type, BandEvent.event_types.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= f.label :date %>
+                <%= f.date_field :date, class: "form-control", required: true %>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                  <%= f.label :start_time %>
+                  <%= f.time_field :start_time, class: "form-control" %>
+                </div>
+                <div class="form-group">
+                  <%= f.label :end_time %>
+                  <%= f.time_field :end_time, class: "form-control" %>
+                </div>
+              </div>
+              <div class="form-group">
+                <%= f.label :location %>
+                <%= f.text_field :location, class: "form-control" %>
+              </div>
+              <div class="form-group">
+                <%= f.label :description %>
+                <%= f.text_area :description, class: "form-control", rows: 3 %>
+              </div>
+              <div class="form-actions">
+                <button type="button" class="btn-cancel" data-action="click->band-calendar#closeEventForm">Cancel</button>
+                <%= f.submit "Add Event", class: "btn-submit" %>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+      <%# Member Availability Section %>
+      <div class="member-availability-section">
+        <h4><i class="fa-solid fa-user-clock"></i> My Availability</h4>
+        <p class="availability-hint">Mark dates when you're unavailable for band activities</p>
+        <%= form_with model: MemberAvailability.new, url: band_member_availabilities_path(@band), local: true, class: "availability-form" do |f| %>
+          <div class="availability-form-row">
+            <div class="form-group">
+              <%= f.label :start_date, "From", class: "availability-label" %>
+              <%= f.date_field :start_date, class: "form-control", required: true, min: Date.today %>
+            </div>
+            <div class="form-group">
+              <%= f.label :end_date, "To (optional)", class: "availability-label" %>
+              <%= f.date_field :end_date, class: "form-control", min: Date.today %>
+            </div>
+            <div class="form-group">
+              <%# MemberAvailability.statuses.keys returns ["unavailable", "tentative"]
+                  .map { |k| [k.titleize, k] } transforms it to [["Unavailable", "unavailable"], ["Tentative", "tentative"]]
+                  This gives users a nice display name while submitting the lowercase value to the database %>
+              <%= f.select :status, MemberAvailability.statuses.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+            </div>
+            <div class="form-group">
+              <%= f.text_field :reason, class: "form-control", placeholder: "Reason (optional)" %>
+            </div>
+            <%= f.submit "Mark Unavailable", class: "btn-unavailable" %>
+          </div>
+        <% end %>
+        <%# Display current user's availabilities with delete option %>
+        <% my_availabilities = @band.member_availabilities.where(musician: current_user.musician).order(:start_date) %>
+        <div class="my-availabilities-list" id="my-availabilities-list">
+        <% if my_availabilities.any? %>
+            <h5>Your Unavailability</h5>
+            <% my_availabilities.each do |avail| %>
+              <div class="availability-item" id="availability_<%= avail.id %>">
+                <div class="availability-info">
+                  <span class="availability-dates">
+                    <i class="fa-solid fa-calendar-xmark"></i>
+                    <%= avail.start_date.strftime("%b %d, %Y") %>
+                    <% if avail.end_date.present? %>
+                      - <%= avail.end_date.strftime("%b %d, %Y") %>
+                    <% end %>
+                  </span>
+                  <span class="availability-status <%= avail.status %>"><%= avail.status.titleize %></span>
+                  <% if avail.reason.present? %>
+                    <span class="availability-reason"><%= avail.reason %></span>
+                  <% end %>
+                </div>
+                <%= button_to band_member_availability_path(@band, avail), method: :delete, class: "btn-delete-availability", data: { turbo_confirm: "Remove this availability?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
+            <% end %>
+        <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
   <div class="band-dashboard-content">
     <div class="band-dashboard-card">
       <div class="band-card-header">
