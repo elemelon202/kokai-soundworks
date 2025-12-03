@@ -238,13 +238,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_015101) do
   end
 
   create_table "gig_applications", force: :cascade do |t|
+    t.bigint "gig_id", null: false
     t.bigint "band_id", null: false
     t.integer "status", default: 0
     t.text "message"
     t.text "response_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "gig_id", null: false
     t.index ["band_id"], name: "index_gig_applications_on_band_id"
     t.index ["gig_id", "band_id"], name: "index_gig_applications_on_gig_id_and_band_id", unique: true
     t.index ["gig_id"], name: "index_gig_applications_on_gig_id"
@@ -338,20 +338,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_015101) do
     t.datetime "updated_at", null: false
     t.index ["mainstage_contest_id"], name: "index_mainstage_winners_on_mainstage_contest_id", unique: true
     t.index ["musician_id"], name: "index_mainstage_winners_on_musician_id"
-  end
-
-  create_table "member_availabilities", force: :cascade do |t|
-    t.bigint "musician_id", null: false
-    t.bigint "band_id", null: false
-    t.date "available_date", null: false
-    t.integer "status", default: 0, null: false
-    t.text "notes"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["band_id", "available_date"], name: "index_member_availabilities_on_band_id_and_available_date"
-    t.index ["band_id"], name: "index_member_availabilities_on_band_id"
-    t.index ["musician_id", "band_id", "available_date"], name: "index_member_availability_unique", unique: true
-    t.index ["musician_id"], name: "index_member_availabilities_on_musician_id"
   end
 
   create_table "message_reads", force: :cascade do |t|
@@ -636,8 +622,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_015101) do
   add_foreign_key "mainstage_votes", "users"
   add_foreign_key "mainstage_winners", "mainstage_contests"
   add_foreign_key "mainstage_winners", "musicians"
-  add_foreign_key "member_availabilities", "bands"
-  add_foreign_key "member_availabilities", "musicians"
   add_foreign_key "message_reads", "messages"
   add_foreign_key "message_reads", "users"
   add_foreign_key "messages", "chats"
