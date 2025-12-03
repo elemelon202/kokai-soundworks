@@ -72,6 +72,7 @@ Rails.application.routes.draw do
     resources :band_invitations, only: [:new, :create, :edit, :destroy]
     resources :spotify_tracks, only: [:create, :destroy]
     resources :kanban_tasks, only: [:index, :create, :update, :destroy], path: 'tasks'
+    resources :band_gigs, only: [:create, :destroy], path: 'gigs'
     member do
       patch :transfer_leadership
       delete :purge_attachment

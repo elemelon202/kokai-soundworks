@@ -51,12 +51,6 @@
               </li>
             </ul>
           </li>
-          <li class="nav-item">
-            <!-- Update the path to task board -->
-            <%= link_to band_kanban_tasks_path(@band), class: "nav-link btn btn-primary text-white" do %>
-              <i class="fa-solid fa-list-check"></i> Task
-            <% end %>
-          </li>
           <% if current_user.musician.present? %>
             <li class="nav-item dropdown">
               <a href="#" class="nav-link btn btn-primary text-white dropdown-toggle" id="bandDashboardDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

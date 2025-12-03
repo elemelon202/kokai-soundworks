@@ -15,14 +15,7 @@
   </div>
 
   <div class="band-stats-grid">
-    <div class="band-stat-card">
-      <div class="stat-icon">
-        <i class="fa-solid fa-ticket"></i>
-      </div>
-      <div class="stat-value"><%= @band.bookings.count %></div>
-      <div class="stat-label">Gig Applications</div>
-      <div class="stat-sub">Pending: <%= @pending_bookings.count %></div>
-    </div>
+
 
     <div class="band-stat-card">
       <div class="stat-icon">
@@ -32,13 +25,40 @@
       <div class="stat-label">Band Members</div>
     </div>
 
-    <div class="band-stat-card">
-      <div class="stat-icon">
-        <i class="fa-solid fa-calendar-days"></i>
+    <% if @next_gig %>
+      <div class="band-stat-card countdown-card" data-controller="countdown" data-countdown-date-value="<%= @next_gig.date.to_datetime.iso8601 %>">
+        <div class="stat-icon countdown-icon">
+          <i class="fa-solid fa-clock"></i>
+        </div>
+        <div class="countdown-display">
+          <div class="countdown-numbers" data-countdown-target="display">
+            <div class="countdown-unit">
+              <span class="countdown-value" data-countdown-target="days">--</span>
+              <span class="countdown-label">days</span>
+            </div>
+            <div class="countdown-unit">
+              <span class="countdown-value" data-countdown-target="hours">--</span>
+              <span class="countdown-label">hrs</span>
+            </div>
+            <div class="countdown-unit">
+              <span class="countdown-value" data-countdown-target="minutes">--</span>
+              <span class="countdown-label">min</span>
+            </div>
+          </div>
+        </div>
+        <div class="countdown-gig-name"><%= truncate(@next_gig.name, length: 25) %></div>
+        <div class="countdown-venue"><%= @next_gig.venue_name %></div>
       </div>
-      <div class="stat-value"><%= @band.gigs.count %></div>
-      <div class="stat-label">Upcoming Gigs</div>
-    </div>
+    <% else %>
+      <div class="band-stat-card">
+        <div class="stat-icon">
+          <i class="fa-solid fa-calendar-days"></i>
+        </div>
+        <div class="stat-value">0</div>
+        <div class="stat-label">Upcoming Gigs</div>
+        <div class="stat-sub">Book a gig!</div>
+      </div>
+    <% end %>
 
     <div class="band-stat-card">
       <div class="stat-icon">
@@ -46,6 +66,83 @@
       </div>
       <div class="stat-value"><%= @unread_count %></div>
       <div class="stat-label">Unread Messages</div>
+    </div>
+  </div>
+
+  <%# Upcoming Gigs Section %>
+  <div class="band-gigs-section">
+    <div class="band-dashboard-card full-width">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-calendar-alt"></i>
+        </div>
+        <h3>Upcoming Gigs</h3>
+      </div>
+
+      <div class="gigs-content">
+        <%# Add Gig Form %>
+        <div class="add-gig-form">
+          <%= form_with model: [@band, BandGig.new], local: true, class: "gig-form" do |f| %>
+            <div class="gig-form-row">
+              <div class="gig-form-group">
+                <%= f.text_field :name, placeholder: "Gig name *", class: "gig-input", required: true %>
+              </div>
+              <div class="gig-form-group">
+                <%= f.text_field :venue_name, placeholder: "Venue name", class: "gig-input" %>
+              </div>
+              <div class="gig-form-group">
+                <%= f.date_field :date, class: "gig-input", required: true, min: Date.current %>
+              </div>
+              <div class="gig-form-group">
+                <%= f.text_field :location, placeholder: "Location", class: "gig-input" %>
+              </div>
+              <%= f.submit "Add Gig", class: "btn-add-gig" %>
+            </div>
+          <% end %>
+        </div>
+
+        <%# Gigs List %>
+        <% upcoming_gigs = @band.band_gigs.upcoming %>
+        <% if upcoming_gigs.any? %>
+          <div class="gigs-list">
+            <% upcoming_gigs.each do |gig| %>
+              <div class="gig-item">
+                <div class="gig-date">
+                  <span class="gig-day"><%= gig.date.strftime("%d") %></span>
+                  <span class="gig-month"><%= gig.date.strftime("%b") %></span>
+                </div>
+                <div class="gig-details">
+                  <div class="gig-name"><%= gig.name %></div>
+                  <div class="gig-venue">
+                    <% if gig.venue_name.present? %>
+                      <i class="fa-solid fa-location-dot"></i> <%= gig.venue_name %>
+                      <% if gig.location.present? %>
+                        <span class="gig-location">(<%= gig.location %>)</span>
+                      <% end %>
+                    <% elsif gig.location.present? %>
+                      <i class="fa-solid fa-location-dot"></i> <%= gig.location %>
+                    <% end %>
+                  </div>
+                </div>
+                <div class="gig-countdown-mini">
+                  <% days_until = (gig.date - Date.current).to_i %>
+                  <span class="days-count"><%= days_until %></span>
+                  <span class="days-label"><%= days_until == 1 ? 'day' : 'days' %></span>
+                </div>
+                <%= button_to band_band_gig_path(@band, gig), method: :delete, class: "gig-delete", data: { turbo_confirm: "Remove this gig?" } do %>
+                  <i class="fa-solid fa-trash"></i>
+                <% end %>
+              </div>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="gigs-empty">
+            <i class="fa-solid fa-guitar"></i>
+            <p>No upcoming gigs scheduled</p>
+            <p class="sub">Add your next show above!</p>
+          </div>
+        <% end %>
+      </div>
     </div>
   </div>
 
@@ -125,6 +222,89 @@
           </div>
           <%= link_to band_mainstage_path, class: "band-mainstage-link" do %>
             View Full Leaderboard <i class="fa-solid fa-arrow-right"></i>
+          <% end %>
+        </div>
+
+        <%# Growth Trends Section %>
+        <div class="band-growth-trends">
+          <div class="growth-trends-header">
+            <i class="fa-solid fa-arrow-trend-up"></i>
+            <span>Growth Trends</span>
+          </div>
+          <div class="growth-trends-grid">
+            <%# Kokai Platform Metrics %>
+            <div class="growth-trend-item">
+              <div class="growth-metric-name">
+                <i class="fa-solid fa-user-plus"></i> Followers
+              </div>
+              <% follower_growth = @stats[:new_followers_week] %>
+              <% follower_pct = @stats[:followers_count] > 0 ? ((follower_growth.to_f / @stats[:followers_count]) * 100).round(1) : 0 %>
+              <div class="growth-value <%= follower_growth > 0 ? 'positive' : (follower_growth < 0 ? 'negative' : 'neutral') %>">
+                <% if follower_growth > 0 %>
+                  <i class="fa-solid fa-arrow-up"></i> +<%= follower_pct %>%
+                <% elsif follower_growth < 0 %>
+                  <i class="fa-solid fa-arrow-down"></i> <%= follower_pct %>%
+                <% else %>
+                  <i class="fa-solid fa-minus"></i> 0%
+                <% end %>
+              </div>
+              <div class="growth-detail"><%= follower_growth > 0 ? "+#{follower_growth}" : follower_growth %> this week</div>
+            </div>
+
+            <div class="growth-trend-item">
+              <div class="growth-metric-name">
+                <i class="fa-solid fa-eye"></i> Profile Views
+              </div>
+              <% views_week = @stats[:profile_views_week] %>
+              <% views_total = @stats[:profile_views_total] %>
+              <% views_pct = views_total > views_week && views_total > 0 ? ((views_week.to_f / (views_total - views_week).to_f) * 100).round(1) : 0 %>
+              <div class="growth-value <%= views_week > 0 ? 'positive' : 'neutral' %>">
+                <% if views_week > 0 %>
+                  <i class="fa-solid fa-arrow-up"></i> +<%= views_pct > 100 ? '>100' : views_pct %>%
+                <% else %>
+                  <i class="fa-solid fa-minus"></i> 0%
+                <% end %>
+              </div>
+              <div class="growth-detail"><%= views_week %> views this week</div>
+            </div>
+
+            <%# Social Media Trends %>
+            <% social_platforms = [
+              { name: 'Instagram', icon: 'fa-instagram', brand: true, followers: @band.instagram_followers.to_i, handle: @band.instagram_handle },
+              { name: 'TikTok', icon: 'fa-tiktok', brand: true, followers: @band.tiktok_followers.to_i, handle: @band.tiktok_handle },
+              { name: 'YouTube', icon: 'fa-youtube', brand: true, followers: @band.youtube_subscribers.to_i, handle: @band.youtube_handle },
+              { name: 'X', icon: 'fa-x-twitter', brand: true, followers: @band.twitter_followers.to_i, handle: @band.twitter_handle }
+            ] %>
+            <% social_platforms.each do |platform| %>
+              <% next if platform[:followers] == 0 && platform[:handle].blank? %>
+              <div class="growth-trend-item social-trend <%= platform[:name].downcase %>">
+                <div class="growth-metric-name">
+                  <i class="fa-brands <%= platform[:icon] %>"></i> <%= platform[:name] %>
+                </div>
+                <div class="growth-value neutral">
+                  <span class="social-follower-count"><%= number_with_delimiter(platform[:followers]) %></span>
+                </div>
+                <div class="growth-detail">
+                  <% if platform[:handle].present? %>
+                    <%= platform[:handle] %>
+                  <% else %>
+                    Add handle to track
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Total Reach Summary %>
+          <% total_social = @band.instagram_followers.to_i + @band.tiktok_followers.to_i + @band.youtube_subscribers.to_i + @band.twitter_followers.to_i %>
+          <% if total_social > 0 %>
+            <div class="growth-total-reach">
+              <div class="reach-icon"><i class="fa-solid fa-globe"></i></div>
+              <div class="reach-content">
+                <span class="reach-label">Total Social Reach</span>
+                <span class="reach-number"><%= number_with_delimiter(total_social) %></span>
+              </div>
+            </div>
           <% end %>
         </div>
       <% else %>
@@ -253,27 +433,7 @@
       </div>
     </div>
 
-    <div class="band-dashboard-card full-width">
-      <div class="band-card-header">
-        <div class="card-icon">
-          <i class="fa-solid fa-clipboard-list"></i>
-        </div>
-        <h3>Gig Applications</h3>
-      </div>
 
-      <% if @pending_bookings.any? %>
-        <% @pending_bookings.each do |booking| %>
-          <div class="gig-application-card">
-            <h5><%= booking.gig.name %></h5>
-            <p><strong>Date:</strong> <%= booking.gig.date.strftime("%B %d, %Y") %></p>
-            <p><strong>Venue:</strong> <%= booking.gig.venue.name %></p>
-            <span class="status-badge <%= booking.status.downcase %>"><%= booking.status %></span>
-          </div>
-        <% end %>
-      <% else %>
-        <p class="no-gig-apps-notice">No pending gig applications</p>
-      <% end %>
-    </div>
 
     <!-- Band Media Section -->
     <div class="band-dashboard-card full-width">
@@ -449,6 +609,114 @@
         </div>
 
         <%= render 'spotify_tracks/form', band: @band %>
+      </div>
+    </div>
+
+    <!-- Social Media Tracking Section -->
+    <div class="band-dashboard-card full-width">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-chart-simple"></i>
+        </div>
+        <h3>Social Media Tracking</h3>
+        <span class="band-feed-note">Track your growth across platforms</span>
+      </div>
+      <div class="social-tracking-section">
+        <%= form_with model: @band, local: true, class: "social-tracking-form" do |f| %>
+          <div class="social-stats-grid">
+            <%# Instagram %>
+            <div class="social-stat-card instagram">
+              <div class="social-stat-header">
+                <i class="fa-brands fa-instagram"></i>
+                <span>Instagram</span>
+              </div>
+              <div class="social-stat-inputs">
+                <%= f.text_field :instagram_handle, placeholder: "@yourband", class: "social-handle-input" %>
+                <div class="social-followers-input">
+                  <%= f.number_field :instagram_followers, placeholder: "0", min: 0, class: "social-count-input" %>
+                  <span class="social-count-label">followers</span>
+                </div>
+              </div>
+              <% if @band.instagram_followers.to_i > 0 %>
+                <div class="social-stat-display">
+                  <span class="social-stat-number"><%= number_with_delimiter(@band.instagram_followers) %></span>
+                </div>
+              <% end %>
+            </div>
+
+            <%# TikTok %>
+            <div class="social-stat-card tiktok">
+              <div class="social-stat-header">
+                <i class="fa-brands fa-tiktok"></i>
+                <span>TikTok</span>
+              </div>
+              <div class="social-stat-inputs">
+                <%= f.text_field :tiktok_handle, placeholder: "@yourband", class: "social-handle-input" %>
+                <div class="social-followers-input">
+                  <%= f.number_field :tiktok_followers, placeholder: "0", min: 0, class: "social-count-input" %>
+                  <span class="social-count-label">followers</span>
+                </div>
+              </div>
+              <% if @band.tiktok_followers.to_i > 0 %>
+                <div class="social-stat-display">
+                  <span class="social-stat-number"><%= number_with_delimiter(@band.tiktok_followers) %></span>
+                </div>
+              <% end %>
+            </div>
+
+            <%# YouTube %>
+            <div class="social-stat-card youtube">
+              <div class="social-stat-header">
+                <i class="fa-brands fa-youtube"></i>
+                <span>YouTube</span>
+              </div>
+              <div class="social-stat-inputs">
+                <%= f.text_field :youtube_handle, placeholder: "@yourband", class: "social-handle-input" %>
+                <div class="social-followers-input">
+                  <%= f.number_field :youtube_subscribers, placeholder: "0", min: 0, class: "social-count-input" %>
+                  <span class="social-count-label">subscribers</span>
+                </div>
+              </div>
+              <% if @band.youtube_subscribers.to_i > 0 %>
+                <div class="social-stat-display">
+                  <span class="social-stat-number"><%= number_with_delimiter(@band.youtube_subscribers) %></span>
+                </div>
+              <% end %>
+            </div>
+
+            <%# Twitter/X %>
+            <div class="social-stat-card twitter">
+              <div class="social-stat-header">
+                <i class="fa-brands fa-x-twitter"></i>
+                <span>X / Twitter</span>
+              </div>
+              <div class="social-stat-inputs">
+                <%= f.text_field :twitter_handle, placeholder: "@yourband", class: "social-handle-input" %>
+                <div class="social-followers-input">
+                  <%= f.number_field :twitter_followers, placeholder: "0", min: 0, class: "social-count-input" %>
+                  <span class="social-count-label">followers</span>
+                </div>
+              </div>
+              <% if @band.twitter_followers.to_i > 0 %>
+                <div class="social-stat-display">
+                  <span class="social-stat-number"><%= number_with_delimiter(@band.twitter_followers) %></span>
+                </div>
+              <% end %>
+            </div>
+          </div>
+
+          <div class="social-tracking-total">
+            <% total_followers = (@band.instagram_followers.to_i + @band.tiktok_followers.to_i + @band.youtube_subscribers.to_i + @band.twitter_followers.to_i) %>
+            <div class="total-reach">
+              <span class="total-label">Total Reach</span>
+              <span class="total-number"><%= number_with_delimiter(total_followers) %></span>
+            </div>
+          </div>
+
+          <div class="social-tracking-submit">
+            <%= f.submit "Save Social Stats", class: "btn-save-social" %>
+          </div>
+        <% end %>
       </div>
     </div>
 

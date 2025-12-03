@@ -74,9 +74,9 @@
   <%# Action Button %>
   <div class="mw-post-actions">
     <% if post.band && post.user != current_user %>
-      <% band_leader = post.band.band_members.find_by(role: "leader")&.musician&.user %>
-      <% if band_leader %>
-        <%= link_to new_conversation_path(recipient_id: band_leader.id), class: "mw-dm-btn" do %>
+      <% band_leader_user = User.find_by(id: post.band.user_id) %>
+      <% if band_leader_user %>
+        <%= button_to create_or_show_direct_messages_path(recipient_id: band_leader_user.id), method: :post, class: "mw-dm-btn" do %>
           <i class="fa-solid fa-envelope"></i>
           Message Band
         <% end %>

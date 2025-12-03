@@ -46,6 +46,10 @@ class BandsController < ApplicationController
   def edit
     authorize @band #* Tyrhen was here
     @pending_bookings = @band.bookings.where(status: 'pending')
+
+    # Next upcoming gig for countdown (from manually added band gigs)
+    @next_gig = @band.band_gigs.upcoming.first
+
     # app/controllers/bands_controller.rb
   @chat = @band.chat || @band.create_band_chat(name: "#{@band.name} Chat")
 
@@ -252,7 +256,14 @@ class BandsController < ApplicationController
 
   def band_params_without_media
     # Exclude media attachments - they're handled separately in attach_new_media
-    params.require(:band).permit(:name, :location, :description, :banner_position, genre_list: [])
+    params.require(:band).permit(
+      :name, :location, :description, :banner_position,
+      :instagram_handle, :instagram_followers,
+      :tiktok_handle, :tiktok_followers,
+      :youtube_handle, :youtube_subscribers,
+      :twitter_handle, :twitter_followers,
+      genre_list: []
+    )
   end
 
   def attach_new_media

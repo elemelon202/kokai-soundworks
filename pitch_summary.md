@@ -1,121 +1,132 @@
-# KOKAI SOUNDWORKS - 5-Minute Pitch Summary
+# Kokai Pitch Flow - Band Management Focus (5 Minutes)
 
-## The Hook (30 seconds)
-
-**"Every booking agent asks the same question: Can this artist draw a crowd?"**
-
-Kokai Soundworks is the platform that gives emerging musicians a way to prove it.
+## The Setup
+**Login:** `thunder@band.com` / `password123` (Tokyo Thunder)
 
 ---
 
-## The Problem (45 seconds)
+## 1. THE HOOK (30 sec)
 
-**For Musicians:**
-- Hard to get discovered among millions of artists
-- No way to prove engagement to booking agents and labels
-- Social media followers don't translate to venue attendance
-- Building a fanbase is scattered across multiple platforms
+> "Managing a band is chaos. You've got gigs to plan, members to coordinate, tasks piling up, and everyone's scattered across different apps. Kokai brings it all together in one place."
 
-**For Industry Professionals:**
-- Follower counts are easily manipulated
-- No reliable way to measure an artist's real engagement
-- Difficult to discover unsigned talent with genuine audiences
+**Action:** Show the Band Dashboard - quick visual of what's available
 
 ---
 
-## The Solution: MAINSTAGE (1 minute)
+## 2. GIG COUNTDOWN & SCHEDULING (45 sec)
 
-**MAINSTAGE is our weekly engagement competition that proves an artist can build a real community.**
+> "First thing you see - your next gig countdown. No more asking 'wait, when's that show again?'"
 
-Every interaction counts:
-- **Follows** = 5 points
-- **Endorsements** = 3 points
-- **Shoutouts** = 8 points
-- **Short Likes** = 2 points
-- **Community Votes** = 10 points
+**Action:**
+- Point out the countdown card (days/hrs/min)
+- Scroll to "Upcoming Gigs" section
+- Add a new gig: "Rock Festival", "Metro Tokyo", pick a date
+- Show it appear in the list with days countdown
 
-**Anti-gaming protections:**
-- Accounts must be 3+ days old
-- Max 15 points per user per musician
-- Real engagement, not bot farms
-
-**Winners get:**
-- Homepage spotlight
-- Profile badge
-- Platform promotion
-- **Credible proof of audience engagement**
+> "Every band member sees this. No excuses for forgetting."
 
 ---
 
-## Key Features (1.5 minutes)
+## 3. TASK MANAGEMENT (1 min)
 
-### 1. Shorts - Vertical Video Discovery
-Musicians upload short performance clips. Fans swipe through and discover new talent. Think TikTok for musicians, but the engagement actually means something.
+> "Running a band is like running a startup. There's always something that needs doing."
 
-### 2. Challenges - Viral Moments
-Musicians post a challenge ("Play this riff your way"). Others respond. Community votes. Winners get MAINSTAGE points. Creates shareable, competitive content.
+**Action:**
+- Click "Tasks" button to go to Kanban board
+- Show tasks across To Do / In Progress / Done
+- Drag a task from "To Do" to "In Progress"
+- Assign a task to a band member using the dropdown
 
-### 3. Endorsements & Shoutouts
-Fans publicly vouch for specific skills (Guitar, Stage Presence, Improvisation). Builds credible reputation over time.
-
-### 4. Band Collaboration
-- Create bands, invite members
-- Automatic band chat
-- Separate Band MAINSTAGE competition
-- Spotify track integration
-
-### 5. Complete Social Platform
-- Direct messaging
-- Friend connections
-- Personalized feed
-- Gig discovery (coming soon)
+> "Who's bringing the merch? Is the setlist done? Who's handling promo? Everyone knows their job."
 
 ---
 
-## Why Kokai Wins (45 seconds)
+## 4. BAND COMMUNICATION (45 sec)
 
-| Other Platforms | Kokai Soundworks |
-|-----------------|------------------|
-| Vanity metrics (followers) | Engagement proof (MAINSTAGE) |
-| Scattered presence | All-in-one workspace |
-| Passive discovery | Active community building |
-| No industry credibility | Transparent, gamified metrics |
+> "No more hunting through WhatsApp groups or missing important messages."
 
-**The magic:** Every like, follow, and shoutout contributes to a single, transparent score that booking agents and labels can trust.
+**Action:**
+- Scroll to Band Chat on dashboard
+- Show the real-time chat with band members
+- Point out unread message count
 
----
-
-## The Ask (15 seconds)
-
-We're building the platform where the next wave of artists proves they can draw a crowd.
-
-**Join us:**
-- Musicians: Build your audience, win MAINSTAGE
-- Fans: Discover tomorrow's stars today
-- Industry: Find talent with proven engagement
+> "Real-time chat, right in your band hub. Everyone's in the loop."
 
 ---
 
-## Quick Stats to Mention
+## 5. MUSICIANS WANTED (1 min)
 
-- 42 database models (comprehensive platform)
-- Real-time notifications
-- Mobile-first design
-- Live on Heroku now
+> "Here's where it gets interesting. Your drummer breaks his hand a week before a big show. What do you do?"
+
+**Action:**
+- Go to `/feed` (Musicians Wanted)
+- Show the URGENT drummer request from Tokyo Thunder
+- Demonstrate the filters: filter by "drums", "Tokyo"
+- Click "Message Band" button
+
+> "Every musician on the platform sees these requests. They filter by instrument, location, genre. Find a fill-in drummer in hours, not weeks."
+
+**Action:**
+- Show the post form briefly
+
+> "Any band member can post. Musicians respond via DM. Problem solved."
 
 ---
 
-## Demo Flow (if time permits)
+## 6. SOCIAL TRACKING (30 sec)
 
-1. **Homepage** - Show MAINSTAGE winners spotlight
-2. **Musicians Index** - Discover Shorts CTA, filter by instrument/location
-3. **Shorts Carousel** - Swipe through videos
-4. **Musician Profile** - Endorsements, shoutouts, MAINSTAGE badge
-5. **MAINSTAGE Leaderboard** - Real-time engagement scores
-6. **Challenge** - Show voting in action
+> "And because you need to know if your hustle is paying off..."
+
+**Action:**
+- Scroll to Social Media Tracking section
+- Show the stats: Instagram, TikTok, YouTube, Twitter
+- Point out the Total Reach number
+
+> "Track your growth across every platform. All in one place."
+
+---
+
+## 7. THE CLOSE (30 sec)
+
+> "Kokai isn't just another app. It's your band's command center."
+
+**Action:** Scroll back to top, show the full dashboard
+
+> "Gig planning. Task management. Team communication. Musician network. Social tracking. Everything a modern band needs to stay organized and grow."
+
+> "Band management shouldn't feel like herding cats. With Kokai, you focus on the music. We handle the chaos."
+
+---
+
+## Key Demo Accounts
+
+| Account | Password | Use For |
+|---------|----------|---------|
+| thunder@band.com | password123 | Main demo (Tokyo Thunder - has URGENT drummer post) |
+| neon@band.com | password123 | Alternative band demo |
+| yuki.drums@musician.com | password123 | Musician perspective |
+
+---
+
+## Features to Highlight
+
+- **Countdown Timer** - Visual urgency, pulsing animation
+- **Kanban Board** - Drag & drop, mobile-friendly tabs
+- **Real-time Chat** - WebSocket powered, instant messages
+- **Musicians Wanted** - Filters, DM integration, urgent badges
+- **Social Tracking** - Platform-specific icons, total reach
+
+---
+
+## Backup Talking Points (if asked)
+
+- **Mobile-first design** - Everything works on phones
+- **Real-time updates** - WebSockets for chat and notifications
+- **Spotify integration** - Embed tracks on band profile
+- **MAINSTAGE competition** - Gamification for engagement (if relevant)
 
 ---
 
 ## One-Liner Closing
 
-**"Kokai Soundworks: Where musicians prove they can draw a crowd."**
+**"Kokai: The command center for bands who want to stop herding cats and start making music."**
