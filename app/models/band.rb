@@ -22,6 +22,8 @@ class Band < ApplicationRecord
   has_many :band_mainstage_wins, class_name: 'BandMainstageWinner', dependent: :destroy
   accepts_nested_attributes_for :spotify_tracks, allow_destroy: true, reject_if: :all_blank
   has_many :gig_applications, dependent: :destroy
+  has_many :band_events, dependent: :destroy
+  has_many :member_availabilities, dependent: :destroy
 
   has_one :chat, dependent: :destroy
   has_many :messages, through: :chat
