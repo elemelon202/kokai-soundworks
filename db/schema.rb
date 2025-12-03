@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_03_013900) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -121,6 +121,14 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
     t.datetime "updated_at", null: false
     t.string "location"
     t.integer "banner_position", default: 50
+    t.string "instagram_handle"
+    t.integer "instagram_followers", default: 0
+    t.string "tiktok_handle"
+    t.integer "tiktok_followers", default: 0
+    t.string "youtube_handle"
+    t.integer "youtube_subscribers", default: 0
+    t.string "twitter_handle"
+    t.integer "twitter_followers", default: 0
     t.index ["user_id"], name: "index_bands_on_user_id"
   end
 
@@ -230,13 +238,13 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
   end
 
   create_table "gig_applications", force: :cascade do |t|
-    t.bigint "gig_id", null: false
     t.bigint "band_id", null: false
     t.integer "status", default: 0
     t.text "message"
     t.text "response_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "gig_id", null: false
     t.index ["band_id"], name: "index_gig_applications_on_band_id"
     t.index ["gig_id", "band_id"], name: "index_gig_applications_on_gig_id_and_band_id", unique: true
     t.index ["gig_id"], name: "index_gig_applications_on_gig_id"
@@ -288,6 +296,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
     t.integer "position", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "band_id"
+    t.bigint "assigned_to_id"
+    t.index ["assigned_to_id"], name: "index_kanban_tasks_on_assigned_to_id"
+    t.index ["band_id"], name: "index_kanban_tasks_on_band_id"
     t.index ["created_by_id"], name: "index_kanban_tasks_on_created_by_id"
     t.index ["deadline"], name: "index_kanban_tasks_on_deadline"
     t.index ["status"], name: "index_kanban_tasks_on_status"
@@ -326,6 +338,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
     t.datetime "updated_at", null: false
     t.index ["mainstage_contest_id"], name: "index_mainstage_winners_on_mainstage_contest_id", unique: true
     t.index ["musician_id"], name: "index_mainstage_winners_on_musician_id"
+  end
+
+  create_table "member_availabilities", force: :cascade do |t|
+    t.bigint "musician_id", null: false
+    t.bigint "band_id", null: false
+    t.date "available_date", null: false
+    t.integer "status", default: 0, null: false
+    t.text "notes"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["band_id", "available_date"], name: "index_member_availabilities_on_band_id_and_available_date"
+    t.index ["band_id"], name: "index_member_availabilities_on_band_id"
+    t.index ["musician_id", "band_id", "available_date"], name: "index_member_availability_unique", unique: true
+    t.index ["musician_id"], name: "index_member_availabilities_on_musician_id"
   end
 
   create_table "message_reads", force: :cascade do |t|
@@ -601,12 +627,16 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_01_055424) do
   add_foreign_key "gigs", "venues"
   add_foreign_key "involvements", "bands"
   add_foreign_key "involvements", "musicians"
+  add_foreign_key "kanban_tasks", "bands"
+  add_foreign_key "kanban_tasks", "musicians", column: "assigned_to_id"
   add_foreign_key "kanban_tasks", "users", column: "created_by_id"
   add_foreign_key "mainstage_votes", "mainstage_contests"
   add_foreign_key "mainstage_votes", "musicians"
   add_foreign_key "mainstage_votes", "users"
   add_foreign_key "mainstage_winners", "mainstage_contests"
   add_foreign_key "mainstage_winners", "musicians"
+  add_foreign_key "member_availabilities", "bands"
+  add_foreign_key "member_availabilities", "musicians"
   add_foreign_key "message_reads", "messages"
   add_foreign_key "message_reads", "users"
   add_foreign_key "messages", "chats"
