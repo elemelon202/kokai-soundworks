@@ -18,11 +18,10 @@ namespace :demo do
       exit 1
     end
 
-    # Get some fan users for mock pledges
-    fan_users = User.where(user_type: "fan").limit(5)
-    if fan_users.count < 3
-      puts "ERROR: Not enough fan users. Please ensure seeds have been run."
-      exit 1
+    # Get all users for mock pledges (need ~40 backers)
+    all_users = User.where.not(id: neon_pulse.user_id).to_a
+    if all_users.count < 40
+      puts "WARNING: Only #{all_users.count} users available for pledges (wanted 40)"
     end
 
     # Find the reference gig (funded_gig 14) to copy the poster from
@@ -47,6 +46,8 @@ namespace :demo do
     end
 
     # Create the funded gig with a target of 50,000 yen
+    # 40 backers × ~1,250 yen avg = ~50,000 yen
+    # We'll have 39 backers totaling ~48,750 yen, leaving ~1,250 for the dramatic finish
     funding_target = 50000
 
     # Delete existing funded gig if present to reset
@@ -83,28 +84,65 @@ namespace :demo do
     app.save!
     puts "Created approved application for Neon Pulse"
 
-    # Create mock pledges to get to 95% funded (47,500 yen)
-    # Leave 2,500 yen remaining for the dramatic final pledge
-    pledge_amounts = [15000, 12000, 10000, 8000, 2500]  # Total: 47,500
+    # Create 39 mock pledges with realistic amounts (1000-1500 yen each)
+    # Total should be ~48,750 yen, leaving ~1,250 for the dramatic final pledge
+    fan_messages = [
+      "Go Neon Pulse!", "Can't wait for this show!", "Supporting live music!",
+      "Let's make this happen!", "Amazing band!", "Love your music!",
+      "See you there!", "Best band in Tokyo!", "Take my money!",
+      "This is going to be epic!", "Finally a free show!", "Count me in!",
+      "Supporting local music!", "You guys rock!", "Let's go!",
+      "Been waiting for this!", "Excited!", "This band deserves it!",
+      "Great cause!", "Music brings us together!", "Shibuya represent!",
+      "Underground heroes!", "Real music!", "Let's pack the venue!",
+      "Community power!", "Indie forever!", "Live music matters!",
+      "Can't miss this!", "Bringing friends!", "Let's do this!",
+      "Supporting the scene!", "Tokyo underground!", "Making memories!",
+      "Best investment!", "Music is life!", "Let's goooo!",
+      "Neon Pulse forever!", "Dream show!", "History in the making!"
+    ]
+
+    # Generate 39 pledge amounts between 1000-1500 yen, totaling close to 48,750
+    # This leaves about 1,250 yen for the dramatic final pledge
+    target_total = 48750
+    num_pledges = 39
+    base_amount = 1000
+    max_amount = 1500
+
+    # Create varied but realistic amounts
+    pledge_amounts = []
+    remaining = target_total
+    (num_pledges - 1).times do |i|
+      # Random amount between 1000-1500, weighted toward middle
+      amount = base_amount + rand(0..500)
+      pledge_amounts << amount
+      remaining -= amount
+    end
+    # Last pledge fills the gap (clamp between 1000-1500)
+    pledge_amounts << [[remaining, base_amount].max, max_amount].min
+
+    # Shuffle to make it look natural
+    pledge_amounts.shuffle!
 
     pledges_created = 0
-    fan_users.each_with_index do |fan, index|
-      break if index >= pledge_amounts.length
+    users_for_pledges = all_users.shuffle.take(num_pledges)
 
+    users_for_pledges.each_with_index do |user, index|
       # Skip if pledge already exists
-      next if Pledge.exists?(funded_gig: funded_gig, user: fan)
+      next if Pledge.exists?(funded_gig: funded_gig, user: user)
 
       Pledge.create!(
         funded_gig: funded_gig,
-        user: fan,
+        user: user,
         amount_cents: pledge_amounts[index],
-        status: :authorized,  # Authorized but not captured - realistic for pre-funding
-        fan_message: ["Go Neon Pulse!", "Can't wait for this show!", "Supporting live music!", "Let's fund this!", "Amazing band!"][index],
-        anonymous: [false, false, true, false, false][index]
+        status: :authorized,
+        fan_message: fan_messages[index % fan_messages.length],
+        anonymous: rand < 0.15  # 15% anonymous
       )
       pledges_created += 1
     end
 
+    funded_gig.reload
     puts "Created #{pledges_created} mock pledges"
     puts ""
     puts "=" * 60
@@ -112,19 +150,15 @@ namespace :demo do
     puts "=" * 60
     puts ""
     puts "Funded Gig: #{funded_gig.name}"
-    puts "Current Funding: ¥#{funded_gig.current_pledged_cents} / ¥#{funded_gig.funding_target_cents}"
+    puts "Backers: #{funded_gig.pledges.count} supporters"
+    puts "Current Funding: ¥#{funded_gig.current_pledged_cents.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse} / ¥#{funded_gig.funding_target_cents.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
     puts "Percentage: #{funded_gig.funding_percentage}%"
-    puts "Remaining to fund: ¥#{funded_gig.amount_remaining}"
+    puts "Remaining to fund: ¥#{funded_gig.amount_remaining.to_s.reverse.gsub(/(\d{3})(?=\d)/, '\\1,').reverse}"
     puts ""
-    puts "To complete funding during the presentation:"
-    puts "1. Log in as a fan user (e.g., akira.fan@email.com / password123)"
-    puts "2. Navigate to: /funded-gigs/#{funded_gig.id}"
-    puts "3. Click 'Pledge Now' and pledge ¥#{funded_gig.amount_remaining} or more"
+    puts "URL: /funded-gigs/#{funded_gig.id}"
     puts ""
-    puts "Or use the rails console to add a final pledge:"
-    puts "  user = User.find_by(email: 'your_demo_user@email.com')"
-    puts "  fg = FundedGig.find(#{funded_gig.id})"
-    puts "  Pledge.create!(funded_gig: fg, user: user, amount_cents: 3000, status: :authorized)"
+    puts "To complete funding during the presentation, run:"
+    puts "  heroku run rails runner lib/tasks/complete_demo.rb"
     puts ""
   end
 
@@ -185,14 +219,15 @@ namespace :demo do
       exit 1
     end
 
-    # Keep only the first 5 pledges (the setup ones)
-    pledges_to_delete = funded_gig.pledges.order(:created_at).offset(5)
+    # Keep only the first 39 pledges (the setup ones)
+    pledges_to_delete = funded_gig.pledges.order(:created_at).offset(39)
     count = pledges_to_delete.count
     pledges_to_delete.destroy_all
 
     funded_gig.reload
 
     puts "Deleted #{count} extra pledges"
+    puts "Backers: #{funded_gig.pledges.count}"
     puts "Current funding: ¥#{funded_gig.current_pledged_cents} / ¥#{funded_gig.funding_target_cents} (#{funded_gig.funding_percentage}%)"
   end
 end
