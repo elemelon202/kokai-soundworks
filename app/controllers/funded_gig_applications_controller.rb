@@ -8,6 +8,7 @@ class FundedGigApplicationsController < ApplicationController
   # GET /funded-gigs/:funded_gig_id/applications
   def index
     authorize @funded_gig.gig, :edit?
+    skip_policy_scope
 
     @applications = @funded_gig.gig.gig_applications
                                .includes(band: [:follows, :musicians])
