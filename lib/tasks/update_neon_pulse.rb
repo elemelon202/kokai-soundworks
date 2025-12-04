@@ -15,16 +15,26 @@ band.update!(
   twitter_followers: 156
 )
 
-# Add a past gig from a couple months ago (if not already exists)
-past_gig = band.band_gigs.find_by(name: 'Shimokitazawa SHELTER')
-unless past_gig
+# Add past gig on November 25th, 2025, 18:00-23:00
+nov25_gig = band.band_gigs.find_by(date: Date.new(2025, 11, 25))
+unless nov25_gig
   BandGig.create!(
     band: band,
-    name: 'Shimokitazawa SHELTER',
+    name: 'Shimokitazawa SHELTER Live',
     venue_name: 'SHELTER',
     location: 'Shimokitazawa, Tokyo',
-    date: Date.today - 2.months
+    date: Date.new(2025, 11, 25),
+    start_time: Time.zone.parse('2025-11-25 18:00'),
+    end_time: Time.zone.parse('2025-11-25 23:00')
   )
+  puts "Created past gig: Shimokitazawa SHELTER Live (Nov 25, 2025)"
+end
+
+# Remove old Shimokitazawa SHELTER gig if exists with wrong date
+old_shelter_gig = band.band_gigs.find_by(name: 'Shimokitazawa SHELTER')
+if old_shelter_gig && old_shelter_gig.date != Date.new(2025, 11, 25)
+  old_shelter_gig.destroy
+  puts "Removed old SHELTER gig with incorrect date"
 end
 
 puts "Updated Neon Pulse stats:"

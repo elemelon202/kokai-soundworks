@@ -25,6 +25,10 @@ namespace :demo do
       exit 1
     end
 
+    # Find the reference gig (funded_gig 14) to copy the poster from
+    reference_funded_gig = FundedGig.find_by(id: 14)
+    reference_gig = reference_funded_gig&.gig
+
     # Create the demo gig
     demo_gig = Gig.find_or_create_by!(
       venue: blue_note,
@@ -35,6 +39,12 @@ namespace :demo do
       gig.end_time = Time.zone.parse("22:00")
     end
     puts "Created/found gig: #{demo_gig.name}"
+
+    # Copy poster from reference gig if available
+    if reference_gig&.poster&.attached? && !demo_gig.poster.attached?
+      demo_gig.poster.attach(reference_gig.poster.blob)
+      puts "Copied poster from funded_gig 14"
+    end
 
     # Create the funded gig with a target of 50,000 yen
     funding_target = 50000
