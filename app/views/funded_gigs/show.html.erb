@@ -1,0 +1,423 @@
+<div class="funded-gig-show">
+  <div class="container py-4">
+    <%# Header with poster %>
+    <div class="funded-gig-hero mb-4">
+      <% if @gig.poster.attached? %>
+        <%= cl_image_tag(@gig.poster.key, class: "funded-gig-hero-image", crop: :fill, width: 1200, height: 400) %>
+      <% end %>
+      <div class="funded-gig-hero-overlay">
+        <span class="badge bg-<%= @funded_gig.status_badge_class %> mb-2"><%= @funded_gig.status_label %></span>
+        <h1><%= @funded_gig.name %></h1>
+        <p class="lead mb-0">
+          <i class="fa-solid fa-location-dot me-2"></i><%= @funded_gig.venue.name %>
+          <span class="mx-2">|</span>
+          <i class="fa-solid fa-calendar me-2"></i><%= @funded_gig.date.strftime('%B %d, %Y') %>
+          <% if @funded_gig.start_time %>
+            <span class="mx-2">|</span>
+            <i class="fa-solid fa-clock me-2"></i><%= @funded_gig.start_time.strftime('%H:%M') %>
+          <% end %>
+        </p>
+      </div>
+    </div>
+
+    <div class="row">
+      <%# Main content %>
+      <div class="col-lg-8">
+        <%# Venue message %>
+        <% if @funded_gig.venue_message.present? %>
+          <div class="funded-gig-section mb-4">
+            <h4><i class="fa-solid fa-quote-left me-2"></i>From the Venue</h4>
+            <p class="venue-message"><%= @funded_gig.venue_message %></p>
+          </div>
+        <% end %>
+
+        <%# Bands playing %>
+        <div class="funded-gig-section mb-4">
+          <h4><i class="fa-solid fa-users me-2"></i>Bands Playing</h4>
+          <% if @funded_gig.bands.any? %>
+            <div class="bands-grid">
+              <% @funded_gig.bands.each do |band| %>
+                <%= link_to band_path(band), class: "band-card-mini" do %>
+                  <% if band.banner.attached? %>
+                    <%= cl_image_tag(band.banner.key, class: "band-avatar", crop: :fill, width: 60, height: 60) %>
+                  <% else %>
+                    <div class="band-avatar-placeholder"><%= band.name[0] %></div>
+                  <% end %>
+                  <div class="band-info">
+                    <strong><%= band.name %></strong>
+                    <small><%= band.followers.count %> followers</small>
+                  </div>
+                <% end %>
+              <% end %>
+            </div>
+          <% elsif @funded_gig.open_for_applications? %>
+            <p class="text-muted">Bands are being selected. Check back soon!</p>
+          <% else %>
+            <p class="text-muted">No bands confirmed yet.</p>
+          <% end %>
+        </div>
+
+        <%# Recent supporters %>
+        <div class="funded-gig-section mb-4">
+          <h4><i class="fa-solid fa-heart me-2"></i>Recent Supporters</h4>
+          <% if @pledges.any? %>
+            <div class="supporters-list">
+              <% @pledges.each do |pledge| %>
+                <div class="supporter-item">
+                  <div class="supporter-avatar">
+                    <% if !pledge.anonymous? && pledge.user.musician&.avatar&.attached? %>
+                      <%= cl_image_tag(pledge.user.musician.avatar.key, class: "avatar-small", crop: :fill, width: 40, height: 40) %>
+                    <% else %>
+                      <div class="avatar-placeholder"><%= pledge.anonymous? ? '?' : pledge.user.username[0].upcase %></div>
+                    <% end %>
+                  </div>
+                  <div class="supporter-info">
+                    <strong><%= pledge.display_name %></strong>
+                    <small class="text-muted"><%= time_ago_in_words(pledge.created_at) %> ago</small>
+                  </div>
+                  <div class="supporter-amount">
+                    ¥<%= number_with_delimiter(pledge.amount_yen) %>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% else %>
+            <p class="text-muted">Be the first to support this show!</p>
+          <% end %>
+        </div>
+
+        <%# Band application (for band members) %>
+        <% if user_signed_in? && current_user.musician&.bands&.any? && @funded_gig.open_for_applications? %>
+          <div class="funded-gig-section mb-4">
+            <h4><i class="fa-solid fa-guitar me-2"></i>Apply to Play</h4>
+            <% current_user.musician.bands.each do |band| %>
+              <% existing_application = @gig.gig_applications.find_by(band: band) %>
+              <% if existing_application %>
+                <div class="alert alert-<%= existing_application.status == 'approved' ? 'success' : existing_application.status == 'rejected' ? 'danger' : 'info' %>">
+                  <strong><%= band.name %>:</strong>
+                  <% if existing_application.approved? %>
+                    Approved! You're playing this show.
+                  <% elsif existing_application.rejected? %>
+                    Application not selected.
+                  <% else %>
+                    Application pending review.
+                  <% end %>
+                </div>
+              <% else %>
+                <%= form_with url: gig_gig_applications_path(@gig), method: :post, class: "apply-form" do |f| %>
+                  <%= hidden_field_tag :band_id, band.id %>
+                  <div class="d-flex align-items-center gap-3 mb-2">
+                    <strong><%= band.name %></strong>
+                    <span class="badge bg-primary">Mainstage Score: <%= band.mainstage_win_count > 0 ? "Winner x#{band.mainstage_win_count}" : "Active" %></span>
+                  </div>
+                  <%= text_area_tag :message, nil, class: "form-control mb-2", placeholder: "Why should your band play this show? (optional)", rows: 2 %>
+                  <%= submit_tag "Apply with #{band.name}", class: "btn btn-outline-primary" %>
+                <% end %>
+              <% end %>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+
+      <%# Sidebar - Funding info %>
+      <div class="col-lg-4">
+        <div class="funding-sidebar sticky-top" style="top: 80px;">
+          <%# Funding progress %>
+          <div class="funding-card mb-4">
+            <div class="funding-amount-large">
+              ¥<%= number_with_delimiter(@funded_gig.current_pledged_yen) %>
+            </div>
+            <p class="text-muted mb-2">pledged of ¥<%= number_with_delimiter(@funded_gig.funding_target_yen) %> goal</p>
+
+            <div class="progress mb-3" style="height: 12px;">
+              <div class="progress-bar bg-success" role="progressbar" style="width: <%= [@funded_gig.funding_percentage, 100].min %>%"></div>
+            </div>
+
+            <div class="funding-stats d-flex justify-content-around text-center mb-3">
+              <div>
+                <div class="stat-number"><%= @funded_gig.funding_percentage %>%</div>
+                <div class="stat-label">funded</div>
+              </div>
+              <div>
+                <div class="stat-number"><%= @funded_gig.supporter_count %></div>
+                <div class="stat-label">backers</div>
+              </div>
+              <div>
+                <div class="stat-number"><%= @funded_gig.days_until_deadline %></div>
+                <div class="stat-label">days left</div>
+              </div>
+            </div>
+
+            <%# User's pledge status %>
+            <% if @user_pledge %>
+              <div class="user-pledge-status mb-3">
+                <div class="alert alert-<%= @user_pledge.status_badge_class %>">
+                  <strong>Your pledge: ¥<%= number_with_delimiter(@user_pledge.amount_yen) %></strong>
+                  <br>
+                  <small>
+                    <% if @user_pledge.authorized? %>
+                      Payment authorized - you'll only be charged if the show is funded.
+                    <% elsif @user_pledge.captured? %>
+                      Payment complete! Your ticket is ready.
+                    <% elsif @user_pledge.refunded? %>
+                      Pledge refunded - you were not charged.
+                    <% end %>
+                  </small>
+                </div>
+                <% if @user_pledge.authorized? && @funded_gig.can_accept_pledges? %>
+                  <%= button_to "Cancel Pledge", cancel_funded_gig_pledge_path(@funded_gig, @user_pledge), method: :delete, class: "btn btn-outline-danger btn-sm w-100", data: { confirm: "Are you sure you want to cancel your pledge?" } %>
+                <% end %>
+              </div>
+            <% end %>
+
+            <%# Ticket display %>
+            <% if @user_ticket %>
+              <div class="ticket-ready mb-3">
+                <div class="alert alert-success">
+                  <i class="fa-solid fa-ticket fa-2x mb-2"></i>
+                  <h5>Your Free Ticket!</h5>
+                  <p class="mb-1"><strong>Code:</strong> <%= @user_ticket.ticket_code %></p>
+                  <small>Show this at the venue entrance</small>
+                </div>
+              </div>
+            <% end %>
+
+            <%# Pledge button %>
+            <% if @funded_gig.can_accept_pledges? && !@user_pledge %>
+              <%= link_to new_funded_gig_pledge_path(@funded_gig), class: "btn btn-success btn-lg w-100" do %>
+                <i class="fa-solid fa-hand-holding-heart me-2"></i>Pledge Now
+              <% end %>
+              <p class="text-muted text-center mt-2 small">
+                <i class="fa-solid fa-shield-halved me-1"></i>
+                You won't be charged unless the show is fully funded
+              </p>
+            <% elsif @funded_gig.funded? || @funded_gig.partially_funded? || @funded_gig.completed? %>
+              <div class="alert alert-success text-center">
+                <i class="fa-solid fa-check-circle fa-2x mb-2"></i>
+                <h5>This show is funded!</h5>
+              </div>
+            <% elsif @funded_gig.failed? %>
+              <div class="alert alert-secondary text-center">
+                <i class="fa-solid fa-times-circle fa-2x mb-2"></i>
+                <h5>Funding goal not reached</h5>
+                <small>All pledges have been refunded</small>
+              </div>
+            <% elsif @funded_gig.open_for_applications? %>
+              <div class="alert alert-info text-center">
+                <i class="fa-solid fa-users fa-2x mb-2"></i>
+                <h5>Selecting bands</h5>
+                <small>Pledging opens once bands are confirmed</small>
+              </div>
+            <% end %>
+          </div>
+
+          <%# Venue owner controls %>
+          <% if user_signed_in? && @funded_gig.venue.user_id == current_user.id %>
+            <div class="venue-controls">
+              <h5><i class="fa-solid fa-gear me-2"></i>Manage</h5>
+              <div class="d-grid gap-2">
+                <% if @funded_gig.draft? %>
+                  <%= link_to open_applications_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-primary" do %>
+                    <i class="fa-solid fa-door-open me-1"></i>Open Applications
+                  <% end %>
+                <% elsif @funded_gig.open_for_applications? %>
+                  <%= link_to funded_gig_applications_path(@funded_gig), class: "btn btn-info" do %>
+                    <i class="fa-solid fa-list-check me-1"></i>Review Applications
+                  <% end %>
+                  <% if @funded_gig.gig.bands.any? %>
+                    <%= link_to open_pledges_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success" do %>
+                      <i class="fa-solid fa-hand-holding-dollar me-1"></i>Open Pledging
+                    <% end %>
+                  <% end %>
+                <% elsif @funded_gig.accepting_pledges? %>
+                  <% if @funded_gig.funding_reached? %>
+                    <%= link_to process_funding_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success" do %>
+                      <i class="fa-solid fa-check me-1"></i>Process Funding (Target Reached!)
+                    <% end %>
+                  <% elsif @funded_gig.partial_funding_acceptable? %>
+                    <%= link_to process_funding_funded_gig_path(@funded_gig, accept_partial: true), method: :patch, class: "btn btn-warning", data: { confirm: "Accept partial funding? This will charge all pledgers." } do %>
+                      <i class="fa-solid fa-check me-1"></i>Accept Partial Funding (<%= @funded_gig.funding_percentage %>%)
+                    <% end %>
+                  <% end %>
+                <% end %>
+
+                <%= link_to edit_funded_gig_path(@funded_gig), class: "btn btn-outline-secondary" do %>
+                  <i class="fa-solid fa-edit me-1"></i>Edit Details
+                <% end %>
+
+                <% unless @funded_gig.funded? || @funded_gig.completed? %>
+                  <%= link_to cancel_funded_gig_path(@funded_gig), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Cancel this funded gig? All pledges will be refunded." } do %>
+                    <i class="fa-solid fa-times me-1"></i>Cancel Show
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .funded-gig-show {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #fff;
+  }
+
+  .funded-gig-hero {
+    position: relative;
+    height: 300px;
+    border-radius: 12px;
+    overflow: hidden;
+    background: #2d2d3d;
+  }
+
+  .funded-gig-hero-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .funded-gig-hero-overlay {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    padding: 2rem;
+    background: linear-gradient(transparent, rgba(0,0,0,0.9));
+  }
+
+  .funded-gig-section {
+    background: #1e1e2e;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .funded-gig-section h4 {
+    color: #C8E938;
+    margin-bottom: 1rem;
+  }
+
+  .venue-message {
+    font-style: italic;
+    color: #ccc;
+  }
+
+  .bands-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+
+  .band-card-mini {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: #2d2d3d;
+    border-radius: 8px;
+    text-decoration: none;
+    color: #fff;
+    transition: background 0.2s;
+  }
+
+  .band-card-mini:hover {
+    background: #3d3d4d;
+    color: #fff;
+  }
+
+  .band-avatar, .band-avatar-placeholder {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .band-avatar-placeholder {
+    background: #C8E938;
+    color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.2rem;
+  }
+
+  .supporters-list {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .supporter-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem;
+    background: #2d2d3d;
+    border-radius: 8px;
+  }
+
+  .avatar-small, .avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+  }
+
+  .avatar-placeholder {
+    background: #444;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #888;
+  }
+
+  .supporter-info {
+    flex: 1;
+  }
+
+  .supporter-amount {
+    color: #C8E938;
+    font-weight: bold;
+  }
+
+  .funding-sidebar {
+    background: #1e1e2e;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .funding-card {
+    text-align: center;
+  }
+
+  .funding-amount-large {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #C8E938;
+  }
+
+  .stat-number {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: #fff;
+  }
+
+  .stat-label {
+    font-size: 0.8rem;
+    color: #888;
+  }
+
+  .venue-controls {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid #333;
+  }
+
+  .venue-controls h5 {
+    color: #888;
+    margin-bottom: 1rem;
+  }
+</style>

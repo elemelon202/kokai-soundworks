@@ -5,8 +5,26 @@ class Gig < ApplicationRecord
   has_many :gig_attendances, dependent: :destroy
   has_many :attendees, through: :gig_attendances, source: :user
   has_many :gig_applications, dependent: :destroy
+  has_one :funded_gig, dependent: :destroy
 
   has_one_attached :poster
+
+  # Check if this gig is community-funded
+  def funded?
+    funded_gig.present?
+  end
+
+  def funding_status
+    funded_gig&.funding_status
+  end
+
+  def accepting_applications?
+    funded_gig&.open_for_applications?
+  end
+
+  def accepting_pledges?
+    funded_gig&.can_accept_pledges?
+  end
 
 
   GENRES = ['Rock', 'Pop', 'Jazz', 'Classical', 'Hip Hop', 'Country', 'Electronic', 'Reggae', 'Blues', 'Folk'].freeze

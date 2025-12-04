@@ -1,0 +1,191 @@
+<div class="pledge-form-page">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="pledge-card">
+          <div class="pledge-header text-center mb-4">
+            <i class="fa-solid fa-hand-holding-heart fa-3x mb-3" style="color: #C8E938;"></i>
+            <h2>Support This Show</h2>
+            <p class="lead"><%= @funded_gig.name %></p>
+            <p class="text-muted">
+              <i class="fa-solid fa-location-dot me-1"></i><%= @funded_gig.venue.name %>
+              <span class="mx-2">|</span>
+              <i class="fa-solid fa-calendar me-1"></i><%= @funded_gig.date.strftime('%B %d, %Y') %>
+            </p>
+          </div>
+
+          <div class="funding-status mb-4">
+            <div class="d-flex justify-content-between mb-2">
+              <span>¥<%= number_with_delimiter(@funded_gig.current_pledged_yen) %></span>
+              <span>¥<%= number_with_delimiter(@funded_gig.funding_target_yen) %></span>
+            </div>
+            <div class="progress" style="height: 10px;">
+              <div class="progress-bar bg-success" style="width: <%= [@funded_gig.funding_percentage, 100].min %>%"></div>
+            </div>
+            <div class="text-center mt-2">
+              <span class="badge bg-success"><%= @funded_gig.funding_percentage %>% funded</span>
+              <span class="badge bg-secondary"><%= @funded_gig.days_until_deadline %> days left</span>
+            </div>
+          </div>
+
+          <%= form_with model: [@funded_gig, @pledge], local: true do |f| %>
+            <% if @pledge.errors.any? %>
+              <div class="alert alert-danger">
+                <ul class="mb-0">
+                  <% @pledge.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="mb-4">
+              <%= f.label :amount_cents, "Pledge Amount", class: "form-label" %>
+              <div class="input-group input-group-lg">
+                <span class="input-group-text">¥</span>
+                <%= f.number_field :amount_cents, class: "form-control", min: 500, step: 100, placeholder: "1000", required: true %>
+              </div>
+              <small class="text-muted">Minimum ¥500</small>
+
+              <div class="quick-amounts mt-2">
+                <button type="button" class="btn btn-outline-secondary btn-sm quick-amount" data-amount="1000">¥1,000</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm quick-amount" data-amount="2000">¥2,000</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm quick-amount" data-amount="5000">¥5,000</button>
+                <button type="button" class="btn btn-outline-secondary btn-sm quick-amount" data-amount="10000">¥10,000</button>
+              </div>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :fan_message, "Message of Support (optional)", class: "form-label" %>
+              <%= f.text_area :fan_message, class: "form-control", rows: 3, placeholder: "Say something to the bands..." %>
+            </div>
+
+            <div class="mb-4">
+              <div class="form-check">
+                <%= f.check_box :anonymous, class: "form-check-input" %>
+                <%= f.label :anonymous, "Keep my pledge anonymous", class: "form-check-label" %>
+              </div>
+            </div>
+
+            <div class="pledge-info mb-4">
+              <div class="info-item">
+                <i class="fa-solid fa-shield-halved"></i>
+                <div>
+                  <strong>Safe & Secure</strong>
+                  <p class="mb-0 small text-muted">Your payment is authorized but NOT charged until the show is fully funded.</p>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="fa-solid fa-ticket"></i>
+                <div>
+                  <strong>Free Ticket</strong>
+                  <p class="mb-0 small text-muted">If funded, you'll receive a free ticket to the show!</p>
+                </div>
+              </div>
+              <div class="info-item">
+                <i class="fa-solid fa-rotate-left"></i>
+                <div>
+                  <strong>Full Refund</strong>
+                  <p class="mb-0 small text-muted">If the funding goal isn't reached, you won't be charged at all.</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= f.submit "Continue to Payment", class: "btn btn-success btn-lg" %>
+              <%= link_to "Cancel", funded_gig_path(@funded_gig), class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const quickAmounts = document.querySelectorAll('.quick-amount');
+    const amountField = document.getElementById('pledge_amount_cents');
+
+    quickAmounts.forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        amountField.value = this.dataset.amount;
+        quickAmounts.forEach(b => b.classList.remove('active'));
+        this.classList.add('active');
+      });
+    });
+  });
+</script>
+
+<style>
+  .pledge-form-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #fff;
+  }
+
+  .pledge-card {
+    background: #1e1e2e;
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .form-label {
+    color: #ccc;
+  }
+
+  .form-control {
+    background: #2d2d3d;
+    border-color: #444;
+    color: #fff;
+  }
+
+  .form-control:focus {
+    background: #2d2d3d;
+    border-color: #C8E938;
+    color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(200, 233, 56, 0.25);
+  }
+
+  .input-group-text {
+    background: #444;
+    border-color: #444;
+    color: #ccc;
+  }
+
+  .quick-amounts {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .quick-amount.active {
+    background: #C8E938;
+    border-color: #C8E938;
+    color: #1a1a2e;
+  }
+
+  .pledge-info {
+    background: #2d2d3d;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .info-item {
+    display: flex;
+    gap: 1rem;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid #444;
+  }
+
+  .info-item:last-child {
+    border-bottom: none;
+  }
+
+  .info-item i {
+    font-size: 1.5rem;
+    color: #C8E938;
+    width: 30px;
+    text-align: center;
+  }
+</style>
