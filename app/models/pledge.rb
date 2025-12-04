@@ -56,5 +56,25 @@ class Pledge < ApplicationRecord
   def update_funded_gig_total
     total = funded_gig.pledges.successful.sum(:amount_cents)
     funded_gig.update_column(:current_pledged_cents, total)
+    broadcast_funding_update
+  end
+
+  def broadcast_funding_update
+    funded_gig.reload
+    ActionCable.server.broadcast(
+      "funded_gig_#{funded_gig.id}",
+      {
+        type: 'funding_update',
+        current_pledged_cents: funded_gig.current_pledged_cents,
+        funding_target_cents: funded_gig.funding_target_cents,
+        funding_percentage: funded_gig.funding_percentage,
+        supporter_count: funded_gig.supporter_count,
+        funding_reached: funded_gig.funding_reached?,
+        latest_pledge: {
+          amount: amount_cents,
+          display_name: display_name
+        }
+      }
+    )
   end
 end

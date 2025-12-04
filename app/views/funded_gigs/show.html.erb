@@ -1,4 +1,4 @@
-<div class="funded-gig-show">
+<div class="funded-gig-show" data-controller="funded-gig" data-funded-gig-funded-gig-id-value="<%= @funded_gig.id %>" data-funded-gig-funding-target-value="<%= @funded_gig.funding_target_cents %>">
   <div class="container py-4">
     <%# Header with poster %>
     <div class="funded-gig-hero mb-4">
@@ -125,21 +125,21 @@
           <%# Funding progress %>
           <div class="funding-card mb-4">
             <div class="funding-amount-large">
-              ¥<%= number_with_delimiter(@funded_gig.current_pledged_yen) %>
+              ¥<span data-funded-gig-target="currentAmount"><%= number_with_delimiter(@funded_gig.current_pledged_yen) %></span>
             </div>
             <p class="text-muted mb-2">pledged of ¥<%= number_with_delimiter(@funded_gig.funding_target_yen) %> goal</p>
 
             <div class="progress mb-3" style="height: 12px;">
-              <div class="progress-bar bg-success" role="progressbar" style="width: <%= [@funded_gig.funding_percentage, 100].min %>%"></div>
+              <div class="progress-bar bg-success" role="progressbar" style="width: <%= [@funded_gig.funding_percentage, 100].min %>%" data-funded-gig-target="progressBar"></div>
             </div>
 
             <div class="funding-stats d-flex justify-content-around text-center mb-3">
               <div>
-                <div class="stat-number"><%= @funded_gig.funding_percentage %>%</div>
+                <div class="stat-number"><span data-funded-gig-target="percentage"><%= @funded_gig.funding_percentage %>%</span></div>
                 <div class="stat-label">funded</div>
               </div>
               <div>
-                <div class="stat-number"><%= @funded_gig.supporter_count %></div>
+                <div class="stat-number"><span data-funded-gig-target="supporterCount"><%= @funded_gig.supporter_count %></span></div>
                 <div class="stat-label">backers</div>
               </div>
               <div>
@@ -419,5 +419,139 @@
   .venue-controls h5 {
     color: #888;
     margin-bottom: 1rem;
+  }
+
+  /* Real-time update animations */
+  .pulse-animation {
+    animation: pulse 0.5s ease-out;
+  }
+
+  @keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.2); color: #C8E938; }
+    100% { transform: scale(1); }
+  }
+
+  /* Pledge notification toast */
+  .pledge-notification {
+    position: fixed;
+    top: 100px;
+    right: 20px;
+    background: linear-gradient(135deg, #1e1e2e, #2d2d3d);
+    border: 1px solid #C8E938;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    z-index: 10000;
+    transform: translateX(120%);
+    transition: transform 0.3s ease-out;
+    box-shadow: 0 10px 40px rgba(200, 233, 56, 0.2);
+  }
+
+  .pledge-notification.show {
+    transform: translateX(0);
+  }
+
+  .pledge-notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    color: #fff;
+  }
+
+  .pledge-notification-content i {
+    color: #C8E938;
+    font-size: 1.5rem;
+    animation: heartbeat 0.8s ease-in-out infinite;
+  }
+
+  @keyframes heartbeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.2); }
+  }
+
+  /* Confetti */
+  .confetti {
+    position: fixed;
+    top: -10px;
+    width: 10px;
+    height: 10px;
+    z-index: 9999;
+    animation: confetti-fall linear forwards;
+    pointer-events: none;
+  }
+
+  .confetti:nth-child(odd) {
+    border-radius: 50%;
+  }
+
+  .confetti:nth-child(even) {
+    width: 8px;
+    height: 16px;
+    border-radius: 2px;
+  }
+
+  @keyframes confetti-fall {
+    0% {
+      transform: translateY(0) rotate(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform: translateY(100vh) rotate(720deg);
+      opacity: 0;
+    }
+  }
+
+  /* Funding success banner */
+  .funding-success-banner {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 10001;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+  }
+
+  .funding-success-banner.show {
+    opacity: 1;
+  }
+
+  .funding-success-content {
+    text-align: center;
+    animation: success-pop 0.5s ease-out;
+  }
+
+  .funding-success-content h2 {
+    font-size: 3rem;
+    font-weight: 900;
+    color: #C8E938;
+    text-shadow: 0 0 30px rgba(200, 233, 56, 0.5);
+    margin-bottom: 1rem;
+    animation: glow 1s ease-in-out infinite alternate;
+  }
+
+  .funding-success-content p {
+    font-size: 1.5rem;
+    color: #fff;
+  }
+
+  @keyframes success-pop {
+    0% { transform: scale(0); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+  }
+
+  @keyframes glow {
+    from {
+      text-shadow: 0 0 20px rgba(200, 233, 56, 0.3), 0 0 40px rgba(200, 233, 56, 0.2);
+    }
+    to {
+      text-shadow: 0 0 40px rgba(200, 233, 56, 0.6), 0 0 80px rgba(200, 233, 56, 0.4);
+    }
   }
 </style>
