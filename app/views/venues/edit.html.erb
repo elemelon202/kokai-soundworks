@@ -45,6 +45,89 @@
     </div>
   </div>
 
+  <%# Stripe Connect Section %>
+  <div class="musician-dashboard-card">
+    <div class="musician-card-header">
+      <div class="card-icon">
+        <i class="fa-brands fa-stripe"></i>
+      </div>
+      <h3>Stripe Connect</h3>
+    </div>
+    <div class="dashboard-card-padding">
+      <% if @venue.stripe_connected? %>
+        <div class="stripe-status connected">
+          <i class="fa-solid fa-check-circle"></i>
+          <div>
+            <p class="status-title">Stripe Connected</p>
+            <p class="status-subtitle">You can receive payments from funded gigs</p>
+          </div>
+        </div>
+        <% if @venue.venue_stripe_account.charges_enabled? %>
+          <div class="stripe-features">
+            <span class="feature-badge success"><i class="fa-solid fa-credit-card"></i> Charges Enabled</span>
+            <% if @venue.venue_stripe_account.payouts_enabled? %>
+              <span class="feature-badge success"><i class="fa-solid fa-money-bill-transfer"></i> Payouts Enabled</span>
+            <% end %>
+          </div>
+        <% else %>
+          <div class="stripe-warning">
+            <i class="fa-solid fa-exclamation-triangle"></i>
+            <p>Complete your Stripe setup to enable charges</p>
+          </div>
+          <%= link_to new_venue_stripe_account_path(@venue), class: "btn-stripe-connect" do %>
+            <i class="fa-solid fa-arrow-right"></i> Complete Setup
+          <% end %>
+        <% end %>
+      <% else %>
+        <div class="stripe-status not-connected">
+          <i class="fa-solid fa-credit-card"></i>
+          <div>
+            <p class="status-title">Connect Stripe to Create Funded Gigs</p>
+            <p class="status-subtitle">Receive payments directly when fans fund your shows</p>
+          </div>
+        </div>
+        <%= link_to new_venue_stripe_account_path(@venue), class: "btn-stripe-connect" do %>
+          <i class="fa-brands fa-stripe"></i> Connect with Stripe
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
+  <%# Active Funded Gigs Section %>
+  <% active_funded_gigs = @venue.gigs.joins(:funded_gig).where(funded_gigs: { funding_status: [:open_for_applications, :accepting_pledges] }).includes(:funded_gig) %>
+  <% if active_funded_gigs.any? %>
+    <div class="musician-dashboard-card">
+      <div class="musician-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-hand-holding-dollar"></i>
+        </div>
+        <h3>Active Funded Gigs</h3>
+      </div>
+      <div class="dashboard-card-padding">
+        <div class="funded-gigs-list">
+          <% active_funded_gigs.each do |gig| %>
+            <div class="funded-gig-card">
+              <div class="funded-gig-info">
+                <h4><%= link_to gig.name, funded_gig_path(gig.funded_gig) %></h4>
+                <p class="gig-date"><%= gig.date.strftime("%b %d, %Y") %></p>
+                <div class="funding-progress">
+                  <div class="progress-bar">
+                    <div class="progress-fill" style="width: <%= gig.funded_gig.funding_percentage %>%"></div>
+                  </div>
+                  <span class="progress-text"><%= number_to_currency(gig.funded_gig.current_pledged_cents / 100.0, unit: "¥", precision: 0) %> / <%= number_to_currency(gig.funded_gig.funding_target_cents / 100.0, unit: "¥", precision: 0) %></span>
+                </div>
+              </div>
+              <span class="status-badge <%= gig.funded_gig.funding_status %>"><%= gig.funded_gig.funding_status.titleize %></span>
+            </div>
+          <% end %>
+        </div>
+        <%= link_to funded_gigs_path, class: "link-view-apps" do %>
+          View all funded gigs <i class="fa-solid fa-arrow-right"></i>
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+
   <%# Create New Gig and Pending Applications Row %>
   <div class="dashboard-feed-analytics-row">
     <%# New Gig Form - Left %>
