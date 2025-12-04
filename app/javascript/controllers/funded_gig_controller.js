@@ -126,11 +126,18 @@ export default class extends Controller {
         <div class="funding-success-content">
           <h2>FUNDING GOAL REACHED!</h2>
           <p>This show is happening!</p>
+          <button class="funding-success-dismiss">Continue</button>
         </div>
       `
       document.body.appendChild(successBanner)
 
       setTimeout(() => successBanner.classList.add('show'), 10)
+
+      // Allow dismissing by clicking the button or anywhere on the banner
+      successBanner.addEventListener('click', () => {
+        successBanner.classList.remove('show')
+        setTimeout(() => successBanner.remove(), 500)
+      })
     }, 3000)
   }
 
