@@ -51,6 +51,11 @@
               </li>
             </ul>
           </li>
+          <li class="nav-item">
+            <%= link_to feed_index_path, class: "nav-link btn btn-primary text-white" do %>
+              <i class="fa-solid fa-bullhorn"></i> Feed
+            <% end %>
+          </li>
           <% if current_user.musician.present? %>
             <li class="nav-item dropdown">
               <a href="#" class="nav-link btn btn-primary text-white dropdown-toggle" id="bandDashboardDropdown" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
