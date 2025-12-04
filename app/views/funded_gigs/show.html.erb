@@ -217,7 +217,7 @@
               <h5><i class="fa-solid fa-gear me-2"></i>Manage</h5>
               <div class="d-grid gap-2">
                 <% if @funded_gig.draft? %>
-                  <%= link_to open_applications_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-primary" do %>
+                  <%= button_to open_applications_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-primary w-100" do %>
                     <i class="fa-solid fa-door-open me-1"></i>Open Applications
                   <% end %>
                 <% elsif @funded_gig.open_for_applications? %>
@@ -225,17 +225,17 @@
                     <i class="fa-solid fa-list-check me-1"></i>Review Applications
                   <% end %>
                   <% if @funded_gig.gig.bands.any? %>
-                    <%= link_to open_pledges_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success" do %>
+                    <%= button_to open_pledges_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success w-100" do %>
                       <i class="fa-solid fa-hand-holding-dollar me-1"></i>Open Pledging
                     <% end %>
                   <% end %>
                 <% elsif @funded_gig.accepting_pledges? %>
                   <% if @funded_gig.funding_reached? %>
-                    <%= link_to process_funding_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success" do %>
+                    <%= button_to process_funding_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success w-100" do %>
                       <i class="fa-solid fa-check me-1"></i>Process Funding (Target Reached!)
                     <% end %>
                   <% elsif @funded_gig.partial_funding_acceptable? %>
-                    <%= link_to process_funding_funded_gig_path(@funded_gig, accept_partial: true), method: :patch, class: "btn btn-warning", data: { confirm: "Accept partial funding? This will charge all pledgers." } do %>
+                    <%= button_to process_funding_funded_gig_path(@funded_gig, accept_partial: true), method: :patch, class: "btn btn-warning w-100", data: { turbo_confirm: "Accept partial funding? This will charge all pledgers." } do %>
                       <i class="fa-solid fa-check me-1"></i>Accept Partial Funding (<%= @funded_gig.funding_percentage %>%)
                     <% end %>
                   <% end %>
@@ -246,7 +246,7 @@
                 <% end %>
 
                 <% unless @funded_gig.funded? || @funded_gig.completed? %>
-                  <%= link_to cancel_funded_gig_path(@funded_gig), method: :delete, class: "btn btn-outline-danger", data: { confirm: "Cancel this funded gig? All pledges will be refunded." } do %>
+                  <%= button_to cancel_funded_gig_path(@funded_gig), method: :delete, class: "btn btn-outline-danger w-100", data: { turbo_confirm: "Cancel this funded gig? All pledges will be refunded." } do %>
                     <i class="fa-solid fa-times me-1"></i>Cancel Show
                   <% end %>
                 <% end %>
