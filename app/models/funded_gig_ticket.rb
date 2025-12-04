@@ -5,16 +5,16 @@ class FundedGigTicket < ApplicationRecord
   belongs_to :pledge
   belongs_to :user
 
-  enum status: { valid: 0, checked_in: 1, cancelled: 2 }
+  enum status: { active: 0, checked_in: 1, cancelled: 2 }
 
   before_create :generate_ticket_code
 
   validates :ticket_code, presence: true, uniqueness: true
 
-  scope :active, -> { where(status: [:valid, :checked_in]) }
+  scope :usable, -> { where(status: [:active, :checked_in]) }
 
   def check_in!
-    return false unless valid?
+    return false unless active?
     update!(status: :checked_in, checked_in_at: Time.current)
   end
 
@@ -36,7 +36,7 @@ class FundedGigTicket < ApplicationRecord
 
   def status_badge_class
     case status
-    when 'valid' then 'success'
+    when 'active' then 'success'
     when 'checked_in' then 'primary'
     when 'cancelled' then 'danger'
     else 'secondary'
