@@ -464,12 +464,15 @@ module Webhooks
     end
 
     def send_link_instructions(reply_token, user_id, group_id, args = nil)
-      # Check if this group is already linked
-      existing = LineBandConnection.find_by(line_group_id: group_id, active: true)
-      if existing
-        send_reply(reply_token, "This group is already linked to #{existing.band.name}!")
+      # Check if this group is already linked (active)
+      existing_active = LineBandConnection.find_by(line_group_id: group_id, active: true)
+      if existing_active
+        send_reply(reply_token, "This group is already linked to #{existing_active.band.name}!")
         return
       end
+
+      # Check if there's an inactive connection for this group
+      existing_inactive = LineBandConnection.find_by(line_group_id: group_id, active: false)
 
       # If a code is provided, try to link
       if args.present?
@@ -485,6 +488,9 @@ module Webhooks
           send_reply(reply_token, "This link code has already been used.")
           return
         end
+
+        # If there's an existing inactive connection for this group, delete it first
+        existing_inactive&.destroy
 
         # Link the group!
         connection.link_to_group!(group_id)
