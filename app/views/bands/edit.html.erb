@@ -422,7 +422,52 @@
   </div>
 
   <%# Band Calendar Section %>
-  <div class="band-calendar-section">
+  <%# Build calendar data first so we can use it in the controller wrapper %>
+  <%
+    gigs_data = @band.gigs.map do |gig|
+      {
+        id: gig.id,
+        name: gig.name,
+        date: gig.date,
+        start_time: gig.start_time&.strftime("%H:%M"),
+        end_time: gig.end_time&.strftime("%H:%M"),
+        venue: gig.venue&.name,
+        url: gig_path(gig)
+      }
+    end
+
+    band_events_data = @band.band_events.map do |event|
+      {
+        id: event.id,
+        title: event.title,
+        date: event.date,
+        event_type: event.event_type,
+        start_time: event.start_time&.strftime("%H:%M"),
+        end_time: event.end_time&.strftime("%H:%M"),
+        location: event.location,
+        description: event.description
+      }
+    end
+
+    availabilities_data = @band.member_availabilities.includes(:musician).map do |avail|
+      {
+        id: avail.id,
+        start_date: avail.start_date,
+        end_date: avail.end_date,
+        status: avail.status,
+        reason: avail.notes,
+        musician_id: avail.musician_id,
+        musician_name: avail.musician&.name
+      }
+    end
+  %>
+  <div class="band-calendar-section"
+       data-controller="band-calendar"
+       data-band-calendar-gigs-value="<%= gigs_data.to_json %>"
+       data-band-calendar-band-events-value="<%= band_events_data.to_json %>"
+       data-band-calendar-availabilities-value="<%= availabilities_data.to_json %>"
+       data-band-calendar-band-id-value="<%= @band.id %>"
+       data-band-calendar-is-leader-value="<%= @band.user_id == current_user.id %>">
     <div class="band-dashboard-card">
       <div class="band-card-header">
         <div class="card-icon card-icon-calendar">
@@ -458,52 +503,7 @@
           <span>Unavailable</span>
         </div>
       </div>
-      <%# Build calendar data %>
-      <%
-        gigs_data = @band.gigs.map do |gig|
-          {
-            id: gig.id,
-            name: gig.name,
-            date: gig.date,
-            start_time: gig.start_time&.strftime("%H:%M"),
-            end_time: gig.end_time&.strftime("%H:%M"),
-            venue: gig.venue&.name,
-            url: gig_path(gig)
-          }
-        end
-
-        band_events_data = @band.band_events.map do |event|
-          {
-            id: event.id,
-            title: event.title,
-            date: event.date,
-            event_type: event.event_type,
-            start_time: event.start_time&.strftime("%H:%M"),
-            end_time: event.end_time&.strftime("%H:%M"),
-            location: event.location,
-            description: event.description
-          }
-        end
-
-        availabilities_data = @band.member_availabilities.includes(:musician).map do |avail|
-          {
-            id: avail.id,
-            start_date: avail.start_date,
-            end_date: avail.end_date,
-            status: avail.status,
-            reason: avail.notes,
-            musician_id: avail.musician_id,
-            musician_name: avail.musician&.name
-          }
-        end
-      %>
-      <div class="band-calendar-wrapper"
-           data-controller="band-calendar"
-           data-band-calendar-gigs-value="<%= gigs_data.to_json %>"
-           data-band-calendar-band-events-value="<%= band_events_data.to_json %>"
-           data-band-calendar-availabilities-value="<%= availabilities_data.to_json %>"
-           data-band-calendar-band-id-value="<%= @band.id %>"
-           data-band-calendar-is-leader-value="<%= @band.user_id == current_user.id %>">
+      <div class="band-calendar-wrapper">
         <div data-band-calendar-target="calendar" class="band-calendar"></div>
         <%# Event Details Modal %>
         <div data-band-calendar-target="modal" class="calendar-modal" style="display: none;">
