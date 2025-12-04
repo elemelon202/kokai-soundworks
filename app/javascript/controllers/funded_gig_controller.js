@@ -112,24 +112,26 @@ export default class extends Controller {
   }
 
   celebrate() {
-    // Create confetti
+    // Create confetti first
     this.createConfetti()
-
-    // Show success message
-    const successBanner = document.createElement('div')
-    successBanner.className = 'funding-success-banner'
-    successBanner.innerHTML = `
-      <div class="funding-success-content">
-        <h2>FUNDING GOAL REACHED!</h2>
-        <p>This show is happening!</p>
-      </div>
-    `
-    document.body.appendChild(successBanner)
-
-    setTimeout(() => successBanner.classList.add('show'), 10)
 
     // Play sound effect if available
     this.playSuccessSound()
+
+    // Wait for confetti to build up before showing the success banner (3 seconds delay)
+    setTimeout(() => {
+      const successBanner = document.createElement('div')
+      successBanner.className = 'funding-success-banner'
+      successBanner.innerHTML = `
+        <div class="funding-success-content">
+          <h2>FUNDING GOAL REACHED!</h2>
+          <p>This show is happening!</p>
+        </div>
+      `
+      document.body.appendChild(successBanner)
+
+      setTimeout(() => successBanner.classList.add('show'), 10)
+    }, 3000)
   }
 
   createConfetti() {
