@@ -102,24 +102,23 @@ namespace :demo do
       "Neon Pulse forever!", "Dream show!", "History in the making!"
     ]
 
-    # Generate 39 pledge amounts between 1000-1500 yen, totaling close to 48,750
-    # This leaves about 1,250 yen for the dramatic final pledge
-    target_total = 48750
+    # Generate 39 pledge amounts using realistic rounded numbers (1000, 1500, or 2000 yen)
+    # Target: ~48,000 yen, leaving ~2,000 for the dramatic final pledge
     num_pledges = 39
-    base_amount = 1000
-    max_amount = 1500
 
-    # Create varied but realistic amounts
+    # Use only realistic rounded amounts that people would actually pledge
+    # Distribution: more 1000 yen pledges, some 1500, fewer 2000
     pledge_amounts = []
-    remaining = target_total
-    (num_pledges - 1).times do |i|
-      # Random amount between 1000-1500, weighted toward middle
-      amount = base_amount + rand(0..500)
-      pledge_amounts << amount
-      remaining -= amount
+    num_pledges.times do
+      roll = rand(100)
+      if roll < 50
+        pledge_amounts << 1000  # 50% chance
+      elsif roll < 80
+        pledge_amounts << 1500  # 30% chance
+      else
+        pledge_amounts << 2000  # 20% chance
+      end
     end
-    # Last pledge fills the gap (clamp between 1000-1500)
-    pledge_amounts << [[remaining, base_amount].max, max_amount].min
 
     # Shuffle to make it look natural
     pledge_amounts.shuffle!
