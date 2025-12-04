@@ -206,9 +206,15 @@ export default class extends Controller {
     }
   }
 
-  showAddEventForm(dateStr) {
+  showAddEventForm(dateStr = null) {
     if (this.hasEventFormTarget) {
-      this.eventFormTarget.querySelector('[name="band_event[date]"]').value = dateStr
+      const dateInput = this.eventFormTarget.querySelector('[name="band_event[date]"]')
+      if (dateStr) {
+        dateInput.value = dateStr
+      } else if (!dateInput.value) {
+        // Default to today if no date provided and field is empty
+        dateInput.value = new Date().toISOString().split('T')[0]
+      }
       this.eventFormTarget.style.display = "block"
     }
   }
