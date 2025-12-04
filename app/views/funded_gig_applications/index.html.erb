@@ -60,15 +60,15 @@
                   </div>
                 <% end %>
 
-                <div class="application-actions mt-3">
+                <div class="application-actions mt-3 d-flex gap-2">
                   <% if @funded_gig.gig.bands.count < @funded_gig.max_bands %>
-                    <%= link_to approve_funded_gig_application_path(@funded_gig, application), method: :patch, class: "btn btn-success btn-sm" do %>
+                    <%= button_to approve_funded_gig_application_path(@funded_gig, application), method: :patch, class: "btn btn-success btn-sm" do %>
                       <i class="fa-solid fa-check me-1"></i>Approve
                     <% end %>
                   <% else %>
                     <span class="badge bg-warning">Max bands reached</span>
                   <% end %>
-                  <%= link_to reject_funded_gig_application_path(@funded_gig, application), method: :patch, class: "btn btn-outline-danger btn-sm", data: { confirm: "Reject this application?" } do %>
+                  <%= button_to reject_funded_gig_application_path(@funded_gig, application), method: :patch, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: "Reject this application?" } do %>
                     <i class="fa-solid fa-times me-1"></i>Reject
                   <% end %>
                 </div>
@@ -138,7 +138,7 @@
             <strong><%= @approved_applications.count %> band(s) selected!</strong>
             <span class="ms-2">Ready to open pledging?</span>
           </div>
-          <%= link_to open_pledges_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success" do %>
+          <%= button_to open_pledges_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success" do %>
             <i class="fa-solid fa-hand-holding-dollar me-1"></i>Open Pledging
           <% end %>
         </div>
