@@ -202,8 +202,52 @@ Rails.application.routes.draw do
   # LINE Bot Webhook
   namespace :webhooks do
     post 'line', to: 'line#receive'
+    post 'stripe', to: 'stripe#receive'
   end
 
   # LINE User Connection
   resource :line_user_connection, only: [:create, :destroy]
+
+  # ============================================================================
+  # COMMUNITY-FUNDED GIGS
+  # ============================================================================
+  # Funded gigs - crowdfunded shows where fans pledge to fund the gig
+  resources :funded_gigs, path: 'funded-gigs', only: [:index, :show, :edit, :update] do
+    member do
+      patch :open_applications
+      patch :close_applications
+      patch :open_pledges
+      patch :process_funding
+      delete :cancel
+    end
+    resources :pledges, only: [:new, :create, :show] do
+      collection do
+        get :confirm
+      end
+      member do
+        delete :cancel
+      end
+    end
+    resources :applications, controller: 'funded_gig_applications', only: [:index] do
+      member do
+        patch :approve
+        patch :reject
+      end
+    end
+  end
+
+  # Nested under venues/gigs for creation
+  resources :venues do
+    resources :gigs do
+      resource :funded_gig, only: [:new, :create]
+    end
+    resource :stripe_account, controller: 'venue_stripe_accounts', only: [:new, :create] do
+      get :onboarding
+      get :return
+      get :refresh
+    end
+  end
+
+  # User pledges dashboard
+  get 'my-pledges', to: 'pledges#my_pledges', as: :my_pledges
 end

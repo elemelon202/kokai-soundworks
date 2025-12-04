@@ -27,6 +27,9 @@ class InvolvementsController < ApplicationController
       Participation.find_by(user: member_being_removed.user, chat: band.chat)&.destroy
     end
 
+    # Clean up any old invitations so they can be re-invited
+    BandInvitation.where(band: band, musician: member_being_removed).destroy_all
+
     @involvement.destroy
 
     if member_being_removed.user_id == current_user.id

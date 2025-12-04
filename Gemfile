@@ -91,3 +91,6 @@ gem 'geocoder'
 # LINE Bot Integration
 gem 'line-bot-api'
 gem 'anthropic'
+
+# Stripe Payment Processing
+gem 'stripe'

@@ -1,8 +1,22 @@
 class Venue < ApplicationRecord
   belongs_to :user
   has_many :gigs, dependent: :destroy
+  has_one :venue_stripe_account, dependent: :destroy
   has_one_attached :banner
   has_many_attached :photos
+
+  # Check if venue can receive payments through Stripe Connect
+  def stripe_connected?
+    venue_stripe_account&.can_receive_payments?
+  end
+
+  def stripe_pending?
+    venue_stripe_account&.pending?
+  end
+
+  def has_funded_gigs?
+    gigs.joins(:funded_gig).exists?
+  end
 
   # ============================================================================
   # GEOCODING SETUP (using the 'geocoder' gem)

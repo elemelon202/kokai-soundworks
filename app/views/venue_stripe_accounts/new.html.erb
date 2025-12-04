@@ -1,0 +1,91 @@
+<div class="stripe-connect-page">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-6">
+        <div class="connect-card text-center">
+          <div class="stripe-logo mb-4">
+            <i class="fa-brands fa-stripe fa-4x" style="color: #635BFF;"></i>
+          </div>
+
+          <h2>Connect Stripe</h2>
+          <p class="lead">To receive payments from community-funded shows</p>
+
+          <div class="venue-info mb-4">
+            <strong><%= @venue.name %></strong>
+            <p class="text-muted mb-0"><%= @venue.address %>, <%= @venue.city %></p>
+          </div>
+
+          <div class="benefits-list mb-4">
+            <div class="benefit-item">
+              <i class="fa-solid fa-check-circle text-success"></i>
+              <span>Receive payouts directly to your bank account</span>
+            </div>
+            <div class="benefit-item">
+              <i class="fa-solid fa-check-circle text-success"></i>
+              <span>Secure payment processing by Stripe</span>
+            </div>
+            <div class="benefit-item">
+              <i class="fa-solid fa-check-circle text-success"></i>
+              <span>Host community-funded shows at your venue</span>
+            </div>
+            <div class="benefit-item">
+              <i class="fa-solid fa-check-circle text-success"></i>
+              <span>Get paid only when shows are successfully funded</span>
+            </div>
+          </div>
+
+          <div class="fee-info mb-4">
+            <small class="text-muted">
+              <i class="fa-solid fa-info-circle me-1"></i>
+              Kokai takes a 5% platform fee from successfully funded shows.
+              Standard Stripe processing fees apply.
+            </small>
+          </div>
+
+          <%= button_to "Connect with Stripe", venue_stripe_account_path(@venue), method: :post, class: "btn btn-primary btn-lg" %>
+
+          <p class="mt-3">
+            <%= link_to "← Back to Venue", edit_venue_path(@venue), class: "text-muted" %>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .stripe-connect-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #fff;
+  }
+
+  .connect-card {
+    background: #1e1e2e;
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .venue-info {
+    background: #2d2d3d;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .benefits-list {
+    text-align: left;
+  }
+
+  .benefit-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.5rem 0;
+  }
+
+  .fee-info {
+    background: #2d2d3d;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+</style>

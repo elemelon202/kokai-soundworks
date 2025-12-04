@@ -1,0 +1,158 @@
+<div class="funded-gig-form-page">
+  <div class="container py-4">
+    <div class="row justify-content-center">
+      <div class="col-lg-8">
+        <div class="form-card">
+          <h2><i class="fa-solid fa-hand-holding-heart me-2"></i>Create Funded Show</h2>
+          <p class="text-muted mb-4">Set up a community-funded gig where fans pledge to support the show.</p>
+
+          <%= form_with model: @funded_gig, url: venue_gig_funded_gig_path(@gig.venue, @gig), local: true do |f| %>
+            <% if @funded_gig.errors.any? %>
+              <div class="alert alert-danger">
+                <ul class="mb-0">
+                  <% @funded_gig.errors.full_messages.each do |msg| %>
+                    <li><%= msg %></li>
+                  <% end %>
+                </ul>
+              </div>
+            <% end %>
+
+            <div class="gig-info-preview mb-4">
+              <h5>Gig Details</h5>
+              <p><strong><%= @gig.name %></strong></p>
+              <p class="text-muted mb-1"><i class="fa-solid fa-calendar me-1"></i> <%= @gig.date.strftime('%B %d, %Y') %></p>
+              <p class="text-muted"><i class="fa-solid fa-location-dot me-1"></i> <%= @gig.venue.name %></p>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :funding_target_cents, "Funding Target (¥)", class: "form-label" %>
+              <div class="input-group">
+                <span class="input-group-text">¥</span>
+                <%= f.number_field :funding_target_cents, class: "form-control form-control-lg", min: 1000, step: 1000, placeholder: "50000" %>
+              </div>
+              <small class="text-muted">How much do you need to cover the show? (minimum ¥1,000)</small>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :deadline_days_before, "Funding Deadline", class: "form-label" %>
+              <div class="input-group">
+                <%= f.number_field :deadline_days_before, class: "form-control", min: 3, max: 30, value: 7 %>
+                <span class="input-group-text">days before the show</span>
+              </div>
+              <small class="text-muted">Funding must be complete this many days before the gig date.</small>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :max_bands, "Maximum Bands", class: "form-label" %>
+              <%= f.number_field :max_bands, class: "form-control", min: 1, max: 10, value: 3 %>
+              <small class="text-muted">How many bands can play this show?</small>
+            </div>
+
+            <div class="mb-4">
+              <div class="form-check">
+                <%= f.check_box :allow_partial_funding, class: "form-check-input" %>
+                <%= f.label :allow_partial_funding, "Allow partial funding", class: "form-check-label" %>
+              </div>
+              <small class="text-muted">If enabled, you can choose to proceed even if the full target isn't reached.</small>
+            </div>
+
+            <div class="mb-4" id="partial-funding-options" style="display: none;">
+              <%= f.label :minimum_funding_percent, "Minimum Funding Percentage", class: "form-label" %>
+              <div class="input-group">
+                <%= f.number_field :minimum_funding_percent, class: "form-control", min: 50, max: 100, value: 80 %>
+                <span class="input-group-text">%</span>
+              </div>
+              <small class="text-muted">Minimum percentage needed to proceed with partial funding.</small>
+            </div>
+
+            <div class="mb-4">
+              <%= f.label :venue_message, "Message to Fans", class: "form-label" %>
+              <%= f.text_area :venue_message, class: "form-control", rows: 4, placeholder: "Tell fans why this show is special and why they should support it..." %>
+            </div>
+
+            <div class="alert alert-info">
+              <h6><i class="fa-solid fa-info-circle me-2"></i>How it works</h6>
+              <ol class="mb-0 small">
+                <li>You create the funded gig and open it for band applications</li>
+                <li>Bands apply - you select based on their Mainstage scores</li>
+                <li>Once bands are selected, fans can pledge money</li>
+                <li>If the funding target is reached, pledges are charged and fans get free tickets</li>
+                <li>If not funded, all pledges are automatically refunded</li>
+                <li>Kokai takes a 5% platform fee from successful funding</li>
+              </ol>
+            </div>
+
+            <div class="d-grid gap-2">
+              <%= f.submit "Create Funded Gig", class: "btn btn-primary btn-lg" %>
+              <%= link_to "Cancel", gig_path(@gig), class: "btn btn-outline-secondary" %>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const partialCheckbox = document.getElementById('funded_gig_allow_partial_funding');
+    const partialOptions = document.getElementById('partial-funding-options');
+
+    if (partialCheckbox) {
+      partialCheckbox.addEventListener('change', function() {
+        partialOptions.style.display = this.checked ? 'block' : 'none';
+      });
+      // Initial state
+      if (partialCheckbox.checked) {
+        partialOptions.style.display = 'block';
+      }
+    }
+  });
+</script>
+
+<style>
+  .funded-gig-form-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #fff;
+  }
+
+  .form-card {
+    background: #1e1e2e;
+    border-radius: 12px;
+    padding: 2rem;
+  }
+
+  .form-card h2 {
+    color: #C8E938;
+  }
+
+  .gig-info-preview {
+    background: #2d2d3d;
+    border-radius: 8px;
+    padding: 1rem;
+  }
+
+  .form-label {
+    color: #ccc;
+  }
+
+  .form-control, .form-select {
+    background: #2d2d3d;
+    border-color: #444;
+    color: #fff;
+  }
+
+  .form-control:focus, .form-select:focus {
+    background: #2d2d3d;
+    border-color: #C8E938;
+    color: #fff;
+    box-shadow: 0 0 0 0.2rem rgba(200, 233, 56, 0.25);
+  }
+
+  .input-group-text {
+    background: #444;
+    border-color: #444;
+    color: #ccc;
+  }
+</style>

@@ -1706,3 +1706,419 @@ $kokai-yellow-dark: #b8e020;
     grid-template-columns: 1fr !important;
   }
 }
+
+// Stripe Connect Styles
+.stripe-status {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  padding: 20px;
+  border-radius: 12px;
+  margin-bottom: 20px;
+
+  &.connected {
+    background: rgba(46, 204, 113, 0.1);
+    border: 1px solid rgba(46, 204, 113, 0.2);
+
+    i {
+      color: #2ecc71;
+      font-size: 2rem;
+    }
+  }
+
+  &.not-connected {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+
+    i {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 2rem;
+    }
+  }
+
+  .status-title {
+    font-weight: 600;
+    color: #fff;
+    margin: 0;
+  }
+
+  .status-subtitle {
+    color: rgba(255, 255, 255, 0.6);
+    font-size: 0.9rem;
+    margin: 0;
+  }
+}
+
+.stripe-features {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .feature-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 14px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+
+    &.success {
+      background: rgba(46, 204, 113, 0.15);
+      color: #2ecc71;
+      border: 1px solid rgba(46, 204, 113, 0.3);
+    }
+  }
+}
+
+.stripe-warning {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 15px;
+  background: rgba(241, 196, 15, 0.1);
+  border: 1px solid rgba(241, 196, 15, 0.2);
+  border-radius: 10px;
+  margin-bottom: 15px;
+
+  i {
+    color: #f1c40f;
+    font-size: 1.2rem;
+  }
+
+  p {
+    color: rgba(255, 255, 255, 0.8);
+    margin: 0;
+    font-size: 0.9rem;
+  }
+}
+
+.btn-stripe-connect {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 28px;
+  background: linear-gradient(135deg, #635bff, #5851ea);
+  color: #fff;
+  text-decoration: none;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(99, 91, 255, 0.3);
+    color: #fff;
+  }
+
+  i {
+    font-size: 1.1rem;
+  }
+}
+
+// Funded Gig Styles
+.funded-gig-promo {
+  display: flex;
+  gap: 20px;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 12px;
+  margin-bottom: 20px;
+
+  .promo-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 60px;
+    background: rgba($kokai-yellow, 0.1);
+    border-radius: 12px;
+    flex-shrink: 0;
+
+    i {
+      font-size: 1.8rem;
+      color: $kokai-yellow;
+    }
+  }
+
+  .promo-content {
+    h4 {
+      color: #fff;
+      font-weight: 600;
+      margin: 0 0 8px 0;
+    }
+
+    p {
+      color: rgba(255, 255, 255, 0.6);
+      font-size: 0.9rem;
+      margin: 0;
+      line-height: 1.5;
+    }
+  }
+}
+
+.funded-gig-status {
+  .funding-progress-large {
+    margin-bottom: 20px;
+
+    .progress-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+    }
+
+    .funding-amount {
+      font-weight: 600;
+      color: #fff;
+      font-size: 1.1rem;
+    }
+
+    .progress-bar {
+      height: 12px;
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 6px;
+      overflow: hidden;
+
+      &.large {
+        height: 16px;
+        border-radius: 8px;
+      }
+
+      .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, $kokai-yellow, $kokai-yellow-dark);
+        border-radius: inherit;
+        transition: width 0.5s ease;
+      }
+    }
+
+    .progress-footer {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 10px;
+      font-size: 0.85rem;
+      color: rgba(255, 255, 255, 0.5);
+    }
+  }
+}
+
+.funded-gigs-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.funded-gig-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+
+  .funded-gig-info {
+    h4 {
+      margin: 0 0 5px 0;
+
+      a {
+        color: #fff;
+        text-decoration: none;
+
+        &:hover {
+          color: $kokai-yellow;
+        }
+      }
+    }
+
+    .gig-date {
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      margin: 0 0 10px 0;
+    }
+
+    .funding-progress {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .progress-bar {
+        width: 150px;
+        height: 6px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 3px;
+        overflow: hidden;
+
+        .progress-fill {
+          height: 100%;
+          background: linear-gradient(90deg, $kokai-yellow, $kokai-yellow-dark);
+          border-radius: inherit;
+        }
+      }
+
+      .progress-text {
+        font-size: 0.8rem;
+        color: rgba(255, 255, 255, 0.6);
+      }
+    }
+  }
+}
+
+.status-badge {
+  display: inline-flex;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: capitalize;
+
+  &.draft {
+    background: rgba(149, 165, 166, 0.2);
+    color: #95a5a6;
+  }
+
+  &.open_for_applications {
+    background: rgba(52, 152, 219, 0.2);
+    color: #3498db;
+  }
+
+  &.accepting_pledges {
+    background: rgba($kokai-yellow, 0.2);
+    color: $kokai-yellow;
+  }
+
+  &.funded {
+    background: rgba(46, 204, 113, 0.2);
+    color: #2ecc71;
+  }
+
+  &.failed {
+    background: rgba(231, 76, 60, 0.2);
+    color: #e74c3c;
+  }
+
+  &.completed {
+    background: rgba(155, 89, 182, 0.2);
+    color: #9b59b6;
+  }
+}
+
+// Funded Gig Applications Section
+.band-funded-gigs-section {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+}
+
+.funded-gigs-content {
+  padding: 1rem 0;
+}
+
+.funded-app-section {
+  margin-bottom: 1rem;
+}
+
+.funded-app-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.funded-app-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(30, 30, 30, 0.6);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-left: 3px solid transparent;
+
+  &.approved {
+    border-left-color: #2ecc71;
+  }
+
+  &.pending {
+    border-left-color: #f39c12;
+  }
+
+  &.rejected {
+    opacity: 0.6;
+    border-left-color: #7f8c8d;
+  }
+}
+
+.funded-app-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  strong {
+    color: #fff;
+    font-size: 0.95rem;
+  }
+
+  .text-muted {
+    font-size: 0.8rem;
+  }
+}
+
+.funded-app-status {
+  flex-shrink: 0;
+}
+
+.btn-view-funded-gig {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba($kokai-yellow, 0.15);
+  color: $kokai-yellow;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba($kokai-yellow, 0.3);
+    color: $kokai-yellow;
+    transform: scale(1.05);
+  }
+}
+
+.funded-gigs-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+
+  i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #444;
+  }
+
+  p {
+    margin: 0;
+
+    &.sub {
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+
+      a {
+        color: $kokai-yellow;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

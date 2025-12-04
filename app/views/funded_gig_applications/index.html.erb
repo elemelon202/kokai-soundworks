@@ -1,0 +1,251 @@
+<div class="applications-page">
+  <div class="container py-4">
+    <div class="page-header mb-4">
+      <h2><i class="fa-solid fa-list-check me-2"></i>Band Applications</h2>
+      <p class="text-muted">Review applications for: <strong><%= @funded_gig.name %></strong></p>
+      <%= link_to "← Back to Show", funded_gig_path(@funded_gig), class: "btn btn-outline-secondary btn-sm" %>
+    </div>
+
+    <div class="row">
+      <%# Pending Applications %>
+      <div class="col-lg-6 mb-4">
+        <div class="applications-card">
+          <h4><i class="fa-solid fa-clock me-2"></i>Pending Applications (<%= @pending_applications.count %>)</h4>
+
+          <% if @pending_applications.any? %>
+            <% @pending_applications.each do |application| %>
+              <div class="application-item">
+                <div class="band-header">
+                  <%= link_to band_path(application.band), class: "band-link" do %>
+                    <% if application.band.banner.attached? %>
+                      <%= cl_image_tag(application.band.banner.key, class: "band-avatar", crop: :fill, width: 60, height: 60) %>
+                    <% else %>
+                      <div class="band-avatar-placeholder"><%= application.band.name[0] %></div>
+                    <% end %>
+                    <div class="band-info">
+                      <strong><%= application.band.name %></strong>
+                      <small class="d-block text-muted"><%= application.band.location %></small>
+                    </div>
+                  <% end %>
+                </div>
+
+                <div class="band-metrics">
+                  <div class="metric">
+                    <span class="metric-value"><%= application.mainstage_score_at_application %></span>
+                    <span class="metric-label">Mainstage Score</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-value"><%= application.follower_count_at_application %></span>
+                    <span class="metric-label">Followers</span>
+                  </div>
+                  <div class="metric">
+                    <span class="metric-value"><%= application.past_gig_count %></span>
+                    <span class="metric-label">Past Gigs</span>
+                  </div>
+                </div>
+
+                <% if application.band.mainstage_win_count > 0 %>
+                  <div class="mainstage-badge mb-2">
+                    <span class="badge bg-warning text-dark">
+                      <i class="fa-solid fa-trophy me-1"></i>
+                      Mainstage Winner x<%= application.band.mainstage_win_count %>
+                    </span>
+                  </div>
+                <% end %>
+
+                <% if application.message.present? %>
+                  <div class="application-message">
+                    <small class="text-muted">Message:</small>
+                    <p class="mb-0"><%= application.message %></p>
+                  </div>
+                <% end %>
+
+                <div class="application-actions mt-3 d-flex gap-2">
+                  <% if @funded_gig.gig.bands.count < @funded_gig.max_bands %>
+                    <%= button_to approve_funded_gig_application_path(@funded_gig, application), method: :patch, class: "btn btn-success btn-sm" do %>
+                      <i class="fa-solid fa-check me-1"></i>Approve
+                    <% end %>
+                  <% else %>
+                    <span class="badge bg-warning">Max bands reached</span>
+                  <% end %>
+                  <%= button_to reject_funded_gig_application_path(@funded_gig, application), method: :patch, class: "btn btn-outline-danger btn-sm", data: { turbo_confirm: "Reject this application?" } do %>
+                    <i class="fa-solid fa-times me-1"></i>Reject
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted text-center py-4">No pending applications</p>
+          <% end %>
+        </div>
+      </div>
+
+      <%# Approved & Rejected %>
+      <div class="col-lg-6">
+        <%# Approved %>
+        <div class="applications-card mb-4">
+          <h4><i class="fa-solid fa-check-circle me-2 text-success"></i>Approved (<%= @approved_applications.count %>/<%= @funded_gig.max_bands %>)</h4>
+
+          <% if @approved_applications.any? %>
+            <% @approved_applications.each do |application| %>
+              <div class="application-item approved">
+                <div class="band-header">
+                  <%= link_to band_path(application.band), class: "band-link" do %>
+                    <% if application.band.banner.attached? %>
+                      <%= cl_image_tag(application.band.banner.key, class: "band-avatar", crop: :fill, width: 50, height: 50) %>
+                    <% else %>
+                      <div class="band-avatar-placeholder small"><%= application.band.name[0] %></div>
+                    <% end %>
+                    <strong><%= application.band.name %></strong>
+                  <% end %>
+                  <span class="badge bg-success ms-auto">Approved</span>
+                </div>
+              </div>
+            <% end %>
+          <% else %>
+            <p class="text-muted text-center py-3">No approved bands yet</p>
+          <% end %>
+        </div>
+
+        <%# Rejected %>
+        <% if @rejected_applications.any? %>
+          <div class="applications-card">
+            <h4><i class="fa-solid fa-times-circle me-2 text-danger"></i>Rejected (<%= @rejected_applications.count %>)</h4>
+
+            <% @rejected_applications.each do |application| %>
+              <div class="application-item rejected">
+                <div class="band-header">
+                  <% if application.band.banner.attached? %>
+                    <%= cl_image_tag(application.band.banner.key, class: "band-avatar small", crop: :fill, width: 40, height: 40) %>
+                  <% else %>
+                    <div class="band-avatar-placeholder small"><%= application.band.name[0] %></div>
+                  <% end %>
+                  <span><%= application.band.name %></span>
+                  <span class="badge bg-secondary ms-auto">Rejected</span>
+                </div>
+              </div>
+            <% end %>
+          </div>
+        <% end %>
+      </div>
+    </div>
+
+    <%# Next steps %>
+    <% if @approved_applications.any? && @funded_gig.open_for_applications? %>
+      <div class="next-steps mt-4">
+        <div class="alert alert-info d-flex align-items-center justify-content-between">
+          <div>
+            <strong><%= @approved_applications.count %> band(s) selected!</strong>
+            <span class="ms-2">Ready to open pledging?</span>
+          </div>
+          <%= button_to open_pledges_funded_gig_path(@funded_gig), method: :patch, class: "btn btn-success" do %>
+            <i class="fa-solid fa-hand-holding-dollar me-1"></i>Open Pledging
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .applications-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #fff;
+  }
+
+  .applications-card {
+    background: #1e1e2e;
+    border-radius: 12px;
+    padding: 1.5rem;
+  }
+
+  .applications-card h4 {
+    margin-bottom: 1rem;
+    color: #ccc;
+  }
+
+  .application-item {
+    background: #2d2d3d;
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .application-item.approved {
+    border-left: 3px solid #198754;
+  }
+
+  .application-item.rejected {
+    opacity: 0.7;
+  }
+
+  .band-header {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .band-link {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    color: #fff;
+  }
+
+  .band-avatar, .band-avatar-placeholder {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+  }
+
+  .band-avatar-placeholder {
+    background: #C8E938;
+    color: #1a1a2e;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    font-size: 1.5rem;
+  }
+
+  .band-avatar-placeholder.small {
+    width: 40px;
+    height: 40px;
+    font-size: 1rem;
+  }
+
+  .band-metrics {
+    display: flex;
+    gap: 1.5rem;
+    margin: 1rem 0;
+    padding: 0.75rem;
+    background: #1e1e2e;
+    border-radius: 6px;
+  }
+
+  .metric {
+    text-align: center;
+  }
+
+  .metric-value {
+    display: block;
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #C8E938;
+  }
+
+  .metric-label {
+    font-size: 0.75rem;
+    color: #888;
+  }
+
+  .application-message {
+    background: #1e1e2e;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-style: italic;
+  }
+</style>

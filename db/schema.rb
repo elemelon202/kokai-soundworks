@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
+ActiveRecord::Schema[7.1].define(version: 2025_12_04_060754) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
@@ -263,14 +263,57 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
     t.index ["status"], name: "index_friendships_on_status"
   end
 
-  create_table "gig_applications", force: :cascade do |t|
+  create_table "funded_gig_tickets", force: :cascade do |t|
+    t.bigint "funded_gig_id", null: false
+    t.bigint "pledge_id", null: false
+    t.bigint "user_id", null: false
+    t.string "ticket_code", null: false
+    t.integer "status", default: 0
+    t.datetime "checked_in_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["funded_gig_id", "user_id"], name: "index_funded_gig_tickets_on_funded_gig_id_and_user_id"
+    t.index ["funded_gig_id"], name: "index_funded_gig_tickets_on_funded_gig_id"
+    t.index ["pledge_id"], name: "index_funded_gig_tickets_on_pledge_id"
+    t.index ["ticket_code"], name: "index_funded_gig_tickets_on_ticket_code", unique: true
+    t.index ["user_id"], name: "index_funded_gig_tickets_on_user_id"
+  end
+
+  create_table "funded_gigs", force: :cascade do |t|
     t.bigint "gig_id", null: false
+    t.integer "funding_target_cents", null: false
+    t.string "currency", default: "jpy"
+    t.integer "current_pledged_cents", default: 0
+    t.integer "funding_status", default: 0
+    t.date "funding_deadline"
+    t.integer "deadline_days_before", default: 7
+    t.boolean "allow_partial_funding", default: false
+    t.integer "minimum_funding_percent", default: 80
+    t.text "venue_message"
+    t.integer "max_bands", default: 3
+    t.datetime "applications_open_at"
+    t.datetime "applications_close_at"
+    t.datetime "pledging_opens_at"
+    t.datetime "funded_at"
+    t.datetime "failed_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["funding_deadline"], name: "index_funded_gigs_on_funding_deadline"
+    t.index ["funding_status"], name: "index_funded_gigs_on_funding_status"
+    t.index ["gig_id"], name: "index_funded_gigs_on_gig_id", unique: true
+  end
+
+  create_table "gig_applications", force: :cascade do |t|
     t.bigint "band_id", null: false
     t.integer "status", default: 0
     t.text "message"
     t.text "response_message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.bigint "gig_id", null: false
+    t.integer "mainstage_score_at_application", default: 0
+    t.integer "follower_count_at_application", default: 0
+    t.integer "past_gig_count", default: 0
     t.index ["band_id"], name: "index_gig_applications_on_band_id"
     t.index ["gig_id", "band_id"], name: "index_gig_applications_on_gig_id_and_band_id", unique: true
     t.index ["gig_id"], name: "index_gig_applications_on_gig_id"
@@ -435,13 +478,15 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
   create_table "member_availabilities", force: :cascade do |t|
     t.bigint "musician_id", null: false
     t.bigint "band_id", null: false
-    t.date "start_date"
-    t.integer "status"
-    t.string "reason"
+    t.date "start_date", null: false
+    t.integer "status", default: 0, null: false
+    t.text "notes"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.date "end_date"
+    t.index ["band_id", "start_date"], name: "index_member_availabilities_on_band_id_and_start_date"
     t.index ["band_id"], name: "index_member_availabilities_on_band_id"
+    t.index ["musician_id", "band_id", "start_date"], name: "index_member_availability_unique", unique: true
     t.index ["musician_id"], name: "index_member_availabilities_on_musician_id"
   end
 
@@ -516,6 +561,29 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
     t.index ["chat_id"], name: "index_participations_on_chat_id"
     t.index ["user_id", "chat_id"], name: "index_participations_on_user_and_chat_unique", unique: true
     t.index ["user_id"], name: "index_participations_on_user_id"
+  end
+
+  create_table "pledges", force: :cascade do |t|
+    t.bigint "funded_gig_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "amount_cents", null: false
+    t.string "currency", default: "jpy"
+    t.integer "status", default: 0
+    t.string "stripe_payment_intent_id"
+    t.string "stripe_payment_method_id"
+    t.datetime "authorized_at"
+    t.datetime "captured_at"
+    t.datetime "refunded_at"
+    t.string "refund_reason"
+    t.text "fan_message"
+    t.boolean "anonymous", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["funded_gig_id", "user_id"], name: "index_pledges_on_funded_gig_id_and_user_id", unique: true
+    t.index ["funded_gig_id"], name: "index_pledges_on_funded_gig_id"
+    t.index ["status"], name: "index_pledges_on_status"
+    t.index ["stripe_payment_intent_id"], name: "index_pledges_on_stripe_payment_intent_id", unique: true
+    t.index ["user_id"], name: "index_pledges_on_user_id"
   end
 
   create_table "post_comments", force: :cascade do |t|
@@ -674,6 +742,20 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
+  create_table "venue_stripe_accounts", force: :cascade do |t|
+    t.bigint "venue_id", null: false
+    t.string "stripe_account_id", null: false
+    t.string "account_status", default: "pending"
+    t.boolean "charges_enabled", default: false
+    t.boolean "payouts_enabled", default: false
+    t.json "requirements"
+    t.datetime "onboarded_at"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["stripe_account_id"], name: "index_venue_stripe_accounts_on_stripe_account_id", unique: true
+    t.index ["venue_id"], name: "index_venue_stripe_accounts_on_venue_id", unique: true
+  end
+
   create_table "venues", force: :cascade do |t|
     t.string "name"
     t.string "address"
@@ -721,6 +803,10 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
   add_foreign_key "follows", "users", column: "follower_id"
   add_foreign_key "friendships", "users", column: "addressee_id"
   add_foreign_key "friendships", "users", column: "requester_id"
+  add_foreign_key "funded_gig_tickets", "funded_gigs"
+  add_foreign_key "funded_gig_tickets", "pledges"
+  add_foreign_key "funded_gig_tickets", "users"
+  add_foreign_key "funded_gigs", "gigs"
   add_foreign_key "gig_applications", "bands"
   add_foreign_key "gig_applications", "gigs"
   add_foreign_key "gig_attendances", "gigs"
@@ -753,6 +839,8 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
   add_foreign_key "notifications", "users", column: "actor_id"
   add_foreign_key "participations", "chats"
   add_foreign_key "participations", "users"
+  add_foreign_key "pledges", "funded_gigs"
+  add_foreign_key "pledges", "users"
   add_foreign_key "post_comments", "posts"
   add_foreign_key "post_comments", "users"
   add_foreign_key "post_likes", "posts"
@@ -771,5 +859,6 @@ ActiveRecord::Schema[7.1].define(version: 2025_12_03_082540) do
   add_foreign_key "shoutouts", "users"
   add_foreign_key "spotify_tracks", "bands"
   add_foreign_key "taggings", "tags"
+  add_foreign_key "venue_stripe_accounts", "venues"
   add_foreign_key "venues", "users"
 end

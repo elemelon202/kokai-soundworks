@@ -78,6 +78,38 @@
         </div>
       </div>
     </div>
+    <!-- Funded Shows Section -->
+    <% funded_gigs = @band.gigs.joins(:funded_gig).where('gigs.date >= ?', Date.current).where(funded_gigs: { funding_status: [:accepting_pledges, :funded, :partially_funded] }).order('gigs.date ASC').limit(3) %>
+    <% if funded_gigs.any? %>
+      <div class="band-media-section">
+        <h3><i class="fa-solid fa-hand-holding-heart" style="color: #C8E938;"></i> Funded Shows</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+          <% funded_gigs.each do |gig| %>
+            <%= link_to funded_gig_path(gig.funded_gig), style: "background: #252525; padding: 16px; border-radius: 12px; display: block; text-decoration: none; transition: background 0.2s; border-left: 3px solid #C8E938;", class: "band-gig-card" do %>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+                <div>
+                  <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1rem;"><%= gig.name %></h4>
+                  <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-location-dot" style="margin-right: 4px;"></i> <%= gig.venue.name %>
+                  </p>
+                  <p style="color: #888; margin: 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-calendar" style="margin-right: 4px;"></i> <%= gig.date.strftime("%b %d, %Y") %>
+                  </p>
+                </div>
+                <div style="text-align: right;">
+                  <% if gig.funded_gig.accepting_pledges? %>
+                    <span class="badge bg-primary" style="font-size: 0.9rem;"><%= gig.funded_gig.funding_percentage %>% funded</span>
+                    <p style="color: #f39c12; margin: 4px 0 0 0; font-size: 0.75rem;"><i class="fa-solid fa-clock"></i> <%= gig.funded_gig.days_until_deadline %> days left</p>
+                  <% else %>
+                    <span class="badge bg-success" style="font-size: 0.9rem;">Funded!</span>
+                  <% end %>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
     <!-- Upcoming Gigs Section -->
     <% upcoming_gigs = @band.gigs.where('date >= ?', Date.current).order(:date).limit(5) %>
     <% if upcoming_gigs.any? %>
@@ -108,6 +140,47 @@
         </div>
       </div>
     <% end %>
+    <!-- Past Gigs Section -->
+    <% past_gigs = @band.gigs.where('date < ?', Date.current).order(date: :desc).limit(5) %>
+    <% past_band_gigs = @band.band_gigs.where('date < ?', Date.current).order(date: :desc).limit(5) %>
+    <% if past_gigs.any? || past_band_gigs.any? %>
+      <div class="band-media-section">
+        <h3><i class="fa-solid fa-clock-rotate-left" style="color: #C8E938;"></i> Past Gigs</h3>
+        <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
+          <% past_gigs.each do |gig| %>
+            <%= link_to gig_path(gig), style: "background: #252525; padding: 16px; border-radius: 12px; display: block; text-decoration: none; transition: background 0.2s; opacity: 0.8;", class: "band-gig-card" do %>
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+                <div>
+                  <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1rem;"><%= gig.name %></h4>
+                  <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-location-dot" style="margin-right: 4px;"></i> <%= gig.venue.name %>
+                  </p>
+                  <p style="color: #888; margin: 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-calendar" style="margin-right: 4px;"></i> <%= gig.date.strftime("%b %d, %Y") %>
+                  </p>
+                </div>
+              </div>
+            <% end %>
+          <% end %>
+          <% past_band_gigs.each do |band_gig| %>
+            <div style="background: #252525; padding: 16px; border-radius: 12px; opacity: 0.8;">
+              <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap;">
+                <div>
+                  <h4 style="color: #fff; margin: 0 0 6px 0; font-size: 1rem;"><%= band_gig.name %></h4>
+                  <p style="color: #888; margin: 0 0 4px 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-location-dot" style="margin-right: 4px;"></i> <%= band_gig.venue_name || band_gig.location %>
+                  </p>
+                  <p style="color: #888; margin: 0; font-size: 0.85rem;">
+                    <i class="fa-solid fa-calendar" style="margin-right: 4px;"></i> <%= band_gig.date.strftime("%b %d, %Y") %>
+                  </p>
+                </div>
+              </div>
+            </div>
+          <% end %>
+        </div>
+      </div>
+    <% end %>
+
     <!-- Band Activity/Feed Section -->
     <% band_posts = @band.posts.includes(:user, :post_likes, :post_comments, images_attachments: :blob, videos_attachments: :blob).recent.limit(10) %>
     <% if band_posts.any? %>

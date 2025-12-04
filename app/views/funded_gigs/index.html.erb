@@ -1,0 +1,172 @@
+<div class="funded-gigs-page">
+  <div class="container py-4">
+    <div class="funded-gigs-header mb-4">
+      <h1><i class="fa-solid fa-hand-holding-heart me-2"></i>Community-Funded Shows</h1>
+      <p class="text-muted">Support live music in Japan. Pledge to fund a show - if it's funded, you get a free ticket!</p>
+    </div>
+
+    <% if @funded_gigs.any? %>
+      <div class="row g-4">
+        <% @funded_gigs.each do |funded_gig| %>
+          <div class="col-md-6 col-lg-4">
+            <div class="funded-gig-card">
+              <div class="funded-gig-card-header">
+                <% if funded_gig.gig.poster.attached? %>
+                  <%= cl_image_tag(funded_gig.gig.poster.key, class: "funded-gig-poster", crop: :fill, width: 400, height: 200) %>
+                <% else %>
+                  <div class="funded-gig-poster-placeholder">
+                    <i class="fa-solid fa-music"></i>
+                  </div>
+                <% end %>
+                <div class="funded-gig-status-badge badge bg-<%= funded_gig.status_badge_class %>">
+                  <%= funded_gig.status_label %>
+                </div>
+              </div>
+
+              <div class="funded-gig-card-body">
+                <h5 class="funded-gig-title"><%= funded_gig.name %></h5>
+                <p class="funded-gig-venue">
+                  <i class="fa-solid fa-location-dot me-1"></i>
+                  <%= funded_gig.venue.name %>
+                </p>
+                <p class="funded-gig-date">
+                  <i class="fa-solid fa-calendar me-1"></i>
+                  <%= funded_gig.date.strftime('%B %d, %Y') %>
+                </p>
+
+                <% if funded_gig.bands.any? %>
+                  <div class="funded-gig-bands mb-2">
+                    <small class="text-muted">Featuring:</small>
+                    <% funded_gig.bands.limit(3).each do |band| %>
+                      <span class="badge bg-dark"><%= band.name %></span>
+                    <% end %>
+                  </div>
+                <% end %>
+
+                <div class="funding-progress mt-3">
+                  <div class="d-flex justify-content-between mb-1">
+                    <span class="funding-amount">¥<%= number_with_delimiter(funded_gig.current_pledged_yen) %></span>
+                    <span class="funding-goal text-muted">of ¥<%= number_with_delimiter(funded_gig.funding_target_yen) %></span>
+                  </div>
+                  <div class="progress" style="height: 8px;">
+                    <div class="progress-bar bg-success" role="progressbar" style="width: <%= [funded_gig.funding_percentage, 100].min %>%"></div>
+                  </div>
+                  <div class="d-flex justify-content-between mt-1">
+                    <small class="text-success fw-bold"><%= funded_gig.funding_percentage %>% funded</small>
+                    <small class="text-muted"><%= funded_gig.supporter_count %> supporters</small>
+                  </div>
+                </div>
+
+                <% if funded_gig.can_accept_pledges? %>
+                  <div class="deadline-countdown mt-2">
+                    <small class="text-warning">
+                      <i class="fa-solid fa-clock me-1"></i>
+                      <%= funded_gig.days_until_deadline %> days left
+                    </small>
+                  </div>
+                <% end %>
+              </div>
+
+              <div class="funded-gig-card-footer">
+                <%= link_to funded_gig_path(funded_gig), class: "btn btn-primary w-100" do %>
+                  <% if funded_gig.can_accept_pledges? %>
+                    <i class="fa-solid fa-hand-holding-heart me-1"></i> Pledge Now
+                  <% elsif funded_gig.open_for_applications? %>
+                    <i class="fa-solid fa-eye me-1"></i> View Details
+                  <% else %>
+                    <i class="fa-solid fa-eye me-1"></i> View
+                  <% end %>
+                <% end %>
+              </div>
+            </div>
+          </div>
+        <% end %>
+      </div>
+    <% else %>
+      <div class="no-funded-gigs text-center py-5">
+        <i class="fa-solid fa-hand-holding-heart fa-3x text-muted mb-3"></i>
+        <h4>No funded shows available right now</h4>
+        <p class="text-muted">Check back soon for community-funded gig opportunities!</p>
+      </div>
+    <% end %>
+  </div>
+</div>
+
+<style>
+  .funded-gigs-page {
+    background: linear-gradient(180deg, #1a1a2e 0%, #16213e 100%);
+    min-height: 100vh;
+    color: #fff;
+  }
+
+  .funded-gigs-header h1 {
+    color: #C8E938;
+  }
+
+  .funded-gig-card {
+    background: #1e1e2e;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.2s;
+  }
+
+  .funded-gig-card:hover {
+    transform: translateY(-4px);
+  }
+
+  .funded-gig-card-header {
+    position: relative;
+    height: 150px;
+    overflow: hidden;
+  }
+
+  .funded-gig-poster {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .funded-gig-poster-placeholder {
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #2d2d3d 0%, #1a1a2e 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #444;
+  }
+
+  .funded-gig-status-badge {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+  }
+
+  .funded-gig-card-body {
+    padding: 1rem;
+  }
+
+  .funded-gig-title {
+    margin-bottom: 0.5rem;
+    color: #fff;
+  }
+
+  .funded-gig-venue,
+  .funded-gig-date {
+    font-size: 0.85rem;
+    color: #888;
+    margin-bottom: 0.25rem;
+  }
+
+  .funding-amount {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #C8E938;
+  }
+
+  .funded-gig-card-footer {
+    padding: 1rem;
+    border-top: 1px solid #333;
+  }
+</style>

@@ -45,6 +45,11 @@ class User < ApplicationRecord
   has_many :led_bands, class_name: 'Band', foreign_key: 'user_id'
   has_one :fan, dependent: :destroy
 
+  # Community-funded gigs
+  has_many :pledges, dependent: :destroy
+  has_many :funded_gig_tickets, dependent: :destroy
+  has_many :supported_funded_gigs, through: :pledges, source: :funded_gig
+
   # convenience: check roles
   def musician?
     user_type == "musician"

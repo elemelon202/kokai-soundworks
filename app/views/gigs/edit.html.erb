@@ -93,6 +93,67 @@
     </div>
   </div>
 
+  <%# Funded Gig Section %>
+  <div class="musician-dashboard-card">
+    <div class="musician-card-header">
+      <div class="card-icon">
+        <i class="fa-solid fa-hand-holding-dollar"></i>
+      </div>
+      <h3>Community-Funded Gig</h3>
+    </div>
+    <div class="dashboard-card-padding">
+      <% if @gig.funded_gig.present? %>
+        <%# Show funded gig status %>
+        <div class="funded-gig-status">
+          <div class="funding-progress-large">
+            <div class="progress-header">
+              <span class="status-badge <%= @gig.funded_gig.funding_status %>"><%= @gig.funded_gig.funding_status.titleize %></span>
+              <span class="funding-amount"><%= number_to_currency(@gig.funded_gig.current_pledged_cents / 100.0, unit: "¥", precision: 0) %> / <%= number_to_currency(@gig.funded_gig.funding_target_cents / 100.0, unit: "¥", precision: 0) %></span>
+            </div>
+            <div class="progress-bar large">
+              <div class="progress-fill" style="width: <%= @gig.funded_gig.funding_percentage %>%"></div>
+            </div>
+            <div class="progress-footer">
+              <span><%= @gig.funded_gig.pledges.count %> supporters</span>
+              <span>Deadline: <%= @gig.funded_gig.funding_deadline.strftime("%b %d, %Y") %></span>
+            </div>
+          </div>
+          <%= link_to funded_gig_path(@gig.funded_gig), class: "btn-save-profile" do %>
+            <i class="fa-solid fa-cog"></i> Manage Funded Gig
+          <% end %>
+        </div>
+      <% elsif @gig.venue.stripe_connected? %>
+        <%# Can create funded gig %>
+        <div class="funded-gig-promo">
+          <div class="promo-icon">
+            <i class="fa-solid fa-coins"></i>
+          </div>
+          <div class="promo-content">
+            <h4>Let fans fund this show!</h4>
+            <p>Fans pledge money to make the show happen. If the target is reached, they get free tickets and bands play for free. If not, everyone gets refunded.</p>
+          </div>
+        </div>
+        <%= link_to new_venue_gig_funded_gig_path(@gig.venue, @gig), class: "btn-stripe-connect" do %>
+          <i class="fa-solid fa-plus"></i> Create Funded Gig
+        <% end %>
+      <% else %>
+        <%# Need to connect Stripe first %>
+        <div class="funded-gig-promo">
+          <div class="promo-icon">
+            <i class="fa-solid fa-lock"></i>
+          </div>
+          <div class="promo-content">
+            <h4>Connect Stripe to Create Funded Gigs</h4>
+            <p>Let fans fund your shows! Connect Stripe to receive payments when funding targets are met.</p>
+          </div>
+        </div>
+        <%= link_to new_venue_stripe_account_path(@gig.venue), class: "btn-stripe-connect" do %>
+          <i class="fa-brands fa-stripe"></i> Connect with Stripe
+        <% end %>
+      <% end %>
+    </div>
+  </div>
+
   <%# Main Content Grid %>
   <div class="dashboard-feed-analytics-row">
     <%# Book a Band - Left %>
