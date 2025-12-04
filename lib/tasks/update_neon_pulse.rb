@@ -15,7 +15,7 @@ band.update!(
   twitter_followers: 156
 )
 
-# Add past gig on November 25th, 2025, 18:00-23:00
+# Add past gig on November 25th, 2025
 nov25_gig = band.band_gigs.find_by(date: Date.new(2025, 11, 25))
 unless nov25_gig
   BandGig.create!(
@@ -23,9 +23,7 @@ unless nov25_gig
     name: 'Shimokitazawa SHELTER Live',
     venue_name: 'SHELTER',
     location: 'Shimokitazawa, Tokyo',
-    date: Date.new(2025, 11, 25),
-    start_time: Time.zone.parse('2025-11-25 18:00'),
-    end_time: Time.zone.parse('2025-11-25 23:00')
+    date: Date.new(2025, 11, 25)
   )
   puts "Created past gig: Shimokitazawa SHELTER Live (Nov 25, 2025)"
 end
