@@ -133,7 +133,7 @@
             <p>Fans pledge money to make the show happen. If the target is reached, they get free tickets and bands play for free. If not, everyone gets refunded.</p>
           </div>
         </div>
-        <%= link_to new_funded_gig_path(gig_id: @gig.id), class: "btn-stripe-connect" do %>
+        <%= link_to new_venue_gig_funded_gig_path(@gig.venue, @gig), class: "btn-stripe-connect" do %>
           <i class="fa-solid fa-plus"></i> Create Funded Gig
         <% end %>
       <% else %>
