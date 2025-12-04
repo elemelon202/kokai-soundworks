@@ -2006,3 +2006,119 @@ $kokai-yellow-dark: #b8e020;
     color: #9b59b6;
   }
 }
+
+// Funded Gig Applications Section
+.band-funded-gigs-section {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+}
+
+.funded-gigs-content {
+  padding: 1rem 0;
+}
+
+.funded-app-section {
+  margin-bottom: 1rem;
+}
+
+.funded-app-title {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #888;
+  margin-bottom: 0.75rem;
+  display: flex;
+  align-items: center;
+}
+
+.funded-app-item {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  background: rgba(30, 30, 30, 0.6);
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin-bottom: 0.5rem;
+  border-left: 3px solid transparent;
+
+  &.approved {
+    border-left-color: #2ecc71;
+  }
+
+  &.pending {
+    border-left-color: #f39c12;
+  }
+
+  &.rejected {
+    opacity: 0.6;
+    border-left-color: #7f8c8d;
+  }
+}
+
+.funded-app-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+
+  strong {
+    color: #fff;
+    font-size: 0.95rem;
+  }
+
+  .text-muted {
+    font-size: 0.8rem;
+  }
+}
+
+.funded-app-status {
+  flex-shrink: 0;
+}
+
+.btn-view-funded-gig {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  background: rgba($kokai-yellow, 0.15);
+  color: $kokai-yellow;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+
+  &:hover {
+    background: rgba($kokai-yellow, 0.3);
+    color: $kokai-yellow;
+    transform: scale(1.05);
+  }
+}
+
+.funded-gigs-empty {
+  text-align: center;
+  padding: 2rem;
+  color: #666;
+
+  i {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    color: #444;
+  }
+
+  p {
+    margin: 0;
+
+    &.sub {
+      font-size: 0.85rem;
+      margin-top: 0.5rem;
+
+      a {
+        color: $kokai-yellow;
+        text-decoration: none;
+
+        &:hover {
+          text-decoration: underline;
+        }
+      }
+    }
+  }
+}

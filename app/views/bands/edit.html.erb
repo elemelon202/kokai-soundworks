@@ -146,6 +146,97 @@
     </div>
   </div>
 
+  <%# Funded Gig Applications Section %>
+  <div class="band-funded-gigs-section">
+    <div class="band-dashboard-card full-width">
+      <div class="band-card-header">
+        <div class="card-icon">
+          <i class="fa-solid fa-hand-holding-heart"></i>
+        </div>
+        <h3>Funded Show Applications</h3>
+        <%= link_to funded_gigs_path, class: "band-feed-note" do %>
+          <i class="fa-solid fa-search"></i> Browse Opportunities
+        <% end %>
+      </div>
+
+      <div class="funded-gigs-content">
+        <% pending_apps = @band.gig_applications.pending.includes(gig: [:venue, :funded_gig]).select { |app| app.gig.funded? } %>
+        <% approved_apps = @band.gig_applications.approved.includes(gig: [:venue, :funded_gig]).select { |app| app.gig.funded? } %>
+        <% rejected_apps = @band.gig_applications.rejected.includes(gig: [:venue, :funded_gig]).select { |app| app.gig.funded? }.last(3) %>
+
+        <% if pending_apps.any? || approved_apps.any? %>
+          <% if approved_apps.any? %>
+            <div class="funded-app-section mb-3">
+              <h5 class="funded-app-title"><i class="fa-solid fa-check-circle text-success me-2"></i>Approved</h5>
+              <% approved_apps.each do |app| %>
+                <div class="funded-app-item approved">
+                  <div class="funded-app-info">
+                    <strong><%= app.gig.name %></strong>
+                    <span class="text-muted">@ <%= app.gig.venue.name %></span>
+                    <span class="text-muted"><%= app.gig.date.strftime("%b %d, %Y") %></span>
+                  </div>
+                  <div class="funded-app-status">
+                    <% if app.gig.funded_gig.accepting_pledges? %>
+                      <span class="badge bg-primary"><%= app.gig.funded_gig.funding_percentage %>% funded</span>
+                    <% elsif app.gig.funded_gig.funded? || app.gig.funded_gig.completed? %>
+                      <span class="badge bg-success">Funded!</span>
+                    <% end %>
+                  </div>
+                  <%= link_to funded_gig_path(app.gig.funded_gig), class: "btn-view-funded-gig" do %>
+                    <i class="fa-solid fa-eye"></i>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if pending_apps.any? %>
+            <div class="funded-app-section mb-3">
+              <h5 class="funded-app-title"><i class="fa-solid fa-clock text-warning me-2"></i>Pending Review</h5>
+              <% pending_apps.each do |app| %>
+                <div class="funded-app-item pending">
+                  <div class="funded-app-info">
+                    <strong><%= app.gig.name %></strong>
+                    <span class="text-muted">@ <%= app.gig.venue.name %></span>
+                    <span class="text-muted"><%= app.gig.date.strftime("%b %d, %Y") %></span>
+                  </div>
+                  <div class="funded-app-status">
+                    <span class="badge bg-warning text-dark">Pending</span>
+                  </div>
+                  <%= link_to funded_gig_path(app.gig.funded_gig), class: "btn-view-funded-gig" do %>
+                    <i class="fa-solid fa-eye"></i>
+                  <% end %>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+
+          <% if rejected_apps.any? %>
+            <div class="funded-app-section">
+              <h5 class="funded-app-title"><i class="fa-solid fa-times-circle text-secondary me-2"></i>Not Selected</h5>
+              <% rejected_apps.each do |app| %>
+                <div class="funded-app-item rejected">
+                  <div class="funded-app-info">
+                    <strong><%= app.gig.name %></strong>
+                    <span class="text-muted">@ <%= app.gig.venue.name %></span>
+                  </div>
+                </div>
+              <% end %>
+            </div>
+          <% end %>
+        <% else %>
+          <div class="funded-gigs-empty">
+            <i class="fa-solid fa-hand-holding-heart"></i>
+            <p>No funded show applications yet</p>
+            <p class="sub">
+              <%= link_to "Browse funded shows", funded_gigs_path %> to apply!
+            </p>
+          </div>
+        <% end %>
+      </div>
+    </div>
+  </div>
+
   <%# Analytics Section %>
   <div class="band-analytics-section">
     <div class="band-dashboard-card">
