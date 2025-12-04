@@ -1,3 +1,8 @@
+<%# Mark messages as read when chat is viewed %>
+<% MessageRead.where(user_id: current_user.id, read: false)
+              .where(message_id: @chat.messages.select(:id))
+              .update_all(read: true) %>
+
 <div id="band-chat" class="card p-3 mb-4" data-chat-id="<%= @chat.id %>" data-current-user-id="<%= current_user.id %>">
   <h5><%= @chat.name %></h5>
 
