@@ -442,22 +442,48 @@ module Webhooks
       end
 
       band = connection.band
-      upcoming_events = band.band_events.where('date >= ?', Date.current).order(:date).limit(5)
-      upcoming_gigs = band.band_gigs.where('date >= ?', Date.current).order(:date).limit(5)
+      upcoming_events = band.band_events.where('date >= ?', Date.current)
+      upcoming_gigs = band.gigs.where('date >= ?', Date.current)
 
       if upcoming_events.empty? && upcoming_gigs.empty?
         send_reply(reply_token, "No upcoming events scheduled for #{band.name}.")
         return
       end
 
-      message = "Upcoming for #{band.name}:\n\n"
+      # Combine and sort all events chronologically
+      all_events = []
 
       upcoming_gigs.each do |gig|
-        message += "#{gig.date.strftime('%b %d')} - #{gig.name}\n"
+        all_events << {
+          date: gig.date,
+          time: gig.start_time,
+          label: "#{gig.name} (gig)",
+          icon: "🎤"
+        }
       end
 
       upcoming_events.each do |event|
-        message += "#{event.date.strftime('%b %d')} - #{event.title} (#{event.event_type})\n"
+        icons = { 'rehearsal' => '🎸', 'meeting' => '📋', 'recording' => '🎙️', 'other' => '📌' }
+        all_events << {
+          date: event.date,
+          time: event.start_time,
+          label: "#{event.title} (#{event.event_type})",
+          icon: icons[event.event_type] || '📌'
+        }
+      end
+
+      # Sort by date, then by time (nil times go last)
+      all_events.sort_by! { |e| [e[:date], e[:time] || Time.parse('23:59')] }
+
+      # Limit to 10 events
+      all_events = all_events.first(10)
+
+      message = "📅 Upcoming for #{band.name}:\n\n"
+
+      all_events.each do |event|
+        date_str = event[:date].strftime('%b %d')
+        time_str = event[:time] ? " @ #{event[:time].strftime('%H:%M')}" : ""
+        message += "#{event[:icon]} #{date_str}#{time_str} - #{event[:label]}\n"
       end
 
       send_reply(reply_token, message)
