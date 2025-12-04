@@ -102,26 +102,21 @@ namespace :demo do
       "Neon Pulse forever!", "Dream show!", "History in the making!"
     ]
 
-    # Generate 39 pledge amounts using realistic rounded numbers (1000, 1500, or 2000 yen)
+    # Generate pledge amounts using realistic rounded numbers (1000, 1500, or 2000 yen)
     # Target: ~48,000 yen, leaving ~2,000 for the dramatic final pledge
-    num_pledges = 39
+    # With avg ~1,350 yen per pledge, we need about 35-36 pledges
 
     # Use only realistic rounded amounts that people would actually pledge
-    # Distribution: more 1000 yen pledges, some 1500, fewer 2000
+    # Fixed distribution to ensure we stay under 50,000: 20x ¥1000, 10x ¥1500, 6x ¥2000 = 47,000
     pledge_amounts = []
-    num_pledges.times do
-      roll = rand(100)
-      if roll < 50
-        pledge_amounts << 1000  # 50% chance
-      elsif roll < 80
-        pledge_amounts << 1500  # 30% chance
-      else
-        pledge_amounts << 2000  # 20% chance
-      end
-    end
+    20.times { pledge_amounts << 1000 }  # 20 × 1000 = 20,000
+    10.times { pledge_amounts << 1500 }  # 10 × 1500 = 15,000
+    6.times { pledge_amounts << 2000 }   # 6 × 2000 = 12,000
+    # Total: 47,000 yen with 36 backers, leaving 3,000 for dramatic finish
 
     # Shuffle to make it look natural
     pledge_amounts.shuffle!
+    num_pledges = pledge_amounts.count
 
     pledges_created = 0
     users_for_pledges = all_users.shuffle.take(num_pledges)
