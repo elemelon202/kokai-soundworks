@@ -18,6 +18,12 @@ class VenueStripeAccountsController < ApplicationController
   def create
     authorize @venue, :edit?
 
+    # If already has a Stripe account, redirect to onboarding instead
+    if @venue.venue_stripe_account.present?
+      redirect_to onboarding_venue_stripe_account_path(@venue)
+      return
+    end
+
     result = Stripe::ConnectService.new(@venue).create_account!
 
     if result[:success]
