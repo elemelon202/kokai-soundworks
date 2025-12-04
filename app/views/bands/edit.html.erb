@@ -311,7 +311,8 @@
       <% end %>
     </div>
   </div>
-  <%# SOCIAL MEDIA TRACKING SECTION - COMMENTED OUT FOR NOW
+  <%# SOCIAL MEDIA TRACKING SECTION - COMMENTED OUT FOR NOW %>
+  <% if false # Remove 'if false' to re-enable this section %>
   <!-- Social Media Tracking Section -->
   <div class="band-social-section">
     <div class="band-dashboard-card">
@@ -323,105 +324,105 @@
         <span class="analytics-private-note">Track your growth across platforms</span>
       </div>
       <div class="social-tracking-section">
-        < %= form_with model: @band, local: true, class: "social-tracking-form" do |f| % >
+        <%= form_with model: @band, local: true, class: "social-tracking-form" do |f| %>
           <div class="social-stats-grid">
-            < %# Instagram % >
+            <%# Instagram %>
             <div class="social-stat-card instagram">
               <div class="social-stat-header">
                 <i class="fa-brands fa-instagram"></i>
                 <span>Instagram</span>
               </div>
               <div class="social-stat-inputs">
-                < %= f.text_field :instagram_handle, placeholder: "@yourband", class: "social-handle-input" % >
+                <%= f.text_field :instagram_handle, placeholder: "@yourband", class: "social-handle-input" %>
                 <div class="social-followers-input">
-                  < %= f.number_field :instagram_followers, placeholder: "0", min: 0, class: "social-count-input" % >
+                  <%= f.number_field :instagram_followers, placeholder: "0", min: 0, class: "social-count-input" %>
                   <span class="social-count-label">followers</span>
                 </div>
               </div>
-              < % if @band.instagram_followers.to_i > 0 % >
+              <% if @band.instagram_followers.to_i > 0 %>
                 <div class="social-stat-display">
-                  <span class="social-stat-number">< %= number_with_delimiter(@band.instagram_followers) % ></span>
+                  <span class="social-stat-number"><%= number_with_delimiter(@band.instagram_followers) %></span>
                 </div>
-              < % end % >
+              <% end %>
             </div>
 
-            < %# TikTok % >
+            <%# TikTok %>
             <div class="social-stat-card tiktok">
               <div class="social-stat-header">
                 <i class="fa-brands fa-tiktok"></i>
                 <span>TikTok</span>
               </div>
               <div class="social-stat-inputs">
-                < %= f.text_field :tiktok_handle, placeholder: "@yourband", class: "social-handle-input" % >
+                <%= f.text_field :tiktok_handle, placeholder: "@yourband", class: "social-handle-input" %>
                 <div class="social-followers-input">
-                  < %= f.number_field :tiktok_followers, placeholder: "0", min: 0, class: "social-count-input" % >
+                  <%= f.number_field :tiktok_followers, placeholder: "0", min: 0, class: "social-count-input" %>
                   <span class="social-count-label">followers</span>
                 </div>
               </div>
-              < % if @band.tiktok_followers.to_i > 0 % >
+              <% if @band.tiktok_followers.to_i > 0 %>
                 <div class="social-stat-display">
-                  <span class="social-stat-number">< %= number_with_delimiter(@band.tiktok_followers) % ></span>
+                  <span class="social-stat-number"><%= number_with_delimiter(@band.tiktok_followers) %></span>
                 </div>
-              < % end % >
+              <% end %>
             </div>
 
-            < %# YouTube % >
+            <%# YouTube %>
             <div class="social-stat-card youtube">
               <div class="social-stat-header">
                 <i class="fa-brands fa-youtube"></i>
                 <span>YouTube</span>
               </div>
               <div class="social-stat-inputs">
-                < %= f.text_field :youtube_handle, placeholder: "@yourband", class: "social-handle-input" % >
+                <%= f.text_field :youtube_handle, placeholder: "@yourband", class: "social-handle-input" %>
                 <div class="social-followers-input">
-                  < %= f.number_field :youtube_subscribers, placeholder: "0", min: 0, class: "social-count-input" % >
+                  <%= f.number_field :youtube_subscribers, placeholder: "0", min: 0, class: "social-count-input" %>
                   <span class="social-count-label">subscribers</span>
                 </div>
               </div>
-              < % if @band.youtube_subscribers.to_i > 0 % >
+              <% if @band.youtube_subscribers.to_i > 0 %>
                 <div class="social-stat-display">
-                  <span class="social-stat-number">< %= number_with_delimiter(@band.youtube_subscribers) % ></span>
+                  <span class="social-stat-number"><%= number_with_delimiter(@band.youtube_subscribers) %></span>
                 </div>
-              < % end % >
+              <% end %>
             </div>
 
-            < %# Twitter/X % >
+            <%# Twitter/X %>
             <div class="social-stat-card twitter">
               <div class="social-stat-header">
                 <i class="fa-brands fa-x-twitter"></i>
                 <span>X / Twitter</span>
               </div>
               <div class="social-stat-inputs">
-                < %= f.text_field :twitter_handle, placeholder: "@yourband", class: "social-handle-input" % >
+                <%= f.text_field :twitter_handle, placeholder: "@yourband", class: "social-handle-input" %>
                 <div class="social-followers-input">
-                  < %= f.number_field :twitter_followers, placeholder: "0", min: 0, class: "social-count-input" % >
+                  <%= f.number_field :twitter_followers, placeholder: "0", min: 0, class: "social-count-input" %>
                   <span class="social-count-label">followers</span>
                 </div>
               </div>
-              < % if @band.twitter_followers.to_i > 0 % >
+              <% if @band.twitter_followers.to_i > 0 %>
                 <div class="social-stat-display">
-                  <span class="social-stat-number">< %= number_with_delimiter(@band.twitter_followers) % ></span>
+                  <span class="social-stat-number"><%= number_with_delimiter(@band.twitter_followers) %></span>
                 </div>
-              < % end % >
+              <% end %>
             </div>
           </div>
 
           <div class="social-tracking-total">
-            < % total_followers = (@band.instagram_followers.to_i + @band.tiktok_followers.to_i + @band.youtube_subscribers.to_i + @band.twitter_followers.to_i) % >
+            <% total_followers = (@band.instagram_followers.to_i + @band.tiktok_followers.to_i + @band.youtube_subscribers.to_i + @band.twitter_followers.to_i) %>
             <div class="total-reach">
               <span class="total-label">Total Reach</span>
-              <span class="total-number">< %= number_with_delimiter(total_followers) % ></span>
+              <span class="total-number"><%= number_with_delimiter(total_followers) %></span>
             </div>
           </div>
 
           <div class="social-tracking-submit">
-            < %= f.submit "Save Social Stats", class: "btn-save-social" % >
+            <%= f.submit "Save Social Stats", class: "btn-save-social" %>
           </div>
-        < % end % >
+        <% end %>
       </div>
     </div>
   </div>
-  END SOCIAL MEDIA TRACKING SECTION %>
+  <% end # END SOCIAL MEDIA TRACKING SECTION %>
 
   <%# Band Calendar Section %>
   <%# Build calendar data first so we can use it in the controller wrapper %>
