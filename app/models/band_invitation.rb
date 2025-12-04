@@ -3,7 +3,11 @@ class BandInvitation < ApplicationRecord
   belongs_to :musician
   belongs_to :inviter, class_name: 'User', foreign_key: 'inviter_id'
 
-  validates :musician_id, uniqueness: {scope: :band_id, message: "has already been invited to this band"}
+  validates :musician_id, uniqueness: {
+    scope: :band_id,
+    conditions: -> { pending },
+    message: "has a pending invitation to this band"
+  }
 
   before_create :generate_token
 
