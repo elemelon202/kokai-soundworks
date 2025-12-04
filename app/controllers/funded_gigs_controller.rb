@@ -13,6 +13,7 @@ class FundedGigsController < ApplicationController
                             .limit(20)
 
     skip_authorization
+    skip_policy_scope
   end
 
   # GET /funded-gigs/:id
