@@ -250,6 +250,11 @@ module Webhooks
         message += " and " if events_created > 0 && tasks_created > 0
         message += "#{tasks_created} task#{'s' if tasks_created != 1}" if tasks_created > 0
         message += " to #{connection.band.name}!"
+
+        # Add link to band calendar
+        base_url = Rails.application.routes.default_url_options[:host] || "https://kokai-soundworks-e3e70015f20a.herokuapp.com"
+        band_url = "#{base_url}/bands/#{connection.band.id}/calendar"
+        message += "\n\nView calendar: #{band_url}"
       end
 
       skipped_total = events_skipped + tasks_skipped
