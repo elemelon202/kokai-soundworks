@@ -252,8 +252,7 @@ module Webhooks
         message += " to #{connection.band.name}!"
 
         # Add link to band calendar
-        base_url = Rails.application.routes.default_url_options[:host] || "https://kokai-soundworks-e3e70015f20a.herokuapp.com"
-        band_url = "#{base_url}/bands/#{connection.band.id}/calendar"
+        band_url = "https://kokai-soundworks.com/bands/#{connection.band.id}/calendar"
         message += "\n\nView calendar: #{band_url}"
       end
 
