@@ -19,7 +19,10 @@ namespace :demo do
     end
 
     # Get all users for mock pledges (need ~40 backers)
-    all_users = User.where.not(id: neon_pulse.user_id).to_a
+    # Exclude Neon Pulse owner and Special_K (used as demo login account)
+    special_k = Musician.find_by(name: "Special_K")
+    excluded_user_ids = [neon_pulse.user_id, special_k&.user_id].compact
+    all_users = User.where.not(id: excluded_user_ids).to_a
     if all_users.count < 40
       puts "WARNING: Only #{all_users.count} users available for pledges (wanted 40)"
     end
