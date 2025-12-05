@@ -78,7 +78,7 @@ end
 
     # Check if invitation was already accepted
     if @band_invitation.status == "Accepted"
-      redirect_to band_path(@band_invitation.band), notice: "You have already accepted this invitation."
+      redirect_to edit_band_path(@band_invitation.band), notice: "You have already accepted this invitation."
       return
     end
 
@@ -95,7 +95,7 @@ end
     end
 
     broadcast_invitation_update(@band_invitation)
-    redirect_to band_path(@band_invitation.band), notice: "Invitation accepted."
+    redirect_to edit_band_path(@band_invitation.band), notice: "Invitation accepted. Welcome to #{@band_invitation.band.name}!"
   end
 
   def decline
