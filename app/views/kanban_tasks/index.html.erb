@@ -3,18 +3,18 @@
     <%= link_to edit_band_path(@band), class: "kanban-back-btn" do %>
       <i class="fa-solid fa-arrow-left"></i>
     <% end %>
-    <h1><%= @band.name %> Tasks</h1>
+    <h1><%= @band.name %> <%= t('kanban.title') %></h1>
   </div>
 
   <%# New Task Form %>
   <div class="kanban-new-task">
     <%= form_with model: [@band, KanbanTask.new], local: true, class: "new-task-form" do |f| %>
       <div class="new-task-row">
-        <%= f.text_field :name, placeholder: "Add a task...", class: "new-task-input", required: true %>
-        <%= f.select :task_type, KanbanTask::TASK_TYPES.map { |t| [t.titleize, t] }, {}, class: "new-task-select" %>
-        <%= f.select :assigned_to_id, @band.musicians.map { |m| [m.name, m.id] }, { include_blank: "Unassigned" }, class: "new-task-select" %>
+        <%= f.text_field :name, placeholder: t('kanban.add_placeholder'), class: "new-task-input", required: true %>
+        <%= f.select :task_type, KanbanTask::TASK_TYPES.map { |t| [t("kanban.task_types.#{t}"), t] }, {}, class: "new-task-select" %>
+        <%= f.select :assigned_to_id, @band.musicians.map { |m| [m.name, m.id] }, { include_blank: t('kanban.unassigned') }, class: "new-task-select" %>
         <%= f.hidden_field :status, value: "to_do" %>
-        <%= f.submit "Add", class: "new-task-btn" %>
+        <%= f.submit t('kanban.add'), class: "new-task-btn" %>
       </div>
     <% end %>
   </div>
@@ -28,7 +28,7 @@
                 data-action="click->tabs#switch"
                 data-tabs-target="tab"
                 data-tab="<%= status %>">
-          <%= status.titleize.gsub('_', ' ') %>
+          <%= t("kanban.statuses.#{status}") %>
           <span class="tab-count"><%= @tasks.by_status(status).count %></span>
         </button>
       <% end %>
@@ -43,7 +43,7 @@
             <%= render 'kanban_tasks/task_card', task: task, band: @band %>
           <% end %>
         <% else %>
-          <div class="empty-tab">No tasks</div>
+          <div class="empty-tab"><%= t('kanban.no_tasks') %></div>
         <% end %>
       </div>
     <% end %>
@@ -55,7 +55,7 @@
       <% KanbanTask::STATUSES.each do |status| %>
         <div class="kanban-column" data-status="<%= status %>">
           <div class="column-header">
-            <h3><%= status.titleize.gsub('_', ' ') %></h3>
+            <h3><%= t("kanban.statuses.#{status}") %></h3>
             <span class="task-count"><%= @tasks.by_status(status).count %></span>
           </div>
 

@@ -99,6 +99,42 @@
       }
     }
 
+// Language switcher
+.language-switcher {
+  display: flex;
+  align-items: center;
+  margin-right: 8px;
+
+  .lang-btn {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 6px;
+    padding: 4px 8px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    color: #fff;
+
+    &:hover {
+      background: rgba(255, 255, 255, 0.1);
+      border-color: #C8E938;
+    }
+
+    .lang-flag {
+      font-size: 1rem;
+      line-height: 1;
+    }
+
+    .lang-code {
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+  }
+}
+
 // Mobile navbar improvements
 @media (max-width: 575px) {
   .navbar-lewagon {

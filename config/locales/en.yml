@@ -1,31 +1,251 @@
-# Files in the config/locales directory are used for internationalization and
-# are automatically loaded by Rails. If you want to use locales other than
-# English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t "hello"
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t("hello") %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more about the API, please read the Rails Internationalization guide
-# at https://guides.rubyonrails.org/i18n.html.
-#
-# Be aware that YAML interprets the following case-insensitive strings as
-# booleans: `true`, `false`, `on`, `off`, `yes`, `no`. Therefore, these strings
-# must be quoted to be interpreted as strings. For example:
-#
-#     en:
-#       "yes": yup
-#       enabled: "ON"
-
 en:
-  hello: "Hello world"
+  # Sign Up Form
+  signup:
+    title: "Join the Community"
+    subtitle: "Create your account and start connecting"
+    account_details:
+      title: "Account Details"
+      subtitle: "Set up your login credentials"
+    username: "Username"
+    username_placeholder: "Choose a username"
+    email: "Email"
+    email_placeholder: "Enter your email"
+    password: "Password"
+    password_placeholder: "Create a password"
+    password_hint: "%{min_length} characters minimum"
+    password_confirmation: "Confirm Password"
+    password_confirmation_placeholder: "Confirm your password"
+    your_role:
+      title: "Your Role"
+      subtitle: "Tell us how you'll use the platform"
+    user_type_label: "I am signing up as a:"
+    user_type_prompt: "Select your primary role"
+    user_types:
+      musician: "Musician (Looking to join/start a band)"
+      band_leader: "Band Leader (Manager/admin for a band)"
+      venue: "Venue Owner (Booking agent/manager for a venue looking for bands)"
+      fan: "Music Fan (Here to find the best new music and socialise)"
+    submit: "Sign up"
+
+  # Band Dashboard
+  band:
+    dashboard:
+      title: "Band Dashboard:"
+      subtitle: "Manage your band gig applications and members"
+      view_band_page: "View Band Page"
+      tasks: "Tasks"
+    stats:
+      band_members: "Band Members"
+      pending_invitations: "Pending invitations"
+      upcoming_gigs: "Upcoming Gigs"
+      book_a_gig: "Book a gig!"
+      unread_messages: "Unread Messages"
+      countdown:
+        days: "days"
+        hours: "hrs"
+        minutes: "min"
+    gigs:
+      title: "Upcoming Gigs"
+      add_gig: "Add Gig"
+      gig_name_placeholder: "Gig name *"
+      venue_placeholder: "Venue name"
+      location_placeholder: "Location"
+      no_gigs: "No upcoming gigs scheduled"
+      add_gig_hint: "Add your next show above!"
+      day: "day"
+      days: "days"
+      remove_confirm: "Remove this gig?"
+    funded_shows:
+      title: "Funded Show Applications"
+      browse_opportunities: "Browse Opportunities"
+      approved: "Approved"
+      pending_review: "Pending Review"
+      not_selected: "Not Selected"
+      pending: "Pending"
+      funded: "Funded!"
+      no_applications: "No funded show applications yet"
+      browse_hint: "Browse funded shows to apply!"
+    analytics:
+      title: "Band Analytics"
+      private_note: "Only band members can see this"
+      followers: "Followers"
+      this_week: "this week"
+      views_this_week: "Views This Week"
+      total: "total"
+      profile_saves: "Profile Saves"
+      mainstage_wins: "MAINSTAGE Wins"
+      current_mainstage: "Current MAINSTAGE"
+      rank: "Rank"
+      engagement: "Engagement"
+      votes: "Votes"
+      total_score: "Total Score"
+      view_leaderboard: "View Full Leaderboard"
+      growth_trends: "Growth Trends"
+      profile_views: "Profile Views"
+      views_this_week_detail: "views this week"
+      add_handle_to_track: "Add handle to track"
+      total_social_reach: "Total Social Reach"
+      no_data: "No analytics data yet"
+    calendar:
+      title: "Band Calendar"
+      add_event: "Add Event"
+      legend:
+        gigs: "Gigs"
+        rehearsals: "Rehearsals"
+        meetings: "Meetings"
+        recording: "Recording"
+        unavailable: "Unavailable"
+      event_form:
+        title: "Add Band Event"
+        event_title: "Title"
+        event_type: "Event Type"
+        date: "Date"
+        start_time: "Start Time"
+        end_time: "End Time"
+        location: "Location"
+        description: "Description"
+        cancel: "Cancel"
+        submit: "Add Event"
+      event_types:
+        rehearsal: "Rehearsal"
+        recording: "Recording"
+        meeting: "Meeting"
+        performance: "Performance"
+        other: "Other"
+      availability:
+        title: "My Availability"
+        hint: "Mark dates when you're unavailable for band activities"
+        from: "From"
+        to_optional: "To (optional)"
+        status:
+          unavailable: "Unavailable"
+          tentative: "Tentative"
+        reason_placeholder: "Reason (optional)"
+        submit: "Mark Unavailable"
+        your_unavailability: "Your Unavailability"
+        remove_confirm: "Remove this availability?"
+    chat:
+      title: "Band Chat"
+    musicians_wanted:
+      title: "Musicians Wanted"
+      post_new: "Post New Request"
+      no_posts: "No active musician requests"
+      post_hint: "Post a request to find session musicians"
+    invite:
+      title: "Invite Musicians"
+    members:
+      title: "Band Members"
+      leader: "Leader"
+      not_specified: "Not specified"
+      send_message: "Send Message"
+      remove_from_band: "Remove from Band"
+      remove_confirm: "Remove %{name} from %{band}?"
+    media:
+      title: "Band Media"
+      current_media: "Current Media"
+      banner: "Banner"
+      photos: "Photos"
+      videos: "Videos"
+      remove_banner_confirm: "Remove this banner image?"
+      remove_photo_confirm: "Remove this photo?"
+      remove_video_confirm: "Remove this video?"
+      banner_position: "Banner Position"
+      banner_position_help: "Drag the image up or down to adjust what part is visible"
+      save_position: "Save Position"
+      upload:
+        title: "Upload Media"
+        subtitle: "Add new banner, photos, or videos to your band profile"
+        banner_label: "Banner Image"
+        replace_banner: "Replace banner"
+        choose_banner: "Choose banner"
+        photos_label: "Photos"
+        add_photos: "Add photos"
+        videos_label: "Videos"
+        add_videos: "Add videos"
+        save: "Save Media"
+    spotify:
+      title: "Your Music"
+      description: "Paste Spotify links to tracks, albums, or playlists to feature on your profile."
+    line:
+      title: "LINE Integration"
+      subtitle: "Connect your LINE group to sync events"
+      connected: "Connected to LINE Group"
+      linked_ago: "Linked %{time} ago"
+      auto_create_events: "Auto-create events"
+      auto_create_desc: "Automatically add events to calendar when detected in LINE messages"
+      "on": "On"
+      "off": "Off"
+      pending_events: "Pending Events"
+      pending_hint: "Events detected from LINE messages awaiting confirmation"
+      disconnect: "Disconnect LINE Group"
+      disconnect_confirm: "Disconnect this LINE group? You can reconnect later."
+      waiting: "Waiting for LINE group connection"
+      link_instructions: "Send this code in your LINE group to connect it:"
+      copy: "Copy"
+      copied: "Copied!"
+      how_to_connect: "How to connect:"
+      step1: "Add the Kokai bot to your LINE group"
+      step2: "Send: /link %{code}"
+      step3: "The bot will confirm when connected"
+      cancel: "Cancel"
+      not_connected:
+        feature1: "Chat naturally about plans - AI understands and creates events"
+        feature2: "Events sync automatically to your Kokai calendar"
+        feature3: "Members can mark availability directly from LINE"
+      connect: "Connect LINE Group"
+    transfer:
+      title: "Transfer Leadership"
+      description: "Transfer band leadership to another member. You will remain a member of the band but will no longer be able to delete it or manage invitations."
+      select_label: "Select New Leader"
+      select_prompt: "Choose a band member..."
+      submit: "Transfer Leadership"
+      confirm: "Are you sure you want to transfer leadership? You will no longer be the band leader."
+    delete:
+      title: "Delete Band"
+      description: "As the band leader, you cannot leave the band. Deleting the band will remove all members, chat history, gig applications, and cannot be undone."
+      confirm: "Are you sure you want to permanently delete %{band}? All members will be removed and this cannot be undone."
+    leave:
+      title: "Leave Band"
+      description: "If you leave this band, you will no longer have access to the band chat or be able to apply for gigs with this band."
+      confirm: "Are you sure you want to leave %{band}? This action cannot be undone."
+
+  # Kanban Board
+  kanban:
+    title: "Tasks"
+    add_placeholder: "Add a task..."
+    unassigned: "Unassigned"
+    no_tasks: "No tasks"
+    add: "Add"
+    delete_confirm: "Delete this task?"
+    statuses:
+      to_do: "To Do"
+      in_progress: "In Progress"
+      done: "Done"
+    task_types:
+      rehearsal: "Rehearsal"
+      recording: "Recording"
+      writing: "Writing"
+      booking: "Booking"
+      promotion: "Promotion"
+      admin: "Admin"
+      other: "Other"
+
+  # Common
+  common:
+    save: "Save"
+    cancel: "Cancel"
+    delete: "Delete"
+    edit: "Edit"
+    back: "Back"
+    add: "Add"
+    remove: "Remove"
+    confirm: "Confirm"
+    followers: "followers"
+    subscribers: "subscribers"
+
+  # Social Media
+  social:
+    instagram: "Instagram"
+    tiktok: "TikTok"
+    youtube: "YouTube"
+    twitter: "X / Twitter"

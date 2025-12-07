@@ -4,9 +4,9 @@
      data-task-id="<%= task.id %>"
      data-action="dragstart->kanban#dragStart dragend->kanban#dragEnd">
   <div class="task-card-header">
-    <span class="task-type <%= task.task_type %>"><%= task.task_type.titleize %></span>
+    <span class="task-type <%= task.task_type %>"><%= t("kanban.task_types.#{task.task_type}") %></span>
     <%= form_with model: [band, task], method: :delete, local: true, class: "delete-task-form" do %>
-      <%= button_tag type: "submit", class: "task-delete-btn", data: { turbo_confirm: "Delete this task?" } do %>
+      <%= button_tag type: "submit", class: "task-delete-btn", data: { turbo_confirm: t('kanban.delete_confirm') } do %>
         <i class="fa-solid fa-trash"></i>
       <% end %>
     <% end %>
@@ -23,7 +23,7 @@
       <%= form_with model: [band, task], local: false, data: { controller: "auto-submit" } do |f| %>
         <%= f.select :assigned_to_id,
             band.musicians.map { |m| [m.name, m.id] },
-            { include_blank: "Unassigned" },
+            { include_blank: t('kanban.unassigned') },
             class: "assignee-select",
             data: { action: "change->auto-submit#submit" } %>
       <% end %>
@@ -32,7 +32,7 @@
     <div class="task-status-select">
       <%= form_with model: [band, task], local: false, data: { controller: "auto-submit" } do |f| %>
         <%= f.select :status,
-            KanbanTask::STATUSES.map { |s| [s.titleize.gsub('_', ' '), s] },
+            KanbanTask::STATUSES.map { |s| [t("kanban.statuses.#{s}"), s] },
             {},
             class: "status-select",
             data: { action: "change->auto-submit#submit" } %>

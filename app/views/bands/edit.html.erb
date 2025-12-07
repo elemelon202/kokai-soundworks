@@ -1,13 +1,13 @@
 <div class="band-dashboard-container">
   <div class="band-dashboard-header">
-    <h1>Band Dashboard:</h1>
+    <h1><%= t('band.dashboard.title') %></h1>
     <h1> <%= @band.name %> </h1>
-    <h2>Manage your band gig applications and members</h2>
+    <h2><%= t('band.dashboard.subtitle') %></h2>
     <%= link_to band_path(@band), class: "btn-view-band" do %>
-      <i class="fa-solid fa-eye"></i> View Band Page
+      <i class="fa-solid fa-eye"></i> <%= t('band.dashboard.view_band_page') %>
     <% end %>
     <%= link_to band_kanban_tasks_path(@band), class: "btn-view-band" do %>
-      <i class="fa-solid fa-list-check"></i> Tasks
+      <i class="fa-solid fa-list-check"></i> <%= t('band.dashboard.tasks') %>
     <% end %>
   </div>
   <div id="flash_messages">
@@ -21,8 +21,8 @@
         <i class="fa-solid fa-users"></i>
       </div>
       <div class="stat-value"><%= @band.musicians.count %></div>
-      <div class="stat-label">Band Members</div>
-      <div class="stat-sub">Pending invitations: <%= @band.band_invitations.pending.count %></div>
+      <div class="stat-label"><%= t('band.stats.band_members') %></div>
+      <div class="stat-sub"><%= t('band.stats.pending_invitations') %>: <%= @band.band_invitations.pending.count %></div>
     </div>
 
     <% if @next_gig %>
@@ -34,15 +34,15 @@
           <div class="countdown-numbers" data-countdown-target="display">
             <div class="countdown-unit">
               <span class="countdown-value" data-countdown-target="days">--</span>
-              <span class="countdown-label">days</span>
+              <span class="countdown-label"><%= t('band.stats.countdown.days') %></span>
             </div>
             <div class="countdown-unit">
               <span class="countdown-value" data-countdown-target="hours">--</span>
-              <span class="countdown-label">hrs</span>
+              <span class="countdown-label"><%= t('band.stats.countdown.hours') %></span>
             </div>
             <div class="countdown-unit">
               <span class="countdown-value" data-countdown-target="minutes">--</span>
-              <span class="countdown-label">min</span>
+              <span class="countdown-label"><%= t('band.stats.countdown.minutes') %></span>
             </div>
           </div>
         </div>
@@ -55,8 +55,8 @@
           <i class="fa-solid fa-calendar-days"></i>
         </div>
         <div class="stat-value">0</div>
-        <div class="stat-label">Upcoming Gigs</div>
-        <div class="stat-sub">Book a gig!</div>
+        <div class="stat-label"><%= t('band.stats.upcoming_gigs') %></div>
+        <div class="stat-sub"><%= t('band.stats.book_a_gig') %></div>
       </div>
     <% end %>
 
@@ -65,7 +65,7 @@
         <i class="fa-solid fa-envelope"></i>
       </div>
       <div class="stat-value"><%= @unread_count %></div>
-      <div class="stat-label">Unread Messages</div>
+      <div class="stat-label"><%= t('band.stats.unread_messages') %></div>
     </div>
   </div>
 
@@ -76,7 +76,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-calendar-alt"></i>
         </div>
-        <h3>Upcoming Gigs</h3>
+        <h3><%= t('band.gigs.title') %></h3>
       </div>
 
       <div class="gigs-content">
@@ -85,18 +85,18 @@
           <%= form_with model: [@band, BandGig.new], local: true, class: "gig-form" do |f| %>
             <div class="gig-form-row">
               <div class="gig-form-group">
-                <%= f.text_field :name, placeholder: "Gig name *", class: "gig-input", required: true %>
+                <%= f.text_field :name, placeholder: t('band.gigs.gig_name_placeholder'), class: "gig-input", required: true %>
               </div>
               <div class="gig-form-group">
-                <%= f.text_field :venue_name, placeholder: "Venue name", class: "gig-input" %>
+                <%= f.text_field :venue_name, placeholder: t('band.gigs.venue_placeholder'), class: "gig-input" %>
               </div>
               <div class="gig-form-group">
                 <%= f.date_field :date, class: "gig-input", required: true, min: Date.current %>
               </div>
               <div class="gig-form-group">
-                <%= f.text_field :location, placeholder: "Location", class: "gig-input" %>
+                <%= f.text_field :location, placeholder: t('band.gigs.location_placeholder'), class: "gig-input" %>
               </div>
-              <%= f.submit "Add Gig", class: "btn-add-gig" %>
+              <%= f.submit t('band.gigs.add_gig'), class: "btn-add-gig" %>
             </div>
           <% end %>
         </div>
@@ -127,9 +127,9 @@
                 <div class="gig-countdown-mini">
                   <% days_until = (gig.date - Date.current).to_i %>
                   <span class="days-count"><%= days_until %></span>
-                  <span class="days-label"><%= days_until == 1 ? 'day' : 'days' %></span>
+                  <span class="days-label"><%= days_until == 1 ? t('band.gigs.day') : t('band.gigs.days') %></span>
                 </div>
-                <%= button_to band_band_gig_path(@band, gig), method: :delete, class: "gig-delete", data: { turbo_confirm: "Remove this gig?" } do %>
+                <%= button_to band_band_gig_path(@band, gig), method: :delete, class: "gig-delete", data: { turbo_confirm: t('band.gigs.remove_confirm') } do %>
                   <i class="fa-solid fa-trash"></i>
                 <% end %>
               </div>
@@ -138,8 +138,8 @@
         <% else %>
           <div class="gigs-empty">
             <i class="fa-solid fa-guitar"></i>
-            <p>No upcoming gigs scheduled</p>
-            <p class="sub">Add your next show above!</p>
+            <p><%= t('band.gigs.no_gigs') %></p>
+            <p class="sub"><%= t('band.gigs.add_gig_hint') %></p>
           </div>
         <% end %>
       </div>
@@ -153,9 +153,9 @@
         <div class="card-icon">
           <i class="fa-solid fa-hand-holding-heart"></i>
         </div>
-        <h3>Funded Show Applications</h3>
+        <h3><%= t('band.funded_shows.title') %></h3>
         <%= link_to funded_gigs_path, class: "band-feed-note" do %>
-          <i class="fa-solid fa-search"></i> Browse Opportunities
+          <i class="fa-solid fa-search"></i> <%= t('band.funded_shows.browse_opportunities') %>
         <% end %>
       </div>
 
@@ -167,7 +167,7 @@
         <% if pending_apps.any? || approved_apps.any? %>
           <% if approved_apps.any? %>
             <div class="funded-app-section mb-3">
-              <h5 class="funded-app-title"><i class="fa-solid fa-check-circle text-success me-2"></i>Approved</h5>
+              <h5 class="funded-app-title"><i class="fa-solid fa-check-circle text-success me-2"></i><%= t('band.funded_shows.approved') %></h5>
               <% approved_apps.each do |app| %>
                 <div class="funded-app-item approved">
                   <div class="funded-app-info">
@@ -179,7 +179,7 @@
                     <% if app.gig.funded_gig.accepting_pledges? %>
                       <span class="badge bg-primary"><%= app.gig.funded_gig.funding_percentage %>% funded</span>
                     <% elsif app.gig.funded_gig.funded? || app.gig.funded_gig.completed? %>
-                      <span class="badge bg-success">Funded!</span>
+                      <span class="badge bg-success"><%= t('band.funded_shows.funded') %></span>
                     <% end %>
                   </div>
                   <%= link_to funded_gig_path(app.gig.funded_gig), class: "btn-view-funded-gig" do %>
@@ -192,7 +192,7 @@
 
           <% if pending_apps.any? %>
             <div class="funded-app-section mb-3">
-              <h5 class="funded-app-title"><i class="fa-solid fa-clock text-warning me-2"></i>Pending Review</h5>
+              <h5 class="funded-app-title"><i class="fa-solid fa-clock text-warning me-2"></i><%= t('band.funded_shows.pending_review') %></h5>
               <% pending_apps.each do |app| %>
                 <div class="funded-app-item pending">
                   <div class="funded-app-info">
@@ -201,7 +201,7 @@
                     <span class="text-muted"><%= app.gig.date.strftime("%b %d, %Y") %></span>
                   </div>
                   <div class="funded-app-status">
-                    <span class="badge bg-warning text-dark">Pending</span>
+                    <span class="badge bg-warning text-dark"><%= t('band.funded_shows.pending') %></span>
                   </div>
                   <%= link_to funded_gig_path(app.gig.funded_gig), class: "btn-view-funded-gig" do %>
                     <i class="fa-solid fa-eye"></i>
@@ -213,7 +213,7 @@
 
           <% if rejected_apps.any? %>
             <div class="funded-app-section">
-              <h5 class="funded-app-title"><i class="fa-solid fa-times-circle text-secondary me-2"></i>Not Selected</h5>
+              <h5 class="funded-app-title"><i class="fa-solid fa-times-circle text-secondary me-2"></i><%= t('band.funded_shows.not_selected') %></h5>
               <% rejected_apps.each do |app| %>
                 <div class="funded-app-item rejected">
                   <div class="funded-app-info">
@@ -227,9 +227,9 @@
         <% else %>
           <div class="funded-gigs-empty">
             <i class="fa-solid fa-hand-holding-heart"></i>
-            <p>No funded show applications yet</p>
+            <p><%= t('band.funded_shows.no_applications') %></p>
             <p class="sub">
-              <%= link_to "Browse funded shows", funded_gigs_path %> to apply!
+              <%= link_to t('band.funded_shows.browse_opportunities'), funded_gigs_path %> <%= t('band.funded_shows.browse_hint').split(t('band.funded_shows.browse_opportunities')).last %>
             </p>
           </div>
         <% end %>
@@ -244,8 +244,8 @@
         <div class="card-icon">
           <i class="fa-solid fa-chart-line"></i>
         </div>
-        <h3>Band Analytics</h3>
-        <span class="analytics-private-note">Only band members can see this</span>
+        <h3><%= t('band.analytics.title') %></h3>
+        <span class="analytics-private-note"><%= t('band.analytics.private_note') %></span>
       </div>
       <% if @stats.present? %>
         <div class="band-stats-grid band-feed-section">
@@ -254,9 +254,9 @@
               <i class="fa-solid fa-user-plus"></i>
             </div>
             <div class="stat-value"><%= @stats[:followers_count] %></div>
-            <div class="stat-label">Followers</div>
+            <div class="stat-label"><%= t('band.analytics.followers') %></div>
             <% if @stats[:new_followers_week] > 0 %>
-              <div class="stat-sub analytics-stat-positive">+<%= @stats[:new_followers_week] %> this week</div>
+              <div class="stat-sub analytics-stat-positive">+<%= @stats[:new_followers_week] %> <%= t('band.analytics.this_week') %></div>
             <% end %>
           </div>
           <div class="band-stat-card">
@@ -264,15 +264,15 @@
               <i class="fa-solid fa-eye"></i>
             </div>
             <div class="stat-value"><%= @stats[:profile_views_week] %></div>
-            <div class="stat-label">Views This Week</div>
-            <div class="stat-sub"><%= @stats[:profile_views_total] %> total</div>
+            <div class="stat-label"><%= t('band.analytics.views_this_week') %></div>
+            <div class="stat-sub"><%= @stats[:profile_views_total] %> <%= t('band.analytics.total') %></div>
           </div>
           <div class="band-stat-card">
             <div class="stat-icon">
               <i class="fa-solid fa-bookmark"></i>
             </div>
             <div class="stat-value"><%= @stats[:profile_saves] %></div>
-            <div class="stat-label">Profile Saves</div>
+            <div class="stat-label"><%= t('band.analytics.profile_saves') %></div>
           </div>
           <% if @stats[:mainstage_wins] > 0 %>
             <div class="band-stat-card">
@@ -280,7 +280,7 @@
                 <i class="fa-solid fa-trophy"></i>
               </div>
               <div class="stat-value stat-value-trophy"><%= @stats[:mainstage_wins] %></div>
-              <div class="stat-label">MAINSTAGE Wins</div>
+              <div class="stat-label"><%= t('band.analytics.mainstage_wins') %></div>
             </div>
           <% end %>
         </div>
@@ -288,27 +288,27 @@
         <div class="band-mainstage-stats">
           <div class="band-mainstage-header">
             <i class="fa-solid fa-fire"></i>
-            <span>Current MAINSTAGE</span>
+            <span><%= t('band.analytics.current_mainstage') %></span>
             <% if @stats[:mainstage_rank] %>
-              <span class="mainstage-rank-badge">Rank #<%= @stats[:mainstage_rank] %></span>
+              <span class="mainstage-rank-badge"><%= t('band.analytics.rank') %> #<%= @stats[:mainstage_rank] %></span>
             <% end %>
           </div>
           <div class="band-mainstage-scores">
             <div class="band-mainstage-score-card">
               <div class="score-value engagement"><%= @stats[:mainstage_engagement] %></div>
-              <div class="score-label">Engagement</div>
+              <div class="score-label"><%= t('band.analytics.engagement') %></div>
             </div>
             <div class="band-mainstage-score-card">
               <div class="score-value votes"><%= @stats[:mainstage_votes] %></div>
-              <div class="score-label">Votes</div>
+              <div class="score-label"><%= t('band.analytics.votes') %></div>
             </div>
             <div class="band-mainstage-score-card">
               <div class="score-value total"><%= @stats[:mainstage_total] %></div>
-              <div class="score-label">Total Score</div>
+              <div class="score-label"><%= t('band.analytics.total_score') %></div>
             </div>
           </div>
           <%= link_to band_mainstage_path, class: "band-mainstage-link" do %>
-            View Full Leaderboard <i class="fa-solid fa-arrow-right"></i>
+            <%= t('band.analytics.view_leaderboard') %> <i class="fa-solid fa-arrow-right"></i>
           <% end %>
         </div>
 
@@ -316,13 +316,13 @@
         <div class="band-growth-trends">
           <div class="growth-trends-header">
             <i class="fa-solid fa-arrow-trend-up"></i>
-            <span>Growth Trends</span>
+            <span><%= t('band.analytics.growth_trends') %></span>
           </div>
           <div class="growth-trends-grid">
             <%# Kokai Platform Metrics %>
             <div class="growth-trend-item">
               <div class="growth-metric-name">
-                <i class="fa-solid fa-user-plus"></i> Followers
+                <i class="fa-solid fa-user-plus"></i> <%= t('band.analytics.followers') %>
               </div>
               <% follower_growth = @stats[:new_followers_week] %>
               <% follower_pct = @stats[:followers_count] > 0 ? ((follower_growth.to_f / @stats[:followers_count]) * 100).round(1) : 0 %>
@@ -335,12 +335,12 @@
                   <i class="fa-solid fa-minus"></i> 0%
                 <% end %>
               </div>
-              <div class="growth-detail"><%= follower_growth > 0 ? "+#{follower_growth}" : follower_growth %> this week</div>
+              <div class="growth-detail"><%= follower_growth > 0 ? "+#{follower_growth}" : follower_growth %> <%= t('band.analytics.this_week') %></div>
             </div>
 
             <div class="growth-trend-item">
               <div class="growth-metric-name">
-                <i class="fa-solid fa-eye"></i> Profile Views
+                <i class="fa-solid fa-eye"></i> <%= t('band.analytics.profile_views') %>
               </div>
               <% views_week = @stats[:profile_views_week] %>
               <% views_total = @stats[:profile_views_total] %>
@@ -352,7 +352,7 @@
                   <i class="fa-solid fa-minus"></i> 0%
                 <% end %>
               </div>
-              <div class="growth-detail"><%= views_week %> views this week</div>
+              <div class="growth-detail"><%= views_week %> <%= t('band.analytics.views_this_week_detail') %></div>
             </div>
 
             <%# Social Media Trends %>
@@ -375,7 +375,7 @@
                   <% if platform[:handle].present? %>
                     <%= platform[:handle] %>
                   <% else %>
-                    Add handle to track
+                    <%= t('band.analytics.add_handle_to_track') %>
                   <% end %>
                 </div>
               </div>
@@ -388,7 +388,7 @@
             <div class="growth-total-reach">
               <div class="reach-icon"><i class="fa-solid fa-globe"></i></div>
               <div class="reach-content">
-                <span class="reach-label">Total Social Reach</span>
+                <span class="reach-label"><%= t('band.analytics.total_social_reach') %></span>
                 <span class="reach-number"><%= number_with_delimiter(total_social) %></span>
               </div>
             </div>
@@ -397,7 +397,7 @@
       <% else %>
         <div class="band-analytics-empty">
           <i class="fa-solid fa-chart-line"></i>
-          <p>No analytics data yet</p>
+          <p><%= t('band.analytics.no_data') %></p>
         </div>
       <% end %>
     </div>
@@ -567,10 +567,10 @@
         <div class="card-icon card-icon-calendar">
           <i class="fa-solid fa-calendar-days"></i>
         </div>
-        <h3>Band Calendar</h3>
+        <h3><%= t('band.calendar.title') %></h3>
         <% if @band.user_id == current_user.id %>
           <button type="button" class="btn-add-event" data-action="click->band-calendar#showAddEventForm">
-            <i class="fa-solid fa-plus"></i> Add Event
+            <i class="fa-solid fa-plus"></i> <%= t('band.calendar.add_event') %>
           </button>
         <% end %>
       </div>
@@ -578,23 +578,23 @@
       <div class="calendar-legend">
         <div class="legend-item">
           <span class="legend-color" style="background: #fbbf24;"></span>
-          <span>Gigs</span>
+          <span><%= t('band.calendar.legend.gigs') %></span>
         </div>
         <div class="legend-item">
           <span class="legend-color" style="background: #C8E938;"></span>
-          <span>Rehearsals</span>
+          <span><%= t('band.calendar.legend.rehearsals') %></span>
         </div>
         <div class="legend-item">
           <span class="legend-color" style="background: #60a5fa;"></span>
-          <span>Meetings</span>
+          <span><%= t('band.calendar.legend.meetings') %></span>
         </div>
         <div class="legend-item">
           <span class="legend-color" style="background: #E936AD;"></span>
-          <span>Recording</span>
+          <span><%= t('band.calendar.legend.recording') %></span>
         </div>
         <div class="legend-item">
           <span class="legend-color" style="background: #ef4444;"></span>
-          <span>Unavailable</span>
+          <span><%= t('band.calendar.legend.unavailable') %></span>
         </div>
       </div>
       <div class="band-calendar-wrapper">
@@ -612,41 +612,41 @@
         <%# Add Event Form (Leader only) %>
         <% if @band.user_id == current_user.id %>
           <div data-band-calendar-target="eventForm" class="calendar-event-form" style="display: none;">
-            <h4>Add Band Event</h4>
+            <h4><%= t('band.calendar.event_form.title') %></h4>
             <%= form_with model: BandEvent.new, url: band_band_events_path(@band), local: true, class: "event-form" do |f| %>
               <div class="form-group">
-                <%= f.label :title %>
+                <%= f.label :title, t('band.calendar.event_form.event_title') %>
                 <%= f.text_field :title, class: "form-control", required: true %>
               </div>
               <div class="form-group">
-                <%= f.label :event_type %>
-                <%= f.select :event_type, BandEvent.event_types.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+                <%= f.label :event_type, t('band.calendar.event_form.event_type') %>
+                <%= f.select :event_type, BandEvent.event_types.keys.map { |k| [t("band.calendar.event_types.#{k}"), k] }, {}, class: "form-control" %>
               </div>
               <div class="form-group">
-                <%= f.label :date %>
+                <%= f.label :date, t('band.calendar.event_form.date') %>
                 <%= f.date_field :date, class: "form-control", required: true %>
               </div>
               <div class="form-row">
                 <div class="form-group">
-                  <%= f.label :start_time %>
+                  <%= f.label :start_time, t('band.calendar.event_form.start_time') %>
                   <%= f.time_field :start_time, class: "form-control" %>
                 </div>
                 <div class="form-group">
-                  <%= f.label :end_time %>
+                  <%= f.label :end_time, t('band.calendar.event_form.end_time') %>
                   <%= f.time_field :end_time, class: "form-control" %>
                 </div>
               </div>
               <div class="form-group">
-                <%= f.label :location %>
+                <%= f.label :location, t('band.calendar.event_form.location') %>
                 <%= f.text_field :location, class: "form-control" %>
               </div>
               <div class="form-group">
-                <%= f.label :description %>
+                <%= f.label :description, t('band.calendar.event_form.description') %>
                 <%= f.text_area :description, class: "form-control", rows: 3 %>
               </div>
               <div class="form-actions">
-                <button type="button" class="btn-cancel" data-action="click->band-calendar#closeEventForm">Cancel</button>
-                <%= f.submit "Add Event", class: "btn-submit" %>
+                <button type="button" class="btn-cancel" data-action="click->band-calendar#closeEventForm"><%= t('band.calendar.event_form.cancel') %></button>
+                <%= f.submit t('band.calendar.event_form.submit'), class: "btn-submit" %>
               </div>
             <% end %>
           </div>
@@ -654,35 +654,35 @@
       </div>
       <%# Member Availability Section %>
       <div class="member-availability-section">
-        <h4><i class="fa-solid fa-user-clock"></i> My Availability</h4>
-        <p class="availability-hint">Mark dates when you're unavailable for band activities</p>
+        <h4><i class="fa-solid fa-user-clock"></i> <%= t('band.calendar.availability.title') %></h4>
+        <p class="availability-hint"><%= t('band.calendar.availability.hint') %></p>
         <%= form_with model: MemberAvailability.new, url: band_member_availabilities_path(@band), local: true, class: "availability-form" do |f| %>
           <div class="availability-form-row">
             <div class="form-group">
-              <%= f.label :start_date, "From", class: "availability-label" %>
+              <%= f.label :start_date, t('band.calendar.availability.from'), class: "availability-label" %>
               <%= f.date_field :start_date, class: "form-control", required: true, min: Date.today %>
             </div>
             <div class="form-group">
-              <%= f.label :end_date, "To (optional)", class: "availability-label" %>
+              <%= f.label :end_date, t('band.calendar.availability.to_optional'), class: "availability-label" %>
               <%= f.date_field :end_date, class: "form-control", min: Date.today %>
             </div>
             <div class="form-group">
               <%# MemberAvailability.statuses.keys returns ["unavailable", "tentative"]
                   .map { |k| [k.titleize, k] } transforms it to [["Unavailable", "unavailable"], ["Tentative", "tentative"]]
                   This gives users a nice display name while submitting the lowercase value to the database %>
-              <%= f.select :status, MemberAvailability.statuses.keys.map { |k| [k.titleize, k] }, {}, class: "form-control" %>
+              <%= f.select :status, MemberAvailability.statuses.keys.map { |k| [t("band.calendar.availability.status.#{k}"), k] }, {}, class: "form-control" %>
             </div>
             <div class="form-group">
-              <%= f.text_field :notes, class: "form-control", placeholder: "Reason (optional)" %>
+              <%= f.text_field :notes, class: "form-control", placeholder: t('band.calendar.availability.reason_placeholder') %>
             </div>
-            <%= f.submit "Mark Unavailable", class: "btn-unavailable" %>
+            <%= f.submit t('band.calendar.availability.submit'), class: "btn-unavailable" %>
           </div>
         <% end %>
         <%# Display current user's availabilities with delete option %>
         <% my_availabilities = @band.member_availabilities.where(musician: current_user.musician).order(:start_date) %>
         <div class="my-availabilities-list" id="my-availabilities-list">
         <% if my_availabilities.any? %>
-            <h5>Your Unavailability</h5>
+            <h5><%= t('band.calendar.availability.your_unavailability') %></h5>
             <% my_availabilities.each do |avail| %>
               <div class="availability-item" id="availability_<%= avail.id %>">
                 <div class="availability-info">
@@ -693,12 +693,12 @@
                       - <%= avail.end_date.strftime("%b %d, %Y") %>
                     <% end %>
                   </span>
-                  <span class="availability-status <%= avail.status %>"><%= avail.status.titleize %></span>
+                  <span class="availability-status <%= avail.status %>"><%= t("band.calendar.availability.status.#{avail.status}") %></span>
                   <% if avail.notes.present? %>
                     <span class="availability-reason"><%= avail.notes %></span>
                   <% end %>
                 </div>
-                <%= button_to band_member_availability_path(@band, avail), method: :delete, class: "btn-delete-availability", data: { turbo_confirm: "Remove this availability?" } do %>
+                <%= button_to band_member_availability_path(@band, avail), method: :delete, class: "btn-delete-availability", data: { turbo_confirm: t('band.calendar.availability.remove_confirm') } do %>
                   <i class="fa-solid fa-trash"></i>
                 <% end %>
               </div>
@@ -714,7 +714,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-comments"></i>
         </div>
-        <h3>Band Chat</h3>
+        <h3><%= t('band.chat.title') %></h3>
       </div>
       <div class="band-chat-wrapper">
         <%= render 'chat', band: @band %>
@@ -727,9 +727,9 @@
         <div class="card-icon card-icon-feed">
           <i class="fa-solid fa-bullhorn"></i>
         </div>
-        <h3>Musicians Wanted</h3>
+        <h3><%= t('band.musicians_wanted.title') %></h3>
         <%= link_to posts_path, class: "band-feed-note" do %>
-          <i class="fa-solid fa-plus"></i> Post New Request
+          <i class="fa-solid fa-plus"></i> <%= t('band.musicians_wanted.post_new') %>
         <% end %>
       </div>
       <div class="band-feed-section">
@@ -743,9 +743,9 @@
         <% else %>
           <div class="band-empty-feed">
             <i class="fa-solid fa-bullhorn"></i>
-            <p>No active musician requests</p>
+            <p><%= t('band.musicians_wanted.no_posts') %></p>
             <p class="sub">
-              <%= link_to "Post a request", posts_path %> to find session musicians
+              <%= link_to t('band.musicians_wanted.post_new'), posts_path %> <%= t('band.musicians_wanted.post_hint').split(t('band.musicians_wanted.post_new')).last rescue '' %>
             </p>
           </div>
         <% end %>
@@ -756,7 +756,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-user-plus"></i>
         </div>
-        <h3>Invite Musicians</h3>
+        <h3><%= t('band.invite.title') %></h3>
       </div>
       <div class="band-invite-section">
         <turbo-frame id="band_invitation_form">
@@ -772,7 +772,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-users"></i>
         </div>
-        <h3>Band Members</h3>
+        <h3><%= t('band.members.title') %></h3>
       </div>
       <div class="band-members-list">
         <% @band.musicians.each do |musician| %>
@@ -792,11 +792,11 @@
               <div class="member-name">
                 <%= link_to musician.name, musician_path(musician) %>
                 <% if musician.user_id == @band.user_id %>
-                  <span class="leader-badge"><i class="fa-solid fa-crown"></i> Leader</span>
+                  <span class="leader-badge"><i class="fa-solid fa-crown"></i> <%= t('band.members.leader') %></span>
                 <% end %>
               </div>
               <div class="member-info">
-                <span class="member-instrument"><i class="fa-solid fa-guitar"></i> <%= musician.instrument || "Not specified" %></span>
+                <span class="member-instrument"><i class="fa-solid fa-guitar"></i> <%= musician.instrument || t('band.members.not_specified') %></span>
                 <% if musician.location.present? %>
                   <span class="member-location"><i class="fa-solid fa-location-dot"></i> <%= musician.location %></span>
                 <% end %>
@@ -804,14 +804,14 @@
             </div>
             <div class="member-actions">
               <% if musician.user_id != current_user.id %>
-                <%= button_to create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn-member-action", title: "Send Message" do %>
+                <%= button_to create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn-member-action", title: t('band.members.send_message') do %>
                   <i class="fa-solid fa-envelope"></i>
                 <% end %>
               <% end %>
               <% if @band.user_id == current_user.id && musician.user_id != current_user.id %>
                 <% involvement = Involvement.find_by(band: @band, musician: musician) %>
                 <% if involvement %>
-                  <%= button_to involvement_path(involvement), method: :delete, class: "btn-member-action danger", title: "Remove from Band", data: { turbo_confirm: "Remove #{musician.name} from #{@band.name}?" } do %>
+                  <%= button_to involvement_path(involvement), method: :delete, class: "btn-member-action danger", title: t('band.members.remove_from_band'), data: { turbo_confirm: t('band.members.remove_confirm', name: musician.name, band: @band.name) } do %>
                     <i class="fa-solid fa-user-minus"></i>
                   <% end %>
                 <% end %>
@@ -830,29 +830,29 @@
         <div class="card-icon">
           <i class="fa-solid fa-images"></i>
         </div>
-        <h3>Band Media</h3>
+        <h3><%= t('band.media.title') %></h3>
       </div>
       <!-- Current Media Display (only shows sections with content) -->
       <% if @band.banner.attached? || @band.images.attached? || @band.videos.attached? %>
         <div class="current-media-section">
-          <h4 class="current-media-title"><i class="fa-solid fa-photo-film"></i> Current Media</h4>
+          <h4 class="current-media-title"><i class="fa-solid fa-photo-film"></i> <%= t('band.media.current_media') %></h4>
           <% if @band.banner.attached? %>
             <div class="media-display-group">
-              <label class="media-group-label">Banner</label>
+              <label class="media-group-label"><%= t('band.media.banner') %></label>
               <div class="current-media-preview banner-preview">
                 <%= image_tag url_for(@band.banner), class: "banner-image-preview" %>
                 <%= button_to purge_attachment_band_path(@band, attachment_id: @band.banner.id),
                     method: :delete,
                     class: "btn-remove-media",
-                    data: { turbo_confirm: "Remove this banner image?" } do %>
+                    data: { turbo_confirm: t('band.media.remove_banner_confirm') } do %>
                   <i class="fa-solid fa-trash"></i>
                 <% end %>
               </div>
             </div>
             <!-- Banner Position Adjuster -->
             <div class="media-display-group" data-controller="banner-position">
-              <label class="media-group-label">Banner Position</label>
-              <p class="banner-position-help">Drag the image up or down to adjust what part is visible</p>
+              <label class="media-group-label"><%= t('band.media.banner_position') %></label>
+              <p class="banner-position-help"><%= t('band.media.banner_position_help') %></p>
               <div class="banner-position-adjuster">
                 <div class="banner-position-preview" data-banner-position-target="preview">
                   <%= image_tag url_for(@band.banner),
@@ -871,13 +871,13 @@
               </div>
               <%= form_with model: @band, local: true, class: "banner-position-form", data: { banner_position_target: "form" } do |f| %>
                 <%= f.hidden_field :banner_position, data: { banner_position_target: "input" }, value: @band.banner_position || 50 %>
-                <%= f.submit "Save Position", class: "btn-save-position" %>
+                <%= f.submit t('band.media.save_position'), class: "btn-save-position" %>
               <% end %>
             </div>
           <% end %>
           <% if @band.images.attached? %>
             <div class="media-display-group">
-              <label class="media-group-label">Photos (<%= @band.images.count %>)</label>
+              <label class="media-group-label"><%= t('band.media.photos') %> (<%= @band.images.count %>)</label>
               <div class="current-media-grid">
                 <% @band.images.each do |image| %>
                   <div class="media-grid-item">
@@ -885,7 +885,7 @@
                     <%= button_to purge_attachment_band_path(@band, attachment_id: image.id),
                         method: :delete,
                         class: "btn-remove-media",
-                        data: { turbo_confirm: "Remove this photo?" } do %>
+                        data: { turbo_confirm: t('band.media.remove_photo_confirm') } do %>
                       <i class="fa-solid fa-trash"></i>
                     <% end %>
                   </div>
@@ -895,7 +895,7 @@
           <% end %>
           <% if @band.videos.attached? %>
             <div class="media-display-group">
-              <label class="media-group-label">Videos (<%= @band.videos.count %>)</label>
+              <label class="media-group-label"><%= t('band.media.videos') %> (<%= @band.videos.count %>)</label>
               <div class="current-media-grid videos-grid">
                 <% @band.videos.each do |video| %>
                   <div class="media-grid-item video-item">
@@ -905,7 +905,7 @@
                     <%= button_to purge_attachment_band_path(@band, attachment_id: video.id),
                         method: :delete,
                         class: "btn-remove-media",
-                        data: { turbo_confirm: "Remove this video?" } do %>
+                        data: { turbo_confirm: t('band.media.remove_video_confirm') } do %>
                       <i class="fa-solid fa-trash"></i>
                     <% end %>
                   </div>
@@ -923,50 +923,50 @@
           <div class="media-section-header">
             <i class="fa-solid fa-cloud-upload-alt"></i>
             <div>
-              <h4>Upload Media</h4>
-              <p>Add new banner, photos, or videos to your band profile</p>
+              <h4><%= t('band.media.upload.title') %></h4>
+              <p><%= t('band.media.upload.subtitle') %></p>
             </div>
           </div>
           <div class="upload-fields-grid">
             <div class="upload-field" data-controller="file-preview">
-              <label class="upload-field-label">Banner Image</label>
+              <label class="upload-field-label"><%= t('band.media.upload.banner_label') %></label>
               <div class="upload-input-wrapper">
                 <%= f.file_field :banner, accept: "image/*", class: "media-file-input", id: "banner-input",
                     data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
                 <label for="banner-input" class="upload-label compact" data-file-preview-target="placeholder">
                   <i class="fa-solid fa-panorama"></i>
-                  <span><%= @band.banner.attached? ? "Replace banner" : "Choose banner" %></span>
+                  <span><%= @band.banner.attached? ? t('band.media.upload.replace_banner') : t('band.media.upload.choose_banner') %></span>
                 </label>
               </div>
               <div class="file-preview-container" data-file-preview-target="preview"></div>
             </div>
             <div class="upload-field" data-controller="file-preview">
-              <label class="upload-field-label">Photos</label>
+              <label class="upload-field-label"><%= t('band.media.upload.photos_label') %></label>
               <div class="upload-input-wrapper">
                 <%= f.file_field :images, accept: "image/*", multiple: true, class: "media-file-input", id: "images-input",
                     data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
                 <label for="images-input" class="upload-label compact" data-file-preview-target="placeholder">
                   <i class="fa-solid fa-camera"></i>
-                  <span>Add photos</span>
+                  <span><%= t('band.media.upload.add_photos') %></span>
                 </label>
               </div>
               <div class="file-preview-container" data-file-preview-target="preview"></div>
             </div>
             <div class="upload-field" data-controller="file-preview">
-              <label class="upload-field-label">Videos</label>
+              <label class="upload-field-label"><%= t('band.media.upload.videos_label') %></label>
               <div class="upload-input-wrapper">
                 <%= f.file_field :videos, accept: "video/*", multiple: true, class: "media-file-input", id: "videos-input",
                     data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
                 <label for="videos-input" class="upload-label compact" data-file-preview-target="placeholder">
                   <i class="fa-solid fa-video"></i>
-                  <span>Add videos</span>
+                  <span><%= t('band.media.upload.add_videos') %></span>
                 </label>
               </div>
               <div class="file-preview-container" data-file-preview-target="preview"></div>
             </div>
           </div>
           <div class="media-submit-wrapper">
-            <%= f.submit "Save Media", class: "btn-save-media" %>
+            <%= f.submit t('band.media.upload.save'), class: "btn-save-media" %>
           </div>
         </div>
       <% end %>
@@ -977,10 +977,10 @@
         <div class="card-icon">
           <i class="fa-brands fa-spotify"></i>
         </div>
-        <h3>Your Music</h3>
+        <h3><%= t('band.spotify.title') %></h3>
       </div>
       <div class="spotify-tracks-section">
-        <p class="spotify-description">Paste Spotify links to tracks, albums, or playlists to feature on your profile.</p>
+        <p class="spotify-description"><%= t('band.spotify.description') %></p>
         <div id="spotify-tracks">
           <%= render partial: 'spotify_tracks/editable_track', collection: @band.spotify_tracks, as: :track %>
         </div>
@@ -995,8 +995,8 @@
           <div class="card-icon card-icon-line">
             <i class="fa-brands fa-line"></i>
           </div>
-          <h3>LINE Integration</h3>
-          <span class="band-feed-note">Connect your LINE group to sync events</span>
+          <h3><%= t('band.line.title') %></h3>
+          <span class="band-feed-note"><%= t('band.line.subtitle') %></span>
         </div>
         <div class="line-integration-section">
           <% line_connection = @band.line_band_connections.where(active: true).or(@band.line_band_connections.pending).first %>
@@ -1008,16 +1008,16 @@
                 <i class="fa-solid fa-check-circle"></i>
               </div>
               <div class="line-status-info">
-                <span class="line-status-text">Connected to LINE Group</span>
-                <span class="line-status-date">Linked <%= time_ago_in_words(line_connection.linked_at) %> ago</span>
+                <span class="line-status-text"><%= t('band.line.connected') %></span>
+                <span class="line-status-date"><%= t('band.line.linked_ago', time: time_ago_in_words(line_connection.linked_at)) %></span>
               </div>
             </div>
 
             <div class="line-settings">
               <div class="line-setting-item">
                 <div class="line-setting-info">
-                  <span class="line-setting-label">Auto-create events</span>
-                  <span class="line-setting-desc">Automatically add events to calendar when detected in LINE messages</span>
+                  <span class="line-setting-label"><%= t('band.line.auto_create_events') %></span>
+                  <span class="line-setting-desc"><%= t('band.line.auto_create_desc') %></span>
                 </div>
                 <%= button_to toggle_auto_create_band_line_band_connection_path(@band, line_connection),
                     method: :patch,
@@ -1025,7 +1025,7 @@
                   <span class="toggle-track">
                     <span class="toggle-thumb"></span>
                   </span>
-                  <span class="toggle-label"><%= line_connection.auto_create_events ? 'On' : 'Off' %></span>
+                  <span class="toggle-label"><%= line_connection.auto_create_events ? t('band.line.on') : t('band.line.off') %></span>
                 <% end %>
               </div>
             </div>
@@ -1033,13 +1033,13 @@
             <% pending_events = line_connection.line_pending_events.pending %>
             <% if pending_events.any? %>
               <div class="line-pending-events">
-                <h4><i class="fa-solid fa-clock"></i> Pending Events (<%= pending_events.count %>)</h4>
-                <p class="line-pending-hint">Events detected from LINE messages awaiting confirmation</p>
+                <h4><i class="fa-solid fa-clock"></i> <%= t('band.line.pending_events') %> (<%= pending_events.count %>)</h4>
+                <p class="line-pending-hint"><%= t('band.line.pending_hint') %></p>
                 <div class="pending-events-list">
                   <% pending_events.limit(5).each do |event| %>
                     <div class="pending-event-item">
                       <div class="pending-event-info">
-                        <span class="pending-event-type <%= event.event_type %>"><%= event.event_type.titleize %></span>
+                        <span class="pending-event-type <%= event.event_type %>"><%= t("band.calendar.event_types.#{event.event_type}", default: event.event_type.titleize) %></span>
                         <span class="pending-event-title"><%= event.title || "Untitled" %></span>
                         <span class="pending-event-date"><%= event.date&.strftime("%b %d, %Y") %> <%= event.start_time&.strftime("%H:%M") %></span>
                       </div>
@@ -1056,8 +1056,8 @@
               <%= button_to band_line_band_connection_path(@band, line_connection),
                   method: :delete,
                   class: "btn-line-disconnect",
-                  data: { turbo_confirm: "Disconnect this LINE group? You can reconnect later." } do %>
-                <i class="fa-solid fa-unlink"></i> Disconnect LINE Group
+                  data: { turbo_confirm: t('band.line.disconnect_confirm') } do %>
+                <i class="fa-solid fa-unlink"></i> <%= t('band.line.disconnect') %>
               <% end %>
             </div>
 
@@ -1068,26 +1068,26 @@
                 <i class="fa-solid fa-link"></i>
               </div>
               <div class="line-status-info">
-                <span class="line-status-text">Waiting for LINE group connection</span>
+                <span class="line-status-text"><%= t('band.line.waiting') %></span>
               </div>
             </div>
 
             <div class="line-link-code-section">
               <p class="line-link-instructions">
-                Send this code in your LINE group to connect it:
+                <%= t('band.line.link_instructions') %>
               </p>
               <div class="line-link-code-display">
                 <code class="line-link-code"><%= line_connection.link_code %></code>
-                <button type="button" class="btn-copy-code" data-code="<%= line_connection.link_code %>" onclick="navigator.clipboard.writeText(this.dataset.code); this.innerHTML='<i class=\'fa-solid fa-check\'></i> Copied!';">
-                  <i class="fa-solid fa-copy"></i> Copy
+                <button type="button" class="btn-copy-code" data-code="<%= line_connection.link_code %>" onclick="navigator.clipboard.writeText(this.dataset.code); this.innerHTML='<i class=\'fa-solid fa-check\'></i> <%= t('band.line.copied') %>';">
+                  <i class="fa-solid fa-copy"></i> <%= t('band.line.copy') %>
                 </button>
               </div>
               <div class="line-link-help">
-                <p><strong>How to connect:</strong></p>
+                <p><strong><%= t('band.line.how_to_connect') %></strong></p>
                 <ol>
-                  <li>Add the Kokai bot to your LINE group</li>
-                  <li>Send: <code>/link <%= line_connection.link_code %></code></li>
-                  <li>The bot will confirm when connected</li>
+                  <li><%= t('band.line.step1') %></li>
+                  <li><%= t('band.line.step2', code: line_connection.link_code) %></li>
+                  <li><%= t('band.line.step3') %></li>
                 </ol>
               </div>
             </div>
@@ -1096,7 +1096,7 @@
               <%= button_to band_line_band_connection_path(@band, line_connection),
                   method: :delete,
                   class: "btn-line-cancel" do %>
-                <i class="fa-solid fa-times"></i> Cancel
+                <i class="fa-solid fa-times"></i> <%= t('band.line.cancel') %>
               <% end %>
             </div>
 
@@ -1106,22 +1106,22 @@
               <div class="line-feature-list">
                 <div class="line-feature">
                   <i class="fa-solid fa-comments"></i>
-                  <span>Chat naturally about plans - AI understands and creates events</span>
+                  <span><%= t('band.line.not_connected.feature1') %></span>
                 </div>
                 <div class="line-feature">
                   <i class="fa-solid fa-calendar-plus"></i>
-                  <span>Events sync automatically to your Kokai calendar</span>
+                  <span><%= t('band.line.not_connected.feature2') %></span>
                 </div>
                 <div class="line-feature">
                   <i class="fa-solid fa-user-clock"></i>
-                  <span>Members can mark availability directly from LINE</span>
+                  <span><%= t('band.line.not_connected.feature3') %></span>
                 </div>
               </div>
 
               <%= button_to band_line_band_connections_path(@band),
                   method: :post,
                   class: "btn-line-connect" do %>
-                <i class="fa-brands fa-line"></i> Connect LINE Group
+                <i class="fa-brands fa-line"></i> <%= t('band.line.connect') %>
               <% end %>
             </div>
           <% end %>
@@ -1137,23 +1137,23 @@
             <div class="card-icon">
               <i class="fa-solid fa-crown"></i>
             </div>
-            <h3>Transfer Leadership</h3>
+            <h3><%= t('band.transfer.title') %></h3>
           </div>
           <div class="transfer-leadership-section">
-            <p>Transfer band leadership to another member. You will remain a member of the band but will no longer be able to delete it or manage invitations.</p>
+            <p><%= t('band.transfer.description') %></p>
             <div class="transfer-form">
               <%= form_with url: transfer_leadership_band_path(@band), method: :patch, local: true do |f| %>
                 <div class="transfer-input-group">
                   <div class="transfer-select-wrapper">
                     <%= f.label :musician_id, class: "transfer-label" do %>
-                      <i class="fa-solid fa-user"></i> Select New Leader
+                      <i class="fa-solid fa-user"></i> <%= t('band.transfer.select_label') %>
                     <% end %>
                     <%= f.collection_select :musician_id, other_members, :id, :name,
-                        { prompt: "Choose a band member..." },
+                        { prompt: t('band.transfer.select_prompt') },
                         { class: "transfer-select" } %>
                   </div>
-                  <%= f.submit "Transfer Leadership", class: "btn-transfer",
-                      data: { turbo_confirm: "Are you sure you want to transfer leadership? You will no longer be the band leader." } %>
+                  <%= f.submit t('band.transfer.submit'), class: "btn-transfer",
+                      data: { turbo_confirm: t('band.transfer.confirm') } %>
                 </div>
               <% end %>
             </div>
@@ -1165,14 +1165,14 @@
           <div class="card-icon danger">
             <i class="fa-solid fa-trash"></i>
           </div>
-          <h3>Delete Band</h3>
+          <h3><%= t('band.delete.title') %></h3>
         </div>
         <div class="leave-band-section">
-          <p>As the band leader, you cannot leave the band. Deleting the band will remove all members, chat history, gig applications, and cannot be undone.</p>
-          <%= button_to "Delete #{@band.name}", band_path(@band),
+          <p><%= t('band.delete.description') %></p>
+          <%= button_to @band.name, band_path(@band),
               method: :delete,
               class: "btn-leave-band",
-              data: { turbo_confirm: "Are you sure you want to permanently delete #{@band.name}? All members will be removed and this cannot be undone." } %>
+              data: { turbo_confirm: t('band.delete.confirm', band: @band.name) } %>
         </div>
       </div>
     <% elsif current_user.musician %>
@@ -1183,14 +1183,14 @@
             <div class="card-icon danger">
               <i class="fa-solid fa-right-from-bracket"></i>
             </div>
-            <h3>Leave Band</h3>
+            <h3><%= t('band.leave.title') %></h3>
           </div>
           <div class="leave-band-section">
-            <p>If you leave this band, you will no longer have access to the band chat or be able to apply for gigs with this band.</p>
-            <%= button_to "Leave #{@band.name}", involvement_path(involvement),
+            <p><%= t('band.leave.description') %></p>
+            <%= button_to @band.name, involvement_path(involvement),
                 method: :delete,
                 class: "btn-leave-band",
-                data: { turbo_confirm: "Are you sure you want to leave #{@band.name}? This action cannot be undone." } %>
+                data: { turbo_confirm: t('band.leave.confirm', band: @band.name) } %>
           </div>
         </div>
       <% end %>

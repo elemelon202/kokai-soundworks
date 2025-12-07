@@ -4,8 +4,8 @@
       <div class="cool-form-icon">
         <i class="fa-solid fa-user-plus"></i>
       </div>
-      <h1>Join the Community</h1>
-      <p>Create your account and start connecting</p>
+      <h1><%= t('signup.title') %></h1>
+      <p><%= t('signup.subtitle') %></p>
     </div>
 
     <%= simple_form_for(resource, as: resource_name, url: registration_path(resource_name)) do |f| %>
@@ -17,32 +17,32 @@
             <i class="fa-solid fa-user"></i>
           </div>
           <div class="section-text">
-            <h2>Account Details</h2>
-            <p>Set up your login credentials</p>
+            <h2><%= t('signup.account_details.title') %></h2>
+            <p><%= t('signup.account_details.subtitle') %></p>
           </div>
         </div>
 
         <%= f.input :username,
                     required: true,
                     autofocus: true,
-                    label: "Username",
-                    placeholder: "Choose a username",
+                    label: t('signup.username'),
+                    placeholder: t('signup.username_placeholder'),
                     input_html: { autocomplete: "username", class: "form-control" } %>
         <%= f.input :email,
                     required: true,
-                    label: "Email",
-                    placeholder: "Enter your email",
+                    label: t('signup.email'),
+                    placeholder: t('signup.email_placeholder'),
                     input_html: { autocomplete: "email", class: "form-control" } %>
         <%= f.input :password,
                     required: true,
-                    label: "Password",
-                    placeholder: "Create a password",
-                    hint: ("#{@minimum_password_length} characters minimum" if @minimum_password_length),
+                    label: t('signup.password'),
+                    placeholder: t('signup.password_placeholder'),
+                    hint: (@minimum_password_length ? t('signup.password_hint', min_length: @minimum_password_length) : nil),
                     input_html: { autocomplete: "new-password", class: "form-control" } %>
         <%= f.input :password_confirmation,
                     required: true,
-                    label: "Confirm Password",
-                    placeholder: "Confirm your password",
+                    label: t('signup.password_confirmation'),
+                    placeholder: t('signup.password_confirmation_placeholder'),
                     input_html: { autocomplete: "new-password", class: "form-control" } %>
       </div>
 
@@ -52,8 +52,8 @@
             <i class="fa-solid fa-music"></i>
           </div>
           <div class="section-text">
-            <h2>Your Role</h2>
-            <p>Tell us how you'll use the platform</p>
+            <h2><%= t('signup.your_role.title') %></h2>
+            <p><%= t('signup.your_role.subtitle') %></p>
           </div>
         </div>
 
@@ -61,18 +61,18 @@
                     as: :select,
                     required: true,
                     collection: [
-                      ['Musician (Looking to join/start a band)', 'musician'],
-                      ['Band Leader (Manager/admin for a band)', 'band_leader'],
-                      ['Venue Owner (Booking agent/manager for a venue looking for bands)', 'venue'],
-                      ['Music Fan (Here to find the best new music and socialise)', 'fan']
+                      [t('signup.user_types.musician'), 'musician'],
+                      [t('signup.user_types.band_leader'), 'band_leader'],
+                      [t('signup.user_types.venue'), 'venue'],
+                      [t('signup.user_types.fan'), 'fan']
                     ],
-                    label: 'I am signing up as a:',
-                    prompt: 'Select your primary role',
+                    label: t('signup.user_type_label'),
+                    prompt: t('signup.user_type_prompt'),
                     input_html: { class: 'form-control form-select' } %>
       </div>
 
       <div class="cool-form-submit">
-        <%= f.button :submit, "Sign up", class: "btn-submit" %>
+        <%= f.button :submit, t('signup.submit'), class: "btn-submit" %>
       </div>
     <% end %>
 

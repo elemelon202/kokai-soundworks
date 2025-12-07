@@ -2,6 +2,9 @@ Rails.application.routes.draw do
   mount ActionCable.server => '/cable'
   root to: "pages#home"
 
+  # Locale switching
+  patch 'locale', to: 'locales#update', as: :update_locale
+
   # MAINSTAGE weekly contest (Musicians)
   get 'mainstage', to: 'mainstage#index', as: :mainstage
   post 'mainstage/vote', to: 'mainstage#vote', as: :mainstage_vote

@@ -1,0 +1,13 @@
+<div class="language-switcher">
+  <% if I18n.locale == :en %>
+    <%= button_to update_locale_path, method: :patch, params: { locale: :ja }, class: "lang-btn", title: "Switch to Japanese" do %>
+      <span class="lang-flag">🇯🇵</span>
+      <span class="lang-code">JP</span>
+    <% end %>
+  <% else %>
+    <%= button_to update_locale_path, method: :patch, params: { locale: :en }, class: "lang-btn", title: "Switch to English" do %>
+      <span class="lang-flag">🇺🇸</span>
+      <span class="lang-code">EN</span>
+    <% end %>
+  <% end %>
+</div>
