@@ -4,6 +4,100 @@ module Webhooks
     skip_before_action :authenticate_user!
     skip_after_action :verify_authorized
 
+    # Bilingual messages for LINE bot
+    MESSAGES = {
+      en: {
+        unknown_command: "Unknown command. Type /help for available commands.",
+        no_new_messages: "No new messages to analyze since last time.\n\nUse /schedule to see upcoming events.",
+        not_linked: "This group isn't linked to a Kokai band yet.\nType /link to connect it!",
+        analyzed: "I analyzed the conversation.",
+        added_events: "Added %{events} event%{events_plural}",
+        added_tasks: "%{tasks} task%{tasks_plural}",
+        and: " and ",
+        to_band: " to %{band}!",
+        view_calendar: "View calendar:",
+        already_existed: "(%{count} already existed)",
+        no_events_tasks: "No events or tasks to add.",
+        no_upcoming: "No upcoming events scheduled for %{band}.",
+        upcoming_for: "Upcoming for %{band}:",
+        group_not_linked: "This group isn't linked to a Kokai band yet. Have the band leader type /link",
+        already_linked: "This group is already linked to %{band}!",
+        invalid_link_code: "Invalid link code. Please check and try again.\n\nTo get a link code:\n1. Go to your band dashboard on Kokai\n2. Find 'LINE Integration' section\n3. Click 'Connect LINE Group'",
+        code_already_used: "This link code has already been used.",
+        link_success: "Successfully linked to %{band}!\n\nYou can now:\n- Chat about plans and I'll create events\n- Use /schedule to see upcoming events\n- Use /busy to mark unavailability\n\nTip: Just chat naturally, like \"Let's practice Saturday at 3pm\"",
+        link_instructions: "To link this LINE group to your Kokai band:\n\n1. Go to your band dashboard on Kokai\n2. Find the 'LINE Integration' section\n3. Click 'Connect LINE Group'\n4. Copy the code and send: /link CODE\n\nExample: /link ABC12345",
+        user_already_linked: "Your LINE account is already linked to %{email}!",
+        user_link_instructions: "To link your LINE account to Kokai:\n\n1. Log in to Kokai\n2. Go to your profile settings\n3. Find 'LINE Connection' and click 'Connect'\n4. Send: /link-me CODE\n\nExample: /link-me ABC123",
+        invalid_user_code: "Invalid code. Please check and try again.",
+        user_code_used: "This code has already been used.",
+        user_link_success: "Successfully linked to your Kokai account!\n\nYou can now:\n- Use /busy to mark your availability\n- Your name will appear on events you suggest",
+        welcome: "Hi! I'm the Kokai Band Bot. I can help manage your band's schedule.\n\nType /help to see available commands.\n\nTo link this group to your Kokai band, have the band leader type /link",
+        help: <<~HELP
+          Kokai Band Bot
+
+          Just chat naturally about your plans! When you're ready, say "kokai" and I'll read the conversation and add the final decisions to your calendar.
+
+          Example:
+          "Let's rehearse Saturday"
+          "Actually make it Sunday 3pm"
+          "Ok sounds good"
+          "kokai"
+          -> I'll add: Rehearsal on Sunday at 3pm
+
+          Commands:
+          /schedule - View upcoming events
+          /link [code] - Link group to band
+          /link-me [code] - Link your account
+          /help - Show this message
+        HELP
+      },
+      ja: {
+        unknown_command: "不明なコマンドです。/help で利用可能なコマンドを確認してください。",
+        no_new_messages: "前回以降、新しいメッセージはありません。\n\n/schedule で今後のイベントを確認できます。",
+        not_linked: "このグループはまだKokaiのバンドにリンクされていません。\n/link で接続してください！",
+        analyzed: "会話を分析しました。",
+        added_events: "%{events}件のイベント",
+        added_tasks: "%{tasks}件のタスク",
+        and: "と",
+        to_band: "を%{band}に追加しました！",
+        view_calendar: "カレンダーを見る:",
+        already_existed: "(%{count}件は既に存在)",
+        no_events_tasks: "追加するイベントやタスクはありませんでした。",
+        no_upcoming: "%{band}の予定されているイベントはありません。",
+        upcoming_for: "%{band}の予定:",
+        group_not_linked: "このグループはまだKokaiのバンドにリンクされていません。バンドリーダーが /link と入力してください",
+        already_linked: "このグループは既に%{band}にリンクされています！",
+        invalid_link_code: "無効なリンクコードです。確認してもう一度お試しください。\n\nリンクコードを取得するには:\n1. Kokaiのバンドダッシュボードにアクセス\n2. 「LINE連携」セクションを見つける\n3. 「LINEグループを接続」をクリック",
+        code_already_used: "このリンクコードは既に使用されています。",
+        link_success: "%{band}へのリンクに成功しました！\n\nこれからできること:\n- 予定について自然にチャットするだけでイベントを作成\n- /schedule で今後のイベントを確認\n- /busy で都合の悪い日を登録\n\nヒント: 「土曜日にリハやろう」のように自然に話してください",
+        link_instructions: "このLINEグループをKokaiのバンドにリンクするには:\n\n1. Kokaiのバンドダッシュボードにアクセス\n2. 「LINE連携」セクションを見つける\n3. 「LINEグループを接続」をクリック\n4. コードをコピーして送信: /link コード\n\n例: /link ABC12345",
+        user_already_linked: "あなたのLINEアカウントは既に%{email}にリンクされています！",
+        user_link_instructions: "LINEアカウントをKokaiにリンクするには:\n\n1. Kokaiにログイン\n2. プロフィール設定に移動\n3. 「LINE接続」を見つけて「接続」をクリック\n4. 送信: /link-me コード\n\n例: /link-me ABC123",
+        invalid_user_code: "無効なコードです。確認してもう一度お試しください。",
+        user_code_used: "このコードは既に使用されています。",
+        user_link_success: "Kokaiアカウントへのリンクに成功しました！\n\nこれからできること:\n- /busy で都合の悪い日を登録\n- イベントを提案すると名前が表示されます",
+        welcome: "こんにちは！Kokaiバンドボットです。バンドのスケジュール管理をお手伝いします。\n\n/help で利用可能なコマンドを確認できます。\n\nこのグループをバンドにリンクするには、バンドリーダーが /link と入力してください",
+        help: <<~HELP
+          Kokaiバンドボット
+
+          予定について自然にチャットしてください！準備ができたら「kokai」と言うと、会話を読んで最終決定をカレンダーに追加します。
+
+          例:
+          「土曜日にリハしよう」
+          「やっぱり日曜の3時にしよう」
+          「OK、了解」
+          「kokai」
+          -> 追加: 日曜3時にリハーサル
+
+          コマンド:
+          /schedule - 今後のイベントを表示
+          /link [コード] - グループをバンドにリンク
+          /link-me [コード] - アカウントをリンク
+          /help - このメッセージを表示
+        HELP
+      }
+    }.freeze
+
     def receive
       body = request.body.read
       signature = request.env['HTTP_X_LINE_SIGNATURE']
@@ -24,6 +118,29 @@ module Webhooks
     end
 
     private
+
+    # Detect if text contains Japanese characters
+    def japanese?(text)
+      return false if text.blank?
+      # Check for hiragana, katakana, or kanji
+      text.match?(/[\p{Hiragana}\p{Katakana}\p{Han}]/)
+    end
+
+    # Get message in the appropriate language
+    def msg(key, lang = :en, **args)
+      message = MESSAGES.dig(lang, key) || MESSAGES.dig(:en, key) || key.to_s
+      args.empty? ? message : format(message, **args)
+    end
+
+    # Detect language from recent messages in a group
+    def detect_group_language(group_id)
+      recent_messages = LineMessage.where(line_group_id: group_id)
+                                   .order(sent_at: :desc)
+                                   .limit(10)
+                                   .pluck(:content)
+      japanese_count = recent_messages.count { |m| japanese?(m) }
+      japanese_count > recent_messages.length / 2 ? :ja : :en
+    end
 
     def valid_signature?(body, signature)
       return false if signature.blank?
@@ -112,43 +229,45 @@ module Webhooks
       parts = text.split(' ', 2)
       command = parts[0].downcase
       args = parts[1]
+      lang = group_id.present? ? detect_group_language(group_id) : (japanese?(text) ? :ja : :en)
 
       case command
       when '/help'
-        send_reply(reply_token, help_message)
+        send_reply(reply_token, msg(:help, lang))
       when '/schedule'
-        send_schedule(reply_token, group_id)
+        send_schedule(reply_token, group_id, lang)
       when '/link'
-        send_link_instructions(reply_token, user_id, group_id, args)
+        send_link_instructions(reply_token, user_id, group_id, args, lang)
       when '/link-me', '/linkme'
-        link_user_account(reply_token, user_id, args)
+        link_user_account(reply_token, user_id, args, lang)
       when '/rehearsal', '/gig', '/meeting', '/recording'
         create_event_from_command(command, args, user_id, group_id, reply_token)
       when '/busy'
         mark_unavailable(args, user_id, group_id, reply_token)
       else
-        send_reply(reply_token, "Unknown command. Type /help for available commands.")
+        send_reply(reply_token, msg(:unknown_command, lang))
       end
     end
 
     def handle_kokai_trigger(text, user_id, group_id, reply_token)
       clean_text = text.gsub(/kokai/i, '').strip.downcase
+      lang = detect_group_language(group_id)
 
-      # Check for simple commands
-      if clean_text.include?('schedule') || clean_text.include?('upcoming')
-        send_schedule(reply_token, group_id)
+      # Check for simple commands (support both languages)
+      if clean_text.include?('schedule') || clean_text.include?('upcoming') || clean_text.include?('予定') || clean_text.include?('スケジュール')
+        send_schedule(reply_token, group_id, lang)
         return
       end
 
-      if clean_text.include?('help')
-        send_reply(reply_token, help_message)
+      if clean_text.include?('help') || clean_text.include?('ヘルプ') || clean_text.include?('使い方')
+        send_reply(reply_token, msg(:help, lang))
         return
       end
 
       # Check if there are any unprocessed messages to analyze
       unprocessed_count = LineMessage.unprocessed_for_group(group_id).count
       if unprocessed_count <= 1  # Only the "kokai" message itself
-        send_reply(reply_token, "No new messages to analyze since last time.\n\nUse /schedule to see upcoming events.")
+        send_reply(reply_token, msg(:no_new_messages, lang))
         return
       end
 
@@ -157,11 +276,14 @@ module Webhooks
       result = Line::ConversationAnalyzerService.new(group_id).analyze
       Rails.logger.info "Conversation analysis result: #{result.inspect}"
 
+      # Use language detected by the AI if available, otherwise use our detection
+      lang = result[:language]&.to_sym || lang
+
       # Check if group is linked
       connection = LineBandConnection.find_by(line_group_id: group_id, active: true)
 
       unless connection
-        send_reply(reply_token, "#{result[:summary]}\n\nThis group isn't linked to a Kokai band yet.\nType /link to connect it!")
+        send_reply(reply_token, "#{result[:summary]}\n\n#{msg(:not_linked, lang)}")
         return
       end
 
@@ -241,28 +363,38 @@ module Webhooks
         end
       end
 
-      # Build response message
-      message = result[:summary].presence || "I analyzed the conversation."
+      # Build response message (summary is already in the correct language from AI)
+      message = result[:summary].presence || msg(:analyzed, lang)
 
       if events_created > 0 || tasks_created > 0
         message += "\n\n"
-        message += "Added #{events_created} event#{'s' if events_created != 1}" if events_created > 0
-        message += " and " if events_created > 0 && tasks_created > 0
-        message += "#{tasks_created} task#{'s' if tasks_created != 1}" if tasks_created > 0
-        message += " to #{connection.band.name}!"
+        if lang == :ja
+          # Japanese format: "Xイベント と Yタスク をバンドに追加しました！"
+          parts = []
+          parts << msg(:added_events, lang, events: events_created, events_plural: '') if events_created > 0
+          parts << msg(:added_tasks, lang, tasks: tasks_created, tasks_plural: '') if tasks_created > 0
+          message += parts.join(msg(:and, lang))
+          message += msg(:to_band, lang, band: connection.band.name)
+        else
+          # English format: "Added X event(s) and Y task(s) to Band!"
+          message += msg(:added_events, lang, events: events_created, events_plural: events_created != 1 ? 's' : '') if events_created > 0
+          message += msg(:and, lang) if events_created > 0 && tasks_created > 0
+          message += msg(:added_tasks, lang, tasks: tasks_created, tasks_plural: tasks_created != 1 ? 's' : '') if tasks_created > 0
+          message += msg(:to_band, lang, band: connection.band.name)
+        end
 
         # Add link to band calendar
         band_url = "https://kokai-soundworks.com/bands/#{connection.band.id}/calendar"
-        message += "\n\nView calendar: #{band_url}"
+        message += "\n\n#{msg(:view_calendar, lang)} #{band_url}"
       end
 
       skipped_total = events_skipped + tasks_skipped
       if skipped_total > 0
-        message += "\n(#{skipped_total} already existed)"
+        message += "\n#{msg(:already_existed, lang, count: skipped_total)}"
       end
 
       if events_created == 0 && tasks_created == 0 && skipped_total == 0 && result[:events]&.empty? && result[:tasks]&.empty?
-        message += "\n\nNo events or tasks to add."
+        message += "\n\n#{msg(:no_events_tasks, lang)}"
       end
 
       send_reply(reply_token, message)
@@ -370,7 +502,10 @@ module Webhooks
 
       Rails.logger.info "LINE bot joined group: #{group_id}"
 
-      welcome_message = "Hi! I'm the Kokai Band Bot. I can help manage your band's schedule.\n\nType /help to see available commands.\n\nTo link this group to your Kokai band, have the band leader type /link"
+      # Send bilingual welcome message (both languages since we don't know group preference yet)
+      welcome_en = msg(:welcome, :en)
+      welcome_ja = msg(:welcome, :ja)
+      welcome_message = "#{welcome_en}\n\n---\n\n#{welcome_ja}"
 
       send_reply(reply_token, welcome_message)
     end
@@ -416,32 +551,11 @@ module Webhooks
       Rails.logger.error "LINE reply error: #{e.message}"
     end
 
-    def help_message
-      <<~HELP
-        Kokai Band Bot
-
-        Just chat naturally about your plans! When you're ready, say "kokai" and I'll read the conversation and add the final decisions to your calendar.
-
-        Example:
-        "Let's rehearse Saturday"
-        "Actually make it Sunday 3pm"
-        "Ok sounds good"
-        "kokai"
-        -> I'll add: Rehearsal on Sunday at 3pm
-
-        Commands:
-        /schedule - View upcoming events
-        /link [code] - Link group to band
-        /link-me [code] - Link your account
-        /help - Show this message
-      HELP
-    end
-
-    def send_schedule(reply_token, group_id)
+    def send_schedule(reply_token, group_id, lang = :en)
       connection = LineBandConnection.find_by(line_group_id: group_id, active: true)
 
       unless connection
-        send_reply(reply_token, "This group isn't linked to a Kokai band yet. Have the band leader type /link")
+        send_reply(reply_token, msg(:group_not_linked, lang))
         return
       end
 
@@ -450,7 +564,7 @@ module Webhooks
       upcoming_gigs = band.gigs.where('date >= ?', Date.current)
 
       if upcoming_events.empty? && upcoming_gigs.empty?
-        send_reply(reply_token, "No upcoming events scheduled for #{band.name}.")
+        send_reply(reply_token, msg(:no_upcoming, lang, band: band.name))
         return
       end
 
@@ -482,10 +596,10 @@ module Webhooks
       # Limit to 10 events
       all_events = all_events.first(10)
 
-      message = "📅 Upcoming for #{band.name}:\n\n"
+      message = "📅 #{msg(:upcoming_for, lang, band: band.name)}\n\n"
 
       all_events.each do |event|
-        date_str = event[:date].strftime('%b %d')
+        date_str = lang == :ja ? event[:date].strftime('%m/%d') : event[:date].strftime('%b %d')
         time_str = event[:time] ? " @ #{event[:time].strftime('%H:%M')}" : ""
         message += "#{event[:icon]} #{date_str}#{time_str} - #{event[:label]}\n"
       end
@@ -493,11 +607,11 @@ module Webhooks
       send_reply(reply_token, message)
     end
 
-    def send_link_instructions(reply_token, user_id, group_id, args = nil)
+    def send_link_instructions(reply_token, user_id, group_id, args = nil, lang = :en)
       # Check if this group is already linked (active)
       existing_active = LineBandConnection.find_by(line_group_id: group_id, active: true)
       if existing_active
-        send_reply(reply_token, "This group is already linked to #{existing_active.band.name}!")
+        send_reply(reply_token, msg(:already_linked, lang, band: existing_active.band.name))
         return
       end
 
@@ -510,12 +624,12 @@ module Webhooks
         connection = LineBandConnection.find_by_link_code(link_code)
 
         if connection.nil?
-          send_reply(reply_token, "Invalid link code. Please check and try again.\n\nTo get a link code:\n1. Go to your band dashboard on Kokai\n2. Find 'LINE Integration' section\n3. Click 'Connect LINE Group'")
+          send_reply(reply_token, msg(:invalid_link_code, lang))
           return
         end
 
         if connection.linked?
-          send_reply(reply_token, "This link code has already been used.")
+          send_reply(reply_token, msg(:code_already_used, lang))
           return
         end
 
@@ -525,35 +639,23 @@ module Webhooks
         # Link the group!
         connection.link_to_group!(group_id)
 
-        send_reply(reply_token, "Successfully linked to #{connection.band.name}!\n\nYou can now:\n- Chat about plans and I'll create events\n- Use /schedule to see upcoming events\n- Use /busy to mark unavailability\n\nTip: Just chat naturally, like \"Let's practice Saturday at 3pm\"")
+        send_reply(reply_token, msg(:link_success, lang, band: connection.band.name))
       else
         # No code provided, show instructions
-        message = "To link this LINE group to your Kokai band:\n\n"
-        message += "1. Go to your band dashboard on Kokai\n"
-        message += "2. Find the 'LINE Integration' section\n"
-        message += "3. Click 'Connect LINE Group'\n"
-        message += "4. Copy the code and send: /link CODE\n\n"
-        message += "Example: /link ABC12345"
-        send_reply(reply_token, message)
+        send_reply(reply_token, msg(:link_instructions, lang))
       end
     end
 
-    def link_user_account(reply_token, line_user_id, args)
+    def link_user_account(reply_token, line_user_id, args, lang = :en)
       # Check if this LINE user is already linked
       existing = LineUserConnection.find_by(line_user_id: line_user_id)
       if existing&.linked?
-        send_reply(reply_token, "Your LINE account is already linked to #{existing.user.email}!")
+        send_reply(reply_token, msg(:user_already_linked, lang, email: existing.user.email))
         return
       end
 
       if args.blank?
-        message = "To link your LINE account to Kokai:\n\n"
-        message += "1. Log in to Kokai\n"
-        message += "2. Go to your profile settings\n"
-        message += "3. Find 'LINE Connection' and click 'Connect'\n"
-        message += "4. Send: /link-me CODE\n\n"
-        message += "Example: /link-me ABC123"
-        send_reply(reply_token, message)
+        send_reply(reply_token, msg(:user_link_instructions, lang))
         return
       end
 
@@ -561,12 +663,12 @@ module Webhooks
       connection = LineUserConnection.find_by_link_code(link_code)
 
       if connection.nil?
-        send_reply(reply_token, "Invalid code. Please check and try again.")
+        send_reply(reply_token, msg(:invalid_user_code, lang))
         return
       end
 
       if connection.linked?
-        send_reply(reply_token, "This code has already been used.")
+        send_reply(reply_token, msg(:user_code_used, lang))
         return
       end
 
@@ -576,7 +678,7 @@ module Webhooks
       # Link the account!
       connection.link_to_line_user!(line_user_id, display_name)
 
-      send_reply(reply_token, "Successfully linked to your Kokai account!\n\nYou can now:\n- Use /busy to mark your availability\n- Your name will appear on events you suggest")
+      send_reply(reply_token, msg(:user_link_success, lang))
     end
 
     def get_line_profile(user_id)

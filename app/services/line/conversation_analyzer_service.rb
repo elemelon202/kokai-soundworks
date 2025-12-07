@@ -13,8 +13,13 @@ module Line
       The conversation may have back-and-forth discussion, changes of plans, and cancellations.
       Your job is to identify what was FINALLY agreed upon, ignoring earlier suggestions that were changed.
 
+      LANGUAGE DETECTION: Detect the primary language of the conversation.
+      - If the conversation is primarily in Japanese (contains Japanese characters like hiragana, katakana, kanji), write the summary in Japanese.
+      - If the conversation is primarily in English, write the summary in English.
+
       Return ONLY valid JSON with this structure:
       {
+        "language": "ja" | "en",
         "events": [
           {
             "event_type": "rehearsal" | "gig" | "meeting" | "recording" | "other",
@@ -28,7 +33,7 @@ module Line
         ],
         "tasks": [
           {
-            "name": "task description",
+            "name": "task description (in same language as conversation)",
             "task_type": "rehearsal" | "recording" | "writing" | "booking" | "promotion" | "admin" | "other",
             "deadline": "YYYY-MM-DD or null",
             "assigned_to": "person name from participants list, or null if unassigned"
@@ -42,7 +47,7 @@ module Line
             "reason": "string or null"
           }
         ],
-        "summary": "Brief 1-2 sentence summary of what was decided"
+        "summary": "Brief 1-2 sentence summary of what was decided (in the same language as the conversation)"
       }
 
       Rules:
@@ -50,11 +55,11 @@ module Line
       - Tasks are things someone needs to DO (book a venue, write lyrics, design flyer, contact someone, buy equipment)
       - Only include items that were CONFIRMED or agreed upon
       - If someone cancels or changes plans, use the FINAL decision
-      - Convert relative dates (tomorrow, next Wednesday) to actual dates
-      - Support both English and Japanese
+      - Convert relative dates (tomorrow, next Wednesday, 明日, 来週) to actual dates
+      - Support both English and Japanese - respond in the same language as the conversation
       - For task assignments, look for:
-        * Someone volunteering: "I'll do it", "I can handle that", "Leave it to me", "俺がやる", "私がやります"
-        * Someone being asked and agreeing: "Can you do X?" followed by "Sure", "OK", "Yes"
+        * Someone volunteering: "I'll do it", "I can handle that", "Leave it to me", "俺がやる", "私がやります", "やっておく"
+        * Someone being asked and agreeing: "Can you do X?" followed by "Sure", "OK", "Yes", "わかった", "了解", "OK"
         * Direct assignments that are accepted: "Sam, can you book the studio?" "Yeah I'll do it"
         * The assigned_to MUST be a name from the participants list, or null
 
