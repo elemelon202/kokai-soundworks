@@ -2122,3 +2122,147 @@ $kokai-yellow-dark: #b8e020;
     }
   }
 }
+
+// ===== MOBILE BOTTOM NAV =====
+.mobile-bottom-nav {
+  display: none; // Hidden by default on desktop
+
+  @media (max-width: 768px) {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 60px;
+    background: rgba(17, 17, 17, 0.98);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    z-index: 1000;
+    justify-content: space-around;
+    align-items: center;
+  }
+}
+
+.mobile-nav-tab {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  flex: 1;
+  height: 100%;
+  padding: 8px 4px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  min-width: 44px; // Touch target
+
+  i {
+    font-size: 20px;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.2s ease;
+  }
+
+  span {
+    font-size: 10px;
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.5);
+    transition: color 0.2s ease;
+  }
+
+  &:active {
+    transform: scale(0.95);
+  }
+
+  &.active {
+    i {
+      color: $kokai-yellow;
+    }
+
+    span {
+      color: $kokai-yellow;
+    }
+  }
+}
+
+// Mobile nav section scroll margin
+.mobile-nav-section {
+  scroll-margin-top: 70px; // Offset for sticky navbar
+}
+
+// Pulse animation for section indication
+@keyframes mobile-nav-pulse {
+  0% {
+    background-color: transparent;
+  }
+  50% {
+    background-color: rgba(213, 255, 64, 0.15);
+  }
+  100% {
+    background-color: transparent;
+  }
+}
+
+.mobile-nav-pulse {
+  animation: mobile-nav-pulse 0.6s ease;
+  border-radius: 8px;
+}
+
+// Add bottom padding to container on mobile to account for fixed nav
+.musician-dashboard-container {
+  @media (max-width: 768px) {
+    padding-bottom: 80px !important;
+  }
+}
+
+// Feed section wrapper for proper layout
+.dashboard-feed-section {
+  max-width: 1200px;
+  margin: 0 auto 30px;
+
+  .musician-dashboard-card {
+    width: 100%;
+  }
+}
+
+// Mobile responsive adjustments
+@media (max-width: 768px) {
+  .musician-dashboard-header {
+    margin-bottom: 20px;
+
+    h1 {
+      font-size: 1.8rem;
+    }
+
+    h2 {
+      font-size: 0.95rem;
+    }
+  }
+
+  .musician-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 20px;
+  }
+
+  .musician-stat-card {
+    padding: 16px;
+
+    .stat-value {
+      font-size: 1.3rem;
+    }
+
+    .stat-icon {
+      width: 36px;
+      height: 36px;
+      font-size: 16px;
+    }
+  }
+
+  .musician-dashboard-card {
+    margin-bottom: 16px;
+  }
+}

@@ -1,4 +1,4 @@
-<div class="musician-dashboard-container">
+<div class="musician-dashboard-container" data-controller="mobile-nav">
   <div class="musician-dashboard-header">
     <h1>Musician Dashboard</h1>
     <h2>Manage your profile, media, and band invitations</h2>
@@ -32,6 +32,9 @@
       </div>
     </div>
   <% end %>
+
+  <%# ===== HOME SECTION (Stats + Feed) ===== %>
+  <div id="section-home" data-mobile-nav-target="section" data-section="home" class="mobile-nav-section">
 
   <div class="musician-stats-grid">
     <div class="musician-stat-card">
@@ -67,9 +70,8 @@
     </div>
   </div>
 
-  <%# Feed and Analytics Row %>
-  <div class="dashboard-feed-analytics-row">
-    <%# Feed Section - Left %>
+  <%# Feed Section %>
+  <div class="dashboard-feed-section">
     <div class="musician-dashboard-card">
       <div class="musician-card-header">
         <div class="card-icon">
@@ -119,8 +121,12 @@
         <% end %>
       </div>
     </div>
+  </div>
+  </div>
+  <%# ===== END HOME SECTION ===== %>
 
-    <%# Analytics Section - Right %>
+  <%# ===== ANALYTICS SECTION ===== %>
+  <div id="section-analytics" data-mobile-nav-target="section" data-section="analytics" class="mobile-nav-section">
     <div class="musician-dashboard-card">
       <div class="musician-card-header">
         <div class="card-icon">
@@ -205,9 +211,10 @@
       <% end %>
     </div>
   </div>
+  <%# ===== END ANALYTICS SECTION ===== %>
 
-
-  <div class="musician-dashboard-content">
+  <%# ===== PROFILE SECTION ===== %>
+  <div id="section-profile" data-mobile-nav-target="section" data-section="profile" class="mobile-nav-section">
     <div class="musician-dashboard-card full-width">
       <div class="musician-card-header">
         <div class="card-icon">
@@ -334,6 +341,11 @@
         </div>
       <% end %>
     </div>
+  </div>
+  <%# ===== END PROFILE SECTION ===== %>
+
+  <%# ===== MEDIA SECTION ===== %>
+  <div id="section-media" data-mobile-nav-target="section" data-section="media" class="mobile-nav-section">
 
     <%# Current Media Display - Outside form to avoid nested forms %>
     <% if @musician.avatar.attached? || @musician.banner.attached? || @musician.images.attached? || @musician.videos.attached? %>
@@ -508,6 +520,11 @@
         </div>
       <% end %>
     </div>
+  </div>
+  <%# ===== END MEDIA SECTION ===== %>
+
+  <%# ===== MORE SECTION (Connections + Settings) ===== %>
+  <div id="section-more" data-mobile-nav-target="section" data-section="more" class="mobile-nav-section">
 
     <%# LINE Account Connection %>
     <div class="musician-dashboard-card full-width">
@@ -612,4 +629,29 @@
       </div>
     </div>
   </div>
+  <%# ===== END MORE SECTION ===== %>
+
+  <%# ===== MOBILE BOTTOM NAV ===== %>
+  <nav class="mobile-bottom-nav" data-mobile-nav-target="nav">
+    <button type="button" class="mobile-nav-tab active" data-mobile-nav-target="tab" data-section="home" data-action="click->mobile-nav#navigate" aria-selected="true">
+      <i class="fa-solid fa-house"></i>
+      <span>Home</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-mobile-nav-target="tab" data-section="profile" data-action="click->mobile-nav#navigate" aria-selected="false">
+      <i class="fa-solid fa-user"></i>
+      <span>Profile</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-mobile-nav-target="tab" data-section="media" data-action="click->mobile-nav#navigate" aria-selected="false">
+      <i class="fa-solid fa-images"></i>
+      <span>Media</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-mobile-nav-target="tab" data-section="analytics" data-action="click->mobile-nav#navigate" aria-selected="false">
+      <i class="fa-solid fa-chart-simple"></i>
+      <span>Analytics</span>
+    </button>
+    <button type="button" class="mobile-nav-tab" data-mobile-nav-target="tab" data-section="more" data-action="click->mobile-nav#navigate" aria-selected="false">
+      <i class="fa-solid fa-ellipsis"></i>
+      <span>More</span>
+    </button>
+  </nav>
 </div>
