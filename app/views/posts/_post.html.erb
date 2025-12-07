@@ -9,12 +9,16 @@
       <% end %>
     </div>
     <div class="mw-post-info">
-      <%= link_to band_path(post.band), class: "mw-post-band-name" do %>
-        <%= post.band&.name || t('posts.show.unknown_band') %>
+      <% if post.band %>
+        <%= link_to band_path(post.band), class: "mw-post-band-name" do %>
+          <%= post.band.name %>
+        <% end %>
+      <% else %>
+        <span class="mw-post-band-name"><%= t('posts.show.unknown_band') %></span>
       <% end %>
       <span class="mw-post-timestamp"><%= time_ago_in_words(post.created_at) %> <%= t('notifications.index.ago') %></span>
     </div>
-    <% if current_user.bands.include?(post.band) %>
+    <% if post.band && current_user.bands.include?(post.band) %>
       <%= button_to post_path(post), method: :delete, data: { confirm: t('posts.show.delete_confirm') }, class: "mw-post-delete" do %>
         <i class="fa-solid fa-trash"></i>
       <% end %>
