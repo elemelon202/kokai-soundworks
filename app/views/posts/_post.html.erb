@@ -3,7 +3,7 @@
   <div class="mw-post-header">
     <div class="mw-post-avatar">
       <% if post.band&.banner&.attached? %>
-        <%= image_tag post.band.banner %>
+        <%= image_tag post.band.banner, loading: "lazy" %>
       <% else %>
         <i class="fa-solid fa-users"></i>
       <% end %>
@@ -66,7 +66,7 @@
   <% if post.images.attached? %>
     <div class="mw-post-images">
       <% post.images.each do |image| %>
-        <%= image_tag url_for(image) %>
+        <%= image_tag url_for(image), loading: "lazy" %>
       <% end %>
     </div>
   <% end %>

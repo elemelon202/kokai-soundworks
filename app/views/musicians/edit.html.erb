@@ -349,7 +349,7 @@
             <div class="media-display-group">
               <label class="media-group-label">Avatar</label>
               <div class="current-media-preview avatar-preview">
-                <%= image_tag url_for(@musician.avatar), class: "avatar-image-preview" %>
+                <%= image_tag url_for(@musician.avatar), class: "avatar-image-preview", loading: "lazy" %>
                 <%= button_to purge_attachment_musician_path(@musician, attachment_id: @musician.avatar.id),
                     method: :delete,
                     class: "btn-remove-media",
@@ -364,7 +364,7 @@
             <div class="media-display-group">
               <label class="media-group-label">Banner</label>
               <div class="current-media-preview banner-preview">
-                <%= image_tag url_for(@musician.banner), class: "banner-image-preview" %>
+                <%= image_tag url_for(@musician.banner), class: "banner-image-preview", loading: "lazy" %>
                 <%= button_to purge_attachment_musician_path(@musician, attachment_id: @musician.banner.id),
                     method: :delete,
                     class: "btn-remove-media",
@@ -382,6 +382,7 @@
                 <div class="banner-position-preview" data-banner-position-target="preview">
                   <%= image_tag url_for(@musician.banner),
                       data: { banner_position_target: "image" },
+                      loading: "lazy",
                       style: "object-position: center #{@musician.banner_position || 50}%;" %>
                 </div>
                 <div class="banner-position-controls">
@@ -407,7 +408,7 @@
               <div class="current-media-grid">
                 <% @musician.images.each do |image| %>
                   <div class="media-grid-item">
-                    <%= image_tag url_for(image), class: "preview-image" %>
+                    <%= image_tag url_for(image), class: "preview-image", loading: "lazy" %>
                     <%= button_to purge_attachment_musician_path(@musician, attachment_id: image.id),
                         method: :delete,
                         class: "btn-remove-media",
@@ -426,7 +427,7 @@
               <div class="current-media-grid videos-grid">
                 <% @musician.videos.each do |video| %>
                   <div class="media-grid-item video-item">
-                    <video controls class="preview-video">
+                    <video controls preload="none" class="preview-video">
                       <source src="<%= url_for(video) %>" type="<%= video.content_type %>">
                     </video>
                     <%= button_to purge_attachment_musician_path(@musician, attachment_id: video.id),
@@ -473,7 +474,7 @@
                      data-action="dragstart->shorts-reorder#dragStart dragover->shorts-reorder#dragOver drop->shorts-reorder#drop dragend->shorts-reorder#dragEnd"
                      class="short-card">
                   <% if short.video.attached? %>
-                    <video preload="metadata" muted>
+                    <video preload="none" muted poster="">
                       <source src="<%= url_for(short.video) %>" type="<%= short.video.content_type %>">
                     </video>
                   <% end %>
@@ -572,7 +573,7 @@
             <div class="band-item">
               <div class="band-avatar">
                 <% if band.banner.attached? %>
-                  <%= image_tag url_for(band.banner), class: "band-avatar-img" %>
+                  <%= image_tag url_for(band.banner), class: "band-avatar-img", loading: "lazy" %>
                 <% else %>
                   <i class="fa-solid fa-users"></i>
                 <% end %>
