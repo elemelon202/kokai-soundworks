@@ -27,7 +27,7 @@
 
         <%# Animated logo/brand %>
         <div class="hero-brand">
-          <span>Welcome to</span>
+          <span><%= t('home.welcome') %></span>
         </div>
 
         <%# Main title with Impact font %>
@@ -38,32 +38,32 @@
 
         <%# Tagline %>
         <p class="hero-tagline">
-          From Bedroom to <span class="highlight">Breakthrough</span>
+          <%= t('home.tagline') %>
         </p>
 
         <%# Subtext with animated typing effect look %>
         <div class="hero-tagline-row">
           <div class="tagline-item">
             <i class="fa-solid fa-users icon-lime"></i>
-            <span>Build Bands</span>
+            <span><%= t('home.build_bands') %></span>
           </div>
           <div class="tagline-item">
             <i class="fa-solid fa-calendar-check icon-pink"></i>
-            <span>Book Gigs</span>
+            <span><%= t('home.book_gigs') %></span>
           </div>
           <div class="tagline-item">
             <i class="fa-solid fa-location-dot icon-gold"></i>
-            <span>Fill Venues</span>
+            <span><%= t('home.fill_venues') %></span>
           </div>
         </div>
 
         <%# CTA Buttons %>
         <div class="hero-cta-row">
           <%= link_to new_user_registration_path, class: "hero-btn-primary" do %>
-            <i class="fa-solid fa-rocket"></i> Get Started Free
+            <i class="fa-solid fa-rocket"></i> <%= t('home.get_started') %>
           <% end %>
           <%= link_to musicians_path, class: "hero-btn-secondary" do %>
-            <i class="fa-solid fa-compass"></i> Explore
+            <i class="fa-solid fa-compass"></i> <%= t('home.explore') %>
           <% end %>
         </div>
 
@@ -71,15 +71,15 @@
         <div class="hero-stats-row">
           <div class="stat-item">
             <div class="stat-value lime"><%= Musician.count %>+</div>
-            <div class="stat-label">Musicians</div>
+            <div class="stat-label"><%= t('home.musicians.title') %></div>
           </div>
           <div class="stat-item">
             <div class="stat-value pink"><%= Band.count %>+</div>
-            <div class="stat-label">Bands</div>
+            <div class="stat-label"><%= t('navbar.bands') %></div>
           </div>
           <div class="stat-item">
             <div class="stat-value gold"><%= Venue.count %>+</div>
-            <div class="stat-label">Venues</div>
+            <div class="stat-label"><%= t('navbar.venues') %></div>
           </div>
         </div>
       </div>
@@ -94,7 +94,7 @@
     <%= render "mainstage/homepage_spotlight" %>
 
     <div class="hero-cards justify-content-center m-4">
-      <h2>Join the Community</h2>
+      <h2><%= t('home.join_community') %></h2>
       <div class="row justify-content-center">
         <%# Musician Card %>
         <div class="col-10 col-md-3 card-col">
@@ -102,15 +102,15 @@
             <div class="signup-card-icon lime">
               <i class="fa-solid fa-guitar"></i>
             </div>
-            <h3>Musicians</h3>
-            <p>Showcase your talent, connect with other musicians, and find your next band or collaboration.</p>
+            <h3><%= t('home.musicians.title') %></h3>
+            <p><%= t('home.musicians.description') %></p>
             <ul>
-              <li><i class="fa-solid fa-check lime"></i> Create your profile</li>
-              <li><i class="fa-solid fa-check lime"></i> Upload media & shorts</li>
-              <li><i class="fa-solid fa-check lime"></i> Get discovered</li>
+              <li><i class="fa-solid fa-check lime"></i> <%= t('home.musicians.feature1') %></li>
+              <li><i class="fa-solid fa-check lime"></i> <%= t('home.musicians.feature2') %></li>
+              <li><i class="fa-solid fa-check lime"></i> <%= t('home.musicians.feature3') %></li>
             </ul>
             <%= link_to new_user_registration_path, class: "btn signup-card-btn lime" do %>
-              <i class="fa-solid fa-user-plus me-2"></i> Sign Up Free
+              <i class="fa-solid fa-user-plus me-2"></i> <%= t('common.sign_up_free') %>
             <% end %>
           </div>
         </div>
@@ -121,15 +121,15 @@
             <div class="signup-card-icon pink">
               <i class="fa-solid fa-users"></i>
             </div>
-            <h3>Bandleaders</h3>
-            <p>Build your dream band, manage members, and book gigs together as a unit.</p>
+            <h3><%= t('home.bandleaders.title') %></h3>
+            <p><%= t('home.bandleaders.description') %></p>
             <ul>
-              <li><i class="fa-solid fa-check pink"></i> Create & manage bands</li>
-              <li><i class="fa-solid fa-check pink"></i> Invite musicians</li>
-              <li><i class="fa-solid fa-check pink"></i> Book venues</li>
+              <li><i class="fa-solid fa-check pink"></i> <%= t('home.bandleaders.feature1') %></li>
+              <li><i class="fa-solid fa-check pink"></i> <%= t('home.bandleaders.feature2') %></li>
+              <li><i class="fa-solid fa-check pink"></i> <%= t('home.bandleaders.feature3') %></li>
             </ul>
             <%= link_to new_user_registration_path, class: "btn signup-card-btn pink" do %>
-              <i class="fa-solid fa-user-plus me-2"></i> Sign Up Free
+              <i class="fa-solid fa-user-plus me-2"></i> <%= t('common.sign_up_free') %>
             <% end %>
           </div>
         </div>
@@ -140,15 +140,15 @@
             <div class="signup-card-icon gold">
               <i class="fa-solid fa-location-dot"></i>
             </div>
-            <h3>Venue Owners</h3>
-            <p>List your venue, discover local talent, and fill your calendar with live music.</p>
+            <h3><%= t('home.venue_owners.title') %></h3>
+            <p><%= t('home.venue_owners.description') %></p>
             <ul>
-              <li><i class="fa-solid fa-check gold"></i> List your venue</li>
-              <li><i class="fa-solid fa-check gold"></i> Post gig opportunities</li>
-              <li><i class="fa-solid fa-check gold"></i> Find local bands</li>
+              <li><i class="fa-solid fa-check gold"></i> <%= t('home.venue_owners.feature1') %></li>
+              <li><i class="fa-solid fa-check gold"></i> <%= t('home.venue_owners.feature2') %></li>
+              <li><i class="fa-solid fa-check gold"></i> <%= t('home.venue_owners.feature3') %></li>
             </ul>
             <%= link_to new_user_registration_path, class: "btn signup-card-btn gold" do %>
-              <i class="fa-solid fa-user-plus me-2"></i> Sign Up Free
+              <i class="fa-solid fa-user-plus me-2"></i> <%= t('common.sign_up_free') %>
             <% end %>
           </div>
         </div>
@@ -158,7 +158,7 @@
     <div class="carousels text-center m-4">
       <div class="musicians-carousel row justify-content-center">
         <div class="musicians-carousel-heading text-center">
-          <h2>New Faces</h2>
+          <h2><%= t('home.new_faces') %></h2>
         </div>
         <% @new_musicians = Musician.last(3) %>
         <div class="row justify-content-center align-items-stretch">
@@ -187,7 +187,7 @@
                       <p><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
                     </div>
                   <% end %>
-                  <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary message-btn-lime", data: { turbo: false } %>
+                  <%= button_to t('common.message'), create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary message-btn-lime", data: { turbo: false } %>
                 </div>
               </div>
             <% end %>
@@ -196,7 +196,7 @@
       </div>
       <div class="venues-carousel row justify-content-center">
         <div class="venues-carousel-heading text-center">
-          <h2>New Places</h2>
+          <h2><%= t('home.new_places') %></h2>
           <% @new_venues = Venue.last(3) %>
           <div class="row justify-content-center align-items-stretch">
             <% if @new_venues.any? %>

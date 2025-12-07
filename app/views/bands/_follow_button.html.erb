@@ -5,18 +5,18 @@
       <% elsif current_user.followed_bands.include?(band) %>
         <%= button_to unfollow_band_path(band), method: :delete, style: "padding: 8px 16px; background: #2a2a2a; color: #fff; border: 1px solid #444; border-radius: 8px; font-size:
   0.85rem; font-weight: 500; cursor: pointer;" do %>
-          <i class="fa-solid fa-check"></i> Following
+          <i class="fa-solid fa-check"></i> <%= t('bands.show.following') %>
         <% end %>
       <% else %>
         <%= button_to follow_band_path(band), method: :post, style: "padding: 8px 16px; background: #E936AD; color: #fff; border: none; border-radius: 8px; font-size: 0.85rem;
   font-weight: 500; cursor: pointer;" do %>
-          <i class="fa-solid fa-plus"></i> Follow
+          <i class="fa-solid fa-plus"></i> <%= t('bands.show.follow') %>
         <% end %>
       <% end %>
     <% else %>
       <%= link_to new_user_session_path, style: "padding: 8px 16px; background: #E936AD; color: #fff; border: none; border-radius: 8px; font-size: 0.85rem; font-weight: 500; cursor:
   pointer; text-decoration: none;" do %>
-        <i class="fa-solid fa-plus"></i> Follow
+        <i class="fa-solid fa-plus"></i> <%= t('bands.show.follow') %>
       <% end %>
     <% end %>
   </div>

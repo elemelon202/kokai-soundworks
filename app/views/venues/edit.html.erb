@@ -1,9 +1,9 @@
 <div class="musician-dashboard-container">
   <div class="musician-dashboard-header">
-    <h1>Venue Dashboard</h1>
-    <h2>Manage your venue, gigs, and applications</h2>
+    <h1><%= t('venues.edit.title') %></h1>
+    <h2><%= t('venues.edit.subtitle') %></h2>
     <%= link_to venue_path(@venue), class: "btn-view-profile" do %>
-      <i class="fa-solid fa-eye"></i> View Venue
+      <i class="fa-solid fa-eye"></i> <%= t('venues.edit.view_venue') %>
     <% end %>
   </div>
 
@@ -17,7 +17,7 @@
         <i class="fa-solid fa-calendar"></i>
       </div>
       <div class="stat-value"><%= @venue.gigs.where('date >= ?', Date.current).count %></div>
-      <div class="stat-label">Upcoming Gigs</div>
+      <div class="stat-label"><%= t('venues.edit.upcoming_gigs') %></div>
     </div>
 
     <div class="musician-stat-card">
@@ -25,7 +25,7 @@
         <i class="fa-solid fa-clipboard-list"></i>
       </div>
       <div class="stat-value"><%= @venue.gigs.joins(:gig_applications).where(gig_applications: { status: :pending }).distinct.count %></div>
-      <div class="stat-label">Pending Apps</div>
+      <div class="stat-label"><%= t('venues.edit.pending_apps') %></div>
     </div>
 
     <div class="musician-stat-card">
@@ -33,7 +33,7 @@
         <i class="fa-solid fa-users"></i>
       </div>
       <div class="stat-value"><%= @venue.capacity || "—" %></div>
-      <div class="stat-label">Capacity</div>
+      <div class="stat-label"><%= t('venues.edit.capacity') %></div>
     </div>
 
     <div class="musician-stat-card">
@@ -41,7 +41,7 @@
         <i class="fa-solid fa-location-dot"></i>
       </div>
       <div class="stat-value"><%= @venue.city || "—" %></div>
-      <div class="stat-label">City</div>
+      <div class="stat-label"><%= t('venues.edit.city') %></div>
     </div>
   </div>
 
@@ -51,43 +51,43 @@
       <div class="card-icon">
         <i class="fa-brands fa-stripe"></i>
       </div>
-      <h3>Stripe Connect</h3>
+      <h3><%= t('venues.edit.stripe_connect') %></h3>
     </div>
     <div class="dashboard-card-padding">
       <% if @venue.stripe_connected? %>
         <div class="stripe-status connected">
           <i class="fa-solid fa-check-circle"></i>
           <div>
-            <p class="status-title">Stripe Connected</p>
-            <p class="status-subtitle">You can receive payments from funded gigs</p>
+            <p class="status-title"><%= t('venues.edit.stripe_connected') %></p>
+            <p class="status-subtitle"><%= t('venues.edit.stripe_connected_desc') %></p>
           </div>
         </div>
         <% if @venue.venue_stripe_account.charges_enabled? %>
           <div class="stripe-features">
-            <span class="feature-badge success"><i class="fa-solid fa-credit-card"></i> Charges Enabled</span>
+            <span class="feature-badge success"><i class="fa-solid fa-credit-card"></i> <%= t('venues.edit.charges_enabled') %></span>
             <% if @venue.venue_stripe_account.payouts_enabled? %>
-              <span class="feature-badge success"><i class="fa-solid fa-money-bill-transfer"></i> Payouts Enabled</span>
+              <span class="feature-badge success"><i class="fa-solid fa-money-bill-transfer"></i> <%= t('venues.edit.payouts_enabled') %></span>
             <% end %>
           </div>
         <% else %>
           <div class="stripe-warning">
             <i class="fa-solid fa-exclamation-triangle"></i>
-            <p>Complete your Stripe setup to enable charges</p>
+            <p><%= t('venues.edit.complete_stripe_setup') %></p>
           </div>
           <%= link_to new_venue_stripe_account_path(@venue), class: "btn-stripe-connect" do %>
-            <i class="fa-solid fa-arrow-right"></i> Complete Setup
+            <i class="fa-solid fa-arrow-right"></i> <%= t('venues.edit.complete_setup') %>
           <% end %>
         <% end %>
       <% else %>
         <div class="stripe-status not-connected">
           <i class="fa-solid fa-credit-card"></i>
           <div>
-            <p class="status-title">Connect Stripe to Create Funded Gigs</p>
-            <p class="status-subtitle">Receive payments directly when fans fund your shows</p>
+            <p class="status-title"><%= t('venues.edit.connect_stripe') %></p>
+            <p class="status-subtitle"><%= t('venues.edit.connect_stripe_desc') %></p>
           </div>
         </div>
         <%= link_to new_venue_stripe_account_path(@venue), class: "btn-stripe-connect" do %>
-          <i class="fa-brands fa-stripe"></i> Connect with Stripe
+          <i class="fa-brands fa-stripe"></i> <%= t('venues.edit.connect_with_stripe') %>
         <% end %>
       <% end %>
     </div>
@@ -101,7 +101,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-hand-holding-dollar"></i>
         </div>
-        <h3>Active Funded Gigs</h3>
+        <h3><%= t('venues.edit.active_funded_gigs') %></h3>
       </div>
       <div class="dashboard-card-padding">
         <div class="funded-gigs-list">
@@ -122,7 +122,7 @@
           <% end %>
         </div>
         <%= link_to funded_gigs_path, class: "link-view-apps" do %>
-          View all funded gigs <i class="fa-solid fa-arrow-right"></i>
+          <%= t('venues.edit.view_all_funded_gigs') %> <i class="fa-solid fa-arrow-right"></i>
         <% end %>
       </div>
     </div>
@@ -136,19 +136,19 @@
         <div class="card-icon">
           <i class="fa-solid fa-plus"></i>
         </div>
-        <h3>Create New Gig</h3>
+        <h3><%= t('venues.edit.create_new_gig') %></h3>
       </div>
       <div class="dashboard-card-padding">
         <%= simple_form_for [@venue, @gig], html: { class: "venue-gig-form" } do |f| %>
           <div class="form-field">
-            <%= f.input :name, label: false, placeholder: "Gig name", input_html: { class: "form-input venue-form-input" } %>
+            <%= f.input :name, label: false, placeholder: t('venues.edit.gig_name'), input_html: { class: "form-input venue-form-input" } %>
           </div>
 
           <%# Interactive Calendar %>
           <div class="venue-gig-form-row">
             <div class="venue-gig-form-col" data-controller="datepicker">
               <label class="venue-form-label">
-                <i class="fa-solid fa-calendar"></i> Select Date
+                <i class="fa-solid fa-calendar"></i> <%= t('venues.edit.select_date') %>
               </label>
               <input type="hidden" name="gig[date]" data-datepicker-target="input">
               <div class="calendar-wrapper"></div>
@@ -156,20 +156,20 @@
             <div class="venue-gig-form-col-sm">
               <div>
                 <label class="venue-form-label">
-                  <i class="fa-solid fa-clock"></i> Start Time
+                  <i class="fa-solid fa-clock"></i> <%= t('venues.edit.start_time') %>
                 </label>
                 <%= f.input :start_time, as: :time, label: false, input_html: { type: "time", class: "form-input venue-form-input" } %>
               </div>
               <div>
                 <label class="venue-form-label">
-                  <i class="fa-solid fa-clock"></i> End Time
+                  <i class="fa-solid fa-clock"></i> <%= t('venues.edit.end_time') %>
                 </label>
                 <%= f.input :end_time, as: :time, label: false, input_html: { type: "time", class: "form-input venue-form-input" } %>
               </div>
             </div>
           </div>
 
-          <%= f.submit "Create Gig", class: "btn-save-profile" %>
+          <%= f.submit t('venues.edit.create_gig'), class: "btn-save-profile" %>
         <% end %>
       </div>
     </div>
@@ -180,7 +180,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-inbox"></i>
         </div>
-        <h3>Pending Applications</h3>
+        <h3><%= t('venues.edit.pending_applications') %></h3>
       </div>
       <div class="dashboard-card-padding">
         <% pending_apps = GigApplication.joins(gig: :venue).where(venues: { id: @venue.id }, status: :pending).includes(:band, :gig).limit(5) %>
@@ -204,12 +204,12 @@
             <% end %>
           </div>
           <%= link_to gig_applications_path, class: "link-view-apps" do %>
-            View all applications <i class="fa-solid fa-arrow-right"></i>
+            <%= t('venues.edit.view_all_applications') %> <i class="fa-solid fa-arrow-right"></i>
           <% end %>
         <% else %>
           <div class="empty-state">
             <i class="fa-solid fa-inbox"></i>
-            <p>No pending applications</p>
+            <p><%= t('venues.edit.no_pending_applications') %></p>
           </div>
         <% end %>
       </div>
@@ -223,7 +223,7 @@
       <div class="card-icon">
         <i class="fa-solid fa-calendar-days"></i>
       </div>
-      <h3>Upcoming Gigs</h3>
+      <h3><%= t('venues.edit.upcoming_gigs') %></h3>
     </div>
     <div class="dashboard-card-padding">
       <% if upcoming_gigs.any? %>
@@ -253,17 +253,17 @@
                     </div>
                   <% else %>
                     <p class="no-bands-notice">
-                      <i class="fa-solid fa-info-circle"></i> No bands booked yet
+                      <i class="fa-solid fa-info-circle"></i> <%= t('venues.edit.no_bands_booked') %>
                     </p>
                   <% end %>
                 </div>
                 <div class="venue-edit-gig-actions">
                   <% pending_count = gig.gig_applications.pending.count %>
                   <% if pending_count > 0 %>
-                    <span class="pending-badge"><%= pending_count %> pending</span>
+                    <span class="pending-badge"><%= pending_count %> <%= t('venues.edit.pending') %></span>
                   <% end %>
                   <%= link_to edit_gig_path(gig), class: "btn-gig-edit" do %>
-                    <i class="fa-solid fa-pen"></i> Edit
+                    <i class="fa-solid fa-pen"></i> <%= t('common.edit') %>
                   <% end %>
                 </div>
               </div>
@@ -273,8 +273,8 @@
       <% else %>
         <div class="empty-state large">
           <i class="fa-solid fa-calendar-xmark"></i>
-          <p>No upcoming gigs scheduled.</p>
-          <p class="sub">Create a gig above to get started!</p>
+          <p><%= t('venues.edit.no_upcoming_gigs') %></p>
+          <p class="sub"><%= t('venues.edit.create_gig_hint') %></p>
         </div>
       <% end %>
     </div>
@@ -287,7 +287,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-building"></i>
         </div>
-        <h3>Edit Venue Details</h3>
+        <h3><%= t('venues.edit.edit_venue_details') %></h3>
       </div>
 
       <%= simple_form_for @venue, html: { class: "musician-edit-form" } do |f| %>
@@ -304,37 +304,37 @@
         <div class="form-grid">
           <div class="form-field">
             <label class="form-label">
-              <i class="fa-solid fa-signature"></i> Venue Name
+              <i class="fa-solid fa-signature"></i> <%= t('venues.edit.venue_name') %>
             </label>
-            <%= f.text_field :name, class: "form-input", placeholder: "Venue name" %>
+            <%= f.text_field :name, class: "form-input", placeholder: t('venues.edit.venue_name') %>
           </div>
 
           <div class="form-field">
             <label class="form-label">
-              <i class="fa-solid fa-city"></i> City
+              <i class="fa-solid fa-city"></i> <%= t('venues.edit.city') %>
             </label>
-            <%= f.text_field :city, class: "form-input", placeholder: "City" %>
+            <%= f.text_field :city, class: "form-input", placeholder: t('venues.edit.city') %>
           </div>
 
           <div class="form-field">
             <label class="form-label">
-              <i class="fa-solid fa-location-dot"></i> Address
+              <i class="fa-solid fa-location-dot"></i> <%= t('venues.edit.address') %>
             </label>
-            <%= f.text_field :address, class: "form-input", placeholder: "Full address" %>
+            <%= f.text_field :address, class: "form-input", placeholder: t('venues.edit.address') %>
           </div>
 
           <div class="form-field">
             <label class="form-label">
-              <i class="fa-solid fa-users"></i> Capacity
+              <i class="fa-solid fa-users"></i> <%= t('venues.edit.capacity') %>
             </label>
-            <%= f.number_field :capacity, class: "form-input", placeholder: "Venue capacity" %>
+            <%= f.number_field :capacity, class: "form-input", placeholder: t('venues.edit.capacity') %>
           </div>
 
           <div class="form-field full-width">
             <label class="form-label">
-              <i class="fa-solid fa-pen"></i> Description
+              <i class="fa-solid fa-pen"></i> <%= t('venues.edit.description') %>
             </label>
-            <%= f.text_area :description, class: "form-input", placeholder: "Tell bands about your venue...", rows: 4 %>
+            <%= f.text_area :description, class: "form-input", placeholder: t('venues.edit.description'), rows: 4 %>
           </div>
         </div>
 
@@ -343,20 +343,20 @@
           <div class="media-section-header">
             <i class="fa-solid fa-cloud-upload-alt"></i>
             <div>
-              <h4>Venue Photos</h4>
-              <p>Add photos of your venue</p>
+              <h4><%= t('venues.edit.venue_photos') %></h4>
+              <p><%= t('venues.edit.add_photos') %></p>
             </div>
           </div>
 
           <div class="upload-fields-grid">
             <div class="upload-field" data-controller="file-preview">
-              <label class="upload-field-label">Photos</label>
+              <label class="upload-field-label"><%= t('venues.edit.photos') %></label>
               <div class="upload-input-wrapper">
                 <%= f.file_field :photos, multiple: true, accept: "image/*", class: "media-file-input", id: "venue-photos-input",
                     data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
                 <label for="venue-photos-input" class="upload-label compact" data-file-preview-target="placeholder">
                   <i class="fa-solid fa-images"></i>
-                  <span><%= @venue.photos.attached? ? "Add more photos" : "Choose photos" %></span>
+                  <span><%= @venue.photos.attached? ? t('venues.edit.add_more_photos') : t('venues.edit.choose_photos') %></span>
                 </label>
               </div>
               <div class="file-preview-container" data-file-preview-target="preview"></div>
@@ -367,7 +367,7 @@
         <%# Current Photos %>
         <% if @venue.photos.attached? %>
           <div class="venue-current-photos">
-            <h4>Current Photos</h4>
+            <h4><%= t('venues.edit.current_photos') %></h4>
             <div class="venue-photos-grid">
               <% @venue.photos.each do |photo| %>
                 <div class="venue-photo-thumb">
@@ -379,7 +379,7 @@
         <% end %>
 
         <div class="form-submit-wrapper">
-          <%= f.submit "Save Changes", class: "btn-save-profile" %>
+          <%= f.submit t('venues.edit.save_changes'), class: "btn-save-profile" %>
         </div>
       <% end %>
     </div>

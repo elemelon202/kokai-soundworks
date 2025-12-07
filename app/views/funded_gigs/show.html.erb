@@ -26,14 +26,14 @@
         <%# Venue message %>
         <% if @funded_gig.venue_message.present? %>
           <div class="funded-gig-section mb-4">
-            <h4><i class="fa-solid fa-quote-left me-2"></i>From the Venue</h4>
+            <h4><i class="fa-solid fa-quote-left me-2"></i><%= t('funded_gigs.show.from_venue') %></h4>
             <p class="venue-message"><%= @funded_gig.venue_message %></p>
           </div>
         <% end %>
 
         <%# Bands playing %>
         <div class="funded-gig-section mb-4">
-          <h4><i class="fa-solid fa-users me-2"></i>Bands Playing</h4>
+          <h4><i class="fa-solid fa-users me-2"></i><%= t('funded_gigs.show.bands_playing') %></h4>
           <% if @funded_gig.bands.any? %>
             <div class="bands-grid">
               <% @funded_gig.bands.each do |band| %>
@@ -45,21 +45,21 @@
                   <% end %>
                   <div class="band-info">
                     <strong><%= band.name %></strong>
-                    <small><%= band.followers.count %> followers</small>
+                    <small><%= band.followers.count %> <%= t('funded_gigs.show.followers') %></small>
                   </div>
                 <% end %>
               <% end %>
             </div>
           <% elsif @funded_gig.open_for_applications? %>
-            <p class="text-muted">Bands are being selected. Check back soon!</p>
+            <p class="text-muted"><%= t('funded_gigs.show.bands_being_selected') %></p>
           <% else %>
-            <p class="text-muted">No bands confirmed yet.</p>
+            <p class="text-muted"><%= t('funded_gigs.show.no_bands') %></p>
           <% end %>
         </div>
 
         <%# Recent supporters %>
         <div class="funded-gig-section mb-4">
-          <h4><i class="fa-solid fa-heart me-2"></i>Recent Supporters</h4>
+          <h4><i class="fa-solid fa-heart me-2"></i><%= t('funded_gigs.show.recent_supporters') %></h4>
           <% if @pledges.any? %>
             <div class="supporters-list">
               <% @pledges.each do |pledge| %>
@@ -82,25 +82,25 @@
               <% end %>
             </div>
           <% else %>
-            <p class="text-muted">Be the first to support this show!</p>
+            <p class="text-muted"><%= t('funded_gigs.show.be_first_supporter') %></p>
           <% end %>
         </div>
 
         <%# Band application (for band members) %>
         <% if user_signed_in? && current_user.musician&.bands&.any? && @funded_gig.open_for_applications? %>
           <div class="funded-gig-section mb-4">
-            <h4><i class="fa-solid fa-guitar me-2"></i>Apply to Play</h4>
+            <h4><i class="fa-solid fa-guitar me-2"></i><%= t('funded_gigs.show.apply_to_play') %></h4>
             <% current_user.musician.bands.each do |band| %>
               <% existing_application = @gig.gig_applications.find_by(band: band) %>
               <% if existing_application %>
                 <div class="alert alert-<%= existing_application.status == 'approved' ? 'success' : existing_application.status == 'rejected' ? 'danger' : 'info' %>">
                   <strong><%= band.name %>:</strong>
                   <% if existing_application.approved? %>
-                    Approved! You're playing this show.
+                    <%= t('funded_gigs.show.approved') %>
                   <% elsif existing_application.rejected? %>
-                    Application not selected.
+                    <%= t('funded_gigs.show.rejected') %>
                   <% else %>
-                    Application pending review.
+                    <%= t('funded_gigs.show.pending') %>
                   <% end %>
                 </div>
               <% else %>
@@ -108,10 +108,10 @@
                   <%= hidden_field_tag :band_id, band.id %>
                   <div class="d-flex align-items-center gap-3 mb-2">
                     <strong><%= band.name %></strong>
-                    <span class="badge bg-primary">Mainstage Score: <%= band.mainstage_win_count > 0 ? "Winner x#{band.mainstage_win_count}" : "Active" %></span>
+                    <span class="badge bg-primary"><%= t('funded_gigs.show.mainstage_score') %>: <%= band.mainstage_win_count > 0 ? "#{t('funded_gigs.show.winner')} x#{band.mainstage_win_count}" : t('funded_gigs.show.active') %></span>
                   </div>
-                  <%= text_area_tag :message, nil, class: "form-control mb-2", placeholder: "Why should your band play this show? (optional)", rows: 2 %>
-                  <%= submit_tag "Apply with #{band.name}", class: "btn btn-outline-primary" %>
+                  <%= text_area_tag :message, nil, class: "form-control mb-2", placeholder: t('funded_gigs.show.application_message_placeholder'), rows: 2 %>
+                  <%= submit_tag t('funded_gigs.show.apply_with_band', band_name: band.name), class: "btn btn-outline-primary" %>
                 <% end %>
               <% end %>
             <% end %>
@@ -136,15 +136,15 @@
             <div class="funding-stats d-flex justify-content-around text-center mb-3">
               <div>
                 <div class="stat-number"><span data-funded-gig-target="percentage"><%= @funded_gig.funding_percentage %>%</span></div>
-                <div class="stat-label">funded</div>
+                <div class="stat-label"><%= t('funded_gigs.show.funded_percentage') %></div>
               </div>
               <div>
                 <div class="stat-number"><span data-funded-gig-target="supporterCount"><%= @funded_gig.supporter_count %></span></div>
-                <div class="stat-label">backers</div>
+                <div class="stat-label"><%= t('funded_gigs.show.backers') %></div>
               </div>
               <div>
                 <div class="stat-number"><%= @funded_gig.days_until_deadline %></div>
-                <div class="stat-label">days left</div>
+                <div class="stat-label"><%= t('funded_gigs.show.days_left') %></div>
               </div>
             </div>
 
@@ -185,11 +185,11 @@
             <%# Pledge button %>
             <% if @funded_gig.can_accept_pledges? && !@user_pledge %>
               <%= link_to new_funded_gig_pledge_path(@funded_gig), class: "btn btn-success btn-lg w-100" do %>
-                <i class="fa-solid fa-hand-holding-heart me-2"></i>Pledge Now
+                <i class="fa-solid fa-hand-holding-heart me-2"></i><%= t('funded_gigs.show.support_show') %>
               <% end %>
               <p class="text-muted text-center mt-2 small">
                 <i class="fa-solid fa-shield-halved me-1"></i>
-                You won't be charged unless the show is fully funded
+                <%= t('funded_gigs.show.not_charged_until_funded') %>
               </p>
             <% elsif @funded_gig.funded? || @funded_gig.partially_funded? || @funded_gig.completed? %>
               <div class="alert alert-success text-center">

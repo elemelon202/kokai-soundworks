@@ -4,15 +4,15 @@
       <div class="cool-form-icon">
         <i class="fa-solid fa-bell"></i>
       </div>
-      <h1>Notifications</h1>
-      <p>Stay updated with your band activities</p>
+      <h1><%= t('notifications.index.title') %></h1>
+      <p><%= t('notifications.index.subtitle') %></p>
     </div>
 
     <% if @notifications.any? %>
       <div class="notifications-actions">
         <% if @unread_count > 0 %>
           <%= link_to mark_all_as_read_notifications_path, method: :patch, data: { turbo_method: :patch }, class: "btn-mark-all" do %>
-            <i class="fa-solid fa-check-double"></i> Mark all as read
+            <i class="fa-solid fa-check-double"></i> <%= t('notifications.index.mark_all_read') %>
           <% end %>
         <% end %>
       </div>
@@ -29,7 +29,7 @@
               <p class="notification-full-message"><%= notification.message %></p>
               <span class="notification-full-time">
                 <i class="fa-regular fa-clock"></i>
-                <%= time_ago_in_words(notification.created_at) %> ago
+                <%= time_ago_in_words(notification.created_at) %> <%= t('notifications.index.ago') %>
               </span>
             </div>
             <% unless notification.read %>
@@ -41,14 +41,14 @@
     <% else %>
       <div class="notifications-empty-state">
         <i class="fa-solid fa-bell-slash"></i>
-        <h3>No notifications</h3>
-        <p>You're all caught up! We'll notify you when something happens.</p>
+        <h3><%= t('notifications.index.no_notifications') %></h3>
+        <p><%= t('notifications.index.all_caught_up') %></p>
       </div>
     <% end %>
 
     <div class="cool-form-back">
       <%= link_to root_path do %>
-        <i class="fa-solid fa-arrow-left"></i> Back to home
+        <i class="fa-solid fa-arrow-left"></i> <%= t('notifications.index.back_home') %>
       <% end %>
     </div>
   </div>

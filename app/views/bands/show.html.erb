@@ -12,7 +12,7 @@
         <div style="margin: 12px 0;">
           <%= render "bands/follow_button", band: @band %>
           <span style="color: #888; font-size: 0.9rem; margin-left: 8px;">
-            <%= pluralize(@band.followers.count, "follower") %>
+            <%= @band.followers.count %> <%= t('bands.show.followers') %>
           </span>
           <%= render "bands/save_button", band: @band %>
         </div>
@@ -26,7 +26,7 @@
         </div>
         <% if current_user && current_user.id != @band.user_id %>
           <%= button_to create_or_show_direct_messages_path(recipient_id: @band.user_id), method: :post, class: "btn-message-band" do %>
-            <i class="fa-solid fa-envelope"></i> Message Band
+            <i class="fa-solid fa-envelope"></i> <%= t('bands.show.message_band') %>
           <% end %>
         <% end %>
       </div>
@@ -38,7 +38,7 @@
       <div class="band-stats-row">
         <div class="band-stat">
           <i class="fa-solid fa-users"></i>
-          <span><%= @band.musicians.count %> <%= @band.musicians.count == 1 ? "Member" : "Members" %></span>
+          <span><%= @band.musicians.count %> <%= t('bands.show.members') %></span>
         </div>
         <div class="band-stat">
           <i class="fa-solid fa-calendar-days"></i>
@@ -47,13 +47,13 @@
       </div>
       <% if @band.description.present? %>
         <div class="band-description">
-          <h3>About</h3>
+          <h3><%= t('bands.show.about') %></h3>
           <p><%= @band.description %></p>
         </div>
       <% end %>
       <!-- Band Members -->
       <div class="band-members-section">
-        <h3>Members</h3>
+        <h3><%= t('bands.show.members') %></h3>
         <div class="members-grid">
           <% @band.musicians.each do |musician| %>
             <div class="member-card">
@@ -82,7 +82,7 @@
     <% funded_gigs = @band.gigs.joins(:funded_gig).where('gigs.date >= ?', Date.current).where(funded_gigs: { funding_status: [:accepting_pledges, :funded, :partially_funded] }).order('gigs.date ASC').limit(3) %>
     <% if funded_gigs.any? %>
       <div class="band-media-section">
-        <h3><i class="fa-solid fa-hand-holding-heart" style="color: #C8E938;"></i> Funded Shows</h3>
+        <h3><i class="fa-solid fa-hand-holding-heart" style="color: #C8E938;"></i> <%= t('bands.show.funded_shows') %></h3>
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
           <% funded_gigs.each do |gig| %>
             <%= link_to funded_gig_path(gig.funded_gig), style: "background: #252525; padding: 16px; border-radius: 12px; display: block; text-decoration: none; transition: background 0.2s; border-left: 3px solid #C8E938;", class: "band-gig-card" do %>
@@ -114,7 +114,7 @@
     <% upcoming_gigs = @band.gigs.where('date >= ?', Date.current).order(:date).limit(5) %>
     <% if upcoming_gigs.any? %>
       <div class="band-media-section">
-        <h3><i class="fa-solid fa-calendar" style="color: #C8E938;"></i> Upcoming Gigs</h3>
+        <h3><i class="fa-solid fa-calendar" style="color: #C8E938;"></i> <%= t('bands.show.upcoming_gigs') %></h3>
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
           <% upcoming_gigs.each do |gig| %>
             <%= link_to gig_path(gig), style: "background: #252525; padding: 16px; border-radius: 12px; display: block; text-decoration: none; transition: background 0.2s;", class: "band-gig-card" do %>
@@ -145,7 +145,7 @@
     <% past_band_gigs = @band.band_gigs.where('date < ?', Date.current).order(date: :desc).limit(5) %>
     <% if past_gigs.any? || past_band_gigs.any? %>
       <div class="band-media-section">
-        <h3><i class="fa-solid fa-clock-rotate-left" style="color: #C8E938;"></i> Past Gigs</h3>
+        <h3><i class="fa-solid fa-clock-rotate-left" style="color: #C8E938;"></i> <%= t('bands.show.past_gigs') %></h3>
         <div style="display: flex; flex-direction: column; gap: 12px; margin-top: 16px;">
           <% past_gigs.each do |gig| %>
             <%= link_to gig_path(gig), style: "background: #252525; padding: 16px; border-radius: 12px; display: block; text-decoration: none; transition: background 0.2s; opacity: 0.8;", class: "band-gig-card" do %>
@@ -185,7 +185,7 @@
     <% band_posts = @band.posts.includes(:user, :post_likes, :post_comments, images_attachments: :blob, videos_attachments: :blob).recent.limit(10) %>
     <% if band_posts.any? %>
       <div class="band-media-section">
-        <h3><i class="fa-solid fa-newspaper"></i> Activity</h3>
+        <h3><i class="fa-solid fa-newspaper"></i> <%= t('bands.show.activity') %></h3>
         <div style="display: flex; flex-direction: column; gap: 16px;">
           <% band_posts.each do |post| %>
             <%= render "posts/post", post: post %>
@@ -196,7 +196,7 @@
     <!-- Photos Section -->
     <% if @band.images.attached? %>
       <div class="band-media-section">
-        <h3><i class="fa-solid fa-camera"></i> Photos</h3>
+        <h3><i class="fa-solid fa-camera"></i> <%= t('bands.show.photos') %></h3>
         <div class="photos-grid">
           <% @band.images.each do |image| %>
             <div class="photo-item">
@@ -209,7 +209,7 @@
     <!-- Videos Section -->
     <% if @band.videos.attached? %>
       <div class="band-media-section">
-        <h3><i class="fa-solid fa-video"></i> Videos</h3>
+        <h3><i class="fa-solid fa-video"></i> <%= t('bands.show.videos') %></h3>
         <div class="videos-grid">
           <% @band.videos.each do |video| %>
             <div class="video-item">
@@ -224,7 +224,7 @@
     <% end %>
     <% if @band.spotify_tracks.any? %>
       <div class="band-media-section">
-        <h3><i class="fa-brands fa-spotify"></i> Music</h3>
+        <h3><i class="fa-brands fa-spotify"></i> <%= t('bands.show.music') %></h3>
         <div class="spotify-tracks-grid">
           <%= render @band.spotify_tracks %>
         </div>

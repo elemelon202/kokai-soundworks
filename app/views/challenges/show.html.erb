@@ -1,6 +1,6 @@
 <div class="container py-4">
   <%= link_to challenges_path, class: "btn btn-outline-secondary mb-4" do %>
-    <i class="fa-solid fa-arrow-left me-1"></i> Back to Challenges
+    <i class="fa-solid fa-arrow-left me-1"></i> <%= t('common.back') %> to <%= t('challenges.index.title') %>
   <% end %>
 
   <div class="row">
@@ -11,9 +11,9 @@
           <span class="challenge-badge badge-original">ORIGINAL</span>
           <% case @challenge.status %>
           <% when 'open' %>
-            <span class="challenge-badge badge-open">Open for Responses</span>
+            <span class="challenge-badge badge-open"><%= t('challenges.index.open_for_responses') %></span>
           <% when 'voting' %>
-            <span class="challenge-badge badge-voting">Voting Open</span>
+            <span class="challenge-badge badge-voting"><%= t('challenges.show.voting') %></span>
           <% when 'closed' %>
             <span class="challenge-badge badge-closed">Closed</span>
           <% end %>
@@ -55,7 +55,7 @@
 
           <%# Stats %>
           <div class="d-flex gap-4 mb-3 challenge-stats">
-            <span><i class="fa-solid fa-users me-1"></i> <%= @challenge.responses_count %> responses</span>
+            <span><i class="fa-solid fa-users me-1"></i> <%= @challenge.responses_count %> <%= t('challenges.show.responses').downcase %></span>
             <span><i class="fa-solid fa-calendar me-1"></i> <%= time_ago_in_words(@challenge.created_at) %> ago</span>
           </div>
 
@@ -88,7 +88,7 @@
           </div>
         <% else %>
           <%= link_to respond_challenge_path(@challenge), class: "btn btn-lg w-100 mt-3 btn-respond" do %>
-            <i class="fa-solid fa-guitar me-2"></i> Submit Your Response
+            <i class="fa-solid fa-guitar me-2"></i> <%= t('challenges.show.submit_response') %>
           <% end %>
         <% end %>
       <% end %>
@@ -99,7 +99,7 @@
       <% if @challenge.winner && @challenge.closed? %>
         <div class="challenge-winner-section">
           <h4 class="challenge-winner-title">
-            <i class="fa-solid fa-trophy me-2"></i> Winner
+            <i class="fa-solid fa-trophy me-2"></i> <%= t('challenges.show.winner') %>
           </h4>
           <%= render 'response_card', response: @challenge.winner, winner: true %>
         </div>
@@ -107,7 +107,7 @@
 
       <h4 class="mb-3 challenge-responses-title">
         <i class="fa-solid fa-users me-2"></i>
-        Responses (<%= @challenge.responses_count %>)
+        <%= t('challenges.show.responses') %> (<%= @challenge.responses_count %>)
       </h4>
 
       <% if @responses.any? %>

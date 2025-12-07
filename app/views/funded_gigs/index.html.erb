@@ -1,8 +1,8 @@
 <div class="funded-gigs-page">
   <div class="container py-4">
     <div class="funded-gigs-header mb-4">
-      <h1><i class="fa-solid fa-hand-holding-heart me-2"></i>Community-Funded Shows</h1>
-      <p class="text-muted">Support live music in Japan. Pledge to fund a show - if it's funded, you get a free ticket!</p>
+      <h1><i class="fa-solid fa-hand-holding-heart me-2"></i><%= t('funded_gigs.index.title') %></h1>
+      <p class="text-muted"><%= t('funded_gigs.index.description') %></p>
     </div>
 
     <% if @funded_gigs.any? %>
@@ -36,7 +36,7 @@
 
                 <% if funded_gig.bands.any? %>
                   <div class="funded-gig-bands mb-2">
-                    <small class="text-muted">Featuring:</small>
+                    <small class="text-muted"><%= t('funded_gigs.index.featuring') %>:</small>
                     <% funded_gig.bands.limit(3).each do |band| %>
                       <span class="badge bg-dark"><%= band.name %></span>
                     <% end %>
@@ -52,8 +52,8 @@
                     <div class="progress-bar bg-success" role="progressbar" style="width: <%= [funded_gig.funding_percentage, 100].min %>%"></div>
                   </div>
                   <div class="d-flex justify-content-between mt-1">
-                    <small class="text-success fw-bold"><%= funded_gig.funding_percentage %>% funded</small>
-                    <small class="text-muted"><%= funded_gig.supporter_count %> supporters</small>
+                    <small class="text-success fw-bold"><%= funded_gig.funding_percentage %>% <%= t('funded_gigs.index.funded') %></small>
+                    <small class="text-muted"><%= funded_gig.supporter_count %> <%= t('funded_gigs.index.supporters') %></small>
                   </div>
                 </div>
 
@@ -61,7 +61,7 @@
                   <div class="deadline-countdown mt-2">
                     <small class="text-warning">
                       <i class="fa-solid fa-clock me-1"></i>
-                      <%= funded_gig.days_until_deadline %> days left
+                      <%= funded_gig.days_until_deadline %> <%= t('funded_gigs.index.days_left') %>
                     </small>
                   </div>
                 <% end %>
@@ -70,11 +70,11 @@
               <div class="funded-gig-card-footer">
                 <%= link_to funded_gig_path(funded_gig), class: "btn btn-primary w-100" do %>
                   <% if funded_gig.can_accept_pledges? %>
-                    <i class="fa-solid fa-hand-holding-heart me-1"></i> Pledge Now
+                    <i class="fa-solid fa-hand-holding-heart me-1"></i> <%= t('funded_gigs.index.pledge_now') %>
                   <% elsif funded_gig.open_for_applications? %>
-                    <i class="fa-solid fa-eye me-1"></i> View Details
+                    <i class="fa-solid fa-eye me-1"></i> <%= t('funded_gigs.index.view_details') %>
                   <% else %>
-                    <i class="fa-solid fa-eye me-1"></i> View
+                    <i class="fa-solid fa-eye me-1"></i> <%= t('common.view') %>
                   <% end %>
                 <% end %>
               </div>
@@ -85,8 +85,8 @@
     <% else %>
       <div class="no-funded-gigs text-center py-5">
         <i class="fa-solid fa-hand-holding-heart fa-3x text-muted mb-3"></i>
-        <h4>No funded shows available right now</h4>
-        <p class="text-muted">Check back soon for community-funded gig opportunities!</p>
+        <h4><%= t('funded_gigs.index.no_shows') %></h4>
+        <p class="text-muted"><%= t('funded_gigs.index.check_back') %></p>
       </div>
     <% end %>
   </div>

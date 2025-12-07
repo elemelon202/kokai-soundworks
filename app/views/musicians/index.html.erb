@@ -1,7 +1,7 @@
 <div class="container musicians-index-container">
   <div class="index-heading m-3 mt-5">
-    <h1 style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 40px rgba(255, 61, 142, 0.56), 0 0 80px rgba(1, 1, 1, 0.3); margin-bottom: 8px;">Musicians</h1>
-    <p>Future artists</p>
+    <h1 style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 40px rgba(255, 61, 142, 0.56), 0 0 80px rgba(1, 1, 1, 0.3); margin-bottom: 8px;"><%= t('home.musicians.title') %></h1>
+    <p><%= t('musicians.index.title') %></p>
     <%# DISCOVER SHORTS CTA %>
     <div class="discover-shorts-cta-wrapper">
       <%= link_to discover_shorts_path, class: "discover-shorts-cta" do %>
@@ -9,8 +9,8 @@
           <i class="fa-solid fa-play"></i>
         </div>
         <div class="discover-shorts-text">
-          <span class="discover-shorts-title">Discover Shorts</span>
-          <span class="discover-shorts-subtitle">The fastest way to discover talent!</span>
+          <span class="discover-shorts-title"><%= t('musicians.index.discover_shorts') %></span>
+          <span class="discover-shorts-subtitle"><%= t('musicians.index.shorts_description') %></span>
         </div>
         <i class="fa-solid fa-arrow-right discover-shorts-arrow"></i>
       <% end %>
@@ -19,12 +19,12 @@
   <%= form_with url: musicians_path, method: :get, data: { turbo_frame: "musicians_list" }, class: "filters-form" do %>
     <!-- Search Field -->
     <div class="mt-5 mb-5 d-flex gap-2 align-items-center">
-      <%= text_field_tag :query, params[:query], placeholder: "Search...", class: "form-control", data: { action: "input->auto-submit#submit" } %>
-      <%= link_to "Clear Filters", musicians_path, class: "btn btn-outline-secondary" %>
+      <%= text_field_tag :query, params[:query], placeholder: t('musicians.index.search_placeholder'), class: "form-control", data: { action: "input->auto-submit#submit" } %>
+      <%= link_to t('musicians.index.clear_filters'), musicians_path, class: "btn btn-outline-secondary" %>
       <!-- Instruments Dropdown -->
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Instruments
+          <%= t('musicians.index.instruments') %>
         </button>
         <div class="dropdown-menu p-3" style="min-width: 200px;" data-controller="auto-submit">
           <% Musician.where.not(instrument: [nil, '']).distinct.order(:instrument).pluck(:instrument).each do |instrument| %>
@@ -38,7 +38,7 @@
       <!-- Status Dropdown -->
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Status
+          <%= t('musicians.index.status') %>
         </button>
         <div class="dropdown-menu p-3" style="min-width: 200px;" data-controller="auto-submit">
           <% Musician.statuses.each do |label, value| %>
@@ -55,7 +55,7 @@
       <!-- Locations Dropdown -->
       <div class="dropdown">
         <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown">
-          Locations
+          <%= t('musicians.index.locations') %>
         </button>
         <div class="dropdown-menu p-3" style="min-width: 200px;" data-controller="auto-submit">
           <% Musician.where.not(location: [nil, '']).distinct.order(:location).pluck(:location).each do |location| %>
@@ -94,7 +94,7 @@
           </div>
         </nav>
         <p style="text-align: center; color: #666; font-size: 0.9rem; margin-bottom: 20px;" data-horizontal-scroll-target="pageInfo">
-          Viewing page <%= @pagy.page %> of <%= @pagy.pages %>
+          <%= t('musicians.index.viewing_page') %> <%= @pagy.page %> / <%= @pagy.pages %>
         </p>
       <% end %>
       <div class="record-shelf-container">
@@ -128,12 +128,12 @@
                       <p class="musician-bio-line"><i class="fa-solid fa-pen-to-square"></i> <%= musician.bio %></p>
                     </div>
                   <% end %>
-                  <%= button_to "Message", create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary", style: "background-color: #a4fe35ff;", data: { turbo: false } %>
+                  <%= button_to t('common.message'), create_or_show_direct_messages_path(recipient_id: musician.user_id), method: :post, class: "btn btn-primary", style: "background-color: #a4fe35ff;", data: { turbo: false } %>
                 </div>
               </div>
             <% end %>
           <% else %>
-            <em>Sorry, no musicians found.</em>
+            <em><%= t('musicians.index.no_musicians') %></em>
           <% end %>
         </div>
       </div>

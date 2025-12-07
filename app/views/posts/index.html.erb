@@ -1,21 +1,21 @@
 <div class="musicians-wanted-container">
   <div class="mw-header">
-    <h1><i class="fa-solid fa-bullhorn"></i> Musicians Wanted</h1>
-    <p class="mw-subtitle">Bands looking for session musicians</p>
+    <h1><i class="fa-solid fa-bullhorn"></i> <%= t('posts.index.title') %></h1>
+    <p class="mw-subtitle"><%= t('posts.index.subtitle') %></p>
   </div>
 
   <%# Post Form - Only for Band Members %>
   <% if current_user.bands.any? %>
     <div class="mw-post-form">
-      <h3><i class="fa-solid fa-plus"></i> Post a Request</h3>
+      <h3><i class="fa-solid fa-plus"></i> <%= t('posts.index.post_request') %></h3>
       <%= form_with model: @post, local: true, class: "mw-form" do |f| %>
         <div class="mw-form-row">
           <div class="mw-form-group">
-            <label>Posting as Band</label>
+            <label><%= t('posts.index.posting_as_band') %></label>
             <%= f.select :band_id, current_user.bands.map { |b| [b.name, b.id] }, {}, class: "mw-select" %>
           </div>
           <div class="mw-form-group">
-            <label>Instrument Needed</label>
+            <label><%= t('posts.index.instrument_needed') %></label>
             <%= f.select :instrument, [
               ["Guitar", "guitar"],
               ["Bass", "bass"],
@@ -32,29 +32,29 @@
 
         <div class="mw-form-row">
           <div class="mw-form-group">
-            <label>Location</label>
+            <label><%= t('posts.index.location') %></label>
             <%= f.text_field :location, placeholder: "e.g. Los Angeles, CA", class: "mw-input", required: true %>
           </div>
           <div class="mw-form-group">
-            <label>Genre</label>
+            <label><%= t('posts.index.genre') %></label>
             <%= f.text_field :genre, placeholder: "e.g. Rock, Jazz, Blues", class: "mw-input" %>
           </div>
         </div>
 
         <div class="mw-form-row">
           <div class="mw-form-group">
-            <label>Needed By</label>
+            <label><%= t('posts.index.needed_by') %></label>
             <%= f.date_field :needed_by, class: "mw-input", min: Date.current, required: true %>
           </div>
           <div class="mw-form-group"></div>
         </div>
 
         <div class="mw-form-group full-width">
-          <label>Details</label>
+          <label><%= t('posts.index.details') %></label>
           <%= f.text_area :content, placeholder: "Describe what you're looking for: gig details, experience needed, pay, etc.", rows: 3, class: "mw-textarea", required: true %>
         </div>
 
-        <%= f.submit "Post Request", class: "mw-submit-btn" %>
+        <%= f.submit t('posts.index.post_request'), class: "mw-submit-btn" %>
       <% end %>
     </div>
   <% end %>
@@ -98,8 +98,8 @@
   <% else %>
     <div class="mw-empty">
       <i class="fa-solid fa-guitar"></i>
-      <p>No musician requests right now</p>
-      <p class="mw-empty-sub">Check back later or adjust your filters</p>
+      <p><%= t('posts.index.no_requests') %></p>
+      <p class="mw-empty-sub"><%= t('posts.index.check_back') %></p>
     </div>
   <% end %>
 </div>

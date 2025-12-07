@@ -14,7 +14,7 @@
     </div>
     <% if policy(@gig).edit? %>
       <%= link_to edit_gig_path(@gig), class: "btn-edit-gig" do %>
-        <i class="fa-solid fa-cog"></i> Manage Gig
+        <i class="fa-solid fa-cog"></i> <%= t('gigs.show.manage_gig') %>
       <% end %>
     <% end %>
   </div>
@@ -28,7 +28,7 @@
       <% else %>
         <div class="gig-poster-placeholder">
           <i class="fa-solid fa-image"></i>
-          <span>Gig Poster</span>
+          <span><%= t('gigs.show.gig_poster') %></span>
         </div>
       <% end %>
     </div>
@@ -41,7 +41,7 @@
           <i class="fa-solid fa-calendar"></i>
         </div>
         <div class="gig-info-content">
-          <h3>Date & Time</h3>
+          <h3><%= t('gigs.show.date_time') %></h3>
           <p class="gig-date"><%= @gig.date.strftime("%A, %B %d, %Y") %></p>
           <% if @gig.start_time.present? %>
             <p class="gig-time">
@@ -64,7 +64,7 @@
 
       <% unless is_performing || is_venue_owner %>
         <div class="gig-rsvp-section">
-          <h3><i class="fa-solid fa-calendar-check"></i> Are you going?</h3>
+          <h3><i class="fa-solid fa-calendar-check"></i> <%= t('gigs.show.are_you_going') %></h3>
           <%= render partial: "gig_attendances/buttons", locals: { gig: @gig } %>
         </div>
       <% end %>
@@ -74,7 +74,7 @@
   <%# Band Lineup Section %>
   <div class="gig-lineup-section">
     <div class="lineup-header">
-      <h2><i class="fa-solid fa-users"></i> Band Lineup</h2>
+      <h2><i class="fa-solid fa-users"></i> <%= t('gigs.show.band_lineup') %></h2>
     </div>
     <% if @gig.bands.any? %>
       <div class="lineup-grid">
@@ -104,7 +104,7 @@
     <% else %>
       <div class="no-bands-message">
         <i class="fa-solid fa-music"></i>
-        <p>No bands announced yet. Check back soon!</p>
+        <p><%= t('gigs.show.no_bands') %></p>
       </div>
     <% end %>
   </div>
@@ -117,35 +117,35 @@
 
     <div class="gig-apply-section">
       <div class="apply-header">
-        <h2><i class="fa-solid fa-guitar"></i> Apply to Play</h2>
+        <h2><i class="fa-solid fa-guitar"></i> <%= t('gigs.show.apply_to_play') %></h2>
       </div>
 
       <% if available_bands.any? %>
         <%= form_with url: gig_gig_applications_path(@gig), method: :post, local: true, class: "apply-form" do |f| %>
           <div class="form-field">
-            <label>Select your band</label>
+            <label><%= t('gigs.show.select_band') %></label>
             <%= select_tag "gig_application[band_id]",
                 options_from_collection_for_select(available_bands, :id, :name),
                 class: "form-select" %>
           </div>
           <div class="form-field">
-            <label>Message to venue (optional)</label>
+            <label><%= t('gigs.show.message_to_venue') %></label>
             <%= text_area_tag "gig_application[message]", nil,
-                placeholder: "Tell the venue why your band would be a great fit...",
+                placeholder: t('gigs.show.message_placeholder'),
                 rows: 3,
                 class: "form-textarea" %>
           </div>
-          <%= submit_tag "Submit Application", class: "btn-submit-application" %>
+          <%= submit_tag t('gigs.show.submit_application'), class: "btn-submit-application" %>
         <% end %>
       <% elsif booked_bands.any? %>
         <div class="apply-status booked">
           <i class="fa-solid fa-check-circle"></i>
-          <p>Your band is already booked for this gig!</p>
+          <p><%= t('gigs.show.already_booked') %></p>
         </div>
       <% elsif applied_bands.any? %>
         <div class="apply-status pending">
           <i class="fa-solid fa-clock"></i>
-          <p>Application submitted! Waiting for venue response.</p>
+          <p><%= t('gigs.show.application_submitted') %></p>
         </div>
       <% end %>
     </div>

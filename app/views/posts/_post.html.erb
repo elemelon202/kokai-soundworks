@@ -10,12 +10,12 @@
     </div>
     <div class="mw-post-info">
       <%= link_to band_path(post.band), class: "mw-post-band-name" do %>
-        <%= post.band&.name || "Unknown Band" %>
+        <%= post.band&.name || t('posts.show.unknown_band') %>
       <% end %>
-      <span class="mw-post-timestamp"><%= time_ago_in_words(post.created_at) %> ago</span>
+      <span class="mw-post-timestamp"><%= time_ago_in_words(post.created_at) %> <%= t('notifications.index.ago') %></span>
     </div>
     <% if current_user.bands.include?(post.band) %>
-      <%= button_to post_path(post), method: :delete, data: { confirm: "Delete this post?" }, class: "mw-post-delete" do %>
+      <%= button_to post_path(post), method: :delete, data: { confirm: t('posts.show.delete_confirm') }, class: "mw-post-delete" do %>
         <i class="fa-solid fa-trash"></i>
       <% end %>
     <% end %>
@@ -25,31 +25,31 @@
   <div class="mw-post-details">
     <div class="mw-detail">
       <i class="fa-solid fa-guitar"></i>
-      <span class="mw-detail-label">Looking for:</span>
-      <span class="mw-detail-value"><%= post.instrument&.titleize || "Not specified" %></span>
+      <span class="mw-detail-label"><%= t('posts.show.looking_for') %>:</span>
+      <span class="mw-detail-value"><%= post.instrument&.titleize || t('common.not_specified') %></span>
     </div>
 
     <div class="mw-detail">
       <i class="fa-solid fa-location-dot"></i>
-      <span class="mw-detail-label">Location:</span>
-      <span class="mw-detail-value"><%= post.location || "Not specified" %></span>
+      <span class="mw-detail-label"><%= t('posts.index.location') %>:</span>
+      <span class="mw-detail-value"><%= post.location || t('common.not_specified') %></span>
     </div>
 
     <% if post.genre.present? %>
       <div class="mw-detail">
         <i class="fa-solid fa-music"></i>
-        <span class="mw-detail-label">Genre:</span>
+        <span class="mw-detail-label"><%= t('posts.index.genre') %>:</span>
         <span class="mw-detail-value"><%= post.genre %></span>
       </div>
     <% end %>
 
     <div class="mw-detail <%= post.needed_by && post.needed_by < 3.days.from_now.to_date ? 'urgent' : '' %>">
       <i class="fa-solid fa-calendar"></i>
-      <span class="mw-detail-label">Needed by:</span>
+      <span class="mw-detail-label"><%= t('posts.show.needed_by') %>:</span>
       <span class="mw-detail-value">
-        <%= post.needed_by ? post.needed_by.strftime("%B %d, %Y") : "ASAP" %>
+        <%= post.needed_by ? post.needed_by.strftime("%B %d, %Y") : t('posts.show.asap') %>
         <% if post.needed_by && post.needed_by < 3.days.from_now.to_date %>
-          <span class="mw-urgent-badge">URGENT</span>
+          <span class="mw-urgent-badge"><%= t('posts.show.urgent') %></span>
         <% end %>
       </span>
     </div>
@@ -78,7 +78,7 @@
       <% if band_leader_user %>
         <%= button_to create_or_show_direct_messages_path(recipient_id: band_leader_user.id), method: :post, class: "mw-dm-btn" do %>
           <i class="fa-solid fa-envelope"></i>
-          Message Band
+          <%= t('posts.show.message_band') %>
         <% end %>
       <% end %>
     <% end %>

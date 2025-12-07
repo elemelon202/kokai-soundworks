@@ -4,7 +4,7 @@
       <div class="cool-form-icon">
         <i class="fa-solid fa-users-line"></i>
       </div>
-      <h1>Create Your Band</h1>
+      <h1><%= t('bands.new.title') %></h1>
       <p>Bring your musical vision to life</p>
     </div>
     <%= simple_form_for @band do |f| %>
@@ -14,20 +14,20 @@
             <i class="fa-solid fa-guitar"></i>
           </div>
           <div class="section-text">
-            <h2>Band Details</h2>
-            <p>Tell us about your band</p>
+            <h2><%= t('bands.new.band_details') %></h2>
+            <p><%= t('bands.new.band_details_subtitle') %></p>
           </div>
         </div>
         <%= f.input :name,
-                    label: "Band Name",
+                    label: t('bands.new.band_name'),
                     placeholder: "Enter your band's name",
                     input_html: { class: "form-control" } %>
         <%= f.input :location,
-                    label: "Location",
+                    label: t('bands.new.location'),
                     placeholder: "Where are you based?",
                     input_html: { class: "form-control" } %>
         <%= f.input :description,
-                    label: "Description",
+                    label: t('bands.new.description'),
                     placeholder: "Describe your band's sound, style, and story...",
                     input_html: { class: "form-control", rows: 4 } %>
       </div>
@@ -38,28 +38,28 @@
               <i class="fa-solid fa-user-music"></i>
             </div>
             <div class="section-text">
-              <h2>Your Musician Profile</h2>
+              <h2><%= t('bands.new.your_profile') %></h2>
               <p>As a band leader, you need a musician profile</p>
             </div>
           </div>
           <%= f.fields_for :leader_musician, Musician.new do |m| %>
             <%= m.input :name,
-                        label: "Your Name",
+                        label: t('bands.new.your_name'),
                         required: true,
                         placeholder: "Enter your name",
                         input_html: { class: "form-control" } %>
             <%= m.input :instrument,
-                        label: "Your Instrument/Role",
+                        label: t('bands.new.your_instrument'),
                         required: true,
                         placeholder: "e.g., Lead Guitar, Vocals, Drums",
                         input_html: { class: "form-control" } %>
             <%= m.input :location,
-                        label: "Your Location",
+                        label: t('bands.new.your_location'),
                         placeholder: "Where are you based?",
                         input_html: { class: "form-control" } %>
             <%= m.input :media,
                         as: :file,
-                        label: "Profile Photo",
+                        label: t('bands.new.profile_photo'),
                         hint: "Upload an image to personalize your profile",
                         input_html: { accept: "image/*" } %>
           <% end %>
@@ -71,12 +71,12 @@
             <i class="fa-solid fa-user-plus"></i>
           </div>
           <div class="section-text">
-            <h2>Invite Musicians</h2>
+            <h2><%= t('bands.new.invite_musicians') %></h2>
             <p>Search and invite musicians to your band (optional)</p>
           </div>
         </div>
         <div class="musician-search-field">
-          <label class="form-label" for="band_musician_ids">Search Musicians</label>
+          <label class="form-label" for="band_musician_ids"><%= t('bands.new.search_musicians') %></label>
           <%
             available_musicians = Musician.where.not(instrument: [nil, '', 'Unknown'])
             available_musicians = available_musicians.where.not(id: current_user.musician.id) if current_user.musician
@@ -103,7 +103,7 @@
         </div>
       </div>
       <div class="cool-form-actions">
-        <%= f.submit "Create Band", class: "cool-form-submit-btn" %>
+        <%= f.submit t('bands.new.create'), class: "cool-form-submit-btn" %>
       </div>
     <% end %>
     <div class="cool-form-back">

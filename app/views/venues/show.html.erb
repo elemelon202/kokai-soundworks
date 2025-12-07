@@ -18,7 +18,7 @@
     <% if current_user && @venue.user_id == current_user.id %>
       <div class="venue-banner-edit">
         <%= link_to edit_venue_path(@venue), class: "btn-venue-edit" do %>
-          <i class="fa-solid fa-pen"></i> Edit
+          <i class="fa-solid fa-pen"></i> <%= t('venues.show.edit') %>
         <% end %>
       </div>
     <% end %>
@@ -28,7 +28,7 @@
   <% if @venue.photos.attached? && @venue.photos.count > 0 %>
     <div class="venue-section">
       <h2 class="venue-section-title">
-        <i class="fa-solid fa-images"></i> Photos
+        <i class="fa-solid fa-images"></i> <%= t('venues.show.photos') %>
       </h2>
       <div id="venuePhotosCarousel" class="carousel slide venue-photos-carousel" data-bs-ride="carousel">
         <div class="carousel-inner">
@@ -62,7 +62,7 @@
     <div class="venue-info-grid">
       <% if @venue.capacity.present? %>
         <div class="venue-info-item">
-          <p class="info-label">Capacity</p>
+          <p class="info-label"><%= t('venues.show.capacity') %></p>
           <p class="info-value">
             <i class="fa-solid fa-users"></i>
             <%= @venue.capacity %>
@@ -71,7 +71,7 @@
       <% end %>
       <% if @venue.gigs.any? %>
         <div class="venue-info-item">
-          <p class="info-label">Total Gigs</p>
+          <p class="info-label"><%= t('venues.show.total_gigs') %></p>
           <p class="info-value">
             <i class="fa-solid fa-calendar-check"></i>
             <%= @venue.gigs.count %>
@@ -91,7 +91,7 @@
   <% if upcoming_gigs.any? %>
     <div class="venue-section">
       <h2 class="venue-section-title venue-section-title-lg">
-        <i class="fa-solid fa-calendar"></i> Upcoming Gigs
+        <i class="fa-solid fa-calendar"></i> <%= t('venues.show.upcoming_gigs') %>
       </h2>
       <div class="venue-gigs-list">
         <% upcoming_gigs.each do |gig| %>
@@ -136,7 +136,7 @@
   <% if past_gigs.any? %>
     <div class="venue-section">
       <h2 class="venue-section-title muted venue-section-title-lg">
-        <i class="fa-solid fa-clock-rotate-left"></i> Past Gigs
+        <i class="fa-solid fa-clock-rotate-left"></i> <%= t('venues.show.past_gigs') %>
       </h2>
       <div class="venue-past-gigs-list">
         <% past_gigs.each do |gig| %>
@@ -153,7 +153,7 @@
               </p>
             </div>
             <span class="past-gig-attendance">
-              <i class="fa-solid fa-users"></i> <%= gig.gig_attendances.attended.count %> attended
+              <i class="fa-solid fa-users"></i> <%= gig.gig_attendances.attended.count %> <%= t('venues.show.attended') %>
             </span>
           </div>
         <% end %>
@@ -164,7 +164,7 @@
   <%# Gig Calendar %>
   <div class="venue-section venue-calendar-section">
     <h2 class="venue-section-title venue-section-title-lg">
-      <i class="fa-solid fa-calendar-days"></i> Gig Calendar
+      <i class="fa-solid fa-calendar-days"></i> <%= t('venues.show.gig_calendar') %>
     </h2>
     <%
       calendar_events = @venue.gigs.map do |gig|
@@ -188,7 +188,7 @@
 
   <div class="venue-back-link">
     <%= link_to venues_path do %>
-      <i class="fa-solid fa-arrow-left"></i> Back to venues
+      <i class="fa-solid fa-arrow-left"></i> <%= t('venues.show.back_to_venues') %>
     <% end %>
   </div>
 </div>

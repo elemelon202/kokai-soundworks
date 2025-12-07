@@ -14,15 +14,15 @@
         <div class="profile-info">
           <h1 class="profile-name"><%= @fan.display_name || @fan.user.username %></h1>
           <div class="profile-meta">
-            <span class="profile-badge">Fan</span>
+            <span class="profile-badge"><%= t('fans.show.fan') %></span>
             <% if @fan.location.present? %>
               <span class="profile-location"><i class="fa-solid fa-location-dot"></i> <%= @fan.location %></span>
             <% end %>
           </div>
           <div class="profile-stats-inline">
-            <span>Following: <strong><%= @fan.user.followed_musicians.count + @fan.user.followed_bands.count %></strong></span>
-            <span>Friends: <strong><%= @fan.user.friends.count %></strong></span>
-            <span>Gigs Attended: <strong><%= @past_gigs.count %></strong></span>
+            <span><%= t('fans.edit.following') %>: <strong><%= @fan.user.followed_musicians.count + @fan.user.followed_bands.count %></strong></span>
+            <span><%= t('fans.show.friends') %>: <strong><%= @fan.user.friends.count %></strong></span>
+            <span><%= t('fans.show.gigs_attended') %>: <strong><%= @past_gigs.count %></strong></span>
           </div>
           <%# Social Links %>
           <% if @fan.social_instagram.present? || @fan.social_twitter.present? || @fan.social_spotify.present? %>
@@ -50,11 +50,11 @@
         <button class="btn-icon"><i class="fa-solid fa-share-nodes"></i></button>
         <% if current_user && current_user.id == @fan.user_id %>
           <%= link_to edit_fan_path(@fan), class: "btn-edit-profile" do %>
-            <i class="fa-solid fa-pen"></i> Edit Profile
+            <i class="fa-solid fa-pen"></i> <%= t('musicians.show.edit_profile') %>
           <% end %>
         <% elsif current_user && current_user.id != @fan.user_id %>
           <%= button_to create_or_show_direct_messages_path(recipient_id: @fan.user_id), method: :post, class: "btn-message-profile" do %>
-            <i class="fa-solid fa-envelope"></i> Message
+            <i class="fa-solid fa-envelope"></i> <%= t('common.message') %>
           <% end %>
           <%= render "friendships/friend_button", user: @fan.user %>
         <% end %>
@@ -74,12 +74,12 @@
     <div class="bottom-profile-content">
       <%# ----- LEFT COLUMN: ABOUT & ACTIVITY ------ %>
       <div class="about-card">
-        <h3 class="section-title">About</h3>
-        <p class="about-text"><%= @fan.bio.present? ? @fan.bio : "No bio yet." %></p>
+        <h3 class="section-title"><%= t('fans.show.about') %></h3>
+        <p class="about-text"><%= @fan.bio.present? ? @fan.bio : t('musicians.show.no_media') %></p>
 
         <%# Favorite Genres %>
         <% if @fan.favorite_genres.present? %>
-          <h4 class="subsection-title fan-subsection-genres">Favorite Genres</h4>
+          <h4 class="subsection-title fan-subsection-genres"><%= t('fans.show.favorite_genres') %></h4>
           <div class="tag-list">
             <% @fan.favorite_genres.split(',').each do |genre| %>
               <span class="tag"><%= genre.strip %></span>
@@ -91,7 +91,7 @@
         <% if @upcoming_gigs.any? %>
           <div class="fan-section">
             <h3 class="section-title fan-section-title">
-              <i class="fa-solid fa-calendar lime"></i> Upcoming Gigs
+              <i class="fa-solid fa-calendar lime"></i> <%= t('fans.show.upcoming_gigs') %>
             </h3>
             <div class="fan-gigs-list">
               <% @upcoming_gigs.limit(5).each do |gig| %>
@@ -112,7 +112,7 @@
         <%# Following %>
         <div class="fan-section">
           <h3 class="section-title fan-section-title">
-            <i class="fa-solid fa-heart pink"></i> Following
+            <i class="fa-solid fa-heart pink"></i> <%= t('fans.edit.following') %>
           </h3>
           <div class="fan-following-grid">
             <% @following_musicians.limit(6).each do |musician| %>
@@ -138,7 +138,7 @@
           </div>
           <% if @following_musicians.count + @following_bands.count > 12 %>
             <%= link_to following_fan_path(@fan), class: "fan-view-all-link" do %>
-              View all <%= @following_musicians.count + @following_bands.count %> following <i class="fa-solid fa-arrow-right"></i>
+              <%= t('common.view') %> all <%= @following_musicians.count + @following_bands.count %> following <i class="fa-solid fa-arrow-right"></i>
             <% end %>
           <% end %>
         </div>
@@ -148,7 +148,7 @@
         <% if fan_posts.any? %>
           <div class="fan-section">
             <h3 class="section-title fan-section-title">
-              <i class="fa-solid fa-newspaper lime"></i> Posts
+              <i class="fa-solid fa-newspaper lime"></i> <%= t('musicians.show.posts') %>
             </h3>
             <div class="fan-posts-section">
               <% fan_posts.each do |post| %>
@@ -162,25 +162,25 @@
       <%# ----- RIGHT COLUMN: STATS & GIGS ------ %>
       <div class="right-column">
         <div class="stats-card">
-          <h3 class="section-title">Stats</h3>
+          <h3 class="section-title"><%= t('fans.show.stats') %></h3>
           <div class="stat-row">
-            <span class="stat-label">Musicians Following</span>
+            <span class="stat-label"><%= t('fans.show.musicians_following') %></span>
             <span class="stat-value"><%= @following_musicians.count %></span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">Bands Following</span>
+            <span class="stat-label"><%= t('fans.show.bands_following') %></span>
             <span class="stat-value"><%= @following_bands.count %></span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">Friends</span>
+            <span class="stat-label"><%= t('fans.show.friends') %></span>
             <span class="stat-value"><%= @fan.user.friends.count %></span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">Gigs Attended</span>
+            <span class="stat-label"><%= t('fans.show.gigs_attended') %></span>
             <span class="stat-value"><%= @past_gigs.count %></span>
           </div>
           <div class="stat-row">
-            <span class="stat-label">Upcoming Gigs</span>
+            <span class="stat-label"><%= t('fans.show.upcoming_gigs') %></span>
             <span class="stat-value"><%= @upcoming_gigs.count %></span>
           </div>
         </div>
@@ -189,7 +189,7 @@
         <% if @past_gigs.any? %>
           <div class="fan-past-gigs-card">
             <h3 class="section-title fan-section-title">
-              <i class="fa-solid fa-ticket lime"></i> Gig History
+              <i class="fa-solid fa-ticket lime"></i> <%= t('fans.show.gig_history') %>
             </h3>
             <div class="fan-past-gigs-list">
               <% @past_gigs.limit(5).each do |gig| %>
@@ -201,7 +201,7 @@
             </div>
             <% if @past_gigs.count > 5 %>
               <%= link_to gigs_fan_path(@fan), class: "fan-view-link" do %>
-                View all <i class="fa-solid fa-arrow-right"></i>
+                <%= t('common.view') %> all <i class="fa-solid fa-arrow-right"></i>
               <% end %>
             <% end %>
           </div>
@@ -212,13 +212,13 @@
         <% if saved_count > 0 %>
           <div class="fan-saved-card">
             <h3 class="section-title fan-section-title">
-              <i class="fa-solid fa-bookmark lime"></i> Saved
+              <i class="fa-solid fa-bookmark lime"></i> <%= t('fans.edit.saved') %>
             </h3>
             <p class="saved-count">
-              <%= saved_count %> saved profiles
+              <%= saved_count %> <%= t('fans.show.saved_profiles') %>
             </p>
             <%= link_to saved_fan_path(@fan), class: "fan-view-link" do %>
-              View saved <i class="fa-solid fa-arrow-right"></i>
+              <%= t('fans.show.view_saved') %> <i class="fa-solid fa-arrow-right"></i>
             <% end %>
           </div>
         <% end %>

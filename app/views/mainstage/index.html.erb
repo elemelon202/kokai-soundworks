@@ -1,8 +1,8 @@
 <div class="mainstage-poster">
   <%# Festival Poster Header %>
   <div class="mainstage-poster-header">
-    <h1 class="mainstage-poster-title">MAINSTAGE</h1>
-    <p class="mainstage-poster-subtitle">Weekly Engagement Championship</p>
+    <h1 class="mainstage-poster-title"><%= t('mainstage.title') %></h1>
+    <p class="mainstage-poster-subtitle"><%= t('mainstage.subtitle') %></p>
     <div class="mainstage-poster-dates">
       <%= @contest.start_date.strftime('%b %d').upcase %> — <%= @contest.end_date.strftime('%b %d, %Y').upcase %>
     </div>
@@ -11,10 +11,10 @@
   <%# Contest Type Switcher %>
   <div class="mainstage-switcher">
     <div class="mainstage-switch-btn active">
-      <i class="fa-solid fa-user"></i> Musicians
+      <i class="fa-solid fa-user"></i> <%= t('navbar.musicians') %>
     </div>
     <%= link_to band_mainstage_path, class: "mainstage-switch-btn" do %>
-      <i class="fa-solid fa-users"></i> Bands
+      <i class="fa-solid fa-users"></i> <%= t('navbar.bands') %>
     <% end %>
   </div>
 
@@ -33,7 +33,7 @@
     <% end %>
   <% else %>
     <div class="mainstage-vote-banner">
-      <%= link_to "Sign in", new_user_session_path, style: "color: #C8E938;" %> to vote for your favorite artist!
+      <%= link_to t('navbar.login'), new_user_session_path, style: "color: #C8E938;" %> to vote for your favorite artist!
     </div>
   <% end %>
 
@@ -49,15 +49,15 @@
         <div class="mainstage-headliner-score"><%= headliner[:total_score] %> PTS</div>
         <div class="mainstage-headliner-stats">
           <span class="engagement"><i class="fa-solid fa-bolt"></i> <%= headliner[:engagement_score] %> engagement</span>
-          <span class="votes"><i class="fa-solid fa-hand-pointer"></i> <%= headliner[:vote_score] / 10 %> votes</span>
+          <span class="votes"><i class="fa-solid fa-hand-pointer"></i> <%= headliner[:vote_score] / 10 %> <%= t('mainstage.votes') %></span>
         </div>
         <% if current_user && !@user_vote && current_user.musician != headliner[:musician] %>
           <%= button_to mainstage_vote_path(musician_id: headliner[:musician].id), method: :post, class: "mainstage-vote-btn" do %>
-            <i class="fa-solid fa-star"></i> VOTE
+            <i class="fa-solid fa-star"></i> <%= t('mainstage.vote').upcase %>
           <% end %>
         <% elsif @user_vote == headliner[:musician] %>
           <div class="mainstage-vote-btn voted">
-            <i class="fa-solid fa-check"></i> VOTED
+            <i class="fa-solid fa-check"></i> <%= t('mainstage.voted').upcase %>
           </div>
         <% end %>
       </div>
@@ -81,12 +81,12 @@
               <% if current_user && !@user_vote && current_user.musician != entry[:musician] %>
                 <div class="mainstage-main-act-vote">
                   <%= button_to mainstage_vote_path(musician_id: entry[:musician].id), method: :post do %>
-                    Vote
+                    <%= t('mainstage.vote') %>
                   <% end %>
                 </div>
               <% elsif @user_vote == entry[:musician] %>
                 <div class="mainstage-main-act-vote">
-                  <span style="color: #4ade80; font-size: 0.8rem;"><i class="fa-solid fa-check"></i> Voted</span>
+                  <span style="color: #4ade80; font-size: 0.8rem;"><i class="fa-solid fa-check"></i> <%= t('mainstage.voted') %></span>
                 </div>
               <% end %>
             </div>
@@ -111,11 +111,11 @@
                   <% if current_user && !@user_vote && current_user.musician != entry[:musician] %>
                     <div style="margin-top: 6px;">
                       <%= button_to mainstage_vote_path(musician_id: entry[:musician].id), method: :post, style: "padding: 4px 12px; background: transparent; border: 1px solid #E936AD; color: #E936AD; border-radius: 12px; font-size: 0.75rem; cursor: pointer;" do %>
-                        Vote
+                        <%= t('mainstage.vote') %>
                       <% end %>
                     </div>
                   <% elsif @user_vote == entry[:musician] %>
-                    <div style="margin-top: 6px; color: #4ade80; font-size: 0.75rem;"><i class="fa-solid fa-check"></i> Voted</div>
+                    <div style="margin-top: 6px; color: #4ade80; font-size: 0.75rem;"><i class="fa-solid fa-check"></i> <%= t('mainstage.voted') %></div>
                   <% end %>
                 <% end %>
               </div>
@@ -154,7 +154,7 @@
   <%# Past Winners Link %>
   <div class="mainstage-past-link">
     <%= link_to mainstage_winners_path do %>
-      <i class="fa-solid fa-crown"></i> View Past Winners
+      <i class="fa-solid fa-crown"></i> <%= t('common.view') %> <%= t('mainstage.past_winners') %>
     <% end %>
   </div>
 </div>

@@ -7,7 +7,7 @@
     <% other_user = @chat.other_participant(current_user) %>
     <div class="chat-header-info">
       <h4 class="chat-participant-name">
-        <%= other_user&.username || "Unknown User" %>
+        <%= other_user&.username || t('direct_messages.chat.unknown_user') %>
         <% if other_user&.musician %>
           <span class="badge bg-dark"><%= other_user.musician.instrument %></span>
         <% end %>
@@ -15,17 +15,17 @@
     </div>
     <div class="chat-header-actions">
       <% if other_user&.musician %>
-        <%= link_to musician_path(other_user.musician), class: "chat-action-btn", title: "View Profile" do %>
+        <%= link_to musician_path(other_user.musician), class: "chat-action-btn", title: t('direct_messages.chat.view_profile') do %>
           <i class="fa-solid fa-user"></i>
         <% end %>
         <% if current_user.musician %>
           <div class="dropdown d-inline-block">
-            <button class="chat-action-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="Invite to Band">
+            <button class="chat-action-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false" title="<%= t('direct_messages.chat.invite_to_band') %>">
               <i class="fa-solid fa-user-plus"></i>
             </button>
             <ul class="dropdown-menu dropdown-menu-end">
               <li>
-                <h6 class="dropdown-header">Invite to Band</h6>
+                <h6 class="dropdown-header"><%= t('direct_messages.chat.invite_to_band') %></h6>
               </li>
               <% if current_user.musician.bands.any? %>
                 <% current_user.musician.bands.each do |band| %>
@@ -38,13 +38,13 @@
                   <% end %>
                 <% end %>
                 <% if current_user.musician.bands.all? { |band| band.musicians.include?(other_user.musician) } %>
-                  <li><span class="dropdown-item text-muted">Already in all your bands</span></li>
+                  <li><span class="dropdown-item text-muted"><%= t('direct_messages.chat.already_in_all_bands') %></span></li>
                 <% end %>
                 <li><hr class="dropdown-divider"></li>
               <% end %>
               <li>
                 <%= link_to new_band_path(preselect_musician: other_user.musician.id), class: "dropdown-item" do %>
-                  <i class="fa-solid fa-plus me-2"></i> Create a Band
+                  <i class="fa-solid fa-plus me-2"></i> <%= t('direct_messages.chat.create_band') %>
                 <% end %>
               </li>
             </ul>

@@ -4,10 +4,10 @@
 
     <div class="chat-area empty-state">
       <div class="empty-message">
-        <h3>Welcome to Direct Messages</h3>
-        <p>Select a conversation from the sidebar or start a new one.</p>
+        <h3><%= t('direct_messages.index.welcome') %></h3>
+        <p><%= t('direct_messages.index.select_conversation') %></p>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#newChatModal">
-          <i class="fa-solid fa-plus"></i> Start a New Conversation
+          <i class="fa-solid fa-plus"></i> <%= t('messages.sidebar.start_conversation') %>
         </button>
       </div>
     </div>

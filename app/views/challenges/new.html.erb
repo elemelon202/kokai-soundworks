@@ -1,15 +1,15 @@
 <div class="container py-4" style="max-width: 700px;">
   <%= link_to challenges_path, class: "btn btn-outline-secondary mb-4" do %>
-    <i class="fa-solid fa-arrow-left me-1"></i> Back to Challenges
+    <i class="fa-solid fa-arrow-left me-1"></i> <%= t('common.back') %> to <%= t('challenges.index.title') %>
   <% end %>
 
   <div class="card" style="background: #1e1e1e; border: 1px solid #2a2a2a; border-radius: 16px;">
     <div class="card-header" style="background: linear-gradient(135deg, #E936AD 0%, #7B2D8E 100%); border: none; padding: 20px;">
       <h2 style="color: #fff; margin: 0;">
-        <i class="fa-solid fa-trophy me-2"></i> Create a Challenge
+        <i class="fa-solid fa-trophy me-2"></i> <%= t('challenges.new.title') %>
       </h2>
       <p style="color: rgba(255,255,255,0.8); margin: 8px 0 0 0;">
-        Challenge other musicians to match your skills!
+        <%= t('challenges.new.subtitle') %>
       </p>
     </div>
 
@@ -28,18 +28,18 @@
         <div class="mb-4">
           <%= f.label :title, class: "form-label", style: "color: #fff;" %>
           <%= f.text_field :title, class: "form-control", style: "background: #2a2a2a; border-color: #3a3a3a; color: #fff;", placeholder: "e.g., Can You Play This Solo?" %>
-          <small class="text-muted">A catchy title to attract challengers</small>
+          <small class="text-muted"><%= t('challenges.new.title_hint') %></small>
         </div>
 
         <div class="mb-4">
           <%= f.label :description, class: "form-label", style: "color: #fff;" %>
           <%= f.text_area :description, class: "form-control", rows: 3, style: "background: #2a2a2a; border-color: #3a3a3a; color: #fff;", placeholder: "Describe the challenge... What should responders do?" %>
-          <small class="text-muted">Optional: Add rules or context for the challenge</small>
+          <small class="text-muted"><%= t('challenges.new.description_hint') %></small>
         </div>
 
         <div class="mb-4">
-          <%= f.label :original_short_id, "Select Your Short", class: "form-label", style: "color: #fff;" %>
-          <p class="text-muted mb-3">Choose one of your shorts as the challenge video:</p>
+          <%= f.label :original_short_id, t('challenges.new.select_short'), class: "form-label", style: "color: #fff;" %>
+          <p class="text-muted mb-3"><%= t('challenges.new.select_short_hint') %></p>
 
           <% if @shorts.any? %>
             <div class="row g-3">
@@ -66,15 +66,15 @@
           <% else %>
             <div class="alert" style="background: #2a2a2a; border: 1px solid #fbbf24; color: #fbbf24;">
               <i class="fa-solid fa-exclamation-triangle me-2"></i>
-              You need to upload a short first before creating a challenge.
-              <%= link_to "Upload a Short", new_musician_short_path(current_user.musician), class: "alert-link", style: "color: #fbbf24;" %>
+              <%= t('challenges.new.need_short') %>
+              <%= link_to t('challenges.new.upload_short'), new_musician_short_path(current_user.musician), class: "alert-link", style: "color: #fbbf24;" %>
             </div>
           <% end %>
         </div>
 
         <% if @shorts.any? %>
           <div class="d-grid">
-            <%= f.submit "Create Challenge", class: "btn btn-lg", style: "background: #E936AD; color: #fff; font-weight: 600;" %>
+            <%= f.submit t('challenges.index.create'), class: "btn btn-lg", style: "background: #E936AD; color: #fff; font-weight: 600;" %>
           </div>
         <% end %>
       <% end %>

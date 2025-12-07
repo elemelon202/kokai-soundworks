@@ -1,8 +1,8 @@
 <div class="dm-sidebar">
   <div class="sidebar-header">
-    <h3>Messages</h3>
+    <h3><%= t('messages.sidebar.title') %></h3>
     <button type="button" class="btn btn-dark btn-sm" data-bs-toggle="modal" data-bs-target="#newChatModal">
-      + New
+      + <%= t('direct_messages.sidebar.new') %>
     </button>
   </div>
 
@@ -29,14 +29,14 @@
             <% end %>
           </div>
         <% end %>
-        <%= button_to direct_message_path(chat), method: :delete, class: "delete-chat-btn", data: { turbo_confirm: "Delete this conversation?" } do %>
+        <%= button_to direct_message_path(chat), method: :delete, class: "delete-chat-btn", data: { turbo_confirm: t('messages.show.delete_conversation') + "?" } do %>
           <i class="fa-solid fa-trash"></i>
         <% end %>
       </div>
     <% end %>
 
     <% if @chats.empty? %>
-      <p class="no-chats">No conversations yet</p>
+      <p class="no-chats"><%= t('messages.sidebar.no_conversations') %></p>
     <% end %>
   </div>
 </div>
@@ -47,19 +47,19 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="newChatModalLabel">Start a New Conversation</h5>
+        <h5 class="modal-title" id="newChatModalLabel"><%= t('messages.sidebar.start_conversation') %></h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <div class="musician-search-container">
           <div class="musician-search-wrapper">
             <i class="fa-solid fa-search"></i>
-            <input type="text" class="musician-search-input" placeholder="Search musicians by name..."
+            <input type="text" class="musician-search-input" placeholder="<%= t('direct_messages.sidebar.search_placeholder') %>"
                    data-new-chat-modal-target="search"
                    data-action="input->new-chat-modal#filter">
           </div>
         </div>
-        <p class="search-hint">Select a musician to message:</p>
+        <p class="search-hint"><%= t('direct_messages.sidebar.select_musician') %></p>
         <div class="musician-list" data-new-chat-modal-target="list">
           <% @musicians.each do |musician| %>
             <% next if musician.user_id == current_user.id %>
@@ -76,7 +76,7 @@
         </div>
         <div class="no-results-message" style="display: none;" data-new-chat-modal-target="noResults">
           <i class="fa-solid fa-user-slash"></i>
-          <p>No musicians found matching your search</p>
+          <p><%= t('messages.sidebar.no_results') %></p>
         </div>
       </div>
     </div>

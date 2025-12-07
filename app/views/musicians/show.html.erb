@@ -21,8 +21,8 @@
           <span class="profile-location"><i class="fa-solid fa-location-dot"></i> <%= @musician.location %></span>
         </div>
         <div class="profile-stats-inline">
-          <span>Age: <strong><%= @musician.age %></strong></span>
-          <span>Active Bands: <strong><%= @musician.bands.count %></strong></span>
+          <span><%= t('musicians.show.age') %>: <strong><%= @musician.age %></strong></span>
+          <span><%= t('musicians.show.active_bands') %>: <strong><%= @musician.bands.count %></strong></span>
         </div>
           <%= render "musicians/follow_button", musician: @musician %>
           <span class="follower-count"><%= pluralize(@musician.followers.count, "follower") %></span>
@@ -33,11 +33,11 @@
       <button class="btn-icon"><i class="fa-solid fa-share-nodes"></i></button>
       <% if current_user && current_user.id == @musician.user_id %>
         <%= link_to edit_musician_path(@musician), class: "btn-edit-profile" do %>
-          <i class="fa-solid fa-pen"></i> Edit Profile
+          <i class="fa-solid fa-pen"></i> <%= t('musicians.show.edit_profile') %>
         <% end %>
       <% elsif current_user && current_user.id != @musician.user_id %>
         <%= button_to create_or_show_direct_messages_path(recipient_id: @musician.user_id), method: :post, class: "btn-message-profile" do %>
-          <i class="fa-solid fa-envelope"></i> Message
+          <i class="fa-solid fa-envelope"></i> <%= t('common.message') %>
         <% end %>
         <%= render "friendships/friend_button", user: @musician.user %>
       <% end %>
@@ -63,17 +63,17 @@
   <div class="bottom-profile-content">
     <%# ----- LEFT COLUMN: ABOUT CARD ------ %>
     <div class="about-card tab-content active" id="tab-about" data-tabs-target="content">
-      <h3 class="section-title">About</h3>
+      <h3 class="section-title"><%= t('musicians.show.about') %></h3>
       <p class="about-text"><%= @musician.bio %></p>
-      <h4 class="subsection-title">Genres</h4>
+      <h4 class="subsection-title"><%= t('musicians.show.genres') %></h4>
       <div class="tag-list">
         <% @musician.styles&.split(',')&.each do |style| %>
           <span class="tag"><%= style.strip %></span>
         <% end %>
       </div>
-      <h4 class="subsection-title">Instruments</h4>
+      <h4 class="subsection-title"><%= t('musicians.show.instruments') %></h4>
       <div class="tag-list">
-        <% (@musician.instrument || "Not specified").split(',').each do |instrument| %>
+        <% (@musician.instrument || t('common.not_specified')).split(',').each do |instrument| %>
           <span class="tag"><%= instrument.strip %></span>
         <% end %>
       </div>
@@ -93,7 +93,7 @@
       <% if musician_posts.any? %>
         <div class="section-divider">
           <h3 class="section-title">
-            <i class="fa-solid fa-newspaper" style="color: #C8E938;"></i> Posts
+            <i class="fa-solid fa-newspaper" style="color: #C8E938;"></i> <%= t('musicians.show.posts') %>
           </h3>
           <div class="posts-section">
             <% musician_posts.each do |post| %>
@@ -106,24 +106,24 @@
     <%# ----- RIGHT COLUMN: STATS & AVAILABILITY ------ %>
     <div class="right-column">
       <div class="stats-card">
-        <h3 class="section-title">Quick Stats</h3>
+        <h3 class="section-title"><%= t('musicians.show.quick_stats') %></h3>
         <div class="stat-row">
-          <span class="stat-label">Age</span>
+          <span class="stat-label"><%= t('musicians.show.age') %></span>
           <span class="stat-value"><%= @musician.age %></span>
         </div>
         <div class="stat-row">
-          <span class="stat-label">Current Bands</span>
+          <span class="stat-label"><%= t('musicians.show.current_bands') %></span>
           <span class="stat-value"><%= @musician.bands.count %></span>
         </div>
         <div class="stat-row">
-          <span class="stat-label">Primary Style</span>
+          <span class="stat-label"><%= t('musicians.show.primary_style') %></span>
           <span class="stat-value-badge"><%= @musician.styles&.split(',')&.first || '—' %></span>
         </div>
       </div>
       <div class="availability-card">
-        <h3 class="section-title">Availability</h3>
+        <h3 class="section-title"><%= t('musicians.show.availability') %></h3>
         <div class="availability-row">
-          <span>Available for new bands</span>
+          <span><%= t('musicians.show.available_for_bands') %></span>
           <label class="toggle">
             <input type="checkbox" checked disabled>
             <span class="toggle-slider"></span>
@@ -139,7 +139,7 @@
   </div>
   <%# ----- BANDS SECTION (shown via tab) ----- %>
   <div class="bands-card tab-content" id="tab-bands" data-tabs-target="content">
-    <h3 class="section-title">Current Bands</h3>
+    <h3 class="section-title"><%= t('musicians.show.current_bands') %></h3>
     <% if @musician.bands.any? %>
       <ul class="bands-list">
         <% @musician.bands.each do |band| %>
@@ -147,7 +147,7 @@
         <% end %>
       </ul>
     <% else %>
-      <p class="no-bands">Not currently in any bands</p>
+      <p class="no-bands"><%= t('musicians.show.no_bands') %></p>
     <% end %>
   </div>
   <%# ----- MEDIA & SHORTS SECTION (50/50 Split) ----- %>
@@ -162,9 +162,9 @@
       <%# ----- LEFT: MEDIA CAROUSEL (50%) ----- %>
       <div class="media-panel">
         <div class="panel-header">
-          <h3><i class="fa-solid fa-photo-film media-icon"></i> Media</h3>
+          <h3><i class="fa-solid fa-photo-film media-icon"></i> <%= t('musicians.show.media') %></h3>
           <% if has_media %>
-            <span class="item-count"><%= all_images.count + all_videos.count %> items</span>
+            <span class="item-count"><%= all_images.count + all_videos.count %> <%= t('musicians.show.items') %></span>
           <% end %>
         </div>
 
@@ -205,7 +205,7 @@
         <% else %>
           <div class="panel-empty">
             <i class="fa-solid fa-image"></i>
-            <p>No media uploaded yet</p>
+            <p><%= t('musicians.show.no_media') %></p>
           </div>
         <% end %>
       </div>
@@ -213,7 +213,7 @@
       <%# ----- RIGHT: SHORTS REEL (50%) ----- %>
       <div data-controller="shorts-reel" class="shorts-panel">
         <div class="panel-header">
-          <h3><i class="fa-solid fa-clapperboard shorts-icon"></i> Shorts</h3>
+          <h3><i class="fa-solid fa-clapperboard shorts-icon"></i> <%= t('musicians.show.shorts') %></h3>
           <div class="panel-actions">
             <% if has_shorts %>
               <span class="item-count" data-shorts-reel-target="counter">1 / <%= @musician.musician_shorts.count %></span>
@@ -223,7 +223,7 @@
             <% end %>
             <% if current_user && current_user.id == @musician.user_id %>
               <%= link_to new_musician_short_path(@musician), class: "btn-add-short" do %>
-                <i class="fa-solid fa-plus"></i> Add
+                <i class="fa-solid fa-plus"></i> <%= t('common.add') %>
               <% end %>
             <% end %>
           </div>
@@ -277,7 +277,7 @@
                     <% if index == 0 && @musician.musician_shorts.count > 1 %>
                       <div class="short-scroll-hint">
                         <i class="fa-solid fa-chevron-down"></i>
-                        <p>Scroll for more</p>
+                        <p><%= t('musicians.show.scroll_for_more') %></p>
                       </div>
                     <% end %>
                   <% end %>
@@ -297,17 +297,17 @@
         <% else %>
           <div class="shorts-empty">
             <i class="fa-solid fa-film"></i>
-            <h4>No shorts yet</h4>
+            <h4><%= t('musicians.show.no_shorts') %></h4>
             <p>
               <% if current_user && current_user.id == @musician.user_id %>
-                Share your music moments with short videos
+                <%= t('musicians.show.share_moments') %>
               <% else %>
-                This musician hasn't uploaded any shorts yet
+                <%= t('musicians.show.no_shorts_yet') %>
               <% end %>
             </p>
             <% if current_user && current_user.id == @musician.user_id %>
               <%= link_to new_musician_short_path(@musician), class: "btn-upload-short" do %>
-                <i class="fa-solid fa-plus"></i> Upload Your First Short
+                <i class="fa-solid fa-plus"></i> <%= t('musicians.show.upload_first_short') %>
               <% end %>
             <% end %>
           </div>

@@ -1,9 +1,9 @@
 <div class="musician-dashboard-container">
   <div class="musician-dashboard-header">
-    <h1>Dashboard</h1>
-    <h2>Manage your profile and discover music</h2>
+    <h1><%= t('fans.edit.title') %></h1>
+    <h2><%= t('fans.edit.subtitle') %></h2>
     <%= link_to fan_path(@fan), class: "btn-view-profile" do %>
-      <i class="fa-solid fa-eye"></i> View Profile
+      <i class="fa-solid fa-eye"></i> <%= t('common.view') %> <%= t('navbar.profile') %>
     <% end %>
   </div>
 
@@ -17,7 +17,7 @@
         <i class="fa-solid fa-heart"></i>
       </div>
       <div class="stat-value"><%= @fan.user.followed_musicians.count + @fan.user.followed_bands.count %></div>
-      <div class="stat-label">Following</div>
+      <div class="stat-label"><%= t('fans.edit.following') %></div>
     </div>
 
     <div class="musician-stat-card">
@@ -25,7 +25,7 @@
         <i class="fa-solid fa-user-group"></i>
       </div>
       <div class="stat-value"><%= @fan.user.friends.count %></div>
-      <div class="stat-label">Friends</div>
+      <div class="stat-label"><%= t('fans.edit.friends') %></div>
     </div>
 
     <div class="musician-stat-card">
@@ -33,7 +33,7 @@
         <i class="fa-solid fa-ticket"></i>
       </div>
       <div class="stat-value"><%= @fan.user.gig_attendances.attended.count %></div>
-      <div class="stat-label">Gigs Attended</div>
+      <div class="stat-label"><%= t('fans.edit.gigs_attended') %></div>
     </div>
 
     <div class="musician-stat-card">
@@ -41,7 +41,7 @@
         <i class="fa-solid fa-bookmark"></i>
       </div>
       <div class="stat-value"><%= @fan.user.saved_musicians.count + @fan.user.saved_bands.count %></div>
-      <div class="stat-label">Saved</div>
+      <div class="stat-label"><%= t('fans.edit.saved') %></div>
     </div>
   </div>
 
@@ -53,7 +53,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-newspaper"></i>
         </div>
-        <h3>Feed</h3>
+        <h3><%= t('fans.edit.feed') %></h3>
       </div>
       <div class="dashboard-card-padding">
         <%# New Post Form %>
@@ -62,16 +62,16 @@
           <div class="post-form-actions">
             <label class="post-form-upload">
               <i class="fa-solid fa-image"></i>
-              <span>Photo</span>
+              <span><%= t('fans.edit.photo') %></span>
               <%= f.file_field :images, multiple: true, accept: "image/*" %>
             </label>
             <label class="post-form-upload">
               <i class="fa-solid fa-video"></i>
-              <span>Video</span>
+              <span><%= t('fans.edit.video') %></span>
               <%= f.file_field :videos, multiple: true, accept: "video/*" %>
             </label>
             <div class="post-form-spacer"></div>
-            <%= f.submit "Post", class: "btn-post" %>
+            <%= f.submit t('musicians.show.posts'), class: "btn-post" %>
           </div>
         <% end %>
 
@@ -85,13 +85,13 @@
           </div>
           <div class="view-all-center">
             <%= link_to posts_path, class: "link-view-all" do %>
-              View all posts <i class="fa-solid fa-arrow-right"></i>
+              <%= t('common.view') %> all <%= t('musicians.show.posts').downcase %> <i class="fa-solid fa-arrow-right"></i>
             <% end %>
           </div>
         <% else %>
           <div class="empty-state">
             <i class="fa-solid fa-newspaper"></i>
-            <p>Your feed is empty</p>
+            <p><%= t('fans.edit.feed_empty') %></p>
             <p class="sub">Follow musicians and add friends to see their posts!</p>
           </div>
         <% end %>
@@ -104,39 +104,39 @@
         <div class="card-icon">
           <i class="fa-solid fa-compass"></i>
         </div>
-        <h3>Quick Links</h3>
+        <h3><%= t('fans.edit.quick_links') %></h3>
       </div>
       <div class="dashboard-card-padding">
         <div class="quick-links-grid">
           <%= link_to musicians_path, class: "quick-link-item" do %>
             <i class="fa-solid fa-guitar lime"></i>
             <div class="quick-link-text">
-              <p class="title">Discover Musicians</p>
-              <p class="desc">Find new artists to follow</p>
+              <p class="title"><%= t('fans.edit.discover_musicians') %></p>
+              <p class="desc"><%= t('fans.edit.discover_musicians_desc') %></p>
             </div>
           <% end %>
 
           <%= link_to bands_path, class: "quick-link-item" do %>
             <i class="fa-solid fa-users pink"></i>
             <div class="quick-link-text">
-              <p class="title">Browse Bands</p>
-              <p class="desc">Explore local bands</p>
+              <p class="title"><%= t('fans.edit.browse_bands') %></p>
+              <p class="desc"><%= t('fans.edit.browse_bands_desc') %></p>
             </div>
           <% end %>
 
           <%= link_to venues_path, class: "quick-link-item" do %>
             <i class="fa-solid fa-location-dot gold"></i>
             <div class="quick-link-text">
-              <p class="title">Find Venues</p>
-              <p class="desc">Discover live music spots</p>
+              <p class="title"><%= t('fans.edit.find_venues') %></p>
+              <p class="desc"><%= t('fans.edit.find_venues_desc') %></p>
             </div>
           <% end %>
 
           <%= link_to gigs_fan_path(@fan), class: "quick-link-item" do %>
             <i class="fa-solid fa-ticket lime"></i>
             <div class="quick-link-text">
-              <p class="title">My Gigs</p>
-              <p class="desc">Upcoming and past shows</p>
+              <p class="title"><%= t('fans.edit.my_gigs') %></p>
+              <p class="desc"><%= t('fans.edit.my_gigs_desc') %></p>
             </div>
           <% end %>
         </div>
@@ -150,7 +150,7 @@
       <div class="card-icon">
         <i class="fa-solid fa-calendar-days"></i>
       </div>
-      <h3>Upcoming Shows <%= @fan.location.present? ? "in #{@fan.location.split(',').first.strip}" : "Near You" %></h3>
+      <h3><%= t('fans.edit.upcoming_shows') %> <%= @fan.location.present? ? "in #{@fan.location.split(',').first.strip}" : "" %></h3>
     </div>
     <div class="dashboard-card-padding">
       <% if @area_gigs.any? %>
@@ -200,7 +200,7 @@
       <% else %>
         <div class="empty-state large">
           <i class="fa-solid fa-calendar-xmark"></i>
-          <p>No upcoming shows found<%= @fan.location.present? ? " in your area" : "" %>.</p>
+          <p><%= t('fans.edit.no_upcoming_shows') %><%= @fan.location.present? ? " in your area" : "" %>.</p>
           <p class="sub">
             <% unless @fan.location.present? %>
               Add your location above to see local shows, or
@@ -218,7 +218,7 @@
         <div class="card-icon">
           <i class="fa-solid fa-user-pen"></i>
         </div>
-        <h3>Edit Profile</h3>
+        <h3><%= t('fans.edit.edit_profile') %></h3>
       </div>
 
       <%= form_with model: @fan, local: true, class: "musician-edit-form" do |f| %>
@@ -249,10 +249,10 @@
 
           <div class="form-field">
             <label class="form-label">
-              <i class="fa-solid fa-music"></i> Favorite Genres
+              <i class="fa-solid fa-music"></i> <%= t('fans.show.favorite_genres') %>
             </label>
             <%= f.text_field :favorite_genres, class: "form-input", placeholder: "Jazz, Rock, Electronic, Hip-Hop..." %>
-            <p class="hint-text">Separate genres with commas</p>
+            <p class="hint-text"><%= t('fans.edit.genres_hint') %></p>
           </div>
 
           <div class="form-field full-width">
@@ -297,14 +297,14 @@
           <div class="media-section-header">
             <i class="fa-solid fa-cloud-upload-alt"></i>
             <div>
-              <h4>Upload Media</h4>
-              <p>Add your avatar and banner image</p>
+              <h4><%= t('fans.edit.upload_media') %></h4>
+              <p><%= t('fans.edit.upload_media_desc') %></p>
             </div>
           </div>
 
           <div class="upload-fields-grid">
             <div class="upload-field" data-controller="file-preview">
-              <label class="upload-field-label">Profile Avatar</label>
+              <label class="upload-field-label"><%= t('fans.edit.profile_avatar') %></label>
               <div class="upload-input-wrapper">
                 <%= f.file_field :avatar, accept: "image/*", class: "media-file-input", id: "fan-avatar-input",
                     data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
@@ -317,7 +317,7 @@
             </div>
 
             <div class="upload-field" data-controller="file-preview">
-              <label class="upload-field-label">Banner Image</label>
+              <label class="upload-field-label"><%= t('fans.edit.banner_image') %></label>
               <div class="upload-input-wrapper">
                 <%= f.file_field :banner, accept: "image/*", class: "media-file-input", id: "fan-banner-input",
                     data: { file_preview_target: "input", action: "change->file-preview#preview" } %>
@@ -332,7 +332,7 @@
         </div>
 
         <div class="form-submit-wrapper">
-          <%= f.submit "Save Changes", class: "btn-save-profile" %>
+          <%= f.submit t('musicians.edit.save_changes'), class: "btn-save-profile" %>
         </div>
       <% end %>
     </div>
@@ -344,12 +344,12 @@
           <div class="card-icon">
             <i class="fa-solid fa-photo-film"></i>
           </div>
-          <h3>Current Media</h3>
+          <h3><%= t('fans.edit.current_media') %></h3>
         </div>
         <div class="current-media-section">
           <% if @fan.avatar.attached? %>
             <div class="media-display-group">
-              <label class="media-group-label">Avatar</label>
+              <label class="media-group-label"><%= t('fans.edit.avatar') %></label>
               <div class="current-media-preview avatar-preview">
                 <%= cl_image_tag @fan.avatar.key, class: "avatar-image-preview" %>
               </div>
@@ -358,7 +358,7 @@
 
           <% if @fan.banner.attached? %>
             <div class="media-display-group">
-              <label class="media-group-label">Banner</label>
+              <label class="media-group-label"><%= t('fans.edit.banner') %></label>
               <div class="current-media-preview banner-preview">
                 <%= cl_image_tag @fan.banner.key, class: "banner-image-preview" %>
               </div>
@@ -374,12 +374,12 @@
         <div class="card-icon">
           <i class="fa-solid fa-heart"></i>
         </div>
-        <h3>Favorite Artists</h3>
+        <h3><%= t('fans.edit.favorite_artists') %></h3>
       </div>
       <div class="dashboard-card-padding">
         <p class="section-desc">
           Your favorite artists are based on who you follow.
-          <%= link_to "Browse musicians", musicians_path %> to follow more!
+          <%= link_to t('fans.edit.browse_musicians'), musicians_path %> to follow more!
         </p>
         <% if @fan.user.followed_musicians.any? %>
           <div class="favorite-artists-grid">

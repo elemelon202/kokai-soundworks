@@ -1,14 +1,14 @@
 <div class="container bands-index-container">
   <div class="index-heading m-3 mt-5">
-    <h1 style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 40px rgba(251, 191, 36, 0.6), 0 0 80px rgba(251, 191, 36, 0.4); margin-bottom: 8px;">Bands</h1>
-    <p>Discover talented bands to connect with</p>
+    <h1 style="font-family: Impact, 'Arial Black', Haettenschweiler, sans-serif; font-size: clamp(3rem, 10vw, 6rem); font-weight: 900; letter-spacing: 2px; text-transform: uppercase; color: #000; text-shadow: 0 0 40px rgba(251, 191, 36, 0.6), 0 0 80px rgba(251, 191, 36, 0.4); margin-bottom: 8px;"><%= t('bands.index.title') %></h1>
+    <p><%= t('bands.index.subtitle') %></p>
   </div>
   <div class="container">
     <div class="row">
       <div class="col-md-12">
         <form class="d-flex">
           <div class="input-group dark-mode w-100">
-            <%= text_field_tag :q, params[:q], class: "form-control", type: "search", placeholder: "Search for a band...", aria: { label: "Search" } %>
+            <%= text_field_tag :q, params[:q], class: "form-control", type: "search", placeholder: t('bands.index.search_placeholder'), aria: { label: "Search" } %>
             <button class="btn btn-dark text-white px-4" type="submit">
               <i class="fa-solid fa-magnifying-glass"></i>
             </button>
@@ -99,7 +99,7 @@
               </div>
             <% end %>
           <% else %>
-            <em>Sorry, no bands found.</em>
+            <em><%= t('bands.index.no_bands') %></em>
           <% end %>
         </div>
       </div>

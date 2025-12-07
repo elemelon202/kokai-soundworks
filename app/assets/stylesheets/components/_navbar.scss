@@ -99,7 +99,7 @@
       }
     }
 
-// Language switcher
+// Language switcher - always visible including mobile
 .language-switcher {
   display: flex;
   align-items: center;
@@ -131,6 +131,25 @@
       font-size: 0.75rem;
       font-weight: 600;
       letter-spacing: 0.5px;
+    }
+  }
+}
+
+// Mobile: ensure language switcher stays visible
+@media (max-width: 575px) {
+  .language-switcher {
+    margin-right: 6px;
+
+    .lang-btn {
+      padding: 3px 6px;
+
+      .lang-flag {
+        font-size: 0.9rem;
+      }
+
+      .lang-code {
+        font-size: 0.7rem;
+      }
     }
   }
 }
